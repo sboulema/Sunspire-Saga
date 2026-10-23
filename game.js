@@ -1993,6 +1993,105 @@ sum_sol: { p:{o:'#201404',y:'#ffd94e',w:'#fff3c4',g:'#e8b84b',d:'#c9a02a',k:'#3b
 "......odddo....odddo........",
 ".....ooooo......ooooo.......",
 ]},
+// the tier-one summons get figures of their own; the element figures above serve Titan, Phoenix,
+// Leviath, Sylph and the Sol Avatar
+sum_gnome: { p:{o:'#141008',h:'#cf8c2a',d:'#9a6420',s:'#f0c090',b:'#e9e0c8',t:'#48644a',g:'#2f4a32',k:'#8a7a54',m:'#c9ced8',e:'#141008'}, r:[
+"............o...............",
+"...........oho..............",
+"...........ohho.............",
+"..........ohhho.............",
+"..........ohhhho............",
+".........ohhhhdo............",
+".........ohhhhhdo...........",
+"........ohhhhhhddo..........",
+"........ohhhhhhhdo..........",
+".......ohhhhhhhhddo.........",
+".......odddddddddddo........",
+"........ossssssssso....oo...",
+".......osseessseeso...ommo..",
+".......osssssssssso...ommmo.",
+"......obbsssssssbbo....oko..",
+"......obbbbbbbbbbbbo...oko..",
+".....obbbbbbbbbbbbbbo..oko..",
+".....obbbbbbbbbbbbbbo..oko..",
+".....otbbbbbbbbbbbbto..oko..",
+"......otttttttttttto...oko..",
+"......ottggtttggtttoooooko..",
+"......otttttttttttttttttoo..",
+".......oggoooooggoooooooo...",
+".......oggo...oggo..........",
+".......oggo...oggo..........",
+".......oooo...oooo..........",
+]},
+sum_salamand: { p:{o:'#200a04',f:'#e2543a',c:'#c94a30',a:'#ff9a4e',y:'#ffd94e',e:'#ffd94e',k:'#2b1408'}, r:[
+"............a....a....a.....",
+"...........aya..aya..aya....",
+"..........oayyaoayyaoayya...",
+".........oaaaaaaaaaaaaaaao..",
+"........ofaaffffffffffaafo..",
+".oooo..offfffffffffffffffo..",
+"offfffooffcccccccccccccffo..",
+"ofeffffffcccccccccccccccfoo.",
+"offkfffffccccccccccccccccfo.",
+"offfffffcccccccccccccccccfo.",
+".offfffffcccccccccccccccfo..",
+"..ofofffffcccccccccccccffo..",
+"....ooffffffcccccccccfffo...",
+"......offffffffffffffffo....",
+".......offoooffffoooffo.....",
+".......offo..offo..offo.....",
+"......offfo..offfo.offfo....",
+"......oooo...oooo..oooo.....",
+]},
+sum_nixie: { p:{o:'#081428',b:'#2e5fa8',c:'#4fa8e8',l:'#8fd0e8',w:'#c8f4ff',s:'#f0e4d0',e:'#081428'}, r:[
+"........ooooo...........",
+".......occcccoo.........",
+"......occcccccco........",
+"......occlssslcco.......",
+".....occlsssssscco......",
+".....ocolseslesoco......",
+".....oco.sssss.oco......",
+"......o.osssso..o.......",
+"........olllo...........",
+".......ollllllo.........",
+"......ollwwlllo..w......",
+"......olllllllo.........",
+"......ollllllllo........",
+".w....obblllllbo........",
+"......obbbllbbbo........",
+".......obbbbbbo...w.....",
+"........obbbbo..........",
+"........obbbbbo.........",
+".......obbbbbbbo........",
+"......obbcbbbbcbo.......",
+".....obbcc.bbb.ccbo.....",
+"....occc....o....cco....",
+"...occo...........oco...",
+"..ooo..............oo...",
+]},
+sum_tempest: { p:{o:'#1c1430',v:'#9b6ee0',u:'#b99ae8',d:'#d0c0f0',w:'#ffffff',e:'#ffd94e',y:'#ffd94e'}, r:[
+"..........oooo....oooo......",
+".........ouuuuo..ouuuuo.....",
+"......oooouuuuuoouuuuuoooo..",
+".....ouuuuuddduuuudddduuuuo.",
+"....ouuuddddddddddddddddduuo",
+"...ouudddddddddddddddddddduo",
+"...ouddddeedddddddeedddddduo",
+"..ouudddeeeeddddddeeeeddddvo",
+"..ouddddeeeeddddddeeeeddddvo",
+"..ouddddddddddddddddddddddvo",
+"..ovudddddddwwwwwwddddddvvo.",
+"...ovvudddddddddddddddvvvo..",
+"....ovvvuuuuuuuuuuuuvvvvo...",
+".....ooovvvvvvvvvvvvvooo....",
+"........oooyooooooyooo......",
+"..........oyyo...oyo........",
+"..........oyyyo..oyyo.......",
+"...........oyyo...oyyo......",
+"...........oyo.....oyo......",
+"..........oyo.....oyo.......",
+"..........oo.......oo.......",
+]},
 };
 // battle forms of the eight spirits (original designs)
 const DJB_SPRITES = {
@@ -2703,10 +2802,18 @@ function drawEnemyArt(kind, cx, cy, t, s, flash){
   const bob = (t >> 4) % 2;
   drawSpr(kind, cx, cy + bob, m.user ? s : m.eff, flash ? 'w' : '');
 }
-function drawSummonFig(el, cx, cy, t, s, shadowPass){
-  const bob = (t >> 3) % 2;
-  if (shadowPass) drawSpr('sum_' + el, cx + 2, cy + bob + 2, s, 'k');
-  else drawSpr('sum_' + el, cx, cy + bob, s, '');
+// which figure a summon shows: the pack's own (sum_gnome ...), the pack's element figure (sum_earth ...),
+// the built-in figure of its own, else the built-in element figure
+function summonFigSlot(def){
+  const own = 'sum_' + slugName(def.name), el = 'sum_' + def.el;
+  if (userSpr(own)) return own;
+  if (userSpr(el)) return el;
+  return SPRITES[own] ? own : el;
+}
+function drawSummonFig(def, cx, cy, t, s, shadowPass){
+  const bob = (t >> 3) % 2, name = summonFigSlot(def);
+  if (shadowPass) drawSpr(name, cx + 2, cy + bob + 2, s, 'k');
+  else drawSpr(name, cx, cy + bob, s, '');
 }
 
 // ---------------- custom sprite packs ----------------
@@ -2872,6 +2979,7 @@ function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').rep
 function isKnownSlot(n){
   if (ENEMY_DEFS[n]) return true;
   if (/^sum_(earth|fire|water|wind|sol)$/.test(n)) return true;
+  if (n.indexOf('sum_') === 0){ const rest = n.slice(4); for (const s of SUMMON_DEFS) if (slugName(s.name) === rest) return true; }
   const m = n.match(/^([a-z]+)_(downed|down2?|up2?|right2?|back|attack2?|cast2?|hit)$/);
   if (m){
     if (m[1] === 'hero' || CHAR_DEFS[m[1]]) return true;
@@ -2929,8 +3037,9 @@ function buildSlotList(){
   g('Battle enemies', Object.keys(ENEMY_DEFS).filter(k => k.indexOf('djinn_battle_') < 0)
     .map(k => ({ slot: k, desc: cap(ENEMY_DEFS[k].name) + (ENEMY_DEFS[k].boss ? ' (boss)' : '') })));
   g('Spirit duels', SPIRIT_ORDER.map(k => ({ slot: 'djinn_battle_' + k, desc: cap(SPIRIT_DEFS[k].name) + ' in its duel form' })));
-  g('Summons', ELS5.map(el => ({ slot: 'sum_' + el,
-    desc: SUMMON_DEFS.filter(s => s.el === el).map(s => cap(s.name)).join(' / ') })));
+  g('Summons', SUMMON_DEFS.map(s => ({ slot: 'sum_' + slugName(s.name), desc: cap(s.name) + ' in its cutscene' }))
+    .concat(ELS5.map(el => ({ slot: 'sum_' + el,
+      desc: 'fallback for ' + SUMMON_DEFS.filter(s => s.el === el).map(s => cap(s.name)).join(' / ') }))));
 
   const NPC_ROLES = {
     elder: 'Elder Sorin, Thera village elder, standing on the lane by the west houses',
@@ -4417,8 +4526,8 @@ function cineDraw(){
     const ease = 1 - (1 - p) * (1 - p);
     const fy = Math.round(-50 + ease * 106);
     const sc = def.el === 'sol' ? 4 : 3;
-    drawSummonFig(def.el, fx, fy, t, sc, true);
-    drawSummonFig(def.el, fx, fy, t, sc, false);
+    drawSummonFig(def, fx, fy, t, sc, true);
+    drawSummonFig(def, fx, fy, t, sc, false);
   }
   if (t > L - 54) textCO(def.name + '!', 120, 124, '#ffffff', '#241c40', 2);
   // letterbox

@@ -120,13 +120,14 @@
     The eight spirits fight you before they join; their battle forms are
     <code>djinn_battle_flint</code> ... <code>djinn_battle_squall</code> (one per spirit name).
     <h3>Summons</h3>
-    Shown large in the summon cutscene; the drop-shadow pass is generated for you.
+    Shown large in the summon cutscene; the drop-shadow pass is generated for you. Each summon has a
+    slot of its own, with the element slot as fallback.
     <table>
-      <tr><td><code>sum_earth</code></td><td>Gnome / Titan</td></tr>
-      <tr><td><code>sum_fire</code></td><td>Salamand / Phoenix</td></tr>
-      <tr><td><code>sum_water</code></td><td>Nixie / Leviath</td></tr>
-      <tr><td><code>sum_wind</code></td><td>Sylph / Tempest</td></tr>
-      <tr><td><code>sum_sol</code></td><td>Sol Avatar</td></tr>
+      <tr><td><code>sum_gnome</code> <code>sum_titan</code></td><td>Gnome, Titan (fallback <code>sum_earth</code>)</td></tr>
+      <tr><td><code>sum_salamand</code> <code>sum_phoenix</code></td><td>Salamand, Phoenix (fallback <code>sum_fire</code>)</td></tr>
+      <tr><td><code>sum_nixie</code> <code>sum_leviath</code></td><td>Nixie, Leviath (fallback <code>sum_water</code>)</td></tr>
+      <tr><td><code>sum_sylph</code> <code>sum_tempest</code></td><td>Sylph, Tempest (fallback <code>sum_wind</code>)</td></tr>
+      <tr><td><code>sum_sol_avatar</code></td><td>Sol Avatar (fallback <code>sum_sol</code>)</td></tr>
     </table>
     <h3>Characters</h3>
     Six frames per character, drawn at native pixel size with the feet on the tile
