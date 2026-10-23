@@ -26,8 +26,6 @@
     .legend{font-size:13px; color:var(--ink-2); text-align:center; line-height:1.9; max-width:62ch; margin:0;}
     .legend kbd{font-family:var(--mono); font-size:12px; color:var(--ink); background:var(--surface); border:1px solid var(--line);
       border-bottom-width:2px; border-radius:5px; padding:0 5px;}
-    .verline a{color:var(--ink-3); font-family:var(--mono); font-size:12px; letter-spacing:.1em; text-decoration:underline dotted; text-underline-offset:3px; padding:2px 6px;}
-    .verline a:hover{color:var(--accent);}
     .pack-load{display:flex; flex-direction:column; align-items:center; gap:10px; width:100%; max-width:620px; padding-top:4px;}
     .pack-load .btn{cursor:pointer;}
     #packStatus{font-size:13px; line-height:1.7; text-align:center; color:var(--ink-2);}
@@ -37,7 +35,7 @@
     /* ---------- immersive: the handheld alone, as large as the viewport allows ---------- */
     .imm-exit, .imm-hint{display:none;}
     body.immersive{overflow:hidden;}
-    body.immersive .nav, body.immersive .play-bar, body.immersive .legend, body.immersive .verline,
+    body.immersive .nav, body.immersive .play-bar, body.immersive .legend,
     body.immersive .pack-load, body.immersive .foot{display:none;}
     body.immersive .stage{position:fixed; inset:0; z-index:100; max-width:none; display:flex; align-items:center; justify-content:center;
       padding:max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
@@ -121,7 +119,6 @@
     menu <kbd>Enter</kbd> &middot; sound <kbd>M</kbd> &middot; immersive <kbd>F</kbd><br>
     Your progress saves in this browser at every inn and map change.
   </p>
-  <div class="verline"><a href="changelog.html">v39 &middot; changelog</a></div>
 
   <section class="pack-load" aria-label="Sprite pack">
     <label class="btn" for="packIn">
