@@ -195,9 +195,9 @@ function boxFront(){
   x.fillStyle = '#141230'; x.fillRect(0, 892, ART, BOX_H);
   // the party, seen from behind, facing the spire
   const party = [
-    { id:'bram', f:'back',   cx: 185, s: 7,  el:'water' },
+    { id:'bram', f:'back',   cx: 185, s: 7,  el:'fire'  },
     { id:'ari',  f:'attack', cx: 350, s: 8,  el:'earth' },
-    { id:'lyn',  f:'cast',   cx: 495, s: 8,  el:'fire'  },
+    { id:'lyn',  f:'cast',   cx: 495, s: 8,  el:'water' },
     { id:'sera', f:'back',   cx: 660, s: 7,  el:'wind'  }
   ];
   for (const p of party){
@@ -322,8 +322,8 @@ function sheetAdepts(){
   const [c, x] = paper('The Adepts', 'Four heroes, one per element. 16×22 overworld sprites, with the battle poses drawn from behind.');
   const info = {
     ari:  ['Earth adept from Thera, party leader', 'Arts: Quake, Spire, Gaia Blade'],
-    lyn:  ['Fire adept, scouting out of Brindle', 'Arts: Flare, Fire Bomb, Inferno'],
-    bram: ['Water adept, a miner who knows every shaft', 'Arts: Cure, Ice Horn, Pure Ply'],
+    lyn:  ['Water adept, scouting out of Brindle', 'Arts: Cure, Ice Horn, Pure Ply'],
+    bram: ['Fire adept, a miner who knows every shaft', 'Arts: Flare, Fire Bomb, Inferno'],
     sera: ['Wind adept, a scout pinned on the trail', 'Arts: Gust, Plasma, Bolt']
   };
   ['ari', 'lyn', 'bram', 'sera'].forEach((id, i) => {

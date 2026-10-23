@@ -6,7 +6,7 @@ const cv = document.getElementById('game');
 const ctx = cv.getContext('2d');
 ctx.imageSmoothingEnabled = false;
 const W = 240, H = 160, T = 16;
-const GAME_VERSION = 'V39';
+const GAME_VERSION = 'V40';
 // pages that only need the game data (pack guide, art tools) set window.SUNSPIRE_HEADLESS before loading:
 // no input handlers and no main loop
 const HEADLESS = !!window.SUNSPIRE_HEADLESS;
@@ -253,12 +253,12 @@ const CHAR_DEFS = {
   ari:  { name:'ARI',  el:'earth', base:{hp:34,pp:12,atk:10,def:5,agi:8},  grow:{hp:7,pp:3,atk:3,def:1,agi:1},
           pal:{hair:'#e8b84b',skin:'#f0c090',tunic:'#3f6cd8',scarf:'#e8c84b',leg:'#6b4a2c',boot:'#4a3018'},
           arts:[['QUAKE',1],['SPIRE',4],['GAIA BLADE',8]] },
-  lyn:  { name:'LYN',  el:'fire',  base:{hp:24,pp:16,atk:8,def:4,agi:11}, grow:{hp:5,pp:4,atk:2,def:1,agi:2},
-          pal:{hair:'#c0574a',skin:'#f0c090',tunic:'#8a3f5c',scarf:'#e2543a',leg:'#5a3a4a',boot:'#3a2430'},
-          arts:[['FLARE',1],['FIRE BOMB',4],['INFERNO',8]] },
-  bram: { name:'BRAM', el:'water', base:{hp:36,pp:14,atk:12,def:7,agi:6}, grow:{hp:8,pp:3,atk:3,def:1,agi:1},
-          pal:{hair:'#4a3524',skin:'#d9a878',tunic:'#2f6a8f',scarf:'#4fa8e8',leg:'#4a4438',boot:'#2c2820'},
+  lyn:  { name:'LYN',  el:'water', base:{hp:24,pp:16,atk:8,def:4,agi:11}, grow:{hp:5,pp:4,atk:2,def:1,agi:2},
+          pal:{hair:'#c0574a',skin:'#f0c090',tunic:'#2f6a8f',scarf:'#4fa8e8',leg:'#3a4a5a',boot:'#243040'},
           arts:[['CURE',1],['ICE HORN',4],['PURE PLY',7]] },
+  bram: { name:'BRAM', el:'fire',  base:{hp:36,pp:14,atk:12,def:7,agi:6}, grow:{hp:8,pp:3,atk:3,def:1,agi:1},
+          pal:{hair:'#4a3524',skin:'#d9a878',tunic:'#8a3f5c',scarf:'#e2543a',leg:'#4a4438',boot:'#2c2820'},
+          arts:[['FLARE',1],['FIRE BOMB',4],['INFERNO',8]] },
   sera: { name:'SERA', el:'wind',  base:{hp:26,pp:15,atk:9,def:4,agi:13}, grow:{hp:5,pp:4,atk:2,def:1,agi:2},
           pal:{hair:'#b9a8e8',skin:'#f0c090',tunic:'#5c4a8f',scarf:'#9b6ee0',leg:'#4a4460',boot:'#302c44'},
           arts:[['GUST',1],['PLASMA',5],['BOLT',8]] }
@@ -3144,7 +3144,7 @@ function transition(tr){
     G.party.push(makeMember('bram', G.lv));
     say(["A broad miner blocks the tunnel... then grins.",
          "BRAM: 'You're the kids hunting spirits? These tunnels eat travelers.'",
-         "'I know every shaft. I'm coming - and my pick arm too.'",
+         "'I know every shaft. I'm coming - my pick and my fire both.'",
          "BRAM joined the party!"]);
   } else if (tr.to === 'trail' && !G.flags.sera){
     G.flags.sera = true;
@@ -3258,7 +3258,7 @@ function npcTalk(id){
            "Ask LYN to join the party?"], () => {
         G.flags.lyn = true;
         G.party.push(makeMember('lyn', G.lv));
-        say(["LYN: 'Fine - my flames come too. Try to keep up.'", "LYN joined the party!"]);
+        say(["LYN: 'Fine - someone has to patch you up. Try to keep up.'", "LYN joined the party!"]);
       }, () => say(["LYN: 'Suit yourself. I will be around the plaza when you change your mind.'"]));
   } else if (id === 'miner'){
     if (!G.flags.ogre)
