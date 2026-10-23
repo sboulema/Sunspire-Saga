@@ -63,9 +63,9 @@ every `v*` tag:
 
 - a zip of the static site (the pages, `game.js`, `assets/` and the licence) that unpacks straight
   into any web root: a workflow artifact on each run, and attached to the GitHub Release on a tag;
-- an nginx image on GitHub Container Registry and on Docker Hub (the latter needs the
-  `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN` secrets); `latest` follows `main`, release tags get
-  their own tag:
+- an nginx image on GitHub Container Registry, and on Docker Hub too once the
+  `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN` secrets are set; `latest` follows `main`, release
+  tags get their own tag:
 
 ```bash
 docker run --rm -p 8080:80 ghcr.io/YOUR-GITHUB-USER/sunspire-saga
