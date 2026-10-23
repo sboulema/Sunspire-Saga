@@ -2464,6 +2464,100 @@ Object.assign(OW_GRIDS, FENCE_GRIDS);
 Object.assign(OW_GRIDS, HERO_ACTION_GRIDS);
 Object.assign(OW_GRIDS, GRASS_GRIDS);
 Object.assign(SPRITES, FX_SPRITES);
+// arts-window glyphs: one element badge per element (plus heal and sol) and one range badge per target kind
+const UI_SPRITES = {
+el_earth: { p:{d:'#9a6420',a:'#cf8c2a',y:'#ffe9a0'}, r:[
+"...a...",
+"..aya..",
+".aayaa.",
+"aaayaaa",
+".daaad.",
+"..ddd..",
+"...d...",
+]},
+el_fire: { p:{f:'#e2543a',a:'#ff9a4e',y:'#ffd94e'}, r:[
+"...f...",
+"..ff.f.",
+"..fff..",
+".ffaff.",
+".faaaf.",
+".fayaf.",
+"..fff..",
+]},
+el_water: { p:{b:'#4fa8e8',l:'#c8f4ff'}, r:[
+"...b...",
+"..bbb..",
+".bbbbb.",
+".blbbb.",
+"bllbbbb",
+".bbbbb.",
+"..bbb..",
+]},
+el_wind: { p:{v:'#9b6ee0',d:'#d0c0f0'}, r:[
+"..vvv..",
+".v...v.",
+"v..dv.v",
+"v.d.v.v",
+"v..vv.v",
+".v....v",
+"..vvvv.",
+]},
+el_sol: { p:{y:'#ffd94e',w:'#fff6c4'}, r:[
+"y..y..y",
+".yyyyy.",
+".ywwwy.",
+"yywwwyy",
+".ywwwy.",
+".yyyyy.",
+"y..y..y",
+]},
+el_heal: { p:{g:'#7cd88a',w:'#ffffff'}, r:[
+"..ggg..",
+"..gwg..",
+"gggwggg",
+"gwwwwwg",
+"gggwggg",
+"..gwg..",
+"..ggg..",
+]},
+range_one: { p:{w:'#e9e0c8'}, r:[
+".......",
+".......",
+".......",
+"..www..",
+"..www..",
+"..www..",
+"..www..",
+]},
+range_all: { p:{w:'#e9e0c8'}, r:[
+"......ww",
+"......ww",
+"...ww.ww",
+"...ww.ww",
+"ww.ww.ww",
+"ww.ww.ww",
+"ww.ww.ww",
+]},
+range_ally: { p:{w:'#e9e0c8'}, r:[
+"...w...",
+"...w...",
+"...w...",
+"wwwwwww",
+"...w...",
+"...w...",
+"...w...",
+]},
+range_party: { p:{w:'#e9e0c8'}, r:[
+".w......",
+"www..w..",
+".w..www.",
+".....w..",
+"...w....",
+"..www..w",
+"...w..ww",
+]},
+};
+Object.assign(SPRITES, UI_SPRITES);
 const SPR_CACHE = {};
 function sprCanvas(name, variant){
   const key = name + '|' + (variant || '');
@@ -2727,6 +2821,7 @@ function isKnownSlot(n){
   if (n === 'well' || n.indexOf('well_') === 0) return true;
   if (n === 'spring' || n.indexOf('spring_') === 0) return true;
   if (/^icon_(fight|arts|spirit|summon|item|defend|flee)$/.test(n)) return true;
+  if (/^el_(earth|fire|water|wind|sol|heal)$/.test(n) || /^range_(one|all|ally|party)$/.test(n)) return true;
   if (n.indexOf('djinn_battle_') === 0 && SPIRIT_DEFS[n.slice(13)]) return true;
   if (n === 'bg' || n.indexOf('bg_') === 0) return true;
   return false;
@@ -2809,7 +2904,9 @@ function buildSlotList(){
     .concat(ELS4.map(el => ({ slot: 'spirit_' + el, desc: 'menu icon fallback: ' + el + ' spirits' })))
     .concat(SUMMON_DEFS.map(s => ({ slot: 'summon_' + slugName(s.name), desc: 'menu icon: ' + cap(s.name) })))
     .concat(ELS5.map(el => ({ slot: 'summon_' + el, desc: 'menu icon fallback: ' + el + ' summons' })))
-    .concat(Object.keys(ITEM_DEFS).map(k => ({ slot: 'item_' + k, desc: 'menu icon: ' + cap(ITEM_DEFS[k].name) })));
+    .concat(Object.keys(ITEM_DEFS).map(k => ({ slot: 'item_' + k, desc: 'menu icon: ' + cap(ITEM_DEFS[k].name) })))
+    .concat(ELS5.concat(['heal']).map(el => ({ slot: 'el_' + el, desc: 'arts window element badge: ' + el })))
+    .concat([['one','one enemy'],['all','every enemy'],['ally','one ally'],['party','the whole party']].map(r => ({ slot: 'range_' + r[0], desc: 'arts window range badge: ' + r[1] })));
   g('Battle interface', ui);
   g('Title screen', [{ slot: 'title', desc: 'the logo on the title screen (up to 240 px wide, drawn over the sky; GIFs animate)' }]);
   g('Font glyphs (one image per character)', GLYPH_NAME_ORDER.filter(n => ['colon','exclamationpoint','semicolon'].indexOf(n) < 0).map(n => {
@@ -3737,12 +3834,12 @@ function battleUpdate(){
   const b = G.battle;
   b.t++;
   if (b.fx > 0){
-    if (!b.fxTotal){ // first tick of a new effect: an animated overlay plays once through at native speed
-      const u = fxSprite(b);
-      if (u && u.frames.length > 1) b.fx = Math.max(b.fx, Math.ceil(u.total * FX_SLOW / 1000 * 60));
-      b.fxTotal = b.fx;
-    }
+    if (!b.fxTotal){ b.fxTotal = b.fx; b.fxStart = performance.now(); } // first tick of a new effect
     b.fx--;
+    // an animated pack overlay is held until it has played once through by the wall clock, so it runs at
+    // its native speed whatever the display's refresh rate
+    const u = fxSprite(b);
+    if (b.fx <= 0 && u && u.frames.length > 1 && performance.now() - b.fxStart < u.total * FX_SLOW) b.fx = 1;
     if (b.fx <= 0) b.fxTotal = 0;
   }
   if (b.pflashT > 0) b.pflashT--;
@@ -4442,13 +4539,13 @@ function battleToolbar(){
   for (let i = 0; i < L.length; i++)
     drawCmdIcon(L[i].id, 16 + i*19, 141, i === b.menuSel);
 }
-// small range glyph at the right of an arts row: one foe, every foe, one ally, the whole party
-function drawRangeIcon(kind, x, y, col){
-  ctx.fillStyle = col;
-  if (kind === 'one') ctx.fillRect(x + 2, y + 1, 2, 6);
-  else if (kind === 'all'){ ctx.fillRect(x, y + 4, 2, 3); ctx.fillRect(x + 3, y + 2, 2, 5); ctx.fillRect(x + 6, y, 2, 7); }
-  else if (kind === 'ally'){ ctx.fillRect(x + 2, y + 1, 2, 6); ctx.fillRect(x, y + 3, 6, 2); }
-  else { ctx.fillRect(x + 1, y + 2, 2, 4); ctx.fillRect(x, y + 3, 4, 2); ctx.fillRect(x + 5, y + 1, 2, 4); ctx.fillRect(x + 4, y + 2, 4, 2); }
+// the badges at the right of an arts row: element (el_earth ...) and range (range_one: one foe,
+// range_all: every foe, range_ally: one ally, range_party: the whole party), pack-replaceable sprites
+function drawBadge(slot, cx, cy, dim){
+  if (!SPRITES[slot] && !userSpr(slot)) return;
+  if (dim) ctx.globalAlpha = .45;
+  drawSpr(slot, cx, cy, 1, '');
+  ctx.globalAlpha = 1;
 }
 // the arts / spirit / summon / item window: a description strip under the status panel, the caster
 // at the bottom-left and the list on the right, with a lit row for the selection
@@ -4475,9 +4572,9 @@ function battleSubMenu(){
     drawListIcon(b.sub, it, lx + 11, y + (LH >> 1));
     const col = it.dim ? '#7c7498' : (i === b.subSel ? '#f2c14e' : '#ffffff');
     text(it.label, lx + 19, y, col);
-    const rx = lx + lw - 6; // right edge: range glyph, element dot, then the cost
-    drawRangeIcon(it.range, rx - 8, y + (LH >> 1) - 3, it.dim ? '#7c7498' : '#e9e0c8');
-    if (it.el && ELCOL[it.el]){ ctx.fillStyle = ELCOL[it.el]; ctx.fillRect(rx - 16, y + (LH >> 1) - 2, 4, 4); }
+    const rx = lx + lw - 6, cy = y + (LH >> 1); // right edge: range badge, element badge, then the cost
+    drawBadge('range_' + it.range, rx - 4, cy, it.dim);
+    if (it.el) drawBadge('el_' + it.el, rx - 14, cy, it.dim);
     if (it.tag) text(it.tag, rx - 22 - textW(it.tag), y, col);
   }
   ctx.fillStyle = '#eef0ff'; // scroll nubs
@@ -4546,7 +4643,7 @@ function battleDraw(){
     if (b.fxKind){
       const fxName = fxSlotName(b), u = userSpr(fxName);
       if (u){ // pack overlay: covers the screen (aspect kept), played once from the cast
-        const img = (u.frames.length > 1 ? sprFrameAt(u, ph * 1000 / 60 / FX_SLOW) : u.frames[0]).img;
+        const img = (u.frames.length > 1 ? sprFrameAt(u, (performance.now() - (b.fxStart || 0)) / FX_SLOW) : u.frames[0]).img;
         const sc = Math.max(W / u.width, H / u.height);
         const w = Math.round(u.width * sc), h = Math.round(u.height * sc);
         ctx.drawImage(img, Math.round((W - w)/2), Math.round((H - h)/2), w, h);
