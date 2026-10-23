@@ -5,9 +5,10 @@ A browser JRPG in one script, `game.js`. The site around it is `index.html`, `pl
 
 ## Keep the walkthrough in sync with the game
 
-`walkthrough.txt` is a classic plain-text FAQ/walkthrough whose every number and position is
-taken from the data in `game.js`. **Any change to the game that a player could notice must be
-reflected in `walkthrough.txt` in the same change.** That includes, but is not limited to:
+`walkthrough.html` holds a classic plain-text FAQ/walkthrough inside a `<pre>` in a white well;
+every number and position in it is taken from the data in `game.js`. **Any change to the game that
+a player could notice must be reflected in the walkthrough in the same change.** That includes,
+but is not limited to:
 
 - maps and map builders (`build*` functions, `TRANS`): redraw the affected ASCII map in section 7
   and fix every coordinate that moved (chests, spirits, bosses, villagers, doors, exits, the well
@@ -24,8 +25,11 @@ reflected in `walkthrough.txt` in the same change.** That includes, but is not l
   "Last updated" date and add a line to the guide's version history (section 2).
 
 When a change is bigger than a number, re-check the recommended levels and the boss plans still
-hold against the formulas in section 5.9. Keep the file at 79 columns or narrower, plain ASCII,
-and keep the section codes (`[WLK07]` etc.) stable so Find still works.
+hold against the formulas in section 5.9. Edit the text inside the `<pre>` only: keep it at 79
+columns or narrower and plain ASCII, escape `&`, `<` and `>` as entities, and keep the section
+codes (`[WLK07]` etc.) stable, since each heading carries `<b id="CODE">` and the contents list
+links to them. The page shell around the `<pre>` (nav, intro, `.well` styles) matches the other
+site pages and should change only when they do.
 
 The ASCII maps in the walkthrough can be regenerated from the builders: extract `h32`, `makeGrid`,
 `house`, the `build*` functions and `TRANS` from `game.js` into a Node script and print each grid

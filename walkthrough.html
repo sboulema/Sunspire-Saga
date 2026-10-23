@@ -1,9 +1,62 @@
-===============================================================================
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Sunspire Saga Walkthrough</title>
+  <meta name="description" content="A classic plain-text FAQ and walkthrough for Sunspire Saga: every area, treasure chest, spirit and boss, with maps, shop lists and the full bestiary.">
+  <meta name="theme-color" content="#100d1d">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="assets/sunspire-mark-512.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap">
+  <script>try{var t=localStorage.getItem('sunspire_theme'),h=localStorage.getItem('sunspire_handheld'),r=document.documentElement;if(t)r.dataset.theme=t;r.dataset.themeEff=t||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');if(h&&/^#[0-9a-f]{6}$/i.test(h))r.style.setProperty('--hh',h)}catch(e){}</script>
+  <link rel="stylesheet" href="assets/site.css">
+  <style>
+    .faq{max-width:880px; padding-top:40px;}
+    .faq .eyebrow{font-family:var(--display); font-size:14px; letter-spacing:.18em; text-transform:uppercase; color:var(--accent); margin:0 0 10px; font-weight:600;}
+    .faq h1{font-size:clamp(32px, 4.5vw, 44px);}
+    .faq .intro{font-size:17px; color:var(--ink-2); margin:0 0 28px; max-width:62ch;}
+    /* the guide itself sits in a white well with black text, like a text file on an old FAQ site; it stays white in dark mode on purpose */
+    .well{background:#fff; color:#000; border:1px solid var(--line); border-radius:14px; padding:26px 30px; overflow:auto; box-shadow:var(--shadow); color-scheme:light;}
+    .well pre{margin:0; font:13.5px/1.45 var(--mono); color:#000; white-space:pre; tab-size:4;}
+    .well b{font-weight:400; scroll-margin-top:84px;}
+    .well a{color:#0000ee; text-decoration:underline;}
+    .well a:visited{color:#551a8b;}
+    .well a:hover{background:#ffe9a0;}
+    @media (max-width:600px){ .well{padding:18px 16px; border-radius:10px;} .well pre{font-size:12px;} }
+  </style>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+  <a class="brand" href="index.html"><img src="assets/sunspire-mark-512.png" alt=""><span>Sunspire Saga</span></a>
+  <nav class="nav-links" aria-label="Site">
+    <a href="index.html">Home</a>
+    <a href="play.html">Play online</a>
+    <a href="pack-guide.html">Pack guide</a>
+    <a href="changelog.html">Changelog</a>
+    <a href="walkthrough.html" aria-current="page">Walkthrough</a>
+  </nav>
+  <button class="icon-btn theme-toggle" type="button" aria-label="Toggle colour theme">
+    <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+  </button>
+</div></header>
+
+<main class="wrap faq">
+  <p class="eyebrow">Walkthrough</p>
+  <h1>The complete FAQ, the old-school way</h1>
+  <p class="intro">Every area, chest, spirit and boss in plain text with ASCII maps, the way guides were written
+    when the game this one tips its hat to was new. The numbers come straight from the game's data and are
+    kept in step with every release.</p>
+  <div class="well">
+<pre>===============================================================================
 
           ____    _   _   _   _   ____    ____    ___   ____    _____
          / ___|  | | | | | \ | | / ___|  |  _ \  |_ _| |  _ \  | ____|
          \___ \  | | | | |  \| | \___ \  | |_) |  | |  | |_) | |  _|
-          ___) | | |_| | | |\  |  ___) | |  __/   | |  |  _ <  | |___
+          ___) | | |_| | | |\  |  ___) | |  __/   | |  |  _ &lt;  | |___
          |____/   \___/  |_| \_| |____/  |_|     |___| |_| \_\ |_____|
 
                        ____       _       ____      _
@@ -37,14 +90,14 @@ has moved on since then, check the changelog page and section [VER02].
                             TABLE OF CONTENTS
 ===============================================================================
 
-To jump to a section, use your browser's or editor's Find (Ctrl+F) and type
+To jump to a section, click its code below, or use Find (Ctrl+F) and type
 the code in brackets, e.g. "[WLK07]".
 
-   1.  Introduction ........................................... [INT01]
-   2.  Version History ........................................ [VER02]
-   3.  Story .................................................. [STO03]
-   4.  Controls and the Menu .................................. [CTL04]
-   5.  Game Basics ............................................ [BAS05]
+   1.  Introduction ........................................... [<a href="#INT01">INT01</a>]
+   2.  Version History ........................................ [<a href="#VER02">VER02</a>]
+   3.  Story .................................................. [<a href="#STO03">STO03</a>]
+   4.  Controls and the Menu .................................. [<a href="#CTL04">CTL04</a>]
+   5.  Game Basics ............................................ [<a href="#BAS05">BAS05</a>]
          5.1  Party and levels
          5.2  Battle commands
          5.3  Arts (psynergy)
@@ -54,31 +107,31 @@ the code in brackets, e.g. "[WLK07]".
          5.7  Saving
          5.8  Shops, inns, wells and the spring
          5.9  The damage formulas
-   6.  Characters ............................................. [CHR06]
-   7.  Walkthrough ............................................ [WLK07]
-         7.1  Thera and the fields ............................ [WLK7A]
-         7.2  Flint and the boulder ........................... [WLK7B]
-         7.3  The paddock and Lyn's compass ................... [WLK7C]
-         7.4  Mira Farmstead (optional) ....................... [WLK7D]
-         7.5  Brindle ......................................... [WLK7E]
-         7.6  Lake Mira: Dew .................................. [WLK7F]
-         7.7  Brindle Mine .................................... [WLK7G]
-         7.8  BOSS: Maw Ogre .................................. [BOS7H]
-         7.9  Sunspire Trail .................................. [WLK7I]
-         7.10 The Sunspire .................................... [WLK7J]
-         7.11 FINAL BOSS: Shadow Wyrm ......................... [BOS7K]
-         7.12 The ending ...................................... [END7L]
-   8.  Spirit (Djinn) Guide ................................... [SPR08]
-   9.  Summon List ............................................ [SUM09]
-  10.  Treasure Chest List .................................... [CHS10]
-  11.  Items and Equipment .................................... [ITM11]
-  12.  Shop Lists ............................................. [SHP12]
-  13.  Bestiary ............................................... [BST13]
-  14.  Frequently Asked Questions ............................. [FAQ14]
-  15.  Credits and Legal ...................................... [LGL15]
+   6.  Characters ............................................. [<a href="#CHR06">CHR06</a>]
+   7.  Walkthrough ............................................ [<a href="#WLK07">WLK07</a>]
+         7.1  Thera and the fields ............................ [<a href="#WLK7A">WLK7A</a>]
+         7.2  Flint and the boulder ........................... [<a href="#WLK7B">WLK7B</a>]
+         7.3  The paddock and Lyn's compass ................... [<a href="#WLK7C">WLK7C</a>]
+         7.4  Mira Farmstead (optional) ....................... [<a href="#WLK7D">WLK7D</a>]
+         7.5  Brindle ......................................... [<a href="#WLK7E">WLK7E</a>]
+         7.6  Lake Mira: Dew .................................. [<a href="#WLK7F">WLK7F</a>]
+         7.7  Brindle Mine .................................... [<a href="#WLK7G">WLK7G</a>]
+         7.8  BOSS: Maw Ogre .................................. [<a href="#BOS7H">BOS7H</a>]
+         7.9  Sunspire Trail .................................. [<a href="#WLK7I">WLK7I</a>]
+         7.10 The Sunspire .................................... [<a href="#WLK7J">WLK7J</a>]
+         7.11 FINAL BOSS: Shadow Wyrm ......................... [<a href="#BOS7K">BOS7K</a>]
+         7.12 The ending ...................................... [<a href="#END7L">END7L</a>]
+   8.  Spirit (Djinn) Guide ................................... [<a href="#SPR08">SPR08</a>]
+   9.  Summon List ............................................ [<a href="#SUM09">SUM09</a>]
+  10.  Treasure Chest List .................................... [<a href="#CHS10">CHS10</a>]
+  11.  Items and Equipment .................................... [<a href="#ITM11">ITM11</a>]
+  12.  Shop Lists ............................................. [<a href="#SHP12">SHP12</a>]
+  13.  Bestiary ............................................... [<a href="#BST13">BST13</a>]
+  14.  Frequently Asked Questions ............................. [<a href="#FAQ14">FAQ14</a>]
+  15.  Credits and Legal ...................................... [<a href="#LGL15">LGL15</a>]
 
 ===============================================================================
-  1. INTRODUCTION                                                      [INT01]
+<b id="INT01">  1. INTRODUCTION                                                      [INT01]</b>
 ===============================================================================
 
 Sunspire Saga is an original homage to the handheld JRPGs of the early 2000s:
@@ -105,7 +158,7 @@ y counts tiles from the top, both starting at 0, and the rulers on the maps
 show them.
 
 ===============================================================================
-  2. VERSION HISTORY                                                   [VER02]
+<b id="VER02">  2. VERSION HISTORY                                                   [VER02]</b>
 ===============================================================================
 
 Guide 1.0 - 23 October 2026
@@ -129,7 +182,7 @@ The bits of it that matter for a walkthrough:
         the Maw Ogre and the Spire Key, saving.
 
 ===============================================================================
-  3. STORY                                                             [STO03]
+<b id="STO03">  3. STORY                                                             [STO03]</b>
 ===============================================================================
 
 The Sunspire, the great tower north of the village of Thera, has gone dark.
@@ -145,7 +198,7 @@ every shaft of Brindle Mine; and Sera, a wind adept pinned down by harpies
 on the Sunspire Trail.
 
 ===============================================================================
-  4. CONTROLS AND THE MENU                                             [CTL04]
+<b id="CTL04">  4. CONTROLS AND THE MENU                                             [CTL04]</b>
 ===============================================================================
 
 Keyboard
@@ -188,7 +241,7 @@ level, every member's HP and PP bars, and a QUEST line that always tells you
 the next story step. If you are ever lost, open the menu and read it.
 
 ===============================================================================
-  5. GAME BASICS                                                       [BAS05]
+<b id="BAS05">  5. GAME BASICS                                                       [BAS05]</b>
 ===============================================================================
 
 5.1 Party and levels
@@ -276,7 +329,7 @@ Every spirit you own starts each battle SET. A set spirit gives EVERY party
 member +1 ATK and +1 DEF, so eight set spirits are +8/+8 for the whole team.
 Set spirits are also what you unleash:
 
-   SPIRIT command -> the spirit does its effect and goes to STANDBY.
+   SPIRIT command -&gt; the spirit does its effect and goes to STANDBY.
    Standby spirits no longer give their +1/+1 (your ATK and DEF drop by
    one each for the rest of the fight), but they can power a SUMMON.
    After a summon the spirits it used are SPENT for the rest of the battle.
@@ -356,7 +409,7 @@ Your ATK = base + weapon + number of SET spirits.
 Your DEF = base + armour + number of SET spirits.
 
 ===============================================================================
-  6. CHARACTERS                                                        [CHR06]
+<b id="CHR06">  6. CHARACTERS                                                        [CHR06]</b>
 ===============================================================================
 
 Stats at a given level: base + growth x (level - 1). The table shows HP / PP
@@ -421,7 +474,7 @@ Townsfolk worth knowing
    INA     The innkeeper's daughter in Brindle.
 
 ===============================================================================
-  7. WALKTHROUGH                                                       [WLK07]
+<b id="WLK07">  7. WALKTHROUGH                                                       [WLK07]</b>
 ===============================================================================
 
 Map legend (all maps)
@@ -432,7 +485,7 @@ Map legend (all maps)
    H  house        D  door        s  signpost
    #  rock wall    +  well / spring (free full heal)
    O  the boulder  =  the spire gate
-   ^  cave mouth   >  map exit
+   ^  cave mouth   &gt;  map exit
    1-3  treasure chest (numbered per map, see the list under the map)
    *  spirit (named in the list under the map)
    X  boss
@@ -442,7 +495,7 @@ Recommended levels are a guide for a party that has picked up every chest
 and spirit on the way, not a hard requirement.
 
 -------------------------------------------------------------------------------
-  7.1 THERA AND THE FIELDS                                             [WLK7A]
+<b id="WLK7A">  7.1 THERA AND THE FIELDS                                             [WLK7A]</b>
 -------------------------------------------------------------------------------
 
 Recommended level: 1 (you have no choice)
@@ -548,7 +601,7 @@ lakeside clearing: from the lane go up the trail to row 12, east along the
 clearing to (32,12), face up, press A.
 
 -------------------------------------------------------------------------------
-  7.2 FLINT AND THE BOULDER                                            [WLK7B]
+<b id="WLK7B">  7.2 FLINT AND THE BOULDER                                            [WLK7B]</b>
 -------------------------------------------------------------------------------
 
 Recommended level: 2 to 3
@@ -572,7 +625,7 @@ walk into it. FLINT cracks it and the way north opens. The QUEST line now
 says "FIND LYN'S COMPASS IN THE NORTH PADDOCK".
 
 -------------------------------------------------------------------------------
-  7.3 THE PADDOCK AND LYN'S COMPASS                                    [WLK7C]
+<b id="WLK7C">  7.3 THE PADDOCK AND LYN'S COMPASS                                    [WLK7C]</b>
 -------------------------------------------------------------------------------
 
 North of the fence lies the paddock, rows 2 to 7 of the map. The trail runs
@@ -588,7 +641,7 @@ for DEW now (7.6), but it is a harder duel than Flint and easier with two
 members, so this guide fetches Lyn first.
 
 -------------------------------------------------------------------------------
-  7.4 MIRA FARMSTEAD (OPTIONAL)                                        [WLK7D]
+<b id="WLK7D">  7.4 MIRA FARMSTEAD (OPTIONAL)                                        [WLK7D]</b>
 -------------------------------------------------------------------------------
 
 The road east from the lane (row 21, x 34 to 44) then south down x=44 leads
@@ -605,7 +658,7 @@ Nothing here is required, but it is worth one trip:
      or 4 if the mine is giving you trouble later.
 
 -------------------------------------------------------------------------------
-  7.5 BRINDLE                                                          [WLK7E]
+<b id="WLK7E">  7.5 BRINDLE                                                          [WLK7E]</b>
 -------------------------------------------------------------------------------
 
 Recommended level: 3
@@ -669,7 +722,7 @@ The mine mouth is the "^" at (24,1): follow the path from the plaza's
 north-east corner straight up.
 
 -------------------------------------------------------------------------------
-  7.6 LAKE MIRA: DEW                                                   [WLK7F]
+<b id="WLK7F">  7.6 LAKE MIRA: DEW                                                   [WLK7F]</b>
 -------------------------------------------------------------------------------
 
 Recommended level: 3 to 4, with Lyn
@@ -695,7 +748,7 @@ You CAN do this duel with Ari alone at level 3 (QUAKE four times plus Flint
 is just enough), but the margin is thin.
 
 -------------------------------------------------------------------------------
-  7.7 BRINDLE MINE                                                     [WLK7G]
+<b id="WLK7G">  7.7 BRINDLE MINE                                                     [WLK7G]</b>
 -------------------------------------------------------------------------------
 
 Recommended level: 4 to 5 on arrival, 6 for the Ogre
@@ -723,10 +776,10 @@ New party member: BRAM (automatically, on entering)
 17  #..:...#:.::.:#..:..:#..:..#
 18  #:.*.:.::...:.#.:..:....3.:#
 19  #:...:::..::..#...:::.:..::#
-20  #.>:.......::.#...::..:..:.#
+20  #.&gt;:.......::.#...::..:..:.#
 21  ############################
 
-   Arrive     (2,19) from Brindle; the exit back is the ">" at (2,20)
+   Arrive     (2,19) from Brindle; the exit back is the "&gt;" at (2,20)
    Exit       (26,10) east, to the Sunspire Trail - blocked by the Ogre
    Chest 1    (4,3)    BRONZE SWORD (ATK+7)
    Chest 2    (13,12)  PSY DROP
@@ -801,7 +854,7 @@ Suggested route (fight on the ore as you go; you want the XP):
    ticks back), save, and step into it.
 
 -------------------------------------------------------------------------------
-  7.8 BOSS: MAW OGRE                                                   [BOS7H]
+<b id="BOS7H">  7.8 BOSS: MAW OGRE                                                   [BOS7H]</b>
 -------------------------------------------------------------------------------
 
    MAW OGRE
@@ -842,7 +895,7 @@ last trip to Brindle: the 200 coins from the Ogre buy an IRON AXE for Ari or
 a second CHAIN MAIL, and both make the trail much kinder.
 
 -------------------------------------------------------------------------------
-  7.9 SUNSPIRE TRAIL                                                   [WLK7I]
+<b id="WLK7I">  7.9 SUNSPIRE TRAIL                                                   [WLK7I]</b>
 -------------------------------------------------------------------------------
 
 Recommended level: 7, rising to 8 by the gate
@@ -860,7 +913,7 @@ New party member: SERA (automatically, on arriving)
  7  tvvvvvvvvvvvvvvvvvvvvvvvpvvvvvvt
  8  tt.....gt...g..g.t..t......t..gt
  9  t..............................t
-10  t>.............................t
+10  t&gt;.............................t
 11  t.tg..g..g...g.g....t.g..g.....t
 12  trrrrrrrprrrrrrrrrrrrrrrrrrrrrrt
 13  tvvvvvvvpvvvvvvvvvvvvvvvvvvvvvvt
@@ -871,7 +924,7 @@ New party member: SERA (automatically, on arriving)
 18  t...........g.......gg.........t
 19  tttttttttttttttttttttttttttttttt
 
-   Arrive     (2,10) from the mine; the ">" at (1,10) leads back
+   Arrive     (2,10) from the mine; the "&gt;" at (1,10) leads back
    Exit       (16,0) north through the spire gate "=" at (16,1)
    Chest 1    (12,4)    CHAIN MAIL (DEF+6)
    Chest 2    (25,16)   POTION
@@ -943,7 +996,7 @@ Route:
    Elixirs. The free heal inside the spire makes a second trip unnecessary.
 
 -------------------------------------------------------------------------------
-  7.10 THE SUNSPIRE                                                    [WLK7J]
+<b id="WLK7J">  7.10 THE SUNSPIRE                                                    [WLK7J]</b>
 -------------------------------------------------------------------------------
 
 Recommended level: 8 on arrival, 10 for the Wyrm
@@ -971,9 +1024,9 @@ Recommended level: 8 on arrival, 10 for the Wyrm
 18  #...::....::.....:::.:..:#
 19  #.......................:#
 20  #.......................:#
-21  ############>#############
+21  ############&gt;#############
 
-   Arrive     (12,19) from the trail; the ">" at (12,21) leads back out
+   Arrive     (12,19) from the trail; the "&gt;" at (12,21) leads back out
    Chest 1    (2,2)    STEEL RAPIER (ATK+16) - upper hall, west
    Chest 2    (23,2)   ELIXIR - upper hall, east
    Chest 3    (13,8)   SOL BLADE (ATK+24) - centre of the nave
@@ -1055,7 +1108,7 @@ Route:
    up, SAVE, and return.
 
 -------------------------------------------------------------------------------
-  7.11 FINAL BOSS: SHADOW WYRM                                         [BOS7K]
+<b id="BOS7K">  7.11 FINAL BOSS: SHADOW WYRM                                         [BOS7K]</b>
 -------------------------------------------------------------------------------
 
    SHADOW WYRM
@@ -1116,7 +1169,7 @@ When it falls, the Wyrm dissolves into mist and warm light floods the
 tower.
 
 -------------------------------------------------------------------------------
-  7.12 THE ENDING                                                      [END7L]
+<b id="END7L">  7.12 THE ENDING                                                      [END7L]</b>
 -------------------------------------------------------------------------------
 
 The ending screen shows the sun rising over the spire with your party level,
@@ -1127,7 +1180,7 @@ new line for you. There is no post-game content beyond that; the chests you
 missed can still be opened.
 
 ===============================================================================
-  8. SPIRIT (DJINN) GUIDE                                              [SPR08]
+<b id="SPR08">  8. SPIRIT (DJINN) GUIDE                                              [SPR08]</b>
 ===============================================================================
 
 All eight, in the order the game lists them. "Duel" is the battle form you
@@ -1176,7 +1229,7 @@ boulder); the rest are optional but you will not beat the Wyrm without most
 of them.
 
 ===============================================================================
-  9. SUMMON LIST                                                       [SUM09]
+<b id="SUM09">  9. SUMMON LIST                                                       [SUM09]</b>
 ===============================================================================
 
 A summon needs the listed spirits ON STANDBY (unleashed earlier in the same
@@ -1209,7 +1262,7 @@ Rules of thumb
      two-gargoyle fight.
 
 ===============================================================================
-  10. TREASURE CHEST LIST                                              [CHS10]
+<b id="CHS10">  10. TREASURE CHEST LIST                                              [CHS10]</b>
 ===============================================================================
 
 Eleven chests. Face the chest and press A. A chest only ever opens once.
@@ -1232,7 +1285,7 @@ Eleven chests. Face the chest and press A. A chest only ever opens once.
    Total loose coin: 85. Brindle has no chests.
 
 ===============================================================================
-  11. ITEMS AND EQUIPMENT                                              [ITM11]
+<b id="ITM11">  11. ITEMS AND EQUIPMENT                                              [ITM11]</b>
 ===============================================================================
 
 Consumables
@@ -1270,7 +1323,7 @@ Armour
    There is no selling. Unequipped gear sits in the shared pool.
 
 ===============================================================================
-  12. SHOP LISTS                                                       [SHP12]
+<b id="SHP12">  12. SHOP LISTS                                                       [SHP12]</b>
 ===============================================================================
 
 THERA - MARA'S GOODS (the third house on the lane, door at (21,19))
@@ -1301,7 +1354,7 @@ will not have everything - prioritise armour for Bram and Lyn, then Ari's
 weapon.
 
 ===============================================================================
-  13. BESTIARY                                                         [BST13]
+<b id="BST13">  13. BESTIARY                                                         [BST13]</b>
 ===============================================================================
 
 Every enemy in the game. "Phys" is the share of FIGHT damage that lands.
@@ -1355,7 +1408,7 @@ Drains: a Dusk Bat or Pale Shade heals itself by a third of the damage it
 deals with a successful strike. Kill them first in mixed groups.
 
 ===============================================================================
-  14. FREQUENTLY ASKED QUESTIONS                                       [FAQ14]
+<b id="FAQ14">  14. FREQUENTLY ASKED QUESTIONS                                       [FAQ14]</b>
 ===============================================================================
 
 Q: I can't get past the boulder north of Thera.
@@ -1416,7 +1469,7 @@ A: A way to replace every sprite, tile and background with your own art.
    See the game's pack guide page.
 
 ===============================================================================
-  15. CREDITS AND LEGAL                                                [LGL15]
+<b id="LGL15">  15. CREDITS AND LEGAL                                                [LGL15]</b>
 ===============================================================================
 
 Sunspire Saga is original code and art released under the MIT licence. It is
@@ -1434,4 +1487,15 @@ the top. This one is for you.
 
 ===============================================================================
                        May the Sunspire shine anew.
-===============================================================================
+===============================================================================</pre>
+  </div>
+</main>
+
+<footer class="foot"><div class="wrap">
+  <span>Sunspire Saga &middot; original code and art, MIT licence</span>
+  <span>An independent homage; not affiliated with any console maker.</span>
+</div></footer>
+
+<script src="assets/site.js"></script>
+</body>
+</html>
