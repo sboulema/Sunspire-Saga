@@ -7,7 +7,7 @@ COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 
 WORKDIR /usr/share/nginx/html
 RUN rm -f ./*
-COPY index.html play.html pack-guide.html changelog.html game.js ./
+COPY index.html play.html pack-guide.html changelog.html walkthrough.html game.js ./
 COPY assets/ ./assets/
 
 EXPOSE 80
