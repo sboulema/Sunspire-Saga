@@ -6,7 +6,7 @@ const cv = document.getElementById('game');
 const ctx = cv.getContext('2d');
 ctx.imageSmoothingEnabled = false;
 const W = 240, H = 160, T = 16;
-const GAME_VERSION = 'V41';
+const GAME_VERSION = 'V42';
 // pages that only need the game data (pack guide, art tools) set window.SUNSPIRE_HEADLESS before loading:
 // no input handlers and no main loop
 const HEADLESS = !!window.SUNSPIRE_HEADLESS;
@@ -282,13 +282,13 @@ const ART_DEFS = {
 const GEAR_DEFS = {
   wood:   {kind:'wpn', name:'WOOD BLADE',   atk:3,  price:20},
   bronze: {kind:'wpn', name:'BRONZE SWORD', atk:7,  price:80},
-  iron:   {kind:'wpn', name:'IRON AXE',     atk:12, price:220},
+  iron:   {kind:'wpn', name:'IRON AXE',     atk:12, price:180},
   steel:  {kind:'wpn', name:'STEEL RAPIER', atk:16, price:480},
   sol:    {kind:'wpn', name:'SOL BLADE',    atk:24, price:999},
   vest:   {kind:'arm', name:'TRAVEL VEST',  def:2,  price:18},
   leather:{kind:'arm', name:'LEATHER MAIL', def:4,  price:70},
-  chain:  {kind:'arm', name:'CHAIN MAIL',   def:6,  price:200},
-  aegis:  {kind:'arm', name:'AEGIS PLATE',  def:9,  price:460}
+  chain:  {kind:'arm', name:'CHAIN MAIL',   def:6,  price:160},
+  aegis:  {kind:'arm', name:'AEGIS PLATE',  def:9,  price:380}
 };
 const ITEM_DEFS = {
   herb:  {name:'HERB',     price:12, heal:60},
@@ -344,8 +344,8 @@ const ENEMY_DEFS = {
   bat:     {name:'DUSK BAT',   hp:18, atk:10, def:2,  agi:13, xp:10, gold:8,  drain:true},
   wolf:    {name:'FANG WOLF',  hp:24, atk:11, def:3,  agi:10, xp:14, gold:12, drop:['item','herb',.18]},
   spider:  {name:'PIT SPIDER', hp:28, atk:11, def:4,  agi:9,  xp:13, gold:11},
-  beetle:  {name:'ORE BEETLE', hp:70, atk:24, def:10, agi:4,  xp:22, gold:16, drop:['gear','vest',.08]},
-  golem:   {name:'RUIN GOLEM', hp:95, atk:28, def:11, agi:3,  xp:30, gold:22, drop:['item','pdrop',.15]},
+  beetle:  {name:'ORE BEETLE', hp:80, atk:26, def:10, agi:4,  xp:24, gold:17, drop:['gear','vest',.08]},
+  golem:   {name:'RUIN GOLEM', hp:108,atk:30, def:11, agi:3,  xp:33, gold:24, drop:['item','pdrop',.15]},
   harpy:   {name:'CRAG HARPY', hp:100,atk:30, def:9,  agi:14, xp:30, gold:20, drop:['item','herb',.15]},
   boar:    {name:'IRON BOAR',  hp:130,atk:34, def:12, agi:7,  xp:36, gold:24, drop:['gear','leather',.07]},
   shade:   {name:'PALE SHADE', hp:120,atk:38, def:11, agi:11, xp:44, gold:28, drain:true},
@@ -363,7 +363,8 @@ const ENEMY_DEFS = {
 };
 const ENC = {
   field: [['ooze'],['ooze'],['wolf'],['bat'],['spider'],['ooze','ooze'],['ooze','bat'],['wolf','ooze'],['spider','bat']],
-  mine:  [['beetle'],['golem'],['beetle','beetle'],['bat','bat','bat'],['golem','beetle'],['spider','spider']],
+  paddock:[['wolf','ooze'],['wolf','wolf'],['spider','bat'],['wolf','spider'],['spider','spider'],['ooze','ooze','bat']], // Thera Fields behind the boulder
+  mine:  [['beetle'],['golem'],['beetle','beetle'],['bat','bat','bat'],['golem','beetle'],['spider','spider'],['golem','bat','bat']],
   trail: [['harpy'],['boar'],['harpy','harpy'],['boar','wolf'],['harpy','boar'],['harpy','bat','bat']],
   shrine:[['shade'],['gargoyle'],['shade','shade'],['gargoyle','shade'],['shade','bat','bat'],['gargoyle','gargoyle']]
 };
@@ -738,12 +739,15 @@ function dialogDraw(){
   }
   const full = lines.join('\n').length;
   if (d.choice && d.page === d.pages.length - 1 && d.chars >= full){
-    box(178, 82, 54, 27);
-    const opts = ['YES', 'NO'];
+    const opts = ['YES', 'NO'], slots = ['choice_yes', 'choice_no'];
+    const cell = iconCell(slots, 24), rowH = Math.max(11, cell.h + 1); // grows for big pack icons
+    const bw = 14 + cell.w + 4 + textW('YES') + 8, bh = 2*rowH + 5, bx = 232 - bw, by = 109 - bh;
+    box(bx, by, bw, bh);
     for (let i = 0; i < 2; i++){
-      const y = 88 + i*11;
-      if (i === d.choice.sel) drawCursor(191, cursorRowY(y));
-      text(opts[i], 194, y, i === d.choice.sel ? '#f2c14e' : '#e9e0c8');
+      const cy = by + 3 + i*rowH + (rowH >> 1);
+      if (i === d.choice.sel) drawCursor(bx + 13, cy);
+      drawIconFit(slots[i], bx + 14 + cell.w/2, cy, cell.w, cell.h);
+      text(opts[i], bx + 14 + cell.w + 4, cy - cursorRowY(0), i === d.choice.sel ? '#f2c14e' : '#e9e0c8');
     }
   } else if (d.chars >= full && (G.t >> 4) % 2 === 0){
     ctx.fillStyle = '#f2c14e';
@@ -2569,8 +2573,80 @@ range_party: { p:{w:'#e9e0c8'}, r:[
 "..www..w",
 "...w..ww",
 ]},
+// item icons: the shop rows and the battle ITEM window
+item_herb: { p:{o:'#1e4a1a',g:'#5cb14a',l:'#a6e070',s:'#8a5a20'}, r:[
+"....oo.",
+"...olgo",
+"..olggo",
+".olggo.",
+".oggo..",
+".soo...",
+"s......",
+]},
+item_potion: { p:{o:'#3a1020',r:'#e2543a',d:'#a02838',w:'#ffffff',c:'#a07040',g:'#c8d8e8'}, r:[
+"..ccc..",
+"..ogo..",
+".orrro.",
+"orwrrro",
+"orrrrro",
+"orrrddo",
+".ooooo.",
+]},
+item_pdrop: { p:{o:'#2a1a5a',b:'#7a6ee8',l:'#b8b0ff',w:'#ffffff'}, r:[
+"...o...",
+"..obo..",
+".obbbo.",
+"obwbbbo",
+"obbbblo",
+".obllo.",
+"..ooo..",
+]},
+item_elixir: { p:{o:'#5a3a10',y:'#ffd94e',d:'#cf8c2a',w:'#ffffff',c:'#a07040',g:'#c8d8e8'}, r:[
+"..ccc.w",
+"..ogo..",
+".oyyyo.",
+"oywyyyo",
+"oyyyyyo",
+"oyyyddo",
+".ooooo.",
+]},
+// the yes/no box: a green tick and a red cross
+choice_yes: { p:{o:'#245a30',g:'#7cd88a'}, r:[
+"......g",
+".....go",
+"g...gg.",
+"gg.ggo.",
+".gggo..",
+"..go...",
+]},
+choice_no: { p:{o:'#601a10',r:'#e2543a'}, r:[
+"rr...rr",
+"orr.rro",
+".orrro.",
+".rrorr.",
+"rro.orr",
+"o.....o",
+]},
 };
 Object.assign(SPRITES, UI_SPRITES);
+// gear icons for the shop rows (gear_wood ...): a sword, an axe or a breastplate in the piece's own colours
+const GEAR_SHAPES = {
+  sword: ["......l", ".....lb", "....lb.", ".g.lb..", "..gb...", ".hgg...", "h......"],
+  axe:   [".bb.h..", "lbbbh..", "lbbbh..", ".bb.h..", "....h..", "....h..", "....h.."],
+  armor: [".a...a.", "aaa.aaa", "alaaaaa", ".laaaa.", ".aaaaa.", ".aaaad.", ".ddddd."]
+};
+const GEAR_ICONS = {
+  wood:    ['sword', {l:'#e0b878', b:'#a0703a', g:'#6a4a20', h:'#5a3a10'}],
+  bronze:  ['sword', {l:'#ffd090', b:'#c8843a', g:'#8a5a20', h:'#5a3a10'}],
+  iron:    ['axe',   {l:'#e0e8f0', b:'#8a94a8', h:'#8a5a20'}],
+  steel:   ['sword', {l:'#ffffff', b:'#a8b8d0', g:'#f2c14e', h:'#5a3a10'}],
+  sol:     ['sword', {l:'#fff6c4', b:'#ffd94e', g:'#e2543a', h:'#7a5010'}],
+  vest:    ['armor', {a:'#6aa050', l:'#9ad070', d:'#3a6a2a'}],
+  leather: ['armor', {a:'#8a5a2a', l:'#b07a40', d:'#5a3a10'}],
+  chain:   ['armor', {a:'#9aa4b8', l:'#e0e8f0', d:'#5a6478'}],
+  aegis:   ['armor', {a:'#ffd94e', l:'#fff6c4', d:'#cf8c2a'}]
+};
+for (const k in GEAR_ICONS) SPRITES['gear_' + k] = { p: GEAR_ICONS[k][1], r: GEAR_SHAPES[GEAR_ICONS[k][0]] };
 const SPR_CACHE = {};
 function sprCanvas(name, variant){
   const key = name + '|' + (variant || '');
@@ -2831,6 +2907,8 @@ function isKnownSlot(n){
     for (const s of SUMMON_DEFS) if (slugName(s.name) === rest) return true;
   }
   if (n.indexOf('item_') === 0 && ITEM_DEFS[n.slice(5)]) return true;
+  if (n.indexOf('gear_') === 0 && GEAR_DEFS[n.slice(5)]) return true;
+  if (n === 'choice_yes' || n === 'choice_no') return true;
   if (n === 'well' || n.indexOf('well_') === 0) return true;
   if (n === 'spring' || n.indexOf('spring_') === 0) return true;
   if (/^icon_(fight|arts|spirit|summon|item|defend|flee)$/.test(n)) return true;
@@ -2917,7 +2995,9 @@ function buildSlotList(){
     .concat(ELS4.map(el => ({ slot: 'spirit_' + el, desc: 'menu icon fallback: ' + el + ' spirits' })))
     .concat(SUMMON_DEFS.map(s => ({ slot: 'summon_' + slugName(s.name), desc: 'menu icon: ' + cap(s.name) })))
     .concat(ELS5.map(el => ({ slot: 'summon_' + el, desc: 'menu icon fallback: ' + el + ' summons' })))
-    .concat(Object.keys(ITEM_DEFS).map(k => ({ slot: 'item_' + k, desc: 'menu icon: ' + cap(ITEM_DEFS[k].name) })))
+    .concat(Object.keys(ITEM_DEFS).map(k => ({ slot: 'item_' + k, desc: 'menu and shop icon: ' + cap(ITEM_DEFS[k].name) })))
+    .concat(Object.keys(GEAR_DEFS).map(k => ({ slot: 'gear_' + k, desc: 'shop icon: ' + cap(GEAR_DEFS[k].name) })))
+    .concat([['yes','tick'],['no','cross']].map(c => ({ slot: 'choice_' + c[0], desc: 'yes/no box icon: ' + c[1] + ' beside ' + c[0].toUpperCase() })))
     .concat(ELS5.concat(['heal']).map(el => ({ slot: 'el_' + el, desc: 'arts window element badge: ' + el })))
     .concat([['one','one enemy'],['all','every enemy'],['ally','one ally'],['party','the whole party']].map(r => ({ slot: 'range_' + r[0], desc: 'arts window range badge: ' + r[1] })))
     .concat([{ slot: 'cursor', desc: 'menu cursor: the hand pointing at the selected row (fingertip on its right edge)' }]);
@@ -3241,6 +3321,7 @@ function onArrive(){
   }
 }
 function encounterPool(){ // the open fields send only lone monsters (and the odd ooze pair) until the party has grown
+  if (G.mapId === 'fields' && G.player.ty <= 7 && G.player.tx < 34) return ENC.paddock; // behind the boulder: packs, at any level
   const groups = ENC[G.map.kind] || [];
   if (G.map.kind === 'field' && G.lv < 3) return groups.filter(g => g.length === 1 || (g[0] === 'ooze' && g[1] === 'ooze'));
   return groups;
@@ -3425,25 +3506,35 @@ function shopUpdate(){
   }
 }
 function shopDraw(){
-  const s = G.shop, stock = SHOPS[s.id].stock;
-  box(20, 10, 200, 140);
-  text(SHOPS[s.id].keeper + "'S GOODS", 30, 18, '#f2c14e');
-  text(G.gold + ' COINS', 150, 18, '#e8c84b');
-  for (let i = 0; i < stock.length; i++){
-    const [kind, key] = stock[i];
+  const s = G.shop, stock = SHOPS[s.id].stock, n = stock.length;
+  const rows = stock.map(([kind, key]) => {
     const def = kind === 'item' ? ITEM_DEFS[key] : GEAR_DEFS[key];
-    const y = 32 + i*12;
-    if (i === s.sel) drawCursor(31, cursorRowY(y));
-    text(def.name, 34, y, i === s.sel ? '#f2c14e' : '#e9e0c8');
     let tag = '';
     if (kind === 'gear') tag = def.kind === 'wpn' ? 'ATK+' + def.atk : 'DEF+' + def.def;
     else if (def.heal) tag = def.heal >= 999 ? 'FULL HP' : 'HP+' + def.heal;
     else if (def.pp) tag = 'PP+' + def.pp;
     else if (def.revive) tag = 'REVIVE';
-    text(tag, 122, y, '#9a91b8');
-    text(def.price + '', 186, y, '#e8c84b');
+    return { def, tag, slot: (kind === 'item' ? 'item_' : 'gear_') + key };
+  });
+  // rows grow to fit the icons (pack icons are often 16px) as far as the list still fits the window
+  const fitH = Math.floor(120 / n) - 1;
+  const cell = iconCell(rows.map(r => r.slot), fitH);
+  const rowH = Math.max(12, cell.h + 1), off = cursorRowY(0);
+  const R = 224; // right edge of the price column
+  const priceW = Math.max(...rows.map(r => textW(r.def.price + '')));
+  const tagX = R - priceW - 8 - Math.max(...rows.map(r => textW(r.tag)));
+  box(6, 4, 228, 152);
+  text(SHOPS[s.id].keeper + "'S GOODS", 16, 9, '#f2c14e');
+  text(G.gold + ' COINS', R - textW(G.gold + ' COINS'), 9, '#e8c84b');
+  for (let i = 0; i < n; i++){
+    const r = rows[i], cy = 21 + i*rowH + (rowH >> 1), y = cy - off;
+    if (i === s.sel) drawCursor(17, cy);
+    drawIconFit(r.slot, 19 + cell.w/2, cy, cell.w, cell.h);
+    text(r.def.name, 19 + cell.w + 4, y, i === s.sel ? '#f2c14e' : '#e9e0c8');
+    text(r.tag, tagX, y, '#9a91b8');
+    text(r.def.price + '', R - textW(r.def.price + ''), y, '#e8c84b');
   }
-  text('A: BUY   B: LEAVE', 30, 138, '#9a91b8');
+  text('A: BUY   B: LEAVE', 16, 143, '#9a91b8');
 }
 
 // ---------------- pause menu ----------------
@@ -4449,16 +4540,17 @@ function listIconSlots(sub, entry){
   }
   return ['item_' + entry.key];
 }
-function drawListIcon(sub, entry, cx, cy){
-  for (const slot of listIconSlots(sub, entry)){
-    const u = userSpr(slot);
-    if (u){
-      const f = sprFrame(u).img;
-      if (entry.dim) ctx.globalAlpha = .45;
-      ctx.drawImage(f, Math.round(cx - f.width/2), Math.round(cy + 1 - f.height/2));
-      ctx.globalAlpha = 1;
-      return;
-    }
+function listIconSlot(sub, entry){ // the pack icon for a row, else a built-in one (the items have them)
+  const slots = listIconSlots(sub, entry);
+  return slots.find(s => userSpr(s)) || slots.find(s => SPRITES[s]) || null;
+}
+function drawListIcon(sub, entry, cx, cy, maxW, maxH){
+  const slot = listIconSlot(sub, entry);
+  if (slot){
+    if (entry.dim) ctx.globalAlpha = .45;
+    drawIconFit(slot, cx, cy + 1, maxW || 99, maxH || 99);
+    ctx.globalAlpha = 1;
+    return;
   }
   const col = entry.dim ? '#5c5478' : (entry.el ? ELCOL[entry.el] || entry.col : entry.col);
   ctx.fillStyle = col;
@@ -4561,12 +4653,30 @@ function drawBadge(slot, cx, cy, dim){
   drawSpr(slot, cx, cy, 1, '');
   ctx.globalAlpha = 1;
 }
+// a menu icon (pack sprite, else built-in): the cell its rows need, and drawing it centred and shrunk to fit
+function iconImg(slot){ const u = userSpr(slot); return u ? sprFrame(u).img : SPRITES[slot] ? sprCanvas(slot, '') : null; }
+function iconCell(slots, maxH){ // the cell that holds the biggest of these icons, at most maxH tall
+  let w = 0, h = 0;
+  for (const s of slots){ const im = iconImg(s); if (im){ w = Math.max(w, im.width); h = Math.max(h, im.height); } }
+  const k = h > maxH ? maxH / h : 1;
+  return { w: Math.round(w * k), h: Math.round(h * k) };
+}
+function drawIconFit(slot, cx, cy, maxW, maxH){
+  const im = iconImg(slot);
+  if (!im) return;
+  const k = Math.min(1, maxW / im.width, maxH / im.height);
+  const w = Math.max(1, Math.round(im.width * k)), h = Math.max(1, Math.round(im.height * k));
+  ctx.drawImage(im, Math.round(cx - w/2), Math.round(cy - h/2), w, h);
+}
 // the arts / spirit / summon / item window: a description strip under the status panel, the caster
 // at the bottom-left and the list on the right, with a lit row for the selection
 function battleSubMenu(){
   const b = G.battle, list = subList(), m = G.party[b.inputIdx];
   if (!list.length) return;
-  const LH = stripLH(), SH = stripH(), rowH = LH + 4, sel = list[b.subSel];
+  const LH = stripLH(), SH = stripH(), sel = list[b.subSel];
+  // rows grow to fit big pack icons (up to 16px); the text sits centred in the taller row
+  const cell = iconCell(list.map(it => listIconSlot(b.sub, it)).filter(Boolean), 16);
+  const iw = Math.max(8, cell.w), rowH = Math.max(LH + 4, cell.h + 2), pad = (rowH - LH - 4) >> 1;
   const dy = SH + 2, dh = LH*2 + 8;
   box(2, dy, W - 4, dh);
   const dl = wrap(sel ? sel.desc : '', glyphFontOn() ? 31 : 36);
@@ -4581,12 +4691,12 @@ function battleSubMenu(){
   const vis = Math.max(1, Math.floor((lh - 8) / rowH));
   b.subScroll = clamp(b.subScroll, Math.max(0, b.subSel - vis + 1), Math.min(b.subSel, Math.max(0, list.length - vis)));
   for (let r = 0; r < vis && r + b.subScroll < list.length; r++){
-    const i = r + b.subScroll, it = list[i], y = ly + 4 + r*rowH;
-    if (i === b.subSel){ ctx.fillStyle = '#2f4cc4'; ctx.fillRect(lx + 3, y - 1, lw - 6, rowH); }
-    drawListIcon(b.sub, it, lx + 11, y + (LH >> 1));
+    const i = r + b.subScroll, it = list[i], top = ly + 4 + r*rowH, y = top + pad;
+    if (i === b.subSel){ ctx.fillStyle = '#2f4cc4'; ctx.fillRect(lx + 3, top - 1, lw - 6, rowH); }
+    drawListIcon(b.sub, it, lx + 7 + iw/2, y + (LH >> 1), iw, rowH - 2);
     if (i === b.subSel) drawCursor(lx + 5, y + (LH >> 1)); // the glove straddles the window's left edge
     const col = it.dim ? '#7c7498' : (i === b.subSel ? '#f2c14e' : '#ffffff');
-    text(it.label, lx + 19, y, col);
+    text(it.label, lx + 11 + iw, y, col);
     const rx = lx + lw - 6, cy = y + (LH >> 1); // right edge: range badge, element badge, then the cost
     drawBadge('range_' + it.range, rx - 4, cy, it.dim);
     if (it.el) drawBadge('el_' + it.el, rx - 14, cy, it.dim);
