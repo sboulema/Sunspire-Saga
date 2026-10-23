@@ -1,12 +1,15 @@
-# Publish the game: a Docker image on Docker Hub and a zip of the static site.
+# Publish the game: a Docker image on Docker Hub and GitHub Container Registry, and a zip of the
+# static site.
 #
-#   push to main      ->  image <user>/sunspire-saga:latest and :sha-<short sha>
+#   push to main      ->  images <user>/sunspire-saga and ghcr.io/<owner>/sunspire-saga,
+#                         tagged :latest and :sha-<short sha>
 #                         + workflow artifact "sunspire-saga-sha-<short sha>" (the site, zipped)
-#   push of tag vNN   ->  image <user>/sunspire-saga:vNN and :sha-<short sha>
+#   push of tag vNN   ->  the same images tagged :vNN and :sha-<short sha>
 #                         + a GitHub Release for vNN with sunspire-saga-vNN.zip attached
 #
-# The Docker job needs two repository secrets: DOCKERHUB_USERNAME and DOCKERHUB_TOKEN (an access
-# token, Docker Hub -> Account settings -> Personal access tokens, with Read & Write scope).
+# GHCR uses the workflow's own GITHUB_TOKEN. Docker Hub needs two repository secrets:
+# DOCKERHUB_USERNAME and DOCKERHUB_TOKEN (an access token, Docker Hub -> Account settings ->
+# Personal access tokens, with Read & Write scope).
 #
 # The zip unpacks straight into a web root: the HTML pages, game.js, assets/ and the licence.
 # Keep SITE_FILES in step with the COPY lines in the Dockerfile.
@@ -32,21 +35,34 @@ jobs:
   docker:
     name: Docker image
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write   # to push to ghcr.io
     steps:
       - uses: actions/checkout@v4
 
       - uses: docker/setup-qemu-action@v3
       - uses: docker/setup-buildx-action@v3
 
-      - uses: docker/login-action@v3
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ secrets.DOCKERHUB_USERNAME }}/sunspire-saga
+          images: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/sunspire-saga
+            ghcr.io/${{ github.repository_owner }}/sunspire-saga
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=ref,event=tag

@@ -55,18 +55,20 @@ site is live at `https://<user>.github.io/sunspire-saga/`. Then replace `YOUR-GI
 social-card URLs in the `<head>` of `index.html` and `play.html` (and in this README) so link
 previews show `assets/sunspire-card.png`. Alternatively copy the three HTML files, `game.js` and
 `assets/` to any static host. A workflow for Pages deployment via Actions is included in
-`.github/workflows/pages.yml` if you prefer that over branch deployment.
+`.github/workflows/pages.yml` if you prefer that over branch deployment (it only runs when started
+by hand from the Actions tab).
 
 To self-host, `.github/workflows/publish.yml` publishes two things on every push to `main` and
 every `v*` tag:
 
 - a zip of the static site (the pages, `game.js`, `assets/` and the licence) that unpacks straight
   into any web root: a workflow artifact on each run, and attached to the GitHub Release on a tag;
-- an nginx image on Docker Hub (needs the `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN` secrets;
-  `latest` follows `main`, release tags get their own tag):
+- an nginx image on GitHub Container Registry and on Docker Hub (the latter needs the
+  `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN` secrets); `latest` follows `main`, release tags get
+  their own tag:
 
 ```bash
-docker run --rm -p 8080:80 YOUR-DOCKERHUB-USER/sunspire-saga
+docker run --rm -p 8080:80 ghcr.io/YOUR-GITHUB-USER/sunspire-saga
 ```
 
 Or build it yourself from the included `Dockerfile`:
