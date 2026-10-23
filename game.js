@@ -742,7 +742,7 @@ function dialogDraw(){
     const opts = ['YES', 'NO'];
     for (let i = 0; i < 2; i++){
       const y = 88 + i*11;
-      if (i === d.choice.sel){ ctx.fillStyle = '#f2c14e'; ctx.fillRect(186, y + 1, 3, 3); }
+      if (i === d.choice.sel) drawCursor(191, cursorRowY(y));
       text(opts[i], 194, y, i === d.choice.sel ? '#f2c14e' : '#e9e0c8');
     }
   } else if (d.chars >= full && (G.t >> 4) % 2 === 0){
@@ -2521,6 +2521,18 @@ el_heal: { p:{o:'#245a30',b:'#7cd88a',l:'#c8ffd0',w:'#ffffff'}, r:[
 ".obllo.",
 "..ooo..",
 ]},
+// the menu cursor: a white glove pointing right, its fingertip on the right edge
+cursor: { p:{o:'#241c40',w:'#ffffff',s:'#c9c4dc'}, r:[
+".ooooo......",
+"owwwwwo.....",
+"owwwwwwooooo",
+"owwwwwwwwwwo",
+"owwwwwwwwwso",
+"owwwwwsooooo",
+"owwwwwso....",
+"osssssso....",
+".oooooo.....",
+]},
 range_one: { p:{w:'#e9e0c8'}, r:[
 ".......",
 ".......",
@@ -2822,7 +2834,7 @@ function isKnownSlot(n){
   if (n === 'well' || n.indexOf('well_') === 0) return true;
   if (n === 'spring' || n.indexOf('spring_') === 0) return true;
   if (/^icon_(fight|arts|spirit|summon|item|defend|flee)$/.test(n)) return true;
-  if (/^el_(earth|fire|water|wind|sol|heal)$/.test(n) || /^range_(one|all|ally|party)$/.test(n)) return true;
+  if (/^el_(earth|fire|water|wind|sol|heal)$/.test(n) || /^range_(one|all|ally|party)$/.test(n) || n === 'cursor') return true;
   if (n.indexOf('djinn_battle_') === 0 && SPIRIT_DEFS[n.slice(13)]) return true;
   if (n === 'bg' || n.indexOf('bg_') === 0) return true;
   return false;
@@ -2907,7 +2919,8 @@ function buildSlotList(){
     .concat(ELS5.map(el => ({ slot: 'summon_' + el, desc: 'menu icon fallback: ' + el + ' summons' })))
     .concat(Object.keys(ITEM_DEFS).map(k => ({ slot: 'item_' + k, desc: 'menu icon: ' + cap(ITEM_DEFS[k].name) })))
     .concat(ELS5.concat(['heal']).map(el => ({ slot: 'el_' + el, desc: 'arts window element badge: ' + el })))
-    .concat([['one','one enemy'],['all','every enemy'],['ally','one ally'],['party','the whole party']].map(r => ({ slot: 'range_' + r[0], desc: 'arts window range badge: ' + r[1] })));
+    .concat([['one','one enemy'],['all','every enemy'],['ally','one ally'],['party','the whole party']].map(r => ({ slot: 'range_' + r[0], desc: 'arts window range badge: ' + r[1] })))
+    .concat([{ slot: 'cursor', desc: 'menu cursor: the hand pointing at the selected row (fingertip on its right edge)' }]);
   g('Battle interface', ui);
   g('Title screen', [{ slot: 'title', desc: 'the logo on the title screen (up to 240 px wide, drawn over the sky; GIFs animate)' }]);
   g('Font glyphs (one image per character)', GLYPH_NAME_ORDER.filter(n => ['colon','exclamationpoint','semicolon'].indexOf(n) < 0).map(n => {
@@ -3420,7 +3433,7 @@ function shopDraw(){
     const [kind, key] = stock[i];
     const def = kind === 'item' ? ITEM_DEFS[key] : GEAR_DEFS[key];
     const y = 32 + i*12;
-    if (i === s.sel){ ctx.fillStyle = '#f2c14e'; ctx.fillRect(26, y+1, 3, 3); }
+    if (i === s.sel) drawCursor(31, cursorRowY(y));
     text(def.name, 34, y, i === s.sel ? '#f2c14e' : '#e9e0c8');
     let tag = '';
     if (kind === 'gear') tag = def.kind === 'wpn' ? 'ATK+' + def.atk : 'DEF+' + def.def;
@@ -3543,7 +3556,7 @@ function menuDraw(){
     const items = ['STATUS','ITEMS','EQUIP','SPIRITS','SAVE'];
     for (let i = 0; i < items.length; i++){
       const y = 18 + i*13;
-      if (i === M.sel){ ctx.fillStyle = '#f2c14e'; ctx.fillRect(14, y+1, 3, 3); }
+      if (i === M.sel) drawCursor(19, cursorRowY(y));
       text(items[i], 22, y, i === M.sel ? '#f2c14e' : '#e9e0c8');
     }
     text(G.gold + ' COINS', 22, 92, '#e8c84b');
@@ -3604,7 +3617,7 @@ function menuDraw(){
     if (keys.length === 0 && !(G.flags.compass && !G.flags.lyn)) text('NOTHING CARRIED.', 14, 36, '#9a91b8');
     for (let i = 0; i < keys.length; i++){
       const y = 34 + i*12;
-      if (i === M.sel2 && !M.sub){ ctx.fillStyle = '#f2c14e'; ctx.fillRect(14, y+1, 3, 3); }
+      if (i === M.sel2 && !M.sub) drawCursor(19, cursorRowY(y));
       text(ITEM_DEFS[keys[i]].name, 22, y, '#e9e0c8');
       text('X' + G.inv[keys[i]], 110, y, '#9a91b8');
     }
@@ -3632,7 +3645,7 @@ function menuDraw(){
     ];
     for (let i = 0; i < 2; i++){
       const y = 40 + i*14;
-      if (i === M.slot && !M.sub){ ctx.fillStyle = '#f2c14e'; ctx.fillRect(14, y+1, 3, 3); }
+      if (i === M.slot && !M.sub) drawCursor(19, cursorRowY(y));
       text(rows[i][0], 22, y, '#9a91b8');
       text(rows[i][1], 54, y, '#e9e0c8');
     }
@@ -3640,10 +3653,10 @@ function menuDraw(){
       const opts = G.gear.filter(k => GEAR_DEFS[k].kind === M.sub);
       box(110, 34, 122, 14 + (opts.length+1)*12);
       text('REMOVE', 124, 41, M.subSel === 0 ? '#f2c14e' : '#9a91b8');
-      if (M.subSel === 0){ ctx.fillStyle = '#f2c14e'; ctx.fillRect(116, 42, 3, 3); }
+      if (M.subSel === 0) drawCursor(121, cursorRowY(41));
       for (let i = 0; i < opts.length; i++){
         const gd = GEAR_DEFS[opts[i]], y = 53 + i*12;
-        if (M.subSel === i+1){ ctx.fillStyle = '#f2c14e'; ctx.fillRect(116, y+1, 3, 3); }
+        if (M.subSel === i+1) drawCursor(121, cursorRowY(y));
         text(gd.name, 124, y, M.subSel === i+1 ? '#f2c14e' : '#e9e0c8');
       }
     } else text('LEFT/RIGHT: MEMBER  A: CHANGE', 14, 141, '#9a91b8');
@@ -4542,6 +4555,14 @@ function battleToolbar(){
 }
 // the badges at the right of an arts row: element (el_earth ...) and range (range_one: one foe,
 // range_all: every foe, range_ally: one ally, range_party: the whole party), pack-replaceable sprites
+// the menu cursor (pack slot `cursor`): drawn with its fingertip at (tipX, cy), nudging right and left as it waits
+function drawCursor(tipX, cy){
+  const u = userSpr('cursor'), bob = (G.t >> 3) % 2;
+  if (u){ const f = sprFrame(u).img; ctx.drawImage(f, Math.round(tipX - f.width + bob), Math.round(cy - f.height/2)); return; }
+  const c = sprCanvas('cursor', '');
+  ctx.drawImage(c, Math.round(tipX - c.width + bob), Math.round(cy - c.height/2));
+}
+function cursorRowY(y){ return y + (glyphFontOn() ? 4 : 3); } // vertical centre of a text row that starts at y
 function drawBadge(slot, cx, cy, dim){
   if (!SPRITES[slot] && !userSpr(slot)) return;
   if (dim) ctx.globalAlpha = .45;
@@ -4571,6 +4592,7 @@ function battleSubMenu(){
     const i = r + b.subScroll, it = list[i], y = ly + 4 + r*rowH;
     if (i === b.subSel){ ctx.fillStyle = '#2f4cc4'; ctx.fillRect(lx + 3, y - 1, lw - 6, rowH); }
     drawListIcon(b.sub, it, lx + 11, y + (LH >> 1));
+    if (i === b.subSel) drawCursor(lx + 5, y + (LH >> 1)); // the glove straddles the window's left edge
     const col = it.dim ? '#7c7498' : (i === b.subSel ? '#f2c14e' : '#ffffff');
     text(it.label, lx + 19, y, col);
     const rx = lx + lw - 6, cy = y + (LH >> 1); // right edge: range badge, element badge, then the cost
@@ -4831,9 +4853,7 @@ function titleDraw(){
   for (let i = 0; i < opts.length; i++){
     const x = opts.length > 1 ? 62 + i*76 : 120;
     textCO(opts[i], x, 146, i === titleSel ? '#ffffff' : '#9a91b8', '#241c40');
-    if (i === titleSel && (G.t >> 4) % 2 === 0){
-      ctx.fillStyle = '#f2c14e'; ctx.fillRect(x - textW(opts[i])/2 - 7, 147, 3, 3);
-    }
+    if (i === titleSel) drawCursor(x - textW(opts[i])/2 - 3, cursorRowY(146));
   }
   if (pressed.start || pressed.a){
     sfx.ok();
