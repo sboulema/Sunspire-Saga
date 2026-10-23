@@ -6,7 +6,7 @@ const cv = document.getElementById('game');
 const ctx = cv.getContext('2d');
 ctx.imageSmoothingEnabled = false;
 const W = 240, H = 160, T = 16;
-const GAME_VERSION = 'V41';
+const GAME_VERSION = 'V42';
 // pages that only need the game data (pack guide, art tools) set window.SUNSPIRE_HEADLESS before loading:
 // no input handlers and no main loop
 const HEADLESS = !!window.SUNSPIRE_HEADLESS;
@@ -282,13 +282,13 @@ const ART_DEFS = {
 const GEAR_DEFS = {
   wood:   {kind:'wpn', name:'WOOD BLADE',   atk:3,  price:20},
   bronze: {kind:'wpn', name:'BRONZE SWORD', atk:7,  price:80},
-  iron:   {kind:'wpn', name:'IRON AXE',     atk:12, price:220},
+  iron:   {kind:'wpn', name:'IRON AXE',     atk:12, price:180},
   steel:  {kind:'wpn', name:'STEEL RAPIER', atk:16, price:480},
   sol:    {kind:'wpn', name:'SOL BLADE',    atk:24, price:999},
   vest:   {kind:'arm', name:'TRAVEL VEST',  def:2,  price:18},
   leather:{kind:'arm', name:'LEATHER MAIL', def:4,  price:70},
-  chain:  {kind:'arm', name:'CHAIN MAIL',   def:6,  price:200},
-  aegis:  {kind:'arm', name:'AEGIS PLATE',  def:9,  price:460}
+  chain:  {kind:'arm', name:'CHAIN MAIL',   def:6,  price:160},
+  aegis:  {kind:'arm', name:'AEGIS PLATE',  def:9,  price:380}
 };
 const ITEM_DEFS = {
   herb:  {name:'HERB',     price:12, heal:60},
@@ -344,8 +344,8 @@ const ENEMY_DEFS = {
   bat:     {name:'DUSK BAT',   hp:18, atk:10, def:2,  agi:13, xp:10, gold:8,  drain:true},
   wolf:    {name:'FANG WOLF',  hp:24, atk:11, def:3,  agi:10, xp:14, gold:12, drop:['item','herb',.18]},
   spider:  {name:'PIT SPIDER', hp:28, atk:11, def:4,  agi:9,  xp:13, gold:11},
-  beetle:  {name:'ORE BEETLE', hp:70, atk:24, def:10, agi:4,  xp:22, gold:16, drop:['gear','vest',.08]},
-  golem:   {name:'RUIN GOLEM', hp:95, atk:28, def:11, agi:3,  xp:30, gold:22, drop:['item','pdrop',.15]},
+  beetle:  {name:'ORE BEETLE', hp:80, atk:26, def:10, agi:4,  xp:24, gold:17, drop:['gear','vest',.08]},
+  golem:   {name:'RUIN GOLEM', hp:108,atk:30, def:11, agi:3,  xp:33, gold:24, drop:['item','pdrop',.15]},
   harpy:   {name:'CRAG HARPY', hp:100,atk:30, def:9,  agi:14, xp:30, gold:20, drop:['item','herb',.15]},
   boar:    {name:'IRON BOAR',  hp:130,atk:34, def:12, agi:7,  xp:36, gold:24, drop:['gear','leather',.07]},
   shade:   {name:'PALE SHADE', hp:120,atk:38, def:11, agi:11, xp:44, gold:28, drain:true},
@@ -363,7 +363,8 @@ const ENEMY_DEFS = {
 };
 const ENC = {
   field: [['ooze'],['ooze'],['wolf'],['bat'],['spider'],['ooze','ooze'],['ooze','bat'],['wolf','ooze'],['spider','bat']],
-  mine:  [['beetle'],['golem'],['beetle','beetle'],['bat','bat','bat'],['golem','beetle'],['spider','spider']],
+  paddock:[['wolf','ooze'],['wolf','wolf'],['spider','bat'],['wolf','spider'],['spider','spider'],['ooze','ooze','bat']], // Thera Fields behind the boulder
+  mine:  [['beetle'],['golem'],['beetle','beetle'],['bat','bat','bat'],['golem','beetle'],['spider','spider'],['golem','bat','bat']],
   trail: [['harpy'],['boar'],['harpy','harpy'],['boar','wolf'],['harpy','boar'],['harpy','bat','bat']],
   shrine:[['shade'],['gargoyle'],['shade','shade'],['gargoyle','shade'],['shade','bat','bat'],['gargoyle','gargoyle']]
 };
@@ -738,12 +739,13 @@ function dialogDraw(){
   }
   const full = lines.join('\n').length;
   if (d.choice && d.page === d.pages.length - 1 && d.chars >= full){
-    box(178, 82, 54, 27);
+    box(170, 82, 62, 27);
     const opts = ['YES', 'NO'];
     for (let i = 0; i < 2; i++){
       const y = 88 + i*11;
-      if (i === d.choice.sel) drawCursor(191, cursorRowY(y));
-      text(opts[i], 194, y, i === d.choice.sel ? '#f2c14e' : '#e9e0c8');
+      if (i === d.choice.sel) drawCursor(183, cursorRowY(y));
+      drawBadge(i === 0 ? 'choice_yes' : 'choice_no', 190, cursorRowY(y), false);
+      text(opts[i], 197, y, i === d.choice.sel ? '#f2c14e' : '#e9e0c8');
     }
   } else if (d.chars >= full && (G.t >> 4) % 2 === 0){
     ctx.fillStyle = '#f2c14e';
@@ -2569,8 +2571,80 @@ range_party: { p:{w:'#e9e0c8'}, r:[
 "..www..w",
 "...w..ww",
 ]},
+// item icons: the shop rows and the battle ITEM window
+item_herb: { p:{o:'#1e4a1a',g:'#5cb14a',l:'#a6e070',s:'#8a5a20'}, r:[
+"....oo.",
+"...olgo",
+"..olggo",
+".olggo.",
+".oggo..",
+".soo...",
+"s......",
+]},
+item_potion: { p:{o:'#3a1020',r:'#e2543a',d:'#a02838',w:'#ffffff',c:'#a07040',g:'#c8d8e8'}, r:[
+"..ccc..",
+"..ogo..",
+".orrro.",
+"orwrrro",
+"orrrrro",
+"orrrddo",
+".ooooo.",
+]},
+item_pdrop: { p:{o:'#2a1a5a',b:'#7a6ee8',l:'#b8b0ff',w:'#ffffff'}, r:[
+"...o...",
+"..obo..",
+".obbbo.",
+"obwbbbo",
+"obbbblo",
+".obllo.",
+"..ooo..",
+]},
+item_elixir: { p:{o:'#5a3a10',y:'#ffd94e',d:'#cf8c2a',w:'#ffffff',c:'#a07040',g:'#c8d8e8'}, r:[
+"..ccc.w",
+"..ogo..",
+".oyyyo.",
+"oywyyyo",
+"oyyyyyo",
+"oyyyddo",
+".ooooo.",
+]},
+// the yes/no box: a green tick and a red cross
+choice_yes: { p:{o:'#245a30',g:'#7cd88a'}, r:[
+"......g",
+".....go",
+"g...gg.",
+"gg.ggo.",
+".gggo..",
+"..go...",
+]},
+choice_no: { p:{o:'#601a10',r:'#e2543a'}, r:[
+"rr...rr",
+"orr.rro",
+".orrro.",
+".rrorr.",
+"rro.orr",
+"o.....o",
+]},
 };
 Object.assign(SPRITES, UI_SPRITES);
+// gear icons for the shop rows (gear_wood ...): a sword, an axe or a breastplate in the piece's own colours
+const GEAR_SHAPES = {
+  sword: ["......l", ".....lb", "....lb.", ".g.lb..", "..gb...", ".hgg...", "h......"],
+  axe:   [".bb.h..", "lbbbh..", "lbbbh..", ".bb.h..", "....h..", "....h..", "....h.."],
+  armor: [".a...a.", "aaa.aaa", "alaaaaa", ".laaaa.", ".aaaaa.", ".aaaad.", ".ddddd."]
+};
+const GEAR_ICONS = {
+  wood:    ['sword', {l:'#e0b878', b:'#a0703a', g:'#6a4a20', h:'#5a3a10'}],
+  bronze:  ['sword', {l:'#ffd090', b:'#c8843a', g:'#8a5a20', h:'#5a3a10'}],
+  iron:    ['axe',   {l:'#e0e8f0', b:'#8a94a8', h:'#8a5a20'}],
+  steel:   ['sword', {l:'#ffffff', b:'#a8b8d0', g:'#f2c14e', h:'#5a3a10'}],
+  sol:     ['sword', {l:'#fff6c4', b:'#ffd94e', g:'#e2543a', h:'#7a5010'}],
+  vest:    ['armor', {a:'#6aa050', l:'#9ad070', d:'#3a6a2a'}],
+  leather: ['armor', {a:'#8a5a2a', l:'#b07a40', d:'#5a3a10'}],
+  chain:   ['armor', {a:'#9aa4b8', l:'#e0e8f0', d:'#5a6478'}],
+  aegis:   ['armor', {a:'#ffd94e', l:'#fff6c4', d:'#cf8c2a'}]
+};
+for (const k in GEAR_ICONS) SPRITES['gear_' + k] = { p: GEAR_ICONS[k][1], r: GEAR_SHAPES[GEAR_ICONS[k][0]] };
 const SPR_CACHE = {};
 function sprCanvas(name, variant){
   const key = name + '|' + (variant || '');
@@ -2831,6 +2905,8 @@ function isKnownSlot(n){
     for (const s of SUMMON_DEFS) if (slugName(s.name) === rest) return true;
   }
   if (n.indexOf('item_') === 0 && ITEM_DEFS[n.slice(5)]) return true;
+  if (n.indexOf('gear_') === 0 && GEAR_DEFS[n.slice(5)]) return true;
+  if (n === 'choice_yes' || n === 'choice_no') return true;
   if (n === 'well' || n.indexOf('well_') === 0) return true;
   if (n === 'spring' || n.indexOf('spring_') === 0) return true;
   if (/^icon_(fight|arts|spirit|summon|item|defend|flee)$/.test(n)) return true;
@@ -2917,7 +2993,9 @@ function buildSlotList(){
     .concat(ELS4.map(el => ({ slot: 'spirit_' + el, desc: 'menu icon fallback: ' + el + ' spirits' })))
     .concat(SUMMON_DEFS.map(s => ({ slot: 'summon_' + slugName(s.name), desc: 'menu icon: ' + cap(s.name) })))
     .concat(ELS5.map(el => ({ slot: 'summon_' + el, desc: 'menu icon fallback: ' + el + ' summons' })))
-    .concat(Object.keys(ITEM_DEFS).map(k => ({ slot: 'item_' + k, desc: 'menu icon: ' + cap(ITEM_DEFS[k].name) })))
+    .concat(Object.keys(ITEM_DEFS).map(k => ({ slot: 'item_' + k, desc: 'menu and shop icon: ' + cap(ITEM_DEFS[k].name) })))
+    .concat(Object.keys(GEAR_DEFS).map(k => ({ slot: 'gear_' + k, desc: 'shop icon: ' + cap(GEAR_DEFS[k].name) })))
+    .concat([['yes','tick'],['no','cross']].map(c => ({ slot: 'choice_' + c[0], desc: 'yes/no box icon: ' + c[1] + ' beside ' + c[0].toUpperCase() })))
     .concat(ELS5.concat(['heal']).map(el => ({ slot: 'el_' + el, desc: 'arts window element badge: ' + el })))
     .concat([['one','one enemy'],['all','every enemy'],['ally','one ally'],['party','the whole party']].map(r => ({ slot: 'range_' + r[0], desc: 'arts window range badge: ' + r[1] })))
     .concat([{ slot: 'cursor', desc: 'menu cursor: the hand pointing at the selected row (fingertip on its right edge)' }]);
@@ -3241,6 +3319,7 @@ function onArrive(){
   }
 }
 function encounterPool(){ // the open fields send only lone monsters (and the odd ooze pair) until the party has grown
+  if (G.mapId === 'fields' && G.player.ty <= 7 && G.player.tx < 34) return ENC.paddock; // behind the boulder: packs, at any level
   const groups = ENC[G.map.kind] || [];
   if (G.map.kind === 'field' && G.lv < 3) return groups.filter(g => g.length === 1 || (g[0] === 'ooze' && g[1] === 'ooze'));
   return groups;
@@ -3434,14 +3513,15 @@ function shopDraw(){
     const def = kind === 'item' ? ITEM_DEFS[key] : GEAR_DEFS[key];
     const y = 32 + i*12;
     if (i === s.sel) drawCursor(31, cursorRowY(y));
-    text(def.name, 34, y, i === s.sel ? '#f2c14e' : '#e9e0c8');
+    drawBadge((kind === 'item' ? 'item_' : 'gear_') + key, 38, cursorRowY(y), false);
+    text(def.name, 45, y, i === s.sel ? '#f2c14e' : '#e9e0c8');
     let tag = '';
     if (kind === 'gear') tag = def.kind === 'wpn' ? 'ATK+' + def.atk : 'DEF+' + def.def;
     else if (def.heal) tag = def.heal >= 999 ? 'FULL HP' : 'HP+' + def.heal;
     else if (def.pp) tag = 'PP+' + def.pp;
     else if (def.revive) tag = 'REVIVE';
-    text(tag, 122, y, '#9a91b8');
-    text(def.price + '', 186, y, '#e8c84b');
+    text(tag, 134, y, '#9a91b8');
+    text(def.price + '', 212 - textW(def.price + ''), y, '#e8c84b');
   }
   text('A: BUY   B: LEAVE', 30, 138, '#9a91b8');
 }
@@ -4468,6 +4548,8 @@ function drawListIcon(sub, entry, cx, cy){
       return;
     }
   }
+  const own = listIconSlots(sub, entry).find(s => SPRITES[s]); // built-in icons (the items have them)
+  if (own){ drawBadge(own, cx, cy + 1, entry.dim); return; }
   const col = entry.dim ? '#5c5478' : (entry.el ? ELCOL[entry.el] || entry.col : entry.col);
   ctx.fillStyle = col;
   if (sub === 'arts'){           // spark
