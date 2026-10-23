@@ -4768,14 +4768,15 @@ function battleDraw(){
     ctx.fillStyle = b.fxCol || '#7cd88a'; ctx.fillRect(0, 90, W, 40);
     ctx.globalAlpha = 1;
   }
-  // party in the bottom-right corner, over the effects, with attack/cast poses; larger and nearer
-  // the corner as the camera closes in
-  const ps = 1 + z;
+  // party in the bottom-right corner, over the effects, with attack/cast poses; as the camera closes in,
+  // the member whose turn it is grows into the corner and the others fade back out of view
   for (let i = 0; i < G.party.length; i++){
-    const m = G.party[i], k = G.party.length - 1 - i;
+    const m = G.party[i], me = i === b.inputIdx, zz = me ? z : 0;
+    if (!me && z >= .67) continue;
     const hurt = b.hurt && (b.hurt.i === i || b.hurt.i === -2);
-    const p = partyPos(i), x = Math.round(p.x + ((196 - k*28) - p.x) * z), y = Math.round(p.y + ((132 - k*10) - p.y) * z);
-    ctx.save(); ctx.translate(x, y); ctx.scale(ps, ps);
+    const p = partyPos(i), x = Math.round(p.x + (196 - p.x) * zz), y = Math.round(p.y + (132 - p.y) * zz);
+    ctx.save(); ctx.translate(x, y); ctx.scale(1 + zz, 1 + zz);
+    if (!me && z > 0) ctx.globalAlpha = 1 - z * 1.5;
     if (m.ko && !hurt){ // lying where they fell
       ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fillRect(1, 14, 14, 2);
       drawHero(0, 0, 'downed', 0, m.pal);
