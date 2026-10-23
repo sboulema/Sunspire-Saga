@@ -16,6 +16,7 @@ master arts and summons, and bring the dawn back to the Sunspire.
 | `index.html` | landing page: the story, in-game screenshots, concept art and box art |
 | `play.html` | the game in its handheld shell, with an immersive (fullscreen) toggle and a *Load sprite pack* button |
 | `pack-guide.html` | the sprite pack guide with the complete, generated slot list; packs loaded here are used by the play page |
+| `walkthrough.txt` | a classic plain-text FAQ/walkthrough: every area, chest, spirit and boss, with maps and the full bestiary |
 
 Every page has a light / dark toggle (it follows the system until you pick one) and the handheld
 shell colour can be changed from the play page or the screenshot viewer; both choices are remembered
@@ -61,7 +62,8 @@ previews show `assets/sunspire-card.png`. Alternatively copy the three HTML file
 | Path | What it is |
 |---|---|
 | `game.js` | the whole game – source and distribution in one file |
-| `index.html`, `play.html`, `pack-guide.html` | the site: landing page, play page, pack guide |
+| `index.html`, `play.html`, `pack-guide.html`, `changelog.html` | the site: landing page, play page, pack guide, changelog |
+| `walkthrough.txt` | the walkthrough; it mirrors the data in `game.js` and must be updated with every game change (see `CLAUDE.md`) |
 | `assets/` | logo, social card, favicon, site CSS/JS, `screens/` (in-game screenshots) and `art/` (box art, concept sheets) |
 | `packs/` | how to make and share sprite packs |
 | `tools/` | generators for the logo, card, favicon, screenshots and promotional art |
