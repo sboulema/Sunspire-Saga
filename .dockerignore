@@ -1,0 +1,13 @@
+.git
+.github
+.claude
+.vscode
+.idea
+tools
+packs
+*.bak.html
+check.js
+*.md
+LICENSE
+Dockerfile
+.dockerignore
