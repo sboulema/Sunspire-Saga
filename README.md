@@ -57,7 +57,15 @@ previews show `assets/sunspire-card.png`. Alternatively copy the three HTML file
 `assets/` to any static host. A workflow for Pages deployment via Actions is included in
 `.github/workflows/pages.yml` if you prefer that over branch deployment.
 
-To self-host with Docker, a `Dockerfile` is included that serves the site with nginx:
+To self-host with Docker, every push to `main` and every `v*` tag publishes an nginx image to
+Docker Hub (`.github/workflows/docker.yml`, needs the `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN`
+secrets; `latest` follows `main`, release tags get their own tag):
+
+```bash
+docker run --rm -p 8080:80 YOUR-DOCKERHUB-USER/sunspire-saga
+```
+
+Or build it yourself from the included `Dockerfile`:
 
 ```bash
 docker build -t sunspire-saga . && docker run --rm -p 8080:80 sunspire-saga
