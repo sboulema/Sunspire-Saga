@@ -2726,6 +2726,16 @@ choice_no: { p:{o:'#601a10',r:'#e2543a'}, r:[
 "rro.orr",
 "o.....o",
 ]},
+// the equip grid's mark on gear a member is wearing: a small green E
+mark_equipped: { p:{o:'#0c3a14',g:'#5fe07a'}, r:[
+"oooooo",
+"oggggo",
+"ogoooo",
+"ogggo.",
+"ogoooo",
+"oggggo",
+"oooooo",
+]},
 };
 Object.assign(SPRITES, UI_SPRITES);
 // gear icons for the shop rows (gear_wood ...): a sword, an axe or a breastplate in the piece's own colours
@@ -3016,7 +3026,8 @@ function isKnownSlot(n){
   }
   if (n.indexOf('item_') === 0 && ITEM_DEFS[n.slice(5)]) return true;
   if (n.indexOf('gear_') === 0 && GEAR_DEFS[n.slice(5)]) return true;
-  if (n === 'choice_yes' || n === 'choice_no') return true;
+  if (n === 'choice_yes' || n === 'choice_no' || n === 'mark_equipped') return true;
+  if (n.indexOf('portrait_') === 0 && CHAR_DEFS[n.slice(9)]) return true;
   if (n === 'well' || n.indexOf('well_') === 0) return true;
   if (n === 'spring' || n.indexOf('spring_') === 0) return true;
   if (/^icon_(fight|arts|spirit|summon|item|defend|flee)$/.test(n)) return true;
@@ -3105,7 +3116,9 @@ function buildSlotList(){
     .concat(SUMMON_DEFS.map(s => ({ slot: 'summon_' + slugName(s.name), desc: 'menu icon: ' + cap(s.name) })))
     .concat(ELS5.map(el => ({ slot: 'summon_' + el, desc: 'menu icon fallback: ' + el + ' summons' })))
     .concat(Object.keys(ITEM_DEFS).map(k => ({ slot: 'item_' + k, desc: 'menu and shop icon: ' + cap(ITEM_DEFS[k].name) })))
-    .concat(Object.keys(GEAR_DEFS).map(k => ({ slot: 'gear_' + k, desc: 'shop icon: ' + cap(GEAR_DEFS[k].name) })))
+    .concat(Object.keys(GEAR_DEFS).map(k => ({ slot: 'gear_' + k, desc: 'shop and equip icon: ' + cap(GEAR_DEFS[k].name) })))
+    .concat([{ slot: 'mark_equipped', desc: 'equip screen: the E on gear a member is wearing (drawn over the icon\'s bottom-right corner)' }])
+    .concat(Object.keys(CHAR_DEFS).map(k => ({ slot: 'portrait_' + k, desc: 'equip screen portrait: ' + cap(CHAR_DEFS[k].name) + ' (32x32; without it the walking sprite is shown at 2x)' })))
     .concat([['yes','tick'],['no','cross']].map(c => ({ slot: 'choice_' + c[0], desc: 'yes/no box icon: ' + c[1] + ' beside ' + c[0].toUpperCase() })))
     .concat(ELS5.concat(['heal']).map(el => ({ slot: 'el_' + el, desc: 'arts window element badge: ' + el })))
     .concat([['one','one enemy'],['all','every enemy'],['ally','one ally'],['party','the whole party']].map(r => ({ slot: 'range_' + r[0], desc: 'arts window range badge: ' + r[1] })))
@@ -3687,39 +3700,44 @@ function menuUpdate(){
     }
     return;
   }
-  if (M.view === 'equip'){
+  if (M.view === 'equip'){ // first pick a member (M.sub null), then a piece of gear in the grid (M.sub 'grid')
+    const m = G.party[M.mem];
     if (!M.sub){
       if (pressed.left){ M.mem = (M.mem + G.party.length - 1) % G.party.length; sfx.blip(); }
       if (pressed.right){ M.mem = (M.mem + 1) % G.party.length; sfx.blip(); }
-      if (pressed.up || pressed.down){ M.slot = 1 - M.slot; sfx.blip(); }
-      if (pressed.a){
-        const kind = M.slot === 0 ? 'wpn' : 'arm';
-        M.sub = kind; M.subSel = 0; sfx.blip();
-      }
-    } else {
-      const opts = G.gear.filter(k => GEAR_DEFS[k].kind === M.sub);
-      const total = opts.length + 1; // + NONE
-      if (pressed.up){ M.subSel = (M.subSel + total - 1) % total; sfx.blip(); }
-      if (pressed.down){ M.subSel = (M.subSel + 1) % total; sfx.blip(); }
-      if (pressed.a){
-        const m = G.party[M.mem];
-        const slot = M.sub;
-        const cur = m[slot];
-        if (M.subSel === 0){ // NONE
-          if (cur){ G.gear.push(cur); m[slot] = null; sfx.blip(); }
-        } else {
-          const key = opts[M.subSel - 1];
-          const idx = G.gear.indexOf(key);
-          if (idx >= 0) G.gear.splice(idx, 1);
-          if (cur) G.gear.push(cur);
-          m[slot] = key;
-          sfx.ok();
-        }
-        M.sub = null;
-      }
+      if (pressed.a){ M.sub = 'grid'; M.subSel = 0; M.scroll = 0; sfx.blip(); }
+      return;
     }
-    return;
+    const cells = equipCells(m), n = cells.length, cols = equipGrid(cells).cols;
+    if (!n) return;
+    M.subSel = clamp(M.subSel, 0, n - 1);
+    if (pressed.left){ M.subSel = (M.subSel + n - 1) % n; sfx.blip(); }
+    if (pressed.right){ M.subSel = (M.subSel + 1) % n; sfx.blip(); }
+    if (pressed.up && M.subSel - cols >= 0){ M.subSel -= cols; sfx.blip(); }
+    if (pressed.down && M.subSel + cols < n){ M.subSel += cols; sfx.blip(); }
+    if (pressed.a){
+      const c = cells[M.subSel], slot = GEAR_DEFS[c.key].kind;
+      if (c.eq){ G.gear.push(c.key); m[slot] = null; sfx.blip(); } // take it off: back to the shared pool
+      else {
+        G.gear.splice(G.gear.indexOf(c.key), 1);
+        if (m[slot]) G.gear.push(m[slot]);
+        m[slot] = c.key; sfx.ok();
+      }
+      const now = equipCells(m); // keep the cursor on the piece that moved
+      M.subSel = Math.max(0, now.findIndex(x => x.key === c.key && x.eq === !c.eq));
+    }
   }
+}
+// the equip grid: the member's own gear first (marked E), then the shared pool, weapons before armour, best first
+function equipCells(m){
+  const val = k => GEAR_DEFS[k].atk || GEAR_DEFS[k].def || 0;
+  const pool = G.gear.slice().sort((a, b) => (GEAR_DEFS[a].kind === GEAR_DEFS[b].kind ? val(b) - val(a) : GEAR_DEFS[a].kind === 'wpn' ? -1 : 1));
+  return [m.wpn, m.arm].filter(Boolean).map(key => ({ key, eq: true })).concat(pool.map(key => ({ key, eq: false })));
+}
+function equipGrid(cells){ // cells grow with the icons (16px pack icons get 20px cells) inside the 122x76 grid window
+  const ic = iconCell(cells.map(c => 'gear_' + c.key), 16);
+  const cs = Math.max(16, Math.max(ic.w, ic.h) + 4);
+  return { ic, cs, cols: Math.floor(122 / cs), rows: Math.floor(76 / cs) };
 }
 function useItemOn(key, m, inBattle){
   const it = ITEM_DEFS[key];
@@ -3751,6 +3769,7 @@ function questHint(){
 }
 function menuDraw(){
   const M = G.menu;
+  if (M.view === 'equip'){ equipDraw(M); return; }
   box(6, 6, 228, 148);
   if (M.view === 'main'){
     const items = ['STATUS','ITEMS','EQUIP','SPIRITS','SAVE'];
@@ -3835,33 +3854,90 @@ function menuDraw(){
     } else text('A: USE  B: BACK', 14, 141, '#9a91b8');
     return;
   }
-  if (M.view === 'equip'){
-    const m = G.party[M.mem];
-    text('< ' + m.name + ' >', 14, 14, ELCOL[m.el], 2);
-    text('ATK ' + eAtk(m) + '  DEF ' + eDef(m), 130, 20, '#9a91b8');
-    const rows = [
-      ['WPN', m.wpn ? GEAR_DEFS[m.wpn].name : '----'],
-      ['ARM', m.arm ? GEAR_DEFS[m.arm].name : '----']
-    ];
-    for (let i = 0; i < 2; i++){
-      const y = 40 + i*14;
-      if (i === M.slot && !M.sub) drawCursor(19, cursorRowY(y));
-      text(rows[i][0], 22, y, '#9a91b8');
-      text(rows[i][1], 54, y, '#e9e0c8');
-    }
-    if (M.sub){
-      const opts = G.gear.filter(k => GEAR_DEFS[k].kind === M.sub);
-      box(110, 34, 122, 14 + (opts.length+1)*12);
-      text('REMOVE', 124, 41, M.subSel === 0 ? '#f2c14e' : '#9a91b8');
-      if (M.subSel === 0) drawCursor(121, cursorRowY(41));
-      for (let i = 0; i < opts.length; i++){
-        const gd = GEAR_DEFS[opts[i]], y = 53 + i*12;
-        if (M.subSel === i+1) drawCursor(121, cursorRowY(y));
-        text(gd.name, 124, y, M.subSel === i+1 ? '#f2c14e' : '#e9e0c8');
-      }
-    } else text('LEFT/RIGHT: MEMBER  A: CHANGE', 14, 141, '#9a91b8');
-    return;
+}
+// the equip screen, in panels: party sprites (top left), the member's card (left), a prompt (top right),
+// the gear grid (right), help (bottom right) and the purse (bottom)
+function equipDraw(M){
+  const m = G.party[M.mem], picking = !M.sub, off = cursorRowY(0);
+  const cells = equipCells(m);
+  if (!picking) M.subSel = clamp(M.subSel, 0, Math.max(0, cells.length - 1));
+  const sel = picking ? null : cells[M.subSel];
+  // party: everyone standing in a row, the chosen one walking with the hand beside them
+  box(2, 2, 104, 36);
+  const n = G.party.length, sp = Math.min(24, Math.floor(84 / Math.max(1, n - 1)));
+  const x0 = Math.round(54 - ((n - 1) * sp + 16) / 2);
+  for (let i = 0; i < n; i++){
+    const x = x0 + i*sp, me = i === M.mem;
+    drawHero(x, 16, 'down', me && picking ? (G.t >> 3) & 1 : 0, G.party[i].pal);
+    if (me) drawCursor(x + 6, 30); // the hand rests on their feet, pointing in
   }
+  // the member's card: portrait, name, level, HP / PP, and ATK / DEF with a preview of the selected piece
+  box(2, 40, 104, 96);
+  drawPortrait(m, 7, 45);
+  text(m.name, 43, 47, ELCOL[m.el]);
+  text('LV', 43, 59, '#9a91b8'); text(G.lv + '', 100 - textW(G.lv + ''), 59, '#e9e0c8');
+  const row = (lbl, y, cur, nxt) => {
+    text(lbl, 8, y, '#9a91b8');
+    if (nxt === undefined || nxt === cur){ text(cur + '', 100 - textW(cur + ''), y, '#e9e0c8'); return; }
+    text(cur + '', 66 - textW(cur + ''), y, '#e9e0c8');
+    text('>', 71, y, '#9a91b8');
+    text(nxt + '', 100 - textW(nxt + ''), y, nxt > cur ? '#7cd88a' : '#e2543a');
+  };
+  row('HP', 82, m.hp + '/' + m.maxhp);
+  row('PP', 92, m.pp + '/' + m.maxpp);
+  let alt;
+  if (sel){ const slot = GEAR_DEFS[sel.key].kind; alt = Object.assign({}, m, { [slot]: sel.eq ? null : sel.key }); }
+  row('ATK', 106, eAtk(m), alt && eAtk(alt));
+  row('DEF', 116, eDef(m), alt && eDef(alt));
+  row('NEXT', 126, xpNext(G.lv) - G.xp);
+  // prompt: the question, or the name of the piece under the cursor
+  box(108, 2, 130, 18);
+  text(picking ? 'WHOSE GEAR?' : sel ? GEAR_DEFS[sel.key].name : 'NO GEAR', 114, 11 - off + 1, picking ? '#e9e0c8' : '#f2c14e');
+  // the grid
+  box(108, 22, 130, 84);
+  const g = equipGrid(cells), gx = 108 + ((130 - g.cols * g.cs) >> 1), gy = 26 + ((76 - g.rows * g.cs) >> 1);
+  if (!cells.length) text('NO GEAR YET.', 116, 30, '#9a91b8');
+  const selRow = picking ? 0 : Math.floor(M.subSel / g.cols);
+  M.scroll = clamp(M.scroll || 0, Math.max(0, selRow - g.rows + 1), selRow);
+  for (let i = M.scroll * g.cols; i < cells.length && i < (M.scroll + g.rows) * g.cols; i++){
+    const c = cells[i], r = Math.floor(i / g.cols) - M.scroll, cx = gx + (i % g.cols) * g.cs, cy = gy + r * g.cs;
+    if (sel && i === M.subSel){ ctx.fillStyle = '#2f4cc4'; ctx.fillRect(cx, cy, g.cs, g.cs); }
+    drawIconFit('gear_' + c.key, cx + g.cs/2, cy + g.cs/2, g.ic.w, g.ic.h);
+    if (c.eq) drawBadge('mark_equipped', cx + g.cs - 4, cy + g.cs - 4, false);
+  }
+  if (sel) drawCursor(gx + (M.subSel % g.cols) * g.cs + (g.cs >> 1), gy + (selRow - M.scroll + 1) * g.cs - 3); // over the cell's lower left
+  ctx.fillStyle = '#eef0ff'; // scroll nubs
+  if (M.scroll > 0){ ctx.fillRect(229, 23, 5, 1); ctx.fillRect(230, 22, 3, 1); }
+  if ((M.scroll + g.rows) * g.cols < cells.length){ ctx.fillRect(229, 104, 5, 1); ctx.fillRect(230, 105, 3, 1); }
+  // help
+  box(108, 108, 130, 28);
+  let h1, h2;
+  if (picking){ h1 = 'LEFT/RIGHT: WHO'; h2 = 'A:CHOOSE  B:BACK'; }
+  else if (sel){
+    const d = GEAR_DEFS[sel.key];
+    h1 = (d.kind === 'wpn' ? 'WEAPON  ATK+' + d.atk : 'ARMOUR  DEF+' + d.def);
+    h2 = (sel.eq ? 'A:REMOVE' : 'A:EQUIP') + '  B:BACK';
+  } else { h1 = 'NOTHING TO EQUIP'; h2 = 'B:BACK'; }
+  text(h1, 114, 113, '#e9e0c8'); text(h2, 114, 124, '#9a91b8');
+  // purse
+  box(2, 138, 236, 20);
+  text(G.gold + ' COINS', 14, 148 - off, '#e8c84b');
+  text('SPIRITS ' + spiritsFound().length + '/8', 226 - textW('SPIRITS ' + spiritsFound().length + '/8'), 148 - off, '#9a91b8');
+}
+// a member's portrait in a 32x32 frame: the pack's portrait_<id>, else their own sprite at 2x, head and shoulders
+function drawPortrait(m, x, y){
+  ctx.fillStyle = shade(ELCOL[m.el], .45); ctx.fillRect(x, y, 32, 32);
+  if (userSpr('portrait_' + m.id)) drawIconFit('portrait_' + m.id, x + 16, y + 16, 32, 32);
+  else {
+    const u = userSpr(m.id + '_down') || userSpr('hero_down'), h = u ? u.height : 16;
+    ctx.save();
+    ctx.beginPath(); ctx.rect(x, y, 32, 32); ctx.clip();
+    ctx.translate(x, y + Math.max(0, h - 16) * 2 + 2); ctx.scale(2, 2);
+    drawHero(0, 0, 'down', 0, m.pal);
+    ctx.restore();
+  }
+  ctx.fillStyle = '#eef0ff';
+  ctx.fillRect(x - 1, y - 1, 34, 1); ctx.fillRect(x - 1, y + 32, 34, 1); ctx.fillRect(x - 1, y, 1, 32); ctx.fillRect(x + 32, y, 1, 32);
 }
 
 // ---------------- world drawing (y-sorted, semi-3D) ----------------

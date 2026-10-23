@@ -60,7 +60,13 @@
       them are pack slots (<code>item_...</code>, <code>gear_...</code>, <code>choice_yes</code>,
       <code>choice_no</code>). The shop list, the YES/NO box and the battle arts / spirit / summon / item
       window size their rows to the icons, so 16-pixel pack icons no longer spill over the next row or the
-      names; the shop window is wider and its stat column lines up against the prices.</td></tr>
+      names; the shop window is wider and its stat column lines up against the prices. EQUIP is rebuilt as a
+      screen of panels: the party's sprites along the top left with the hand on the chosen member, their card
+      below (portrait, level, HP, PP, ATK, DEF and XP to the next level), and on the right a grid of gear icons,
+      worn pieces first with a green E, then the shared pool. Hovering a piece previews the ATK or DEF it
+      would give in green or red; A equips it or takes it off. New pack slots: <code>portrait_ari</code> ...
+      (32&times;32; without one the member's walking sprite stands in at 2&times;) and
+      <code>mark_equipped</code>.</td></tr>
     <tr><td class="ver">v41</td><td>A new battle screen in the handheld classic style. The status bar
       is a row of cards hanging from the top-right corner: HP and PP are written over bars that are blue for
       what is left and red (HP) or purple (PP) for what is gone, and the member choosing a command sits on a
