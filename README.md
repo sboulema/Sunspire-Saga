@@ -56,6 +56,14 @@ previews show `assets/sunspire-card.png`. Alternatively copy the three HTML file
 `assets/` to any static host. A workflow for Pages deployment via Actions is included in
 `.github/workflows/pages.yml` if you prefer that over branch deployment.
 
+To self-host with Docker, a `Dockerfile` is included that serves the site with nginx:
+
+```bash
+docker build -t sunspire-saga . && docker run --rm -p 8080:80 sunspire-saga
+```
+
+The game is then at `http://localhost:8080/play.html`.
+
 ## Repository layout
 
 | Path | What it is |
@@ -65,6 +73,7 @@ previews show `assets/sunspire-card.png`. Alternatively copy the three HTML file
 | `assets/` | logo, social card, favicon, site CSS/JS, `screens/` (in-game screenshots) and `art/` (box art, concept sheets) |
 | `packs/` | how to make and share sprite packs |
 | `tools/` | generators for the logo, card, favicon, screenshots and promotional art |
+| `Dockerfile`, `docker/` | self-hosting image: nginx serving the site |
 
 Releases are tagged (`v34`, …); `changelog.html` is the authoritative change list, and the title
 screen shows the running version.
