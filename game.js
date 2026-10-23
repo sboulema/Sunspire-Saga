@@ -435,7 +435,7 @@ function buildFields(){
     {x:20, y:17, id:'thera_shop',  use:'shop', shop:'thera'},
     {x:40, y:27, id:'thera_far_1', use:'home'},
     {x:46, y:27, id:'thera_far_2', use:'home'},
-    {x:43, y:32, id:'thera_inn',   use:'inn'}
+    {x:43, y:32, id:'thera_far_inn', use:'inn'}
   ];
   return { w, h, g, kind:'field', name:'THERA FIELDS', houses };
 }
@@ -1372,7 +1372,7 @@ function drawSpiritSprite(id, x, y, t){
   if (sp === 0) ctx.fillRect(x+2, y+2+bob, 1, 1);
   if (sp === 2) ctx.fillRect(x+13, y+4+bob, 1, 1);
 }
-const HOUSE_IDS = ['thera_1','thera_2','thera_shop','thera_far_1','thera_far_2','thera_inn','brindle_1','brindle_2','brindle_3','brindle_inn'];
+const HOUSE_IDS = ['thera_1','thera_2','thera_shop','thera_far_1','thera_far_2','thera_far_inn','brindle_1','brindle_2','brindle_3','brindle_inn'];
 const HOUSE_KINDS = ['inn','shop'];
 let HOUSE_MEMO = { rev: -1 };
 function houseMemo(){
