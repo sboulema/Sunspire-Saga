@@ -739,13 +739,15 @@ function dialogDraw(){
   }
   const full = lines.join('\n').length;
   if (d.choice && d.page === d.pages.length - 1 && d.chars >= full){
-    box(170, 82, 62, 27);
-    const opts = ['YES', 'NO'];
+    const opts = ['YES', 'NO'], slots = ['choice_yes', 'choice_no'];
+    const cell = iconCell(slots, 24), rowH = Math.max(11, cell.h + 1); // grows for big pack icons
+    const bw = 14 + cell.w + 4 + textW('YES') + 8, bh = 2*rowH + 5, bx = 232 - bw, by = 109 - bh;
+    box(bx, by, bw, bh);
     for (let i = 0; i < 2; i++){
-      const y = 88 + i*11;
-      if (i === d.choice.sel) drawCursor(183, cursorRowY(y));
-      drawBadge(i === 0 ? 'choice_yes' : 'choice_no', 190, cursorRowY(y), false);
-      text(opts[i], 197, y, i === d.choice.sel ? '#f2c14e' : '#e9e0c8');
+      const cy = by + 3 + i*rowH + (rowH >> 1);
+      if (i === d.choice.sel) drawCursor(bx + 13, cy);
+      drawIconFit(slots[i], bx + 14 + cell.w/2, cy, cell.w, cell.h);
+      text(opts[i], bx + 14 + cell.w + 4, cy - cursorRowY(0), i === d.choice.sel ? '#f2c14e' : '#e9e0c8');
     }
   } else if (d.chars >= full && (G.t >> 4) % 2 === 0){
     ctx.fillStyle = '#f2c14e';
@@ -3504,26 +3506,35 @@ function shopUpdate(){
   }
 }
 function shopDraw(){
-  const s = G.shop, stock = SHOPS[s.id].stock;
-  box(20, 10, 200, 140);
-  text(SHOPS[s.id].keeper + "'S GOODS", 30, 18, '#f2c14e');
-  text(G.gold + ' COINS', 150, 18, '#e8c84b');
-  for (let i = 0; i < stock.length; i++){
-    const [kind, key] = stock[i];
+  const s = G.shop, stock = SHOPS[s.id].stock, n = stock.length;
+  const rows = stock.map(([kind, key]) => {
     const def = kind === 'item' ? ITEM_DEFS[key] : GEAR_DEFS[key];
-    const y = 32 + i*12;
-    if (i === s.sel) drawCursor(31, cursorRowY(y));
-    drawBadge((kind === 'item' ? 'item_' : 'gear_') + key, 38, cursorRowY(y), false);
-    text(def.name, 45, y, i === s.sel ? '#f2c14e' : '#e9e0c8');
     let tag = '';
     if (kind === 'gear') tag = def.kind === 'wpn' ? 'ATK+' + def.atk : 'DEF+' + def.def;
     else if (def.heal) tag = def.heal >= 999 ? 'FULL HP' : 'HP+' + def.heal;
     else if (def.pp) tag = 'PP+' + def.pp;
     else if (def.revive) tag = 'REVIVE';
-    text(tag, 134, y, '#9a91b8');
-    text(def.price + '', 212 - textW(def.price + ''), y, '#e8c84b');
+    return { def, tag, slot: (kind === 'item' ? 'item_' : 'gear_') + key };
+  });
+  // rows grow to fit the icons (pack icons are often 16px) as far as the list still fits the window
+  const fitH = Math.floor(120 / n) - 1;
+  const cell = iconCell(rows.map(r => r.slot), fitH);
+  const rowH = Math.max(12, cell.h + 1), off = cursorRowY(0);
+  const R = 224; // right edge of the price column
+  const priceW = Math.max(...rows.map(r => textW(r.def.price + '')));
+  const tagX = R - priceW - 8 - Math.max(...rows.map(r => textW(r.tag)));
+  box(6, 4, 228, 152);
+  text(SHOPS[s.id].keeper + "'S GOODS", 16, 9, '#f2c14e');
+  text(G.gold + ' COINS', R - textW(G.gold + ' COINS'), 9, '#e8c84b');
+  for (let i = 0; i < n; i++){
+    const r = rows[i], cy = 21 + i*rowH + (rowH >> 1), y = cy - off;
+    if (i === s.sel) drawCursor(17, cy);
+    drawIconFit(r.slot, 19 + cell.w/2, cy, cell.w, cell.h);
+    text(r.def.name, 19 + cell.w + 4, y, i === s.sel ? '#f2c14e' : '#e9e0c8');
+    text(r.tag, tagX, y, '#9a91b8');
+    text(r.def.price + '', R - textW(r.def.price + ''), y, '#e8c84b');
   }
-  text('A: BUY   B: LEAVE', 30, 138, '#9a91b8');
+  text('A: BUY   B: LEAVE', 16, 143, '#9a91b8');
 }
 
 // ---------------- pause menu ----------------
@@ -4537,19 +4548,18 @@ function listIconSlots(sub, entry){
   }
   return ['item_' + entry.key];
 }
-function drawListIcon(sub, entry, cx, cy){
-  for (const slot of listIconSlots(sub, entry)){
-    const u = userSpr(slot);
-    if (u){
-      const f = sprFrame(u).img;
-      if (entry.dim) ctx.globalAlpha = .45;
-      ctx.drawImage(f, Math.round(cx - f.width/2), Math.round(cy + 1 - f.height/2));
-      ctx.globalAlpha = 1;
-      return;
-    }
+function listIconSlot(sub, entry){ // the pack icon for a row, else a built-in one (the items have them)
+  const slots = listIconSlots(sub, entry);
+  return slots.find(s => userSpr(s)) || slots.find(s => SPRITES[s]) || null;
+}
+function drawListIcon(sub, entry, cx, cy, maxW, maxH){
+  const slot = listIconSlot(sub, entry);
+  if (slot){
+    if (entry.dim) ctx.globalAlpha = .45;
+    drawIconFit(slot, cx, cy + 1, maxW || 99, maxH || 99);
+    ctx.globalAlpha = 1;
+    return;
   }
-  const own = listIconSlots(sub, entry).find(s => SPRITES[s]); // built-in icons (the items have them)
-  if (own){ drawBadge(own, cx, cy + 1, entry.dim); return; }
   const col = entry.dim ? '#5c5478' : (entry.el ? ELCOL[entry.el] || entry.col : entry.col);
   ctx.fillStyle = col;
   if (sub === 'arts'){           // spark
@@ -4651,12 +4661,30 @@ function drawBadge(slot, cx, cy, dim){
   drawSpr(slot, cx, cy, 1, '');
   ctx.globalAlpha = 1;
 }
+// a menu icon (pack sprite, else built-in): the cell its rows need, and drawing it centred and shrunk to fit
+function iconImg(slot){ const u = userSpr(slot); return u ? sprFrame(u).img : SPRITES[slot] ? sprCanvas(slot, '') : null; }
+function iconCell(slots, maxH){ // the cell that holds the biggest of these icons, at most maxH tall
+  let w = 0, h = 0;
+  for (const s of slots){ const im = iconImg(s); if (im){ w = Math.max(w, im.width); h = Math.max(h, im.height); } }
+  const k = h > maxH ? maxH / h : 1;
+  return { w: Math.round(w * k), h: Math.round(h * k) };
+}
+function drawIconFit(slot, cx, cy, maxW, maxH){
+  const im = iconImg(slot);
+  if (!im) return;
+  const k = Math.min(1, maxW / im.width, maxH / im.height);
+  const w = Math.max(1, Math.round(im.width * k)), h = Math.max(1, Math.round(im.height * k));
+  ctx.drawImage(im, Math.round(cx - w/2), Math.round(cy - h/2), w, h);
+}
 // the arts / spirit / summon / item window: a description strip under the status panel, the caster
 // at the bottom-left and the list on the right, with a lit row for the selection
 function battleSubMenu(){
   const b = G.battle, list = subList(), m = G.party[b.inputIdx];
   if (!list.length) return;
-  const LH = stripLH(), SH = stripH(), rowH = LH + 4, sel = list[b.subSel];
+  const LH = stripLH(), SH = stripH(), sel = list[b.subSel];
+  // rows grow to fit big pack icons (up to 16px); the text sits centred in the taller row
+  const cell = iconCell(list.map(it => listIconSlot(b.sub, it)).filter(Boolean), 16);
+  const iw = Math.max(8, cell.w), rowH = Math.max(LH + 4, cell.h + 2), pad = (rowH - LH - 4) >> 1;
   const dy = SH + 2, dh = LH*2 + 8;
   box(2, dy, W - 4, dh);
   const dl = wrap(sel ? sel.desc : '', glyphFontOn() ? 31 : 36);
@@ -4671,12 +4699,12 @@ function battleSubMenu(){
   const vis = Math.max(1, Math.floor((lh - 8) / rowH));
   b.subScroll = clamp(b.subScroll, Math.max(0, b.subSel - vis + 1), Math.min(b.subSel, Math.max(0, list.length - vis)));
   for (let r = 0; r < vis && r + b.subScroll < list.length; r++){
-    const i = r + b.subScroll, it = list[i], y = ly + 4 + r*rowH;
-    if (i === b.subSel){ ctx.fillStyle = '#2f4cc4'; ctx.fillRect(lx + 3, y - 1, lw - 6, rowH); }
-    drawListIcon(b.sub, it, lx + 11, y + (LH >> 1));
+    const i = r + b.subScroll, it = list[i], top = ly + 4 + r*rowH, y = top + pad;
+    if (i === b.subSel){ ctx.fillStyle = '#2f4cc4'; ctx.fillRect(lx + 3, top - 1, lw - 6, rowH); }
+    drawListIcon(b.sub, it, lx + 7 + iw/2, y + (LH >> 1), iw, rowH - 2);
     if (i === b.subSel) drawCursor(lx + 5, y + (LH >> 1)); // the glove straddles the window's left edge
     const col = it.dim ? '#7c7498' : (i === b.subSel ? '#f2c14e' : '#ffffff');
-    text(it.label, lx + 19, y, col);
+    text(it.label, lx + 11 + iw, y, col);
     const rx = lx + lw - 6, cy = y + (LH >> 1); // right edge: range badge, element badge, then the cost
     drawBadge('range_' + it.range, rx - 4, cy, it.dim);
     if (it.el) drawBadge('el_' + it.el, rx - 14, cy, it.dim);
