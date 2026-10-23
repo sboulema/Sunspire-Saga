@@ -4042,7 +4042,8 @@ function subList(){
       .map(k => { const d = SPIRIT_DEFS[k];
         return {key:k, label:d.name, tag:'', dim:false, col:ELCOL[d.el], el:d.el, range:d.heal ? 'ally' : d.healAll ? 'party' : d.aoe ? 'all' : 'one', desc:spiritDesc(d)}; });
   if (b.sub === 'summon')
-    return availSummons().map(s => ({key:SUMMON_DEFS.indexOf(s), label:s.name, tag:'', dim:false, col:ELCOL[s.el], el:s.el, range:'all', desc:summonDesc(s)}));
+    return availSummons().map(s => ({key:SUMMON_DEFS.indexOf(s), label:s.name, dim:false, col:ELCOL[s.el], el:s.el, range:'all', desc:summonDesc(s),
+      tag: s.need === 'all' ? '1' : '' + s.need, els: s.need === 'all' ? ELS4.slice() : [s.el] })); // the spirits it needs: a count and one badge per element
   if (b.sub === 'item')
     return Object.keys(G.inv).filter(k => G.inv[k] > 0)
       .map(k => ({key:k, label:ITEM_DEFS[k].name, tag:'X' + G.inv[k], dim:false, col:'#e9e0c8', range:'ally', desc:itemDesc(ITEM_DEFS[k])}));
@@ -4697,10 +4698,11 @@ function battleSubMenu(){
     if (i === b.subSel) drawCursor(lx + 5, y + (LH >> 1)); // the glove straddles the window's left edge
     const col = it.dim ? '#7c7498' : (i === b.subSel ? '#f2c14e' : '#ffffff');
     text(it.label, lx + 11 + iw, y, col);
-    const rx = lx + lw - 6, cy = y + (LH >> 1); // right edge: range badge, element badge, then the cost
+    const rx = lx + lw - 6, cy = y + (LH >> 1); // right edge: range badge, element badge(s), then the cost
     drawBadge('range_' + it.range, rx - 4, cy, it.dim);
-    if (it.el) drawBadge('el_' + it.el, rx - 14, cy, it.dim);
-    if (it.tag) text(it.tag, rx - 22 - textW(it.tag), y, col);
+    const els = it.els || (it.el ? [it.el] : []);
+    els.forEach((el, j) => drawBadge('el_' + el, rx - 14 - j*8, cy, it.dim));
+    if (it.tag) text(it.tag, rx - 22 - Math.max(0, els.length - 1)*8 - textW(it.tag), y, col);
   }
   ctx.fillStyle = '#eef0ff'; // scroll nubs
   if (b.subScroll > 0){ ctx.fillRect(lx + lw - 9, ly + 1, 5, 1); ctx.fillRect(lx + lw - 8, ly, 3, 1); }
