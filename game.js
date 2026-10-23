@@ -4401,11 +4401,7 @@ function drawCmdIcon(id, cx, cy, sel){
   const u = userSpr('icon_' + id);
   if (u){
     const f = sprFrame(u).img;
-    const yy = cy - (sel ? 2 : 0);
-    if (sel){
-      ctx.strokeStyle = '#f2c14e'; ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.arc(cx, yy, Math.max(f.width, f.height)/2 + 2, 0, Math.PI*2); ctx.stroke();
-    }
+    const yy = cy - (sel ? 2 : 0); // the chosen icon simply sits a little higher
     ctx.drawImage(f, Math.round(cx - f.width/2), Math.round(yy - f.height/2));
     return;
   }
@@ -4414,10 +4410,6 @@ function drawCmdIcon(id, cx, cy, sel){
   ctx.beginPath(); ctx.arc(x, y, r + 1, 0, Math.PI*2); ctx.fill();
   ctx.fillStyle = sel ? '#3a2f6e' : '#241d49';
   ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI*2); ctx.fill();
-  if (sel){
-    ctx.strokeStyle = '#f2c14e'; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI*2); ctx.stroke();
-  }
   ctx.fillStyle = sel ? '#ffd94e' : '#b9aed8';
   if (id === 'fight'){
     for (let i = 0; i < 5; i++) ctx.fillRect(x - 4 + i, y + 2 - i, 2, 2);
@@ -4650,19 +4642,9 @@ function battleDraw(){
     }
   }
   ctx.restore();
-  // spell fx: a ring at the target plus the element overlay scaled over the whole screen, under the party
+  // spell fx: the element overlay scaled over the whole screen, under the party
   if (b.fx > 0 && b.fxSlot){
     const ph = b.fxTotal ? b.fxTotal - b.fx : 22 - b.fx, s = b.fxSlot;
-    if (ph < 22){
-      const r = ph * 2;
-      ctx.strokeStyle = b.fxCol || '#fff'; ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.arc(s.x, s.y, r, 0, Math.PI*2); ctx.stroke();
-      ctx.fillStyle = b.fxCol || '#fff';
-      for (let i = 0; i < 6; i++){
-        const a = i * Math.PI/3 + b.fx * .2;
-        ctx.fillRect(s.x + Math.cos(a)*r|0, s.y + Math.sin(a)*r|0, 2, 2);
-      }
-    }
     if (b.fxKind){
       const fxName = fxSlotName(b), u = userSpr(fxName);
       if (u){ // pack overlay: covers the screen (aspect kept), played once from the cast
