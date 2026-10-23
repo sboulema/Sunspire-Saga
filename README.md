@@ -66,8 +66,8 @@ previews show `assets/sunspire-card.png`. Alternatively copy the three HTML file
 | `packs/` | how to make and share sprite packs |
 | `tools/` | generators for the logo, card, favicon, screenshots and promotional art |
 
-Releases are tagged (`v34`, …); the in-game **changelog** button is the authoritative change list,
-and the title screen shows the running version.
+Releases are tagged (`v34`, …); `changelog.html` is the authoritative change list, and the title
+screen shows the running version.
 
 ## Credits and licence
 
