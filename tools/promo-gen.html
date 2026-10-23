@@ -1,0 +1,474 @@
+<!doctype html><meta charset="utf-8"><title>promo gen</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap">
+<body style="background:#222;margin:0;color:#ddd;font:14px sans-serif">
+<canvas id="game" width="240" height="160" style="display:none"></canvas>
+<div id="out" style="display:flex;flex-wrap:wrap;gap:12px;padding:12px"></div>
+<script>window.SUNSPIRE_HEADLESS = true;</script>
+<script src="../game.js"></script>
+<script>
+// Promotional art for the website, drawn from the game's own built-in sprites:
+// box art (front, back, spine), four concept-art sheets and the hero portraits.
+// Serve the repo root with a server that accepts POST /save/assets/<path>.png (see tools/README.md),
+// open /tools/promo-gen.html and run generate() in the console; preview() only draws.
+const GOLD = '#f2c14e', LIGHT = '#fff6c4', DEEP = '#b9771c', DARK = '#3a1e08', AMBER = '#e8a83a';
+const FONT = '"Pixelify Sans", ui-monospace, monospace';
+const ELNAME = { earth:'Earth', fire:'Fire', water:'Water', wind:'Wind', sol:'Sol' };
+
+function mk(w, h){ const c = document.createElement('canvas'); c.width = w; c.height = h; const x = c.getContext('2d'); x.imageSmoothingEnabled = false; return [c, x]; }
+function crop(){
+  const d = ctx.getImageData(0, 0, W, H).data;
+  let x0 = W, y0 = H, x1 = -1, y1 = -1;
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (d[(y*W + x)*4 + 3] > 0){ if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+  if (x1 < 0) return mk(1, 1)[0];
+  const [c, cx] = mk(x1 - x0 + 1, y1 - y0 + 1);
+  cx.drawImage(document.getElementById('game'), x0, y0, c.width, c.height, 0, 0, c.width, c.height);
+  return c;
+}
+function capture(fn){ ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, W, H); fn(); ctx.restore(); return crop(); }
+function captureFull(fn){ ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, W, H); fn(); ctx.restore(); const [c, x] = mk(W, H); x.drawImage(document.getElementById('game'), 0, 0); return c; }
+const FR = { down:['down',0], down2:['down',1], up:['up',0], right:['right',0], left:['left',0], back:['back',0],
+             attack:['attack',0], attack2:['attack',1], cast:['cast',0], cast2:['cast',1], hit:['hit',0], downed:['downed',0] };
+const hero = (id, f) => capture(() => drawHero(100, 60, FR[f][0], FR[f][1], CHAR_DEFS[id].pal));
+const enemy = k => capture(() => ctx.drawImage(sprCanvas(k, ''), 4, 4));
+const summon = el => capture(() => drawSpr('sum_' + el, 120, 80, 1, ''));
+const djinn = id => capture(() => ctx.drawImage(owCanvas('dj_' + id, DJ_PALS[id]), 4, 4));
+function tint(src, col){ const [c, x] = mk(src.width, src.height); x.drawImage(src, 0, 0); x.globalCompositeOperation = 'source-in'; x.fillStyle = col; x.fillRect(0, 0, c.width, c.height); return c; }
+function shaded(src, col, a){ const [c, x] = mk(src.width, src.height); x.drawImage(src, 0, 0); x.globalCompositeOperation = 'source-atop'; x.globalAlpha = a; x.fillStyle = col; x.fillRect(0, 0, c.width, c.height); return c; }
+function outlined(src, col){
+  const [c, x] = mk(src.width + 2, src.height + 2), t = tint(src, col);
+  for (const [dx, dy] of [[-1,0],[1,0],[0,-1],[0,1]]) x.drawImage(t, 1 + dx, 1 + dy);
+  x.drawImage(src, 1, 1); return c;
+}
+// draw a sprite scaled by s with its bottom-centre at (cx, by)
+function put(x, src, cx, by, s, opt){
+  opt = opt || {};
+  x.save(); x.imageSmoothingEnabled = false;
+  if (opt.alpha != null) x.globalAlpha = opt.alpha;
+  if (opt.glow){ x.shadowColor = opt.glow; x.shadowBlur = opt.blur || 30; }
+  const w = src.width * s, h = src.height * s;
+  if (opt.flip){ x.translate(Math.round(cx), 0); x.scale(-1, 1); x.drawImage(src, Math.round(-w/2), Math.round(by - h), w, h); }
+  else x.drawImage(src, Math.round(cx - w/2), Math.round(by - h), w, h);
+  x.restore();
+  return { w, h };
+}
+function glowDisc(x, cx, cy, r, col, a){
+  const g = x.createRadialGradient(cx, cy, 0, cx, cy, r);
+  g.addColorStop(0, col); g.addColorStop(1, 'rgba(0,0,0,0)');
+  x.save(); x.globalAlpha = a == null ? 1 : a; x.fillStyle = g; x.beginPath(); x.arc(cx, cy, r, 0, Math.PI*2); x.fill(); x.restore();
+}
+function hexA(hex, a){ const n = parseInt(hex.slice(1), 16); return 'rgba(' + (n >> 16) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')'; }
+function seeded(s){ return () => (s = (s * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff; }
+
+// ---- logo pieces, as in tools/logo-gen.html ----
+function ring(ctx, cx, cy, r){
+  ctx.save();
+  ctx.lineWidth = r * .2; ctx.strokeStyle = DARK; ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.stroke();
+  const g = ctx.createLinearGradient(cx, cy - r, cx, cy + r);
+  g.addColorStop(0, LIGHT); g.addColorStop(.45, GOLD); g.addColorStop(.75, DEEP); g.addColorStop(1, GOLD);
+  ctx.lineWidth = r * .12; ctx.strokeStyle = g; ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.stroke();
+  ctx.lineWidth = Math.max(2, r * .02); ctx.strokeStyle = LIGHT; ctx.beginPath(); ctx.arc(cx, cy, r - r*.045, Math.PI*1.05, Math.PI*1.75); ctx.stroke();
+  ctx.strokeStyle = DEEP; ctx.beginPath(); ctx.arc(cx, cy, r * .82, 0, Math.PI*2); ctx.stroke();
+  for (let i = 0; i < 16; i++){
+    const a = i * Math.PI / 8 - Math.PI / 2, long = i % 2 === 0;
+    const r0 = r * 1.12, r1 = long ? r * 1.42 : r * 1.28, w = long ? .07 : .05;
+    ctx.fillStyle = DARK;
+    ctx.beginPath();
+    ctx.moveTo(cx + Math.cos(a - w*1.4) * r0, cy + Math.sin(a - w*1.4) * r0);
+    ctx.lineTo(cx + Math.cos(a) * (r1 + r*.03), cy + Math.sin(a) * (r1 + r*.03));
+    ctx.lineTo(cx + Math.cos(a + w*1.4) * r0, cy + Math.sin(a + w*1.4) * r0);
+    ctx.closePath(); ctx.fill();
+    ctx.fillStyle = long ? GOLD : AMBER;
+    ctx.beginPath();
+    ctx.moveTo(cx + Math.cos(a - w) * r0, cy + Math.sin(a - w) * r0);
+    ctx.lineTo(cx + Math.cos(a) * r1, cy + Math.sin(a) * r1);
+    ctx.lineTo(cx + Math.cos(a + w) * r0, cy + Math.sin(a + w) * r0);
+    ctx.closePath(); ctx.fill();
+  }
+  ctx.restore();
+}
+function spire(ctx, x, by, h, tipGlow){
+  const w = h * .11;
+  ctx.fillStyle = '#4b5a8a';
+  ctx.beginPath(); ctx.moveTo(x - w*3.2, by); ctx.lineTo(x - w*1.6, by - h*.09); ctx.lineTo(x + w*1.8, by - h*.1); ctx.lineTo(x + w*3.4, by); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = '#9aa6c9'; ctx.fillRect(x - w, by - h*.86, w*2, h*.78);
+  ctx.fillStyle = '#c9d2e8'; ctx.fillRect(x - w, by - h*.86, w*.55, h*.78);
+  ctx.fillStyle = '#6a7598'; ctx.fillRect(x + w*.55, by - h*.86, w*.45, h*.78);
+  ctx.fillStyle = GOLD;
+  ctx.fillRect(x - w*1.25, by - h*.88, w*2.5, h*.025);
+  ctx.fillRect(x - w*1.25, by - h*.52, w*2.5, h*.025);
+  ctx.fillStyle = '#2a2f55';
+  for (let i = 0; i < 4; i++) ctx.fillRect(x - w*.15, by - h*.78 + i*h*.15, w*.4, h*.06);
+  ctx.fillStyle = '#c9d2e8'; ctx.fillRect(x - w*.6, by - h*1.0, w*1.2, h*.14);
+  const gl = ctx.createRadialGradient(x, by - h*1.05, 0, x, by - h*1.05, h*.2);
+  gl.addColorStop(0, tipGlow || 'rgba(255,246,196,.9)'); gl.addColorStop(1, 'rgba(255,217,78,0)');
+  ctx.fillStyle = gl; ctx.beginPath(); ctx.arc(x, by - h*1.05, h*.2, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#ffd94e'; ctx.fillRect(x - w*.3, by - h*1.1, w*.6, h*.1); ctx.fillRect(x - w*.6, by - h*1.06, w*1.2, h*.025);
+}
+function goldText(ctx, s, cx, y, px, italic){
+  ctx.save();
+  ctx.font = (italic ? 'italic ' : '') + 'bold ' + px + 'px "Times New Roman", Georgia, serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+  ctx.lineJoin = 'round';
+  ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.fillText(s, cx + px*.06, y + px*.06);
+  ctx.lineWidth = px * .11; ctx.strokeStyle = DARK; ctx.strokeText(s, cx, y);
+  ctx.lineWidth = px * .05; ctx.strokeStyle = '#7a4a12'; ctx.strokeText(s, cx, y + px*.02);
+  const g = ctx.createLinearGradient(0, y - px*.72, 0, y + px*.2);
+  g.addColorStop(0, LIGHT); g.addColorStop(.35, GOLD); g.addColorStop(.62, DEEP); g.addColorStop(.72, AMBER); g.addColorStop(1, '#ffe27a');
+  ctx.fillStyle = g; ctx.fillText(s, cx, y);
+  ctx.restore();
+}
+function sagaRibbon(x, cx, y, w, h){
+  x.fillStyle = '#2a1608'; x.fillRect(cx - w/2, y, w, h);
+  x.fillStyle = GOLD; const b = Math.max(3, h * .07);
+  x.fillRect(cx - w/2, y, w, b); x.fillRect(cx - w/2, y + h - b, w, b); x.fillRect(cx - w/2, y, b, h); x.fillRect(cx + w/2 - b, y, b, h);
+  x.font = 'bold ' + Math.round(h * .62) + 'px Arial, Helvetica, sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle';
+  x.fillStyle = '#ffe9a0'; x.fillText('S  A  G  A', cx, y + h/2 + 2);
+}
+function label(x, s, px, cx, y, col, opt){
+  opt = opt || {};
+  x.save(); x.font = (opt.weight || 600) + ' ' + px + 'px ' + (opt.font || FONT);
+  x.textAlign = opt.align || 'center'; x.textBaseline = opt.base || 'alphabetic';
+  if (opt.track) x.letterSpacing = opt.track + 'px';
+  if (opt.stroke){ x.lineJoin = 'round'; x.lineWidth = opt.strokeW || px * .18; x.strokeStyle = opt.stroke; x.strokeText(s, cx, y); }
+  x.fillStyle = col; x.fillText(s, cx, y); x.restore();
+}
+function wrapText(x, s, maxW){
+  const words = s.split(' '), lines = []; let cur = '';
+  for (const w of words){ const t = cur ? cur + ' ' + w : w; if (x.measureText(t).width > maxW && cur){ lines.push(cur); cur = w; } else cur = t; }
+  if (cur) lines.push(cur); return lines;
+}
+function para(x, s, px, x0, y, maxW, col, lh, font){
+  x.save(); x.font = px + 'px ' + (font || 'system-ui, "Segoe UI", sans-serif'); x.fillStyle = col; x.textAlign = 'left'; x.textBaseline = 'alphabetic';
+  const lines = wrapText(x, s, maxW);
+  lines.forEach((l, i) => x.fillText(l, x0, y + i * lh)); x.restore();
+  return y + lines.length * lh;
+}
+function steppedRidge(x, y0, w, step, minH, maxH, col, seed){
+  const r = seeded(seed); x.fillStyle = col;
+  for (let px = 0; px < w; px += step){ const hh = minH + Math.floor(r() * (maxH - minH)); x.fillRect(px, y0 - hh, step, hh + 2000); }
+}
+function loadImg(src){ return new Promise(res => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src; }); }
+
+// ================= box art =================
+const BOX_W = 900, BOX_H = 1020, STRIP = 58;
+function pocketStrip(x, h){
+  const g = x.createLinearGradient(0, 0, STRIP, 0);
+  g.addColorStop(0, '#1d1740'); g.addColorStop(1, '#2f2560');
+  x.fillStyle = g; x.fillRect(0, 0, STRIP, h);
+  x.fillStyle = GOLD; x.fillRect(STRIP - 4, 0, 4, h);
+  x.fillStyle = 'rgba(255,255,255,.08)'; x.fillRect(0, 0, 3, h);
+  x.save(); x.translate(STRIP/2 - 2, h - 40); x.rotate(-Math.PI/2);
+  label(x, 'POCKET RPG', 26, 0, 9, '#e9e0c8', { align:'left', track: 8 });
+  x.restore();
+  ring(x, STRIP/2 - 2, 46, 13);
+  x.fillStyle = '#ffd94e'; x.fillRect(STRIP/2 - 5, 38, 6, 16);
+}
+function boxFront(){
+  const [c, x] = mk(BOX_W, BOX_H);
+  const ART = BOX_W - STRIP;
+  x.save(); x.translate(STRIP, 0);
+  // dusk sky: night above, the dawn the party came to bring back glowing at the horizon
+  const sky = x.createLinearGradient(0, 0, 0, 860);
+  sky.addColorStop(0, '#0a0f2e'); sky.addColorStop(.32, '#1f3480'); sky.addColorStop(.58, '#5a5fae');
+  sky.addColorStop(.78, '#e0866a'); sky.addColorStop(.9, '#f6c983'); sky.addColorStop(1, '#ffe6b0');
+  x.fillStyle = sky; x.fillRect(0, 0, ART, BOX_H);
+  const st = seeded(11);
+  for (let i = 0; i < 90; i++){ const sx = st() * ART, sy = st() * 420, a = .25 + st() * .6; x.fillStyle = 'rgba(255,246,220,' + a + ')'; const s = st() < .15 ? 3 : 2; x.fillRect(Math.round(sx), Math.round(sy), s, s); }
+  glowDisc(x, ART/2, 760, 520, 'rgba(255,190,110,.55)');
+  glowDisc(x, ART/2, 380, 260, 'rgba(255,233,160,.35)');
+  // clouds
+  x.fillStyle = 'rgba(255,236,214,.22)';
+  for (const [cx, cy, r] of [[110, 470, 26], [700, 420, 22], [420, 560, 30], [760, 600, 20]]){
+    x.beginPath(); x.arc(cx, cy, r, 0, 7); x.arc(cx + r, cy + r*.3, r*.8, 0, 7); x.arc(cx - r, cy + r*.4, r*.7, 0, 7); x.fill();
+    x.fillRect(cx - r*1.6, cy + r*.2, r*3.2, r*.6);
+  }
+  // ghost of the Phoenix to the left, the Shadow Wyrm coiled to the right
+  const phx = summon('fire');
+  put(x, phx, 165, 640, 8, { alpha: .34, glow: 'rgba(255,120,60,.9)', blur: 50 });
+  const wy = shaded(enemy('wyrm'), '#1a0f33', .55);
+  put(x, wy, 690, 650, 11, { glow: 'rgba(170,80,255,.85)', blur: 46, flip: true });
+  // far ridges, the spire on its crag, near ridge
+  steppedRidge(x, 800, ART, 24, 30, 120, '#6c5f9e', 7);
+  steppedRidge(x, 840, ART, 32, 10, 70, '#3f3a72', 21);
+  spire(x, ART/2, 842, 470);
+  steppedRidge(x, 900, ART, 40, 0, 46, '#1c1a3c', 5);
+  x.fillStyle = '#141230'; x.fillRect(0, 892, ART, BOX_H);
+  // the party, seen from behind, facing the spire
+  const party = [
+    { id:'bram', f:'back',   cx: 185, s: 7,  el:'water' },
+    { id:'ari',  f:'attack', cx: 350, s: 8,  el:'earth' },
+    { id:'lyn',  f:'cast',   cx: 495, s: 8,  el:'fire'  },
+    { id:'sera', f:'back',   cx: 660, s: 7,  el:'wind'  }
+  ];
+  for (const p of party){
+    glowDisc(x, p.cx, 930, 120, hexA(ELCOL[p.el], .45));
+    x.fillStyle = 'rgba(0,0,0,.4)'; x.beginPath(); x.ellipse(p.cx, 948, 9 * p.s / 1.4, 2.4 * p.s / 1.4, 0, 0, 7); x.fill();
+    put(x, outlined(hero(p.id, p.f), '#0b0918'), p.cx, 952, p.s, { glow: hexA(ELCOL[p.el], .55), blur: 24 });
+  }
+  // spirits drifting around the party
+  for (const [id, cx, by] of [['flint', 268, 742], ['ember', 572, 742], ['dew', 92, 790], ['breeze', 768, 800]]){
+    put(x, outlined(djinn(id), '#0b0918'), cx, by, 5, { glow: hexA(ELCOL[SPIRIT_DEFS[id].el], .95), blur: 28 });
+  }
+  // title block
+  glowDisc(x, ART/2, 150, 260, 'rgba(10,15,46,.65)');
+  ring(x, ART/2, 140, 92);
+  goldText(x, 'Sunspire', ART/2, 205, 150, true);
+  sagaRibbon(x, ART/2 + 150, 232, 250, 58);
+  label(x, 'AN ELEMENTAL TALE', 22, ART/2 - 120, 268, '#f3e6c4', { track: 5, stroke: 'rgba(10,8,30,.8)', strokeW: 6 });
+  // bottom band
+  const bb = x.createLinearGradient(0, 960, 0, BOX_H); bb.addColorStop(0, '#221b48'); bb.addColorStop(1, '#120f28');
+  x.fillStyle = bb; x.fillRect(0, 960, ART, BOX_H - 960);
+  x.fillStyle = GOLD; x.fillRect(0, 960, ART, 3);
+  ['earth','fire','water','wind'].forEach((el, i) => { x.fillStyle = ELCOL[el]; x.beginPath(); x.arc(30 + i * 22, 991, 7, 0, 7); x.fill(); });
+  label(x, '1 PLAYER', 18, 130, 998, '#e9e0c8', { align:'left', track: 2 });
+  label(x, 'PLAY FREE IN YOUR BROWSER', 20, ART/2 + 40, 998, '#ffe9a0', { track: 3 });
+  x.fillStyle = '#e9e0c8'; x.fillRect(ART - 96, 972, 72, 38); x.fillStyle = '#120f28'; x.fillRect(ART - 93, 975, 66, 32);
+  label(x, 'AGES 7+', 15, ART - 60, 997, '#e9e0c8', { track: 1 });
+  x.restore();
+  pocketStrip(x, BOX_H);
+  // print-like sheen
+  const sh = x.createLinearGradient(0, 0, BOX_W, BOX_H); sh.addColorStop(0, 'rgba(255,255,255,.07)'); sh.addColorStop(.35, 'rgba(255,255,255,0)');
+  x.fillStyle = sh; x.fillRect(0, 0, BOX_W, BOX_H);
+  return c;
+}
+function boxSpine(){
+  const SW = 120, [c, x] = mk(SW, BOX_H);
+  const g = x.createLinearGradient(0, 0, SW, 0); g.addColorStop(0, '#16123a'); g.addColorStop(.5, '#2b2250'); g.addColorStop(1, '#16123a');
+  x.fillStyle = g; x.fillRect(0, 0, SW, BOX_H);
+  x.fillStyle = GOLD; x.fillRect(0, 0, SW, 4); x.fillRect(0, BOX_H - 4, SW, 4);
+  ring(x, SW/2, 78, 30);
+  spire(x, SW/2, 118, 72);
+  x.save(); x.translate(SW/2, BOX_H/2 + 40); x.rotate(Math.PI/2);
+  goldText(x, 'Sunspire', -40, 22, 74, true);
+  x.font = 'bold 30px Arial, Helvetica, sans-serif'; x.textAlign = 'left'; x.textBaseline = 'middle'; x.fillStyle = '#ffe9a0';
+  x.fillText('S A G A', 150, 0);
+  x.restore();
+  x.save(); x.translate(SW/2, BOX_H - 150); x.rotate(Math.PI/2);
+  label(x, 'POCKET RPG', 16, 0, 0, '#bdb3dc', { align:'left', base:'middle', track: 5 });
+  x.restore();
+  return c;
+}
+async function boxBack(){
+  const [c, x] = mk(BOX_W, BOX_H);
+  const bg = x.createLinearGradient(0, 0, 0, BOX_H); bg.addColorStop(0, '#1c1640'); bg.addColorStop(1, '#0e0b20');
+  x.fillStyle = bg; x.fillRect(0, 0, BOX_W, BOX_H);
+  x.save(); x.globalAlpha = .05; x.strokeStyle = GOLD; x.lineWidth = 2;
+  for (let i = -BOX_H; i < BOX_W; i += 28){ x.beginPath(); x.moveTo(i, 0); x.lineTo(i + BOX_H, BOX_H); x.stroke(); }
+  x.restore();
+  glowDisc(x, BOX_W/2, -80, 520, 'rgba(242,193,78,.18)');
+  x.strokeStyle = 'rgba(242,193,78,.55)'; x.lineWidth = 2; x.strokeRect(24, 24, BOX_W - 48, BOX_H - 48);
+  label(x, 'THE SUNSPIRE HAS GONE DARK.', 44, BOX_W/2, 108, GOLD, { weight: 700, track: 2, stroke: '#2a1608', strokeW: 6 });
+  let y = para(x, 'Eight elemental spirits fled when the Shadow Wyrm coiled around the great tower, and monsters now prowl every road. In the village of Thera, the elder sends young Ari, an earth adept, to find the spirits and bring back the dawn.', 23, 70, 162, BOX_W - 140, '#e9e0c8', 34);
+  para(x, 'Gather a party of four adepts, duel the spirits to earn their trust, set them for strength or unleash them in battle, and call down the great summons, up to the four-element Sol Avatar.', 23, 70, y + 14, BOX_W - 140, '#bdb3dc', 34);
+  const shots = await Promise.all(['battle-field', 'summon-phoenix', 'thera-intro'].map(n => loadImg('../assets/screens/' + n + '.png')));
+  const sw = 248, shh = sw * 2 / 3, gap = 24, sx0 = (BOX_W - (sw * 3 + gap * 2)) / 2, sy = 420;
+  shots.forEach((im, i) => {
+    const sx = sx0 + i * (sw + gap);
+    x.fillStyle = '#000'; x.fillRect(sx - 6, sy - 6, sw + 12, shh + 12);
+    x.fillStyle = GOLD; x.fillRect(sx - 4, sy - 4, sw + 8, shh + 8);
+    x.fillStyle = '#141021'; x.fillRect(sx - 2, sy - 2, sw + 4, shh + 4);
+    if (im){ x.imageSmoothingEnabled = false; x.drawImage(im, sx, sy, sw, shh); }
+  });
+  const feats = [
+    ['earth', 'Four adepts of earth, fire, water and wind, each with their own arts'],
+    ['fire',  'Eight spirits to duel and recruit, then set, unleash or summon'],
+    ['water', 'Towns, shops, an inn, a mine, a mountain trail and the Sunspire itself'],
+    ['wind',  'Turn-based battles with tough bosses that shrug off plain steel'],
+    ['sol',   'Sprite packs: reskin every sprite, tile and icon with your own art'],
+    ['sol',   'Saves in your browser. No install, no account, free to play']
+  ];
+  const fy0 = sy + shh + 70;
+  feats.forEach((f, i) => {
+    const col = i % 2, row = i >> 1, fx = 74 + col * 392, fy = fy0 + row * 74;
+    x.fillStyle = ELCOL[f[0]]; x.fillRect(fx, fy - 15, 14, 14);
+    x.fillStyle = 'rgba(0,0,0,.4)'; x.fillRect(fx + 3, fy - 12, 8, 8);
+    x.fillStyle = ELCOL[f[0]]; x.fillRect(fx + 5, fy - 10, 4, 4);
+    para(x, f[1], 19, fx + 28, fy, 330, '#e9e0c8', 26);
+  });
+  // party lineup along the bottom
+  const ids = ['ari', 'lyn', 'bram', 'sera'];
+  ids.forEach((id, i) => put(x, outlined(hero(id, 'down'), '#0b0918'), 110 + i * 70, 960, 3));
+  x.fillStyle = 'rgba(242,193,78,.4)'; x.fillRect(70, 968, BOX_W - 140, 2);
+  label(x, 'Free  ·  Plays in any modern browser  ·  MIT licensed', 17, BOX_W - 74, 948, '#bdb3dc', { align:'right', weight: 500 });
+  label(x, 'Original work. Not affiliated with any console maker.', 14, BOX_W - 74, 994, '#8a81ad', { align:'right', weight: 400, font: 'system-ui, sans-serif' });
+  return c;
+}
+
+// ================= concept sheets =================
+const SHEET_W = 1600, SHEET_H = 1000, INK = '#3a2a14', SEPIA = '#8a5a1c', PAPER = '#f1e7cf';
+function paper(title, sub){
+  const [c, x] = mk(SHEET_W, SHEET_H);
+  x.fillStyle = PAPER; x.fillRect(0, 0, SHEET_W, SHEET_H);
+  const r = seeded(3);
+  for (let i = 0; i < 2600; i++){ x.fillStyle = 'rgba(120,90,40,' + (r() * .06) + ')'; x.fillRect(r() * SHEET_W, r() * SHEET_H, 2, 2); }
+  x.strokeStyle = 'rgba(120,90,40,.09)'; x.lineWidth = 1;
+  for (let gx = 0; gx <= SHEET_W; gx += 20){ x.beginPath(); x.moveTo(gx + .5, 0); x.lineTo(gx + .5, SHEET_H); x.stroke(); }
+  for (let gy = 0; gy <= SHEET_H; gy += 20){ x.beginPath(); x.moveTo(0, gy + .5); x.lineTo(SHEET_W, gy + .5); x.stroke(); }
+  const v = x.createRadialGradient(SHEET_W/2, SHEET_H/2, SHEET_H*.4, SHEET_W/2, SHEET_H/2, SHEET_W*.75);
+  v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(90,60,20,.22)');
+  x.fillStyle = v; x.fillRect(0, 0, SHEET_W, SHEET_H);
+  label(x, title, 56, 70, 100, INK, { align:'left', weight: 700 });
+  label(x, sub, 22, 72, 138, SEPIA, { align:'left', weight: 400 });
+  label(x, 'SUNSPIRE SAGA · CONCEPT', 18, SHEET_W - 70, 96, SEPIA, { align:'right', track: 4 });
+  x.strokeStyle = SEPIA; x.lineWidth = 2; x.beginPath(); x.moveTo(70, 160); x.lineTo(SHEET_W - 70, 160); x.stroke();
+  return [c, x];
+}
+function tape(x, cx, cy, ang){
+  x.save(); x.translate(cx, cy); x.rotate(ang); x.fillStyle = 'rgba(232,214,160,.75)'; x.fillRect(-34, -11, 68, 22);
+  x.fillStyle = 'rgba(255,255,255,.2)'; x.fillRect(-34, -11, 68, 4); x.restore();
+}
+function note(x, s, px, cx, y, opt){ label(x, s, px, cx, y, SEPIA, Object.assign({ weight: 500 }, opt || {})); }
+function sheetAdepts(){
+  const [c, x] = paper('The Adepts', 'Four heroes, one per element. 16×22 overworld sprites, with the battle poses drawn from behind.');
+  const info = {
+    ari:  ['Earth adept from Thera, party leader', 'Arts: Quake, Spire, Gaia Blade'],
+    lyn:  ['Fire adept, scouting out of Brindle', 'Arts: Flare, Fire Bomb, Inferno'],
+    bram: ['Water adept, a miner who knows every shaft', 'Arts: Cure, Ice Horn, Pure Ply'],
+    sera: ['Wind adept, a scout pinned on the trail', 'Arts: Gust, Plasma, Bolt']
+  };
+  ['ari', 'lyn', 'bram', 'sera'].forEach((id, i) => {
+    const d = CHAR_DEFS[id], col = ELCOL[d.el], x0 = 70 + i * 375, cx = x0 + 170;
+    label(x, d.name, 44, x0, 222, INK, { align:'left', weight: 700 });
+    label(x, ELNAME[d.el].toUpperCase(), 18, x0 + 340, 220, col, { align:'right', track: 3, weight: 700 });
+    // portrait card
+    x.fillStyle = 'rgba(255,255,255,.55)'; x.fillRect(x0, 240, 340, 250);
+    x.strokeStyle = 'rgba(58,42,20,.35)'; x.strokeRect(x0 + .5, 240.5, 340, 250);
+    glowDisc(x, cx, 380, 120, hexA(col, .35));
+    put(x, hero(id, 'down'), cx, 470, 9);
+    tape(x, x0 + 20, 244, -.25); tape(x, x0 + 320, 244, .22);
+    // turnaround
+    const turn = [['down', 'front'], ['right', 'side'], ['up', 'back']];
+    turn.forEach((t, j) => { const tx = x0 + 55 + j * 115; put(x, hero(id, t[0]), tx, 620, 4); note(x, t[1], 16, tx, 645); });
+    note(x, 'turnaround', 15, x0, 528, { align:'left' });
+    x.strokeStyle = 'rgba(138,90,28,.35)'; x.beginPath(); x.moveTo(x0, 536); x.lineTo(x0 + 340, 536); x.stroke();
+    // battle poses
+    note(x, 'battle poses', 15, x0, 678, { align:'left' });
+    x.beginPath(); x.moveTo(x0, 686); x.lineTo(x0 + 340, 686); x.stroke();
+    const poses = [['attack', 'attack'], ['cast', 'cast'], ['hit', 'hit']];
+    poses.forEach((p, j) => { const tx = x0 + 55 + j * 115; put(x, hero(id, p[0]), tx, 790, 4); note(x, p[1], 16, tx, 815); });
+    // palette
+    const keys = ['hair', 'skin', 'tunic', 'scarf', 'leg', 'boot'];
+    keys.forEach((k, j) => {
+      const sx = x0 + j * 57;
+      x.fillStyle = d.pal[k]; x.fillRect(sx, 845, 48, 32);
+      x.strokeStyle = 'rgba(58,42,20,.5)'; x.strokeRect(sx + .5, 845.5, 48, 32);
+      note(x, k, 13, sx + 24, 896);
+    });
+    note(x, info[id][0], 16, x0, 932, { align:'left', weight: 600 });
+    note(x, info[id][1], 15, x0, 956, { align:'left', weight: 400 });
+  });
+  return c;
+}
+function sheetBestiary(){
+  const [c, x] = paper('Bestiary', 'Twelve monsters across four regions. Bosses shrug off plain steel; spirits, arts and summons are the answer.');
+  const where = k => { for (const zone in ENC) if (ENC[zone].some(g => g.indexOf(k) >= 0)) return zone; return k === 'ogre' ? 'mine' : 'spire'; };
+  const ZONE = { field:'Thera Fields', mine:'Brindle Mine', trail:'Sunspire Trail', shrine:'The Sunspire', spire:'The Sunspire' };
+  const list = ['ooze','bat','wolf','spider','beetle','golem','harpy','boar','shade','gargoyle','ogre','wyrm'];
+  list.forEach((k, i) => {
+    const col = i % 6, row = Math.floor(i / 6), cx = 70 + 122 + col * 244, top = 190 + row * 400;
+    const d = ENEMY_DEFS[k], spr = enemy(k), s = Math.max(4, Math.min(8, Math.floor(200 / Math.max(spr.width, spr.height))));
+    x.fillStyle = d.boss ? 'rgba(212,98,47,.12)' : 'rgba(255,255,255,.4)'; x.fillRect(cx - 112, top, 224, 360);
+    x.strokeStyle = d.boss ? 'rgba(180,72,29,.6)' : 'rgba(58,42,20,.3)'; x.strokeRect(cx - 111.5, top + .5, 224, 360);
+    x.fillStyle = 'rgba(58,42,20,.18)'; x.beginPath(); x.ellipse(cx, top + 262, spr.width * s * .42, 8, 0, 0, 7); x.fill();
+    put(x, spr, cx, top + 262, s);
+    label(x, d.name, 22, cx, top + 300, INK, { weight: 700 });
+    note(x, ZONE[where(k)] + (d.boss ? '  ·  BOSS' : ''), 15, cx, top + 326, { weight: d.boss ? 700 : 500 });
+    note(x, 'HP ' + d.hp + '  ATK ' + d.atk + '  DEF ' + d.def, 14, cx, top + 348, { weight: 400 });
+    if (d.boss) tape(x, cx, top + 2, (i % 2 ? .1 : -.1));
+  });
+  return c;
+}
+function sheetSpirits(){
+  const [c, x] = paper('Spirits & Summons', 'Eight elemental spirits hide across the land. Win a duel to recruit one; unleash them together to call a summon.');
+  SPIRIT_ORDER.forEach((id, i) => {
+    const d = SPIRIT_DEFS[id], col = ELCOL[d.el], cx = 70 + 91 + i * 182;
+    x.fillStyle = 'rgba(255,255,255,.45)'; x.fillRect(cx - 82, 190, 164, 250);
+    glowDisc(x, cx, 300, 90, hexA(col, .4));
+    put(x, djinn(id), cx, 360, 8);
+    label(x, d.name, 22, cx, 398, INK, { weight: 700 });
+    note(x, ELNAME[d.el] + ' spirit', 15, cx, 422);
+  });
+  note(x, 'duel forms', 15, 70, 490, { align:'left' });
+  x.strokeStyle = 'rgba(138,90,28,.35)'; x.beginPath(); x.moveTo(70, 498); x.lineTo(SHEET_W - 70, 498); x.stroke();
+  SPIRIT_ORDER.forEach((id, i) => {
+    const cx = 70 + 91 + i * 182, k = 'djinn_battle_' + id;
+    if (SPRITES[k]) put(x, enemy(k), cx, 600, 5);
+  });
+  note(x, 'the great summons', 15, 70, 640, { align:'left' });
+  x.beginPath(); x.moveTo(70, 648); x.lineTo(SHEET_W - 70, 648); x.stroke();
+  const pairs = { earth:'Gnome · Titan', fire:'Salamand · Phoenix', water:'Nixie · Leviath', wind:'Sylph · Tempest', sol:'Sol Avatar' };
+  ['earth','fire','water','wind','sol'].forEach((el, i) => {
+    const cx = 70 + 146 + i * 292, spr = summon(el), s = el === 'sol' ? 4 : 5;
+    glowDisc(x, cx, 800, 130, hexA(ELCOL[el], .35));
+    put(x, spr, cx, 900, s);
+    label(x, pairs[el], 20, cx, 935, INK, { weight: 700 });
+    note(x, el === 'sol' ? 'needs a spirit of every element' : ELNAME[el] + ' summons', 15, cx, 960);
+  });
+  return c;
+}
+function sheetPlaces(){
+  const [c, x] = paper('Places', 'Battle backdrops for each region and the props that dress the overworld, all on a 16-pixel tile grid.');
+  const bgs = [['fields', 'Thera Fields'], ['mine', 'Brindle Mine'], ['trail', 'Sunspire Trail'], ['shrine', 'The Sunspire']];
+  bgs.forEach(([mapId, name], i) => {
+    const col = i % 2, row = i >> 1, bx = 70 + col * 500, by = 200 + row * 380;
+    const im = captureFull(() => { G.map = MAPS[mapId]; G.mapId = mapId; G.battle = { t: 0 }; battleBG(); });
+    x.fillStyle = '#fff'; x.fillRect(bx - 8, by - 8, 496, 336);
+    x.imageSmoothingEnabled = false; x.drawImage(im, bx, by, 480, 320);
+    x.strokeStyle = 'rgba(58,42,20,.4)'; x.strokeRect(bx - 7.5, by - 7.5, 495, 335);
+    tape(x, bx + 30, by - 6, -.2); tape(x, bx + 450, by - 6, .18);
+    label(x, name, 20, bx, by + 350, INK, { align:'left', weight: 700 });
+  });
+  G.battle = null; G.map = MAPS.fields; G.mapId = 'fields';
+  const TREE_FIELD = { o:'#14280f', g:'#2e6e2c', G:'#245c24', L:'#3f8a38', k:'#5b3d22', K:'#3a2612' };
+  const TREE_TRAIL = { o:'#2c3012', g:'#6e7a35', G:'#55682c', L:'#8a9848', k:'#5b3d22', K:'#3a2612' };
+  const noGround = fn => { const keep = drawGroundBase; drawGroundBase = () => {}; try { fn(); } finally { drawGroundBase = keep; } };
+  const tile = (ch, mapId) => capture(() => noGround(() => { G.map = MAPS[mapId]; G.mapId = mapId; ctx.translate(40, 40); drawTile(ch, 0, 0); }));
+  const houseC = capture(() => { G.map = MAPS.fields; G.mapId = 'fields'; const hx = 6, hy = 17; ctx.translate(40 - hx*T, 40 - hy*T); for (let dy = 0; dy < 3; dy++) for (let dx = 0; dx < 3; dx++) drawTile(MAPS.fields.g[hy+dy][hx+dx], hx+dx, hy+dy); });
+  const props = [
+    [houseC, 'Thera home', 3], [owCanvas('tree', TREE_FIELD), 'tree', 5], [owCanvas('tree', TREE_TRAIL), 'trail tree', 5],
+    [tile('k', 'fields'), 'chest', 5], [tile('+', 'fields'), 'healing well', 5], [tile('s', 'fields'), 'signpost', 5],
+    [tile('B', 'fields'), 'boulder', 5], [owCanvas('fence_h', { o:'#2a1a0c', W:'#c9955a', w:'#a0703c', d:'#6e4a24' }), 'fence', 5],
+    [tile('+', 'shrine'), 'spirit spring', 5]
+  ];
+  G.map = MAPS.fields; G.mapId = 'fields';
+  x.fillStyle = 'rgba(255,255,255,.4)'; x.fillRect(1080, 192, 450, 760);
+  note(x, 'overworld props', 15, 1095, 220, { align:'left' });
+  props.forEach(([spr, name, s], i) => {
+    const col = i % 3, row = Math.floor(i / 3), cx = 1155 + col * 150, by = 400 + row * 200;
+    put(x, spr, cx, by, s);
+    note(x, name, 15, cx, by + 26);
+  });
+  return c;
+}
+
+async function render(){
+  await document.fonts.load('600 40px "Pixelify Sans"'); await document.fonts.load('700 40px "Pixelify Sans"'); await document.fonts.load('400 20px "Pixelify Sans"');
+  await new Promise(r => setTimeout(r, 300));
+  for (const k in USER_SPR) delete USER_SPR[k]; // built-in art only, whatever pack this browser holds
+  clearGlyphs();
+  const out = {
+    'assets/art/box-front.png': boxFront(),
+    'assets/art/box-spine.png': boxSpine(),
+    'assets/art/box-back.png': await boxBack(),
+    'assets/art/concept-adepts.png': sheetAdepts(),
+    'assets/art/concept-bestiary.png': sheetBestiary(),
+    'assets/art/concept-spirits.png': sheetSpirits(),
+    'assets/art/concept-places.png': sheetPlaces()
+  };
+  for (const id of ['ari', 'lyn', 'bram', 'sera']){
+    const src = hero(id, 'down'), [c, x] = mk(src.width * 8, src.height * 8);
+    x.drawImage(src, 0, 0, c.width, c.height); out['assets/art/hero-' + id + '.png'] = c;
+  }
+  return out;
+}
+window.preview = async function(){
+  const out = await render(), box = document.getElementById('out'); box.innerHTML = '';
+  for (const k in out){ out[k].style.maxWidth = '48%'; out[k].title = k; box.appendChild(out[k]); }
+  return Object.keys(out);
+};
+window.generate = async function(){
+  const out = await render(), done = [];
+  for (const k in out){ const r = await fetch('/save/' + k, { method: 'POST', body: out[k].toDataURL('image/png') }); done.push(await r.text()); }
+  return done;
+};
+</script>

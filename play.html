@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Play Sunspire Saga</title>
+  <meta name="description" content="Play Sunspire Saga in your browser: an original GBA-style pixel-art RPG. Gather eight elemental spirits, master arts and summons, and bring the dawn back to the Sunspire.">
+  <meta name="theme-color" content="#100d1d">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="assets/sunspire-mark-512.png">
+  <!-- Social cards need an absolute address: replace YOUR-GITHUB-USER with your Pages host. -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Play Sunspire Saga">
+  <meta property="og:description" content="An original GBA-style pixel-art RPG for the browser: gather eight elemental spirits, master arts and summons, and bring the dawn back to the Sunspire.">
+  <meta property="og:image" content="https://YOUR-GITHUB-USER.github.io/sunspire-saga/assets/sunspire-card.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap">
+  <script>try{var t=localStorage.getItem('sunspire_theme'),h=localStorage.getItem('sunspire_handheld'),r=document.documentElement;if(t)r.dataset.theme=t;r.dataset.themeEff=t||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');if(h&&/^#[0-9a-f]{6}$/i.test(h))r.style.setProperty('--hh',h)}catch(e){}</script>
+  <link rel="stylesheet" href="assets/site.css">
+  <style>
+    .play{display:flex; flex-direction:column; align-items:center; gap:16px; padding:28px 16px 0;}
+    .play-bar{width:100%; max-width:620px; display:flex; justify-content:space-between; align-items:center; gap:12px 16px; flex-wrap:wrap;}
+    .stage{width:100%; max-width:620px;}
+    .legend{font-size:13px; color:var(--ink-2); text-align:center; line-height:1.9; max-width:62ch; margin:0;}
+    .legend kbd{font-family:var(--mono); font-size:12px; color:var(--ink); background:var(--surface); border:1px solid var(--line);
+      border-bottom-width:2px; border-radius:5px; padding:0 5px;}
+    .verline button{background:none; border:none; color:var(--ink-3); font-family:var(--mono); font-size:12px; letter-spacing:.1em; cursor:pointer;
+      text-decoration:underline dotted; text-underline-offset:3px; padding:2px 6px;}
+    .verline button:hover{color:var(--accent);}
+    .pack-load{display:flex; flex-direction:column; align-items:center; gap:10px; width:100%; max-width:620px; padding-top:4px;}
+    .pack-load .btn{cursor:pointer;}
+    #packStatus{font-size:13px; line-height:1.7; text-align:center; color:var(--ink-2);}
+    #packStatus:empty{display:none;}
+    #packStatus .ok{color:var(--ok);} #packStatus .warn{color:var(--warn);} #packStatus .err{color:var(--err);}
+
+    /* ---------- immersive: the handheld alone, as large as the viewport allows ---------- */
+    .imm-exit, .imm-hint{display:none;}
+    body.immersive{overflow:hidden;}
+    body.immersive .nav, body.immersive .play-bar, body.immersive .legend, body.immersive .verline,
+    body.immersive .pack-load, body.immersive .foot{display:none;}
+    body.immersive .stage{position:fixed; inset:0; z-index:100; max-width:none; display:flex; align-items:center; justify-content:center;
+      padding:max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+      background:radial-gradient(1200px 760px at 50% 42%, color-mix(in oklab, var(--hh) 30%, #0b0914), #05040a 72%);}
+    /* portrait: screen above the controls, sized so the whole shell fits the height */
+    body.immersive .shell{width:min(100%, calc((100dvh - 214px) * 1.5 + 56px));}
+    /* landscape: the wide handheld, d-pad left and buttons right of the screen */
+    @media (orientation: landscape){
+      body.immersive .shell{display:grid; grid-template-columns:auto auto auto; grid-template-areas:"dpad screen ab" "dpad start ab";
+        align-items:center; justify-items:center; column-gap:clamp(18px, 3vw, 44px); row-gap:10px; width:auto;
+        padding:18px clamp(18px, 3vw, 40px) 12px; border-radius:44px;}
+      body.immersive .controls{display:contents;}
+      body.immersive .dpad{grid-area:dpad;}
+      body.immersive .ab{grid-area:ab;}
+      body.immersive .mid{grid-area:start; flex-direction:row; gap:18px;}
+      body.immersive .screen{grid-area:screen; width:min(calc(100vw - 390px), calc((100dvh - 126px) * 1.5 + 24px));}
+    }
+    body.immersive .imm-exit{display:inline-flex; position:fixed; top:max(12px, env(safe-area-inset-top)); right:max(12px, env(safe-area-inset-right)); z-index:101;
+      background:rgba(20,16,33,.6); color:#e9e0c8; border-color:rgba(255,255,255,.18); opacity:.55; transition:opacity .2s;}
+    body.immersive .imm-exit:hover, body.immersive .imm-exit:focus-visible{opacity:1;}
+    body.immersive .imm-hint{display:block; position:fixed; left:50%; bottom:max(16px, env(safe-area-inset-bottom)); transform:translateX(-50%); z-index:101;
+      background:rgba(20,16,33,.75); color:#e9e0c8; font-size:13px; padding:6px 14px; border-radius:20px; pointer-events:none;
+      animation:hint-fade 3.2s ease forwards;}
+    @keyframes hint-fade{0%,70%{opacity:1} 100%{opacity:0}}
+  </style>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+  <a class="brand" href="index.html"><img src="assets/sunspire-mark-512.png" alt=""><span>Sunspire Saga</span></a>
+  <nav class="nav-links" aria-label="Site">
+    <a href="index.html">Home</a>
+    <a href="play.html" aria-current="page">Play online</a>
+    <a href="pack-guide.html">Pack guide</a>
+  </nav>
+  <button class="icon-btn theme-toggle" type="button" aria-label="Toggle colour theme">
+    <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+  </button>
+</div></header>
+
+<main class="play">
+  <div class="play-bar">
+    <div data-hh-picker="Shell"></div>
+    <button class="btn btn-sm" id="immBtn" type="button" title="Immersive mode (F)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+      Immersive
+    </button>
+  </div>
+
+  <div class="stage" id="stage">
+    <div class="shell" id="shell">
+      <div class="screen">
+        <span class="led"></span><span class="tag">SPIRIT&nbsp;VISION</span>
+        <canvas id="game" width="240" height="160" aria-label="Sunspire Saga game screen"></canvas>
+      </div>
+      <div class="controls">
+        <div class="dpad">
+          <button class="d up" data-k="up" aria-label="Up">&#9650;</button>
+          <button class="d lf" data-k="left" aria-label="Left">&#9664;</button>
+          <span class="hub"></span>
+          <button class="d rt" data-k="right" aria-label="Right">&#9654;</button>
+          <button class="d dn" data-k="down" aria-label="Down">&#9660;</button>
+        </div>
+        <div class="mid"><span class="hh-mark">SUNSPIRE</span><button class="pill" data-k="start">START</button></div>
+        <div class="ab">
+          <button class="round b" data-k="b">B</button>
+          <button class="round a" data-k="a">A</button>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-sm imm-exit" id="immExit" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>
+      Exit
+    </button>
+    <div class="imm-hint" id="immHint">Press F or the Exit button to leave immersive mode</div>
+  </div>
+
+  <p class="legend">
+    Move <kbd>arrows</kbd> / <kbd>WASD</kbd> &middot; confirm <kbd>Z</kbd> / <kbd>Space</kbd> &middot; cancel <kbd>X</kbd> &middot;
+    menu <kbd>Enter</kbd> &middot; sound <kbd>M</kbd> &middot; immersive <kbd>F</kbd><br>
+    Your progress saves in this browser at every inn and map change.
+  </p>
+  <div class="verline"><button id="verBtn" type="button">v39 &middot; changelog</button></div>
+
+  <section class="pack-load" aria-label="Sprite pack">
+    <label class="btn" for="packIn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg>
+      Load sprite pack
+    </label>
+    <input type="file" id="packIn" class="sr-only" accept="image/png,image/gif,image/webp,.zip,application/zip,application/x-zip-compressed" multiple>
+    <div id="packStatus" aria-live="polite"></div>
+  </section>
+</main>
+
+<dialog id="changelog" class="panel">
+  <div class="pg-head">
+    <b>Sunspire Saga &mdash; v39</b>
+    <button class="btn btn-sm" id="changelogClose" type="button">Close</button>
+  </div>
+  <div class="pg-body">
+    <table>
+      <tr><td class="ver">v39</td><td>The TTF pack font is gone; instead a pack replaces the font one
+        character at a time with glyph images (<code>A</code>&ndash;<code>Z</code> 6&times;8,
+        <code>lowercase-a</code>&ndash;<code>z</code> 6&times;6, digits and named punctuation), drawn on a
+        shared baseline with the built-in letters filling any gaps. Summon backdrops (<code>bg_summon...</code>)
+        now fill the whole screen and replace the built-in glow entirely; menu and status numbers are
+        right-aligned so wider fonts no longer clip. Glyph cells are bottom-aligned on one shared line, coloured text keeps the glyphs' shadows, and tall sprites near the screen edge no longer pop into view. The title screen sizes its SAGA ribbon and version tag to the active font.</td></tr>
+      <tr><td class="ver">v38</td><td>Pack fonts render crisp: the game finds the pixel size the font was
+        drawn for and snaps the glyphs to whole pixels. The Thera well moved off the trail path and pack
+        well / spring sprites are drawn in the depth-sorted layer, so wide or tall ones are no longer
+        clipped. Enemies stand at native size (1&times;) like the party, and the status strip grows with a
+        taller pack font.</td></tr>
+      <tr><td class="ver">v37</td><td>Thera Fields is far larger: an open meadow stretches east to Mira
+        Farmstead with two homes, an inn, a chest and the farmer Hob. Text boxes have the classic navy
+        window with a light rounded frame; the battle strip shows the PP number next to its bar; and a pack
+        may replace the whole game font with <code>font.ttf</code> (also .otf/.woff/.woff2).</td></tr>
+      <tr><td class="ver">v36</td><td>The battle status strip labels its bars: HP and PP sit next to the coloured bars on every party card.</td></tr>
+      <tr><td class="ver">v35</td><td>Pack cast effects (<code>fx_...</code>) are drawn larger (longest side
+        ~128&nbsp;px), treat black as transparent, and animated GIFs play once from the cast at native speed
+        with the effect held for the full animation instead of a fixed 0.3&nbsp;s.</td></tr>
+      <tr><td class="ver">v34</td><td>Branding: a 512&times;512 logo, a favicon (embedded in the page and as
+        <code>favicon.ico</code>) and a 1200&times;630 social card, with page description and
+        Open Graph / Twitter card tags in the head.</td></tr>
+      <tr><td class="ver">v33</td><td>Battle party drawn at native size (1&times;); the hit recoil is a
+        single frame (<code>hit</code>, no <code>hit2</code>); townsfolk take only their six walk frames;
+        the guide describes every character's role and place and explains
+        <code>bg_summon_sol</code>. The Thera Fields monsters are a touch gentler and more often alone, for the stretch where Ari walks without spirits; before level 3 the fields send lone monsters (or an ooze pair) only.</td></tr>
+      <tr><td class="ver">v32</td><td>Packs are stored in IndexedDB, so large packs survive a reload
+        (older localStorage saves migrate automatically), and the pack guide marks which slots your
+        pack covers, lists loaded variants and names files that match no slot. In battle the party is
+        drawn smaller (1.5&times;) and the idle back stance is a single frame (<code>back</code>, no
+        <code>back2</code>).</td></tr>
+      <tr><td class="ver">v31</td><td>Difficulty pass: enemies have far more HP and bite, spirit duels
+        ward off steel (physical hits cut to 30%), the four late spirits strike twice a turn, bosses shrug steel off too, the Wyrm knits its
+        wounds twice, levels come a little slower and armour is lighter &mdash; while arts, spirit
+        unleashes and summons hit much harder. Knocked-out party members lie on the field
+        (<code>hero_downed</code>, skinnable).</td></tr>
+      <tr><td class="ver">v30</td><td>New title screen: gold-bevelled lettering with an ornamental sun ring
+        and a SAGA ribbon over a blue sky with drifting clouds and the Sunspire on its crag. The logo is a
+        pack slot (<code>title</code>).</td></tr>
+      <tr><td class="ver">v29</td><td>Party members recoil when they take damage: a two-frame hit pose
+        (<code>hero_hit</code>/<code>hit2</code>, skinnable per character) replaces the plain blink, and a
+        member felled by the blow staggers before dropping out of the line.</td></tr>
+      <tr><td class="ver">v28</td><td>Looting a chest shows the open look only briefly (the
+        <code>chest_open</code> sprite, a GIF playing once in full), then the chest returns to its closed
+        sprite.</td></tr>
+      <tr><td class="ver">v27</td><td>Battle screen: party HP and PP are bars in a strip along the top
+        (name, HP number, HP bar that turns red when low, PP bar), the party stands in the bottom-right
+        corner with the leader in front, battle messages sit just under the strip, and the party idles
+        in a dedicated two-frame back stance (<code>hero_back</code>/<code>back2</code>, skinnable per
+        character) instead of the walk frame. Lyn no longer joins at the boulder: she wanders Brindle's
+        plaza and only agrees to come once you bring back the compass she lost in the paddock north of
+        the fence (a yes/no prompt when you talk to her). Summon backdrops (<code>bg_summon...</code>)
+        now play once for their full GIF length, scaled to the left half of the screen, with black as
+        transparent.</td></tr>
+      <tr><td class="ver">v26</td><td>The Thera cliff wall is now a wooden fence enclosing the north
+        paddock, auto-tiled from four skinnable pieces (<code>fence_h</code>, <code>fence_post</code>,
+        <code>fence_v</code>, <code>fence_v2</code>); the boulder still plugs its gap.</td></tr>
+      <tr><td class="ver">v25</td><td>The pack guide ends with a complete, generated list of every
+        accepted slot name (with a copy-all button), built from the game data so it cannot go
+        stale.</td></tr>
+      <tr><td class="ver">v24</td><td>Battle layout mirrored (enemies left, party in a diagonal line
+        right), party members play two-frame attack and cast poses when acting
+        (<code>hero_attack</code>/<code>cast</code> frames, skinnable per character), and cast effects
+        resolve per art (<code>fx_quake</code>...) before the element fallback.</td></tr>
+      <tr><td class="ver">v23</td><td>Battle submenu icons are pack sprites: exact slots like
+        <code>art_quake</code>, <code>spirit_flint</code>, <code>summon_phoenix</code>,
+        <code>item_herb</code>, with per-element fallbacks.</td></tr>
+      <tr><td class="ver">v22</td><td>Hand-pixeled grass tiles (skinnable: <code>grass</code>),
+        element icons in the battle submenus, spell-cast overlay sprites
+        (<code>fx_...</code>), a skinnable summon backdrop (<code>bg_summon...</code>), and Lyn now
+        joins after the boulder falls instead of at the start.</td></tr>
+      <tr><td class="ver">v21</td><td>Treasure chests are pack-replaceable sprites with separate
+        closed and opened looks (<code>chest</code> / <code>chest_open</code>, variants
+        supported).</td></tr>
+      <tr><td class="ver">v20</td><td>Spirits must be earned: stepping on one starts a duel against its
+        unique battle form (no fleeing, tougher than local monsters). Win to recruit it; lose and it
+        waits for a rematch. Battle forms are skinnable via
+        <code>djinn_battle_&lt;name&gt;</code>.</td></tr>
+      <tr><td class="ver">v19</td><td>Enemy HP is hidden (the name shows only while targeting), and the
+        toolbar icons are pack-replaceable sprites (<code>icon_fight</code>...<code>icon_flee</code>).</td></tr>
+      <tr><td class="ver">v18</td><td>Battle interface reworked in the classic handheld-JRPG layout:
+        a horizontal icon toolbar (original icons) replaces the blocking side menu, with a compact
+        HP/PP numbers panel bottom-right. Navigate icons with left/right.</td></tr>
+      <tr><td class="ver">v17</td><td>The ridge boulder, the signposts, the town well and the spirit
+        spring are pack-replaceable sprites (<code>boulder</code>, <code>sign</code>, <code>well</code>,
+        <code>spring</code>; variants supported).</td></tr>
+      <tr><td class="ver">v16</td><td>Livelier towns: villagers wander with walk animation, Mara is
+        back outside picking herbs, and two new villagers moved in - Polly in Thera and Ina in
+        Brindle (both skinnable: <code>polly_...</code>, <code>ina_...</code>).</td></tr>
+      <tr><td class="ver">v15</td><td>Thera gained a shop building (Mara moved indoors) and Brindle an
+        inn: 12 coins rests the party and saves the game. Sprite packs can target exact buildings
+        (<code>house_thera_shop</code>) or kinds (<code>house_inn</code>).</td></tr>
+      <tr><td class="ver">v14</td><td>Buildings are sprites too: load <code>house</code> (plus
+        <code>house_2</code>... variants) and whole buildings render as single bottom-anchored sprites
+        with stable per-building picks; walk-behind works.</td></tr>
+      <tr><td class="ver">v13</td><td>Tree sprite variants: load <code>tree</code>,
+        <code>tree_2</code>, <code>tree_pine</code>... and every tree keeps a stable random pick;
+        <code>tree_trail_...</code> variants apply only on the trail.</td></tr>
+      <tr><td class="ver">v12</td><td>Multiple background variants per environment (suffix the name:
+        <code>bg_field_2</code>...), picked at random each battle. Loading a pack now shows a clear
+        success / problem report under the file picker.</td></tr>
+      <tr><td class="ver">v11</td><td>Replaceable battle backgrounds, chosen by environment:
+        <code>bg_field</code>, <code>bg_mine</code>, <code>bg_trail</code>, <code>bg_tower</code>,
+        with <code>bg</code> as the fallback for all. Animated GIF backgrounds supported.</td></tr>
+      <tr><td class="ver">v10</td><td>Every collectible spirit has its own unique overworld sprite;
+        sprite packs can target them individually with <code>djinn_&lt;name&gt;</code>.</td></tr>
+      <tr><td class="ver">v9</td><td>Version number on the title screen and this changelog dialog.</td></tr>
+      <tr><td class="ver">v8</td><td>In-game sprite pack guide: full slot reference and step-by-step
+        instructions for making and loading packs.</td></tr>
+      <tr><td class="ver">v7</td><td>Sprite packs can be loaded as a single .zip (built-in reader,
+        folder names ignored, non-images skipped).</td></tr>
+      <tr><td class="ver">v6</td><td>Animated GIF sprites: every frame decoded and played on the GIF's
+        own timing, with hit-flash and shadow variants per frame. Static first frame where the
+        browser can't decode animation.</td></tr>
+      <tr><td class="ver">v5</td><td>Custom sprite packs: replace any enemy, summon, character, or map
+        object with your own PNGs by filename &mdash; per-character skins included. Packs persist in the
+        browser and reset with one click.</td></tr>
+      <tr><td class="ver">v4</td><td>Overworld redrawn: taller shaded characters with palette-swapped
+        party and NPCs, new djinn, trees, and map bosses.</td></tr>
+      <tr><td class="ver">v3</td><td>Hand-pixeled battle art for all twelve enemies and the five summon
+        figures, replacing the procedural placeholder art.</td></tr>
+      <tr><td class="ver">v2</td><td>The big expansion: a party of four with full turn order, eight
+        spirits with combined summons and cutscenes, items and equipment, gold and loot drops, shops,
+        treasure chests, five zones with a mid-boss and the Spire Key, save &amp; continue, and the
+        semi-3D battle presentation.</td></tr>
+      <tr><td class="ver">v1</td><td>First playable: overworld exploration, dialog, four spirits,
+        turn-based battles, and the Shadow Wyrm at the top of the Sunspire.</td></tr>
+    </table>
+  </div>
+</dialog>
+
+<footer class="foot"><div class="wrap">
+  <span>Sunspire Saga &middot; original code and art, MIT licence</span>
+  <span>An independent homage; not affiliated with any console maker.</span>
+</div></footer>
+
+<script src="assets/site.js"></script>
+<script src="game.js"></script>
+<script>
+// immersive mode: the handheld alone, scaled to the viewport, in real fullscreen where the browser allows it
+(function(){
+  const body = document.body, btn = document.getElementById('immBtn'), exit = document.getElementById('immExit');
+  const hint = document.getElementById('immHint');
+  let viaFullscreen = false;
+  function enter(){
+    if (body.classList.contains('immersive')) return;
+    body.classList.add('immersive');
+    hint.style.animation = 'none'; void hint.offsetWidth; hint.style.animation = '';
+    const el = document.documentElement;
+    const req = el.requestFullscreen || el.webkitRequestFullscreen;
+    if (req){
+      try {
+        const p = req.call(el, { navigationUI: 'hide' });
+        viaFullscreen = true;
+        if (p && p.catch) p.catch(() => { viaFullscreen = false; });
+      } catch (e){ viaFullscreen = false; }
+    }
+  }
+  function leave(){
+    if (!body.classList.contains('immersive')) return;
+    body.classList.remove('immersive');
+    const fsEl = document.fullscreenElement || document.webkitFullscreenElement;
+    if (fsEl){ (document.exitFullscreen || document.webkitExitFullscreen).call(document); }
+    viaFullscreen = false;
+  }
+  function toggle(){ body.classList.contains('immersive') ? leave() : enter(); }
+  btn.addEventListener('click', () => { btn.blur(); enter(); });
+  exit.addEventListener('click', () => { exit.blur(); leave(); });
+  // Esc in real fullscreen ends fullscreen; follow it out of immersive mode too
+  function onFs(){ if (viaFullscreen && !(document.fullscreenElement || document.webkitFullscreenElement)) leave(); }
+  document.addEventListener('fullscreenchange', onFs);
+  document.addEventListener('webkitfullscreenchange', onFs);
+  addEventListener('keydown', e => {
+    if ((e.key === 'f' || e.key === 'F') && !e.repeat && !e.ctrlKey && !e.metaKey && !e.altKey
+        && !document.querySelector('dialog[open]') && !/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)){
+      e.preventDefault(); toggle();
+    }
+  });
+})();
+</script>
+</body>
+</html>

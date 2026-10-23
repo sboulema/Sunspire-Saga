@@ -2,12 +2,14 @@
 
 Sunspire Saga draws every sprite from built-in pixel art, and any of it can be replaced by loading a
 **sprite pack**: image files named after the slot they replace (`wolf.png`, `tree_2.gif`,
-`ari_attack.png` …), loaded one by one or as a zip through the "Sprite packs" panel under the game.
-Packs stay in the player's own browser (IndexedDB); nothing is uploaded.
+`ari_attack.png` …), loaded one by one or as a zip with the *Load sprite pack* button under the game
+or at the top of the pack guide page. Packs stay in the player's own browser (IndexedDB); nothing is
+uploaded.
 
-The complete, always-current list of slot names is in the game: open **Pack guide → Complete slot
-list** (it is generated from the game data and has a *Copy all names* button). With a pack loaded, the
-same list marks every slot the pack covers and names files that match no slot.
+The complete, always-current list of slot names is on the **pack guide page** (`pack-guide.html`),
+under *Complete slot list* (it is generated from the game data and has a *Copy all names* button).
+With a pack loaded, the same list marks every slot the pack covers and names files that match no
+slot.
 
 ## Quick rules
 

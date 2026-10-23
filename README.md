@@ -2,12 +2,24 @@
 
 # Sunspire Saga
 
-An original GBA-style pixel-art JRPG that runs in the browser, in a single HTML file. Gather eight
-elemental spirits, master arts and summons, and bring the dawn back to the Sunspire.
+An original GBA-style pixel-art JRPG that runs in the browser. Gather eight elemental spirits,
+master arts and summons, and bring the dawn back to the Sunspire.
 
-**[Play it here](https://YOUR-GITHUB-USER.github.io/sunspire-saga/)** · no install, no build step, saves in your browser.
+**[Play it here](https://YOUR-GITHUB-USER.github.io/sunspire-saga/play.html)** · no install, no build step, saves in your browser.
 
-![Title card](assets/sunspire-card.png)
+<p align="center"><img src="assets/art/box-front.png" width="300" alt="Sunspire Saga box art"></p>
+
+## The site
+
+| Page | What it is |
+|---|---|
+| `index.html` | landing page: the story, in-game screenshots, concept art and box art |
+| `play.html` | the game in its handheld shell, with an immersive (fullscreen) toggle and a *Load sprite pack* button |
+| `pack-guide.html` | the sprite pack guide with the complete, generated slot list; packs loaded here are used by the play page |
+
+Every page has a light / dark toggle (it follows the system until you pick one) and the handheld
+shell colour can be changed from the play page or the screenshot viewer; both choices are remembered
+in the browser.
 
 ## Features
 
@@ -19,11 +31,12 @@ elemental spirits, master arts and summons, and bring the dawn back to the Sunsp
   bosses that shrug off plain steel – levelling, arts, spirits and potions all matter.
 - **Sprite packs**: every sprite, tile, background and icon can be replaced with your own art, loaded
   locally as PNG/GIF/WebP files or a zip. See [packs/README.md](packs/README.md).
-- Everything in one `index.html` (~250 KB). Hand-pixeled art, 5×5 bitmap font, WebAudio sound.
+- The whole game is one script, `game.js` (~250 KB), with no dependencies. Hand-pixeled art, 5×5
+  bitmap font, WebAudio sound.
 
 ## Playing locally
 
-Open `index.html` in a browser. If your browser blocks storage for `file://` pages (saves and
+Open `play.html` in a browser. If your browser blocks storage for `file://` pages (saves and
 sprite packs use localStorage / IndexedDB), serve the folder instead, for example:
 
 ```bash
@@ -31,26 +44,27 @@ npx serve .
 ```
 
 Controls: arrow keys or WASD to move, **Z / Space** = A (confirm), **X / Esc** = B (cancel),
-**Enter** = Start / menu, **M** toggles sound. The handheld shell around the screen has clickable
-D-pad, A, B and Start buttons for touch play.
+**Enter** = Start / menu, **M** toggles sound, **F** toggles immersive mode. The handheld shell
+around the screen has clickable D-pad, A, B and Start buttons for touch play.
 
 ## Hosting
 
 The repo is laid out for GitHub Pages: enable Pages for the `main` branch, root folder, and the
-game is live at `https://<user>.github.io/sunspire-saga/`. Then replace `YOUR-GITHUB-USER` in the
-two social-card URLs in the `<head>` of `index.html` (and in this README) so link previews show
-`assets/sunspire-card.png`. Alternatively copy `index.html` and `assets/` to any static host.
-A workflow for Pages deployment via Actions is included in `.github/workflows/pages.yml` if you
-prefer that over branch deployment.
+site is live at `https://<user>.github.io/sunspire-saga/`. Then replace `YOUR-GITHUB-USER` in the
+social-card URLs in the `<head>` of `index.html` and `play.html` (and in this README) so link
+previews show `assets/sunspire-card.png`. Alternatively copy the three HTML files, `game.js` and
+`assets/` to any static host. A workflow for Pages deployment via Actions is included in
+`.github/workflows/pages.yml` if you prefer that over branch deployment.
 
 ## Repository layout
 
 | Path | What it is |
 |---|---|
-| `index.html` | the whole game – source and distribution in one file |
-| `assets/` | logo, social card, favicon |
+| `game.js` | the whole game – source and distribution in one file |
+| `index.html`, `play.html`, `pack-guide.html` | the site: landing page, play page, pack guide |
+| `assets/` | logo, social card, favicon, site CSS/JS, `screens/` (in-game screenshots) and `art/` (box art, concept sheets) |
 | `packs/` | how to make and share sprite packs |
-| `tools/` | generators for the logo, card and favicon |
+| `tools/` | generators for the logo, card, favicon, screenshots and promotional art |
 
 Releases are tagged (`v34`, …); the in-game **changelog** button is the authoritative change list,
 and the title screen shows the running version.
