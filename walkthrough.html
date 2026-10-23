@@ -72,8 +72,8 @@
 ===============================================================================
                     SUNSPIRE SAGA - FAQ / WALKTHROUGH
                         For the browser (play.html)
-                           Game version: V40
-                         Guide version: 1.1
+                           Game version: V41
+                         Guide version: 1.2
                        Last updated: 23 October 2026
 ===============================================================================
 
@@ -161,6 +161,12 @@ show them.
 <b id="VER02">  2. VERSION HISTORY                                                   [VER02]</b>
 ===============================================================================
 
+Guide 1.2 - 23 October 2026
+   Updated for game version V41: the new battle screen (status cards,
+   over-the-shoulder targeting, the arts window) and the focus rule for
+   area arts and SQUALL, which now hit the enemy you pick for full damage
+   and the rest for 70%. Sections 4, 5.2, 5.3, 5.9 and 8.
+
 Guide 1.1 - 23 October 2026
    Updated for game version V40: Lyn is now the water adept and the
    party's healer, Bram the fire adept. Every plan that names who casts
@@ -174,6 +180,10 @@ Guide 1.0 - 23 October 2026
 The game's own version history lives on its changelog page (changelog.html).
 The bits of it that matter for a walkthrough:
 
+   V41  New battle screen: status cards with filled/empty HP and PP bars,
+        a zoomed-in targeting view with a pink droplet over the target,
+        and a full arts window. Area arts and SQUALL now pick a focus:
+        that enemy takes full damage, every other enemy 70%.
    V40  Lyn and Bram trade elements: Lyn is the water adept (CURE, ICE
         HORN, PURE PLY), Bram the fire adept (FLARE, FIRE BOMB, INFERNO).
    V37  Thera Fields grew an open meadow to the east, Mira Farmstead, with
@@ -280,9 +290,26 @@ each character.
 -------------------
 Commands are picked from a row of icons at the bottom-left, one member at a
 time in party order. Left/right (or up/down) moves between icons, A picks, B
-goes back to the previous member's command. Once everyone has a command the
-round plays out in AGI order (plus a little randomness). Enemy HP is hidden;
-an enemy's name shows only while you are targeting it.
+goes back to the previous member's command. The member choosing sits on a
+lit gold-framed card in the status bar at the top; each card shows HP and PP
+over a bar that is blue for what is left and red (HP) or purple (PP) for
+what is gone. Once everyone has a command the round plays out in AGI order
+(plus a little randomness). Enemy HP is hidden; an enemy's name shows only
+while you are targeting it.
+
+Targeting an enemy zooms the camera in over the party's shoulder: the
+enemies grow, the party stands large in the bottom-right corner, and a pink
+droplet bobs over the enemy under the cursor (left/right moves it, A
+confirms, B goes back). Area arts and SQUALL target too: the big droplet
+marks the FOCUS, which takes full damage, and small droplets mark every
+other enemy, which take 70% of it. Picking an ally (CURE, items) puts the
+droplet under that member's card instead.
+
+ARTS, SPIRIT, SUMMON and ITEM open a window on the right of the screen with
+a description strip above it: each row shows the icon, the name, the PP
+cost (or the count you carry), the element and a range glyph (one bar =
+one enemy, three bars = every enemy, a cross = one ally). Rows you cannot
+afford are greyed out; up/down scrolls long lists.
 
    FIGHT    A plain weapon attack on one enemy. Damage is your ATK (base +
             weapon + 1 per set spirit) + 0 to 4, minus the enemy's DEF.
@@ -302,7 +329,10 @@ an enemy's name shows only while you are targeting it.
 Each character has three arts, learned at fixed party levels. Damage arts do
 power + half your ATK + party level + 0 to 3, minus the enemy's DEF, and they
 ignore the "shrugs off steel" reduction entirely. This is why arts, not
-swords, kill spirits and bosses.
+swords, kill spirits and bosses. "ALL enemies" arts ask for a focus: the
+enemy you pick takes the full amount, every other enemy 70% of its own roll
+(rounded down, never below 1). Against a lone boss or spirit that makes no
+difference.
 
    Art          Who    Lv   PP   Power   Notes
    ---------------------------------------------------------------------
@@ -313,10 +343,13 @@ swords, kill spirits and bosses.
    ICE HORN     Lyn     4    6    34     water, one enemy
    PURE PLY     Lyn     7   10    -      fully heals one ally
    FLARE        Bram    1    4    20     fire, one enemy
-   FIRE BOMB    Bram    4    8    22     fire, ALL enemies
-   INFERNO      Bram    8   15    40     fire, ALL enemies
+   FIRE BOMB    Bram    4    8    22     fire, ALL enemies (focus 100%,
+                                         rest 70%)
+   INFERNO      Bram    8   15    40     fire, ALL enemies (focus 100%,
+                                         rest 70%)
    GUST         Sera    1    3    16     wind, one enemy
-   PLASMA       Sera    5    9    28     wind, ALL enemies
+   PLASMA       Sera    5    9    28     wind, ALL enemies (focus 100%,
+                                         rest 70%)
    BOLT         Sera    8   12    58     wind, one enemy
 
 PP comes back slowly as you walk: every member regains 1 PP per 8 steps.
@@ -406,8 +439,12 @@ For the curious (rnd(a,b) is a random whole number from a to b):
    FIGHT      max(1, ATK + rnd(0,4) - enemy DEF), then x0.3 vs spirits,
               x0.5 vs the Ogre, x0.45 vs the Wyrm
    ART        max(1, power + ATK/2 + level + rnd(0,3) - enemy DEF)
-   UNLEASH    max(1, power + 4*level + rnd(0,3) - enemy DEF/2)
+   AREA ART   as ART on the focused enemy; every other enemy takes
+              max(1, floor(0.7 x its own roll))
+   UNLEASH    max(1, power + 4*level + rnd(0,3) - enemy DEF/2); SQUALL
+              uses the same focus rule as area arts
    SUMMON     max(1, power + 5*level + rnd(0,5) - enemy DEF/2), all foes
+              (no focus: every enemy takes the full amount)
    ENEMY HIT  max(1, enemy ATK + rnd(0,4) - your DEF); halved if defending
    ENEMY AOE  as above with enemy ATK x0.7 (Ogre SMASH) or x0.75 (Wyrm's
               SHADOW FLAME), on everyone
@@ -1232,7 +1269,8 @@ Unleash effects (power + 4 x level + 0-3, minus half the target's DEF):
    BREEZE    24 wind damage and STAGGERS the target: it loses its next
              action (one strike of a double-striker's two, or the Wyrm's
              whole turn). Breeze is the best spirit in the game.
-   SQUALL    22 wind damage to EVERY enemy.
+   SQUALL    22 wind damage to EVERY enemy: full on the enemy you focus,
+             70% on the rest.
 
 Set bonus: +1 ATK and +1 DEF to every member per set spirit (max +8/+8).
 All spirits are set again at the start of every battle.
@@ -1493,7 +1531,7 @@ affiliated with or endorsed by Nintendo or Camelot.
 This walkthrough is part of the Sunspire Saga repository and is released
 under the same MIT licence as the game. You may copy, host and share it
 freely as long as this notice stays attached. All numbers were taken from
-the game's data for version V40; if you find a mistake, open an issue in
+the game's data for version V41; if you find a mistake, open an issue in
 the repository.
 
 Thanks to everyone who ever wrote a plain-text FAQ with an ASCII logo at

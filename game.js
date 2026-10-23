@@ -6,7 +6,7 @@ const cv = document.getElementById('game');
 const ctx = cv.getContext('2d');
 ctx.imageSmoothingEnabled = false;
 const W = 240, H = 160, T = 16;
-const GAME_VERSION = 'V40';
+const GAME_VERSION = 'V41';
 // pages that only need the game data (pack guide, art tools) set window.SUNSPIRE_HEADLESS before loading:
 // no input handlers and no main loop
 const HEADLESS = !!window.SUNSPIRE_HEADLESS;
@@ -3682,7 +3682,7 @@ function startBattle(groupKeys, bossId, spiritAward){
     sub:null, subSel:0, pendCmd:null, targetSel:0,
     msgs:[], msgT:0, after:null, queue:[],
     cine:null, fx:0, fxCol:null, fxSlot:null, pflash:-1, pflashT:0, hurt:null,
-    t:0, wyrmHealed:false
+    t:0, wyrmHealed:false, zoom:0, subScroll:0
   };
   sfx.hit(); G.shake = 8;
   nextInput(0);
@@ -3749,6 +3749,10 @@ function battleUpdate(){
   if (b.anim && --b.anim.t <= 0) b.anim = null;
   if (b.hurt && --b.hurt.t <= 0) b.hurt = null;
   b.enemies.forEach(e => { if (e.flash > 0) e.flash--; });
+  // the camera eases in over the party's shoulder while an enemy is being targeted
+  const wantZoom = b.phase === 'target' ? 1 : 0;
+  b.zoom += (wantZoom - b.zoom) * .22;
+  if (Math.abs(wantZoom - b.zoom) < .02) b.zoom = wantZoom;
   if (b.phase === 'cine'){ cineUpdate(); return; }
   if (b.phase === 'msg'){
     b.msgT++;
@@ -3777,7 +3781,7 @@ function battleUpdate(){
       if (id === 'fight'){ b.pendCmd = {type:'fight'}; b.phase = 'target'; b.targetSel = firstAliveEnemy(); }
       else if (id === 'defend') setCmd({type:'defend'});
       else if (id === 'flee') setCmd({type:'flee'});
-      else { b.sub = id; b.subSel = 0; b.phase = 'sub'; }
+      else { b.sub = id; b.subSel = 0; b.subScroll = 0; b.phase = 'sub'; }
     }
     return;
   }
@@ -3794,13 +3798,12 @@ function battleUpdate(){
       if (b.sub === 'arts'){
         const a = ART_DEFS[sel.key];
         if (a.heal){ b.pendCmd = {type:'art', art:sel.key}; b.phase = 'targetAlly'; b.targetSel = b.inputIdx; }
-        else if (a.aoe) setCmd({type:'art', art:sel.key});
-        else { b.pendCmd = {type:'art', art:sel.key}; b.phase = 'target'; b.targetSel = firstAliveEnemy(); }
+        else { b.pendCmd = {type:'art', art:sel.key, aoe:!!a.aoe}; b.phase = 'target'; b.targetSel = firstAliveEnemy(); } // area arts pick a focus too
       } else if (b.sub === 'spirit'){
         const sd = SPIRIT_DEFS[sel.key];
         if (sd.heal){ b.pendCmd = {type:'spirit', spirit:sel.key}; b.phase = 'targetAlly'; b.targetSel = b.inputIdx; }
-        else if (sd.healAll || sd.aoe) setCmd({type:'spirit', spirit:sel.key});
-        else { b.pendCmd = {type:'spirit', spirit:sel.key}; b.phase = 'target'; b.targetSel = firstAliveEnemy(); }
+        else if (sd.healAll) setCmd({type:'spirit', spirit:sel.key});
+        else { b.pendCmd = {type:'spirit', spirit:sel.key, aoe:!!sd.aoe}; b.phase = 'target'; b.targetSel = firstAliveEnemy(); }
       } else if (b.sub === 'summon'){
         setCmd({type:'summon', summon:sel.key});
       } else if (b.sub === 'item'){
@@ -3830,16 +3833,41 @@ function battleUpdate(){
 function subList(){
   const b = G.battle, m = G.party[b.inputIdx];
   if (b.sub === 'arts')
-    return learnedArtNames(m).map(n => ({key:n, label:n + ' ' + ART_DEFS[n].cost, dim:m.pp < ART_DEFS[n].cost, col:ART_DEFS[n].col, el:ART_DEFS[n].el}));
+    return learnedArtNames(m).map(n => { const a = ART_DEFS[n];
+      return {key:n, label:n, tag:'PP ' + a.cost, dim:m.pp < a.cost, col:a.col, el:a.el, range:a.heal ? 'ally' : a.aoe ? 'all' : 'one', desc:ART_DESC[n] || ''}; });
   if (b.sub === 'spirit')
     return SPIRIT_ORDER.filter(k => b.sstate[k] === 'set')
-      .map(k => ({key:k, label:SPIRIT_DEFS[k].name, dim:false, col:ELCOL[SPIRIT_DEFS[k].el], el:SPIRIT_DEFS[k].el}));
+      .map(k => { const d = SPIRIT_DEFS[k];
+        return {key:k, label:d.name, tag:'', dim:false, col:ELCOL[d.el], el:d.el, range:d.heal ? 'ally' : d.healAll ? 'party' : d.aoe ? 'all' : 'one', desc:spiritDesc(d)}; });
   if (b.sub === 'summon')
-    return availSummons().map(s => ({key:SUMMON_DEFS.indexOf(s), label:s.name, dim:false, col:ELCOL[s.el], el:s.el}));
+    return availSummons().map(s => ({key:SUMMON_DEFS.indexOf(s), label:s.name, tag:'', dim:false, col:ELCOL[s.el], el:s.el, range:'all', desc:summonDesc(s)}));
   if (b.sub === 'item')
     return Object.keys(G.inv).filter(k => G.inv[k] > 0)
-      .map(k => ({key:k, label:ITEM_DEFS[k].name + ' X' + G.inv[k], dim:false, col:'#e9e0c8'}));
+      .map(k => ({key:k, label:ITEM_DEFS[k].name, tag:'X' + G.inv[k], dim:false, col:'#e9e0c8', range:'ally', desc:itemDesc(ITEM_DEFS[k])}));
   return [];
+}
+// one-line descriptions for the arts window (the art list is the game's own; keep each under 32 characters)
+const ART_DESC = {
+  'QUAKE':'Attack with a tremor.', 'SPIRE':'Attack with a spire of stone.', 'GAIA BLADE':'Cleave with the earth itself.',
+  'FLARE':'Attack with flaring flames.', 'FIRE BOMB':'Blast every foe with fire.', 'INFERNO':'Engulf every foe in flame.',
+  'CURE':'Restore 70 HP to one ally.', 'ICE HORN':'Attack with a horn of ice.', 'PURE PLY':'Fully heal one ally.',
+  'GUST':'Attack with a cutting gust.', 'PLASMA':'Strike every foe with lightning.', 'BOLT':'Attack with a thunderbolt.'
+};
+function spiritDesc(d){
+  if (d.heal) return 'Heal one ally ' + Math.round(d.heal*100) + '% of max HP.';
+  if (d.healAll) return 'Heal the party ' + Math.round(d.healAll*100) + '% of max HP.';
+  if (d.aoe) return d.pow + ' ' + d.el + ' damage to every foe.';
+  return d.pow + ' ' + d.el + ' damage to one foe' + (d.stun ? ', staggers it.' : '.');
+}
+function summonDesc(s){
+  const need = s.need === 'all' ? 'one spirit of each element' : s.need + ' ' + s.el + ' on standby';
+  const extra = s.healAll ? ' Heals ' + Math.round(s.healAll*100) + '%.' : s.stun ? ' Staggers.' : '';
+  return 'Needs ' + need + '. Power ' + s.pow + ', all foes.' + extra;
+}
+function itemDesc(it){
+  if (it.revive) return 'Revive a fallen ally at half HP.';
+  if (it.heal) return 'Restore ' + it.heal + ' HP to one ally.';
+  return 'Restore ' + it.pp + ' PP to one ally.';
 }
 
 // ---------------- battle: execution ----------------
@@ -3883,6 +3911,8 @@ function checkEnd(){
   if (G.party.every(m => m.ko)) return defeat();
   return false;
 }
+// area attacks have a focus: the enemy under the big droplet takes full damage, the rest 70%
+function splash(dmg, e, focus){ return e === focus ? dmg : Math.max(1, Math.floor(dmg * .7)); }
 function hitEnemy(e, dmg, col, slotFx){
   e.hp = Math.max(0, e.hp - dmg);
   e.flash = 12;
@@ -3915,13 +3945,13 @@ function doCmd(m, cmd, mi){
       bmsg([cmd.art + '! ' + t.name + ' recovers ' + amt + ' HP!'], stepQueue);
     } else if (a.aoe){
       sfx.spell();
-      const parts = [];
+      const parts = [], focus = aliveEnemy(cmd.target);
       for (const e of b.enemies) if (e.hp > 0){
-        const dmg = Math.max(1, a.pow + (eAtk(m) >> 1) + G.lv + rnd(0, 3) - e.def);
+        const dmg = splash(Math.max(1, a.pow + (eAtk(m) >> 1) + G.lv + rnd(0, 3) - e.def), e, focus);
         hitEnemy(e, dmg, a.col, false);
         parts.push(dmg);
       }
-      b.fx = 18; b.fxTotal = 0; b.fxCol = a.col; b.fxKind = a.el; b.fxArt = slugName(cmd.art); b.fxSlot = b.enemies.filter(e=>e.flash>0)[0] ? b.enemies.filter(e=>e.flash>0)[0].slot : null;
+      b.fx = 18; b.fxTotal = 0; b.fxCol = a.col; b.fxKind = a.el; b.fxArt = slugName(cmd.art); b.fxSlot = focus.slot;
       bmsg([cmd.art + '! ' + parts.join(' + ') + ' damage!'], stepQueue);
     } else {
       const e = aliveEnemy(cmd.target);
@@ -3950,12 +3980,13 @@ function doCmd(m, cmd, mi){
       bmsg([nm, 'The party recovers ' + tot + ' HP!'], stepQueue);
     } else if (sd.aoe){
       sfx.spell();
-      const parts = [];
+      const parts = [], focus = aliveEnemy(cmd.target);
       for (const e of b.enemies) if (e.hp > 0){
-        const dmg = Math.max(1, sd.pow + G.lv*4 + rnd(0, 3) - (e.def >> 1));
+        const dmg = splash(Math.max(1, sd.pow + G.lv*4 + rnd(0, 3) - (e.def >> 1)), e, focus);
         hitEnemy(e, dmg, ELCOL[sd.el], false);
         parts.push(dmg);
       }
+      b.fx = 18; b.fxTotal = 0; b.fxCol = ELCOL[sd.el]; b.fxKind = sd.el; b.fxArt = null; b.fxSlot = focus.slot;
       bmsg([nm, parts.join(' + ') + ' damage!'], stepQueue);
     } else {
       const e = aliveEnemy(cmd.target);
@@ -4347,33 +4378,61 @@ function fxSlotName(b){ return (b.fxArt && userSpr('fx_' + b.fxArt)) ? 'fx_' + b
 function fxSprite(b){ return b.fxKind ? userSpr(fxSlotName(b)) : null; }
 function stripLH(){ return glyphFontOn() ? 9 : 6; } // row height of the status strip
 function stripH(){ return 6 + stripLH() * 3; }
+// a status bar with a filled and an empty colour, so its state reads at a glance
+function bar2(x, y, w, h, val, max, fill, empty){
+  ctx.fillStyle = '#0c0a16'; ctx.fillRect(x, y, w, h);
+  ctx.fillStyle = empty; ctx.fillRect(x+1, y+1, w-2, h-2);
+  ctx.fillStyle = fill; ctx.fillRect(x+1, y+1, Math.round((w-2) * clamp(val/max, 0, 1)), h-2);
+}
+// the pink droplet that marks a target: fat round top, point down (or up when it sits under a party card)
+const DROP_BIG = ["..ppp..",".plppp.","plppppp","ppppppp",".ppppp.",".ppppp.","..ppp..","..ppp..","...p...","...p..."];
+const DROP_SMALL = [".pp.","lppp","pppp",".pp.",".pp.","..p."];
+function drawDrop(cx, cy, big, up, t){
+  const rows = big ? DROP_BIG : DROP_SMALL, w = rows[0].length, h = rows.length;
+  const bob = (t >> 3) % 2 ? 1 : 0;
+  const x0 = Math.round(cx - w/2), y0 = Math.round(up ? cy + bob : cy - h - bob);
+  const px = (c, r, col) => { ctx.fillStyle = col; ctx.fillRect(x0 + c, y0 + (up ? h - 1 - r : r), 1, 1); };
+  for (let r = 0; r < h; r++) for (let c = 0; c < w; c++){
+    const ch = rows[r][c];
+    if (ch === 'p') px(c, r, '#f06ab8'); else if (ch === 'l') px(c, r, '#ffd0ec');
+  }
+  ctx.fillStyle = '#5a1040'; // outline
+  for (let r = 0; r < h; r++) for (let c = 0; c < w; c++){
+    if (rows[r][c] !== '.') continue;
+    const near = (rows[r][c-1] && rows[r][c-1] !== '.') || (rows[r][c+1] && rows[r][c+1] !== '.') ||
+                 (rows[r-1] && rows[r-1][c] !== '.') || (rows[r+1] && rows[r+1][c] !== '.');
+    if (near) ctx.fillRect(x0 + c, y0 + (up ? h - 1 - r : r), 1, 1);
+  }
+}
 function battleStatusPanel(){
   const b = G.battle, n = G.party.length;
   const cw = Math.min(76, Math.floor(232 / n)), LH = stripLH(), SH = stripH(), r1 = 5 + LH, r2 = 5 + 2*LH;
-  box(2, 2, 4 + n*cw, SH);
+  const px0 = W - 2 - (4 + n*cw); // the panel hangs from the top-right corner
+  box(px0, 2, 4 + n*cw, SH);
   const choosing = b.phase === 'input' || b.phase === 'sub' || b.phase === 'target' || b.phase === 'targetAlly';
   for (let i = 0; i < n; i++){
-    const m = G.party[i], x0 = 4 + i*cw, bw = cw - 8;
-    if (i > 0){ ctx.fillStyle = '#3448a0'; ctx.fillRect(x0 - 2, 5, 1, SH - 6); }
-    if (b.pflashT > 0 && (b.pflash === i || b.pflash === -2) && (b.pflashT >> 1) % 2 === 0) continue;
+    const m = G.party[i], x0 = px0 + 2 + i*cw, bw = cw - 4;
     const active = choosing && b.inputIdx === i;
-    text(m.name.slice(0, 4), x0 + 2, 5, m.ko ? '#c94a6a' : (active ? '#f2c14e' : ELCOL[m.el]));
-    const low = !m.ko && m.hp <= m.maxhp * .25;
-    const hp = '' + m.hp, pp = '' + m.pp, numW = Math.max(textW(hp), textW(pp), textW('000'));
-    const lx = x0 + 2, lw = textW('HP') + 2, bx = lx + lw, bw2 = bw - lw - numW - 2; // label, bar, number per row
-    const hpCol = m.ko ? '#c94a6a' : '#7cd88a';
-    text('HP', lx, r1, hpCol);
-    bar(bx, r1 + 1, bw2, 4, m.hp, m.maxhp, m.ko ? '#c94a6a' : (low ? '#e05a5a' : '#7cd88a'));
-    text(hp, lx + bw - textW(hp), r1, hpCol);
-    text('PP', lx, r2, '#6ab8e8');
-    bar(bx, r2 + 1, bw2, 3, m.pp, m.maxpp, '#6ab8e8');
-    text(pp, lx + bw - textW(pp), r2, '#6ab8e8');
-    if (active && (G.t >> 3) % 2 === 0){ ctx.fillStyle = '#f2c14e'; ctx.fillRect(x0 + 2, SH - 1, bw, 1); }
-    if (b.phase === 'targetAlly' && b.targetSel === i && (G.t >> 3) % 2 === 0){
-      const cx = x0 + 2 + (bw >> 1);
+    if (active){ // the member choosing a command sits on a lit card with a gold frame
+      ctx.fillStyle = '#2f4cc4'; ctx.fillRect(x0, 4, cw, SH - 4);
       ctx.fillStyle = '#f2c14e';
-      ctx.fillRect(cx - 3, SH + 3, 6, 2); ctx.fillRect(cx - 1, SH + 5, 2, 2);
-    }
+      ctx.fillRect(x0, 4, cw, 1); ctx.fillRect(x0, SH - 1, cw, 1); ctx.fillRect(x0, 4, 1, SH - 4); ctx.fillRect(x0 + cw - 1, 4, 1, SH - 4);
+    } else if (i > 0){ ctx.fillStyle = '#3448a0'; ctx.fillRect(x0, 5, 1, SH - 6); }
+    if (b.pflashT > 0 && (b.pflash === i || b.pflash === -2) && (b.pflashT >> 1) % 2 === 0) continue;
+    const lx = x0 + 2;
+    text(m.name.slice(0, 4), lx, 5, m.ko ? '#c94a6a' : (active ? '#f2c14e' : '#ffffff'));
+    const low = !m.ko && m.hp <= m.maxhp * .25;
+    const hp = '' + m.hp, pp = '' + m.pp, by = LH - 4; // the bar sits under the lower half of the text row
+    // HP: blue fills, red shows what is missing; the label and number are drawn over the bar
+    bar2(lx, r1 + by, bw, 4, m.hp, m.maxhp, m.ko ? '#5a2030' : '#4c84f4', m.ko ? '#5a2030' : '#d44040');
+    const hpCol = m.ko ? '#c94a6a' : (low && (G.t >> 3) % 2 === 0 ? '#ffb0a0' : '#ffffff');
+    text('HP', lx, r1, hpCol);
+    text(hp, lx + bw - textW(hp), r1, hpCol);
+    // PP: blue fills, dusk purple shows what is spent
+    bar2(lx, r2 + by, bw, 4, m.pp, m.maxpp, '#4c84f4', '#7a3a9a');
+    text('PP', lx, r2, '#ffffff');
+    text(pp, lx + bw - textW(pp), r2, '#ffffff');
+    if (b.phase === 'targetAlly' && b.targetSel === i) drawDrop(x0 + (cw >> 1), SH + 4, true, true, G.t);
   }
 }
 function battleToolbar(){
@@ -4383,11 +4442,70 @@ function battleToolbar(){
   for (let i = 0; i < L.length; i++)
     drawCmdIcon(L[i].id, 16 + i*19, 141, i === b.menuSel);
 }
+// small range glyph at the right of an arts row: one foe, every foe, one ally, the whole party
+function drawRangeIcon(kind, x, y, col){
+  ctx.fillStyle = col;
+  if (kind === 'one') ctx.fillRect(x + 2, y + 1, 2, 6);
+  else if (kind === 'all'){ ctx.fillRect(x, y + 4, 2, 3); ctx.fillRect(x + 3, y + 2, 2, 5); ctx.fillRect(x + 6, y, 2, 7); }
+  else if (kind === 'ally'){ ctx.fillRect(x + 2, y + 1, 2, 6); ctx.fillRect(x, y + 3, 6, 2); }
+  else { ctx.fillRect(x + 1, y + 2, 2, 4); ctx.fillRect(x, y + 3, 4, 2); ctx.fillRect(x + 5, y + 1, 2, 4); ctx.fillRect(x + 4, y + 2, 4, 2); }
+}
+// the arts / spirit / summon / item window: a description strip under the status panel, the caster
+// at the bottom-left and the list on the right, with a lit row for the selection
+function battleSubMenu(){
+  const b = G.battle, list = subList(), m = G.party[b.inputIdx];
+  if (!list.length) return;
+  const LH = stripLH(), SH = stripH(), rowH = LH + 4, sel = list[b.subSel];
+  const dy = SH + 2, dh = LH*2 + 8;
+  box(2, dy, W - 4, dh);
+  const dl = wrap(sel ? sel.desc : '', glyphFontOn() ? 31 : 36);
+  text(dl[0] || '', 8, dy + 4, '#e9e0c8');
+  if (dl[1]) text(dl[1], 8, dy + 4 + LH, '#e9e0c8');
+  // the caster, facing us, large in the bottom-left corner
+  ctx.save(); ctx.translate(8, H - 50); ctx.scale(2, 2);
+  drawHero(0, 0, 'down', 0, m.pal);
+  ctx.restore();
+  const lx = 72, ly = dy + dh + 2, lw = W - 2 - lx, lh = H - 2 - ly;
+  box(lx, ly, lw, lh);
+  const vis = Math.max(1, Math.floor((lh - 8) / rowH));
+  b.subScroll = clamp(b.subScroll, Math.max(0, b.subSel - vis + 1), Math.min(b.subSel, Math.max(0, list.length - vis)));
+  for (let r = 0; r < vis && r + b.subScroll < list.length; r++){
+    const i = r + b.subScroll, it = list[i], y = ly + 4 + r*rowH;
+    if (i === b.subSel){ ctx.fillStyle = '#2f4cc4'; ctx.fillRect(lx + 3, y - 1, lw - 6, rowH); }
+    drawListIcon(b.sub, it, lx + 11, y + (LH >> 1));
+    const col = it.dim ? '#7c7498' : (i === b.subSel ? '#f2c14e' : '#ffffff');
+    text(it.label, lx + 19, y, col);
+    const rx = lx + lw - 6; // right edge: range glyph, element dot, then the cost
+    drawRangeIcon(it.range, rx - 8, y + (LH >> 1) - 3, it.dim ? '#7c7498' : '#e9e0c8');
+    if (it.el && ELCOL[it.el]){ ctx.fillStyle = ELCOL[it.el]; ctx.fillRect(rx - 16, y + (LH >> 1) - 2, 4, 4); }
+    if (it.tag) text(it.tag, rx - 22 - textW(it.tag), y, col);
+  }
+  ctx.fillStyle = '#eef0ff'; // scroll nubs
+  if (b.subScroll > 0){ ctx.fillRect(lx + lw - 9, ly + 1, 5, 1); ctx.fillRect(lx + lw - 8, ly, 3, 1); }
+  if (b.subScroll + vis < list.length){ ctx.fillRect(lx + lw - 9, ly + lh - 2, 5, 1); ctx.fillRect(lx + lw - 8, ly + lh - 1, 3, 1); }
+}
+// camera for the over-the-shoulder target view: zoom 0..1 blends from the wide shot to a close one
+function battleCam(){
+  const b = G.battle, z = b.zoom || 0;
+  if (z <= 0.01) return null;
+  const e = b.enemies[b.targetSel] || b.enemies[firstAliveEnemy()], s = e.slot;
+  // a single target is framed left of centre; an area attack frames the whole group
+  let fx = s.x, fy = s.y, sx = 92;
+  if (b.pendCmd && b.pendCmd.aoe){
+    const alive = b.enemies.filter(x => x.hp > 0);
+    fx = alive.reduce((a, x) => a + x.slot.x, 0) / alive.length; fy = alive.reduce((a, x) => a + x.slot.y, 0) / alive.length; sx = 120;
+  }
+  const k = 1 + z * .6, tx = fx + (sx - fx) * z, ty = fy + (86 - fy) * z;
+  return { k, ox: clamp(tx - fx * k, W - W*k, 0), oy: clamp(ty - fy * k, H - H*k, 0) };
+}
 function battleDraw(){
   const b = G.battle;
   if (b.cine){ cineDraw(); return; }
+  const cam = battleCam(), z = b.zoom || 0, targeting = b.phase === 'target';
+  // background and enemies, seen through the camera (zoomed in over the party's shoulder while targeting)
+  ctx.save();
+  if (cam){ ctx.translate(cam.ox, cam.oy); ctx.scale(cam.k, cam.k); }
   battleBG();
-  // enemies
   for (let i = 0; i < b.enemies.length; i++){
     const e = b.enemies[i];
     if (e.hp <= 0) continue;
@@ -4396,29 +4514,23 @@ function battleDraw(){
     ctx.fillStyle = 'rgba(0,0,0,.3)';
     ctx.fillRect(s.x - mm.hw + 2, s.y + mm.hh - 1, mm.hw*2 - 4, 4);
     drawEnemyArt(e.kind, s.x, s.y, b.t + i*7, s.s, e.flash > 0 && (e.flash >> 1) % 2 === 0);
-  }
-  // party in the bottom-right corner, with attack/cast poses
-  for (let i = 0; i < G.party.length; i++){
-    const m = G.party[i];
-    const hurt = b.hurt && (b.hurt.i === i || b.hurt.i === -2);
-    const p = partyPos(i), x = p.x, y = p.y;
-    if (m.ko && !hurt){ // lying where they fell
-      ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fillRect(x + 1, y + 14, 14, 2);
-      ctx.save(); ctx.translate(x, y);
-      drawHero(0, 0, 'downed', 0, m.pal);
-      ctx.restore();
-      continue;
+    if (targeting && i === b.targetSel){ // a soft white sheen over the chosen enemy
+      ctx.globalAlpha = .22 + .12 * Math.sin(b.t / 5);
+      drawEnemyArt(e.kind, s.x, s.y, b.t + i*7, s.s, true);
+      ctx.globalAlpha = 1;
     }
-    if (b.pflashT > 0 && (b.pflash === i || b.pflash === -2) && (b.pflashT >> 1) % 2 === 0) continue;
-    ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fillRect(x + 3, y + 14, 10, 3);
-    ctx.save(); ctx.translate(x, y);
-    const an = (b.anim && b.anim.i === i) ? b.anim : null;
-    if (hurt) drawHero(0, 0, 'hit', 0, m.pal);
-    else if (an) drawHero(0, 0, an.kind, an.t <= 13 ? 1 : 0, m.pal);
-    else drawHero(0, 0, 'back', 0, m.pal);
-    ctx.restore();
   }
-  // spell fx: ring plus element overlay sprite
+  if (targeting){ // droplets: the big one over the target, small ones over the rest of an area attack's victims
+    const aoe = b.pendCmd && b.pendCmd.aoe;
+    for (let i = 0; i < b.enemies.length; i++){
+      const e = b.enemies[i];
+      if (e.hp <= 0 || (i !== b.targetSel && !aoe)) continue;
+      const s = e.slot, mm = sprMetrics(e.kind, s.s);
+      drawDrop(s.x, s.y - mm.hh - 3, i === b.targetSel, false, b.t);
+    }
+  }
+  ctx.restore();
+  // spell fx: a ring at the target plus the element overlay scaled over the whole screen, under the party
   if (b.fx > 0 && b.fxSlot){
     const ph = b.fxTotal ? b.fxTotal - b.fx : 22 - b.fx, s = b.fxSlot;
     if (ph < 22){
@@ -4433,43 +4545,50 @@ function battleDraw(){
     }
     if (b.fxKind){
       const fxName = fxSlotName(b), u = userSpr(fxName);
-      if (u){ // pack overlay: drawn large, played once from the cast
+      if (u){ // pack overlay: covers the screen (aspect kept), played once from the cast
         const img = (u.frames.length > 1 ? sprFrameAt(u, ph * 1000 / 60 / FX_SLOW) : u.frames[0]).img;
-        const sc = Math.max(1, Math.min(3, 128 / Math.max(u.width, u.height)));
+        const sc = Math.max(W / u.width, H / u.height);
         const w = Math.round(u.width * sc), h = Math.round(u.height * sc);
-        ctx.drawImage(img, Math.round(s.x - w/2), Math.round(s.y - 4 - h/2), w, h);
-      } else drawSpr(fxName, s.x, s.y - 4, ph < 5 ? 2 : ph < 15 ? 3 : 2, '');
+        ctx.drawImage(img, Math.round((W - w)/2), Math.round((H - h)/2), w, h);
+      } else drawSpr(fxName, s.x, s.y - 4, ph < 5 ? 3 : ph < 15 ? 5 : 3, '');
     }
   } else if (b.fx > 0 && !b.fxSlot){
     ctx.globalAlpha = b.fx / 40;
     ctx.fillStyle = b.fxCol || '#7cd88a'; ctx.fillRect(0, 90, W, 40);
     ctx.globalAlpha = 1;
   }
-  // status bars along the top, icon toolbar bottom left, party bottom right
-  battleStatusPanel();
-  if (b.phase === 'input' || b.phase === 'sub' || b.phase === 'target' || b.phase === 'targetAlly')
-    battleToolbar();
-  // submenu list pops above the toolbar
-  if (b.phase === 'sub'){
-    const list = subList(), hgt = list.length*11 + 10;
-    box(8, 122 - hgt, 122, hgt);
-    for (let i = 0; i < list.length; i++){
-      const y = 122 - hgt + 6 + i*11;
-      if (i === b.subSel){ ctx.fillStyle = '#f2c14e'; ctx.fillRect(12, y+1, 3, 3); }
-      drawListIcon(b.sub, list[i], 22, y + 2);
-      text(list[i].label, 30, y, list[i].dim ? '#5c5478' : (i === b.subSel ? '#f2c14e' : list[i].col));
+  // party in the bottom-right corner, over the effects, with attack/cast poses; larger and nearer
+  // the corner as the camera closes in
+  const ps = 1 + z;
+  for (let i = 0; i < G.party.length; i++){
+    const m = G.party[i], k = G.party.length - 1 - i;
+    const hurt = b.hurt && (b.hurt.i === i || b.hurt.i === -2);
+    const p = partyPos(i), x = Math.round(p.x + ((196 - k*28) - p.x) * z), y = Math.round(p.y + ((132 - k*10) - p.y) * z);
+    ctx.save(); ctx.translate(x, y); ctx.scale(ps, ps);
+    if (m.ko && !hurt){ // lying where they fell
+      ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fillRect(1, 14, 14, 2);
+      drawHero(0, 0, 'downed', 0, m.pal);
+      ctx.restore();
+      continue;
     }
-  } else if (b.phase === 'target'){
+    if (b.pflashT > 0 && (b.pflash === i || b.pflash === -2) && (b.pflashT >> 1) % 2 === 0){ ctx.restore(); continue; }
+    ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fillRect(3, 14, 10, 3);
+    const an = (b.anim && b.anim.i === i) ? b.anim : null;
+    if (hurt) drawHero(0, 0, 'hit', 0, m.pal);
+    else if (an) drawHero(0, 0, an.kind, an.t <= 13 ? 1 : 0, m.pal);
+    else drawHero(0, 0, 'back', 0, m.pal);
+    ctx.restore();
+  }
+  // status cards along the top, icon toolbar bottom left
+  battleStatusPanel();
+  if (b.phase === 'input' || b.phase === 'targetAlly') battleToolbar();
+  if (b.phase === 'sub') battleSubMenu();
+  else if (targeting){ // the target's name in a small window at the bottom-left
     const e = b.enemies[b.targetSel];
     if (e){
-      const s = e.slot;
-      if ((G.t >> 3) % 2 === 0){
-        const mm = sprMetrics(e.kind, s.s);
-        ctx.fillStyle = '#f2c14e';
-        ctx.fillRect(s.x - 3, s.y - mm.hh - 10, 6, 3);
-        ctx.fillRect(s.x - 1, s.y - mm.hh - 7, 2, 3);
-      }
-      textCO(e.name, 120, stripH() + 6, '#ffffff', '#241c40');
+      const tw = textW(e.name) + 12, bh = stripLH() + 8;
+      box(6, H - 6 - bh, tw, bh);
+      text(e.name, 12, H - 2 - bh, '#ffffff');
     }
   }
   // message box
