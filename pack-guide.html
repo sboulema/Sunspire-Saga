@@ -20,7 +20,6 @@
     .toc a{display:block; color:var(--ink-2); text-decoration:none; padding:5px 10px; border-left:2px solid var(--line); margin-left:1px;}
     .toc a:hover{color:var(--ink);}
     .toc a.on{color:var(--accent); border-left-color:var(--accent);}
-    .toc .toc-play{margin-top:18px;}
     .intro h1{font-size:clamp(32px, 4.5vw, 44px);}
     .intro p{font-size:17px; color:var(--ink-2); max-width:70ch;}
     .load-box{display:flex; flex-wrap:wrap; gap:12px 16px; align-items:center; background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin:22px 0 10px;}
@@ -39,7 +38,8 @@
     .doc td:first-child{white-space:nowrap;}
     .doc table.glyphs td:first-child{white-space:normal; width:38%; line-height:2.1;} /* the punctuation list is long */
     .doc th{color:var(--accent); text-align:left; font-weight:600; font-family:var(--display); font-size:15px; letter-spacing:.04em; padding:14px 0 5px; border-bottom:1px solid var(--line);}
-    .doc td.wrap{white-space:normal; line-height:2.1;}
+    .doc td.wrap{white-space:normal; width:38%; line-height:2.1;} /* long name lists wrap instead of widening the column */
+    .doc td.wrap code{white-space:nowrap;}
     .doc td i{color:var(--ink-3); font-style:normal; font-size:.85em;}
     .doc code.on{background:var(--cov-bg); color:var(--cov-ink);}
     .doc code.off{opacity:.8;}
@@ -74,7 +74,6 @@
   <aside class="toc" aria-label="On this page">
     <b>On this page</b>
     <nav id="toc"></nav>
-    <a class="btn btn-sm btn-gold toc-play" href="play.html">Play online</a>
   </aside>
 
   <div>
@@ -253,10 +252,10 @@
       <tr><td><code>summon_gnome</code> ... <code>summon_sol_avatar</code> /
         <code>summon_earth</code> ...</td><td>submenu icon per summon, element fallback
         (including <code>summon_sol</code>)</td></tr>
-      <tr><td><code>item_herb</code> <code>item_potion</code> <code>item_pdrop</code>
+      <tr><td class="wrap"><code>item_herb</code> <code>item_potion</code> <code>item_pdrop</code>
         <code>item_elixir</code></td><td>item icons in the battle ITEM window and the shops (built in
         7&times;7; the rows grow to fit icons up to 16&times;16, and bigger ones are shrunk to fit)</td></tr>
-      <tr><td><code>gear_wood</code> <code>gear_bronze</code> <code>gear_iron</code> <code>gear_steel</code>
+      <tr><td class="wrap"><code>gear_wood</code> <code>gear_bronze</code> <code>gear_iron</code> <code>gear_steel</code>
         <code>gear_sol</code> <code>gear_vest</code> <code>gear_leather</code> <code>gear_chain</code>
         <code>gear_aegis</code></td><td>gear icons in the shops, one per weapon or armour (built in
         7&times;7; rows grow to fit up to 16&times;16, bigger ones are shrunk)</td></tr>
