@@ -237,8 +237,9 @@
         icons (<code>fight arts spirit summon item defend flee</code>), ~18&times;18, centered;
         the chosen one is drawn two pixels higher, nothing else is added</td></tr>
       <tr><td><code>fx_quake</code> ...</td><td>cast effect per art (slug names: spaces become
-        underscores, e.g. <code>fx_gaia_blade</code>, <code>fx_ice_horn</code>). Scaled to cover the whole
-        240&times;160 screen (aspect kept, centred, so a 3:2 image fits exactly) and drawn under the party
+        underscores, e.g. <code>fx_gaia_blade</code>, <code>fx_ice_horn</code>). Scaled to the screen width
+        (240&nbsp;px, aspect kept) with its top-left corner on the screen's top-left corner, so a
+        240&times;160 image fits exactly and a taller one is cut off at the bottom; drawn under the party
         sprites; pure black (#000) is transparent; an animated GIF plays once from the moment of the
         cast at its native speed, and the effect stays on screen for the whole animation</td></tr>
       <tr><td><code>fx_earth</code> / <code>fire</code> / <code>water</code> / <code>wind</code> /

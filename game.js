@@ -4757,11 +4757,10 @@ function battleDraw(){
     const ph = b.fxTotal ? b.fxTotal - b.fx : 22 - b.fx, s = b.fxSlot;
     if (b.fxKind){
       const fxName = fxSlotName(b), u = userSpr(fxName);
-      if (u){ // pack overlay: covers the screen (aspect kept), played once from the cast
+      if (u){ // pack overlay: scaled to the screen width and pinned to the top-left corner, played once from the cast
         const img = (u.frames.length > 1 ? sprFrameAt(u, (performance.now() - (b.fxStart || 0)) / FX_SLOW) : u.frames[0]).img;
-        const sc = Math.max(W / u.width, H / u.height);
-        const w = Math.round(u.width * sc), h = Math.round(u.height * sc);
-        ctx.drawImage(img, Math.round((W - w)/2), Math.round((H - h)/2), w, h);
+        const sc = W / u.width;
+        ctx.drawImage(img, 0, 0, W, Math.round(u.height * sc));
       } else drawSpr(fxName, s.x, s.y - 4, ph < 5 ? 3 : ph < 15 ? 5 : 3, '');
     }
   } else if (b.fx > 0 && !b.fxSlot){
