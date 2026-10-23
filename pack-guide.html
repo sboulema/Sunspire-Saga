@@ -37,6 +37,7 @@
     .doc table{width:100%; border-collapse:collapse; margin:8px 0 14px;}
     .doc td{border-bottom:1px solid var(--line); padding:7px 12px 7px 0; vertical-align:top;}
     .doc td:first-child{white-space:nowrap;}
+    .doc table.glyphs td:first-child{white-space:normal; width:38%; line-height:2.1;} /* the punctuation list is long */
     .doc th{color:var(--accent); text-align:left; font-weight:600; font-family:var(--display); font-size:15px; letter-spacing:.04em; padding:14px 0 5px; border-bottom:1px solid var(--line);}
     .doc td.wrap{white-space:normal; line-height:2.1;}
     .doc td i{color:var(--ink-3); font-style:normal; font-size:.85em;}
@@ -269,7 +270,7 @@
     The game font can be replaced one character at a time with small images, the way a bitmap font
     sheet is cut up. Load them like any other sprite (or in the zip); every character you leave out
     keeps the built-in 5&times;5 letter, so a partial set works. File names are case-sensitive here.
-    <table>
+    <table class="glyphs">
       <tr><td><code>A</code> ... <code>Z</code></td><td>uppercase letters, 6&times;8</td></tr>
       <tr><td><code>lowercase-a</code> ... <code>lowercase-z</code></td><td>lowercase letters, usually 6&times;6 (ascenders such
         as <code>l</code> and <code>h</code> may use an 8-row cell)</td></tr>
