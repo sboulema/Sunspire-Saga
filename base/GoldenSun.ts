@@ -31,6 +31,7 @@ import {BattleAnimationTester} from "./battle/BattleAnimationTester";
 import {FieldAbilities} from "./field_abilities/FieldAbilities";
 import {load_custom_field_psynergies} from "./initializers/abilities";
 import {LoaderWindow} from "./windows/LoaderWindow";
+import {HandheldShell} from "./shell/HandheldShell";
 
 /**
  * The project has basically two important folders: assets and base. All the source code is located inside base folder.
@@ -50,6 +51,8 @@ export class GoldenSun {
     public loading_what: string = "";
     public fps_reduction_active: boolean = false;
     public showing_fps_banner: boolean = false;
+    /** The handheld shell around the canvas (inactive on a page without one). */
+    public shell: HandheldShell;
     /** Consecutive frames under MIN_FPS; the banner waits for about three seconds of them. */
     private low_fps_frames: number = 0;
     private static readonly LOW_FPS_FRAMES_FOR_BANNER = 180;
@@ -176,6 +179,16 @@ export class GoldenSun {
             },
         };
         this.game = new Phaser.Game(config);
+        this.shell = new HandheldShell(this);
+    }
+
+    /**
+     * Sets the canvas scale from outside, e.g. by the shell fitting the screen to the page.
+     * @param scale_factor integer multiple of the game resolution.
+     */
+    public set_scale_factor(scale_factor: number) {
+        this.scale_factor = scale_factor;
+        this.set_canvas_scale();
     }
 
     /** Whether this browser can give us a WebGL context (off in Lockdown Mode and on blocklisted GPUs). */
@@ -293,6 +306,7 @@ export class GoldenSun {
                     : `scale(${1 / window.devicePixelRatio})`);
         }
         this.set_canvas_scale();
+        this.shell.fit();
 
         this.game.stage.disableVisibilityChange = false;
 
@@ -429,12 +443,21 @@ export class GoldenSun {
         this.main_menu = initialize_menu(this.game, this);
 
         //set initial zoom
-        this.scale_factor = snapshot?.scale_factor ?? this.scale_factor;
-        this.set_canvas_scale();
+        if (this.shell.active) {
+            // the shell sizes the screen; a saved immersive state is restored without the fullscreen API,
+            // which needs a user gesture
+            if (snapshot?.full_screen) {
+                this.shell.enter_immersive(false);
+            }
+            this.shell.fit();
+        } else {
+            this.scale_factor = snapshot?.scale_factor ?? this.scale_factor;
+            this.set_canvas_scale();
 
-        this.fullscreen = snapshot?.full_screen ?? false;
-        if (this.fullscreen) {
-            this.set_fullscreen_mode(false);
+            this.fullscreen = snapshot?.full_screen ?? false;
+            if (this.fullscreen) {
+                this.set_fullscreen_mode(false);
+            }
         }
 
         this.assets_loaded = true;
@@ -492,6 +515,11 @@ export class GoldenSun {
         };
         for (const event_type of ["keydown", "pointerdown", "touchend", "visibilitychange"]) {
             window.addEventListener(event_type, unlock_audio, {passive: true});
+        }
+        if (this.shell.active) {
+            // the shell owns the canvas size and immersive mode; Phaser must not rescale on fullscreen changes
+            this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.NO_SCALE;
+            return;
         }
         this.game.input.onTap.add((pointer, is_double_click) => {
             if (is_double_click) {

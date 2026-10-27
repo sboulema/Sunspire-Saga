@@ -3,9 +3,6 @@ body {
     background-color: black;
     color: whitesmoke;
 }
-body.electron {
-    overflow: hidden;
-}
 label {
     font-family: monospace;
 }
@@ -29,15 +26,6 @@ input[type='checkbox'] {
     bottom: 0px;
     width: 100%;
     padding: 1rem 0 !important;
-}
-.intro {
-    padding: 1rem 20% 0rem 20%;
-}
-#game {
-    padding: 1rem 20%;
-}
-body.electron #game {
-    padding: 0 !important;
 }
 canvas {
     image-rendering: -moz-crisp-edges;
@@ -89,14 +77,6 @@ canvas {
 #stats_debug label, #stats_debug_select {
     font-family: monospace;
     margin-bottom: 1rem;
-}
-.disclaimer {
-    font-size: small;
-    font-style: italic;
-    margin-left: 20%;
-    color: #9b9b9b;
-    font-family: monospace;
-    max-width: 500px;
 }
 #sliders_debug {
     display: none;

@@ -216,7 +216,33 @@ docs and tools.
     semantics, audio sprite offsets, p2 polygon bodies). Stock `phaser-ce` from npm is not a
     drop-in; `patch-package` over it, or a `phaser_patches.ts`, are the routes for Phase 8.
 
-### Phases 4-8
+### Phase 4 - handheld shell (2026-10-27)
 
-Unchanged from the plan: handheld shell, sprite packs, content port, saves and PWA, then the
-Phaser upgrade decision.
+- `index.html` is now the play page: the legacy shell (frame, L / R shoulders, screen, d-pad,
+  Select / Start, B / A) around the engine's `#game` div, the shell colour picker, a sound
+  button, the immersive button, the key legend, and the engine's debug panels hidden under
+  `#debug` (shown with `?debug=1` or the footer link). `static/site.css` / `static/site.js` are
+  the legacy `assets/site.css` / `site.js`, trimmed to this page: colour theme (system until
+  chosen; `localStorage` key `sunspire_theme`), shell colour (`sunspire_handheld`, same presets),
+  so both choices carry over from the legacy site.
+- `base/shell/HandheldShell.ts` is the engine side, created by `GoldenSun` and inactive on a page
+  without `#shell`: on-screen buttons go through `Gamepad.press / release` with pointer capture
+  (no synthesised key events); the screen is an integer multiple of 240x160 that fits the stage,
+  or the viewport in immersive mode (`GoldenSun.set_scale_factor`), re-fitted on resize and
+  orientation change; immersive mode shows the shell alone with the browser's fullscreen API when
+  a gesture allows it (F key, the Immersive and Exit buttons, Esc follows fullscreen out);
+  `?app=1` or a standalone display mode opens immersive at once (for Phase 7). The engine's own
+  double-click fullscreen and the 1-4 zoom keys are off while the shell is active, and Phaser's
+  fullscreen scale mode is `NO_SCALE` so it never resizes the canvas itself.
+- `init.json`: `ignore_system_scaling` is off (the shell sizes the canvas; on a fractional device
+  pixel ratio the integer CSS scale still gives slightly uneven pixels, which only a DPR-aware
+  buffer size would fix).
+- Verified in Chromium: desktop page at scale 2 (538 px shell), Start and A on the shell start a
+  game, Ember shell and dark theme stored, immersive landscape grid at scale 2, F leaves; phone
+  width (375 px) at scale 1 without horizontal overflow, portrait immersive. Not yet tried on a
+  real phone: touch pointer capture, the fullscreen API from a tap, iOS safe areas.
+
+### Phases 5-8
+
+Unchanged from the plan: sprite packs, content port, saves and PWA, then the Phaser upgrade
+decision.

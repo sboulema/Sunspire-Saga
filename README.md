@@ -24,13 +24,16 @@ port catches up with it.
   `npm run build:assets` regenerates the game assets from `assets/sunspire/`; `npm run format`
   runs Prettier over `base/` (the pre-commit hook does the same).
 - Controls: arrows to move, **Z** = A, **X** = B, **A / S** = L / R, **Backspace** = Select,
-  **Enter** = Start. **M** unmutes.
+  **Enter** = Start, **M** sound, **F** immersive mode. The handheld shell around the screen has
+  the same buttons for touch; the shell colour and the light / dark theme are remembered in the
+  browser. `?debug=1` shows the engine's debug panels.
 
 ## Layout
 
 | Path | What |
 |---|---|
 | `base/` | the engine, TypeScript (entry `base/GoldenSun.ts`; the class name is kept for now) |
+| `base/shell/HandheldShell.ts`, `index.html`, `static/site.css`, `static/site.js` | the handheld shell: on-screen buttons, integer scaling, immersive mode; the page's theme and shell colour |
 | `assets/dbs/` | the game data: characters, classes, abilities, items, enemies, spirits (`djinni_db`), summons, maps, NPCs, shops, inn, dialog, audio |
 | `assets/sunspire/` | Sunspire's source art: the exported sprites, the Brindle tileset and grid, the 5x5 font glyphs |
 | `scripts/build_sunspire_assets.js` | generates `assets/images`, `assets/maps`, `assets/font` and `assets/sounds` (plus `bgm_db` / `se_db`) from `assets/sunspire/`; run it after changing the source art |
