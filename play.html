@@ -22,6 +22,15 @@
   <style>
     .play{display:flex; flex-direction:column; align-items:center; gap:16px; padding:28px 16px 0;}
     .play-bar{width:100%; max-width:620px; display:flex; justify-content:space-between; align-items:center; gap:12px 16px; flex-wrap:wrap;}
+    /* phones: swatches and an icon-only Immersive button on one line; the group keeps its aria-label */
+    @media (max-width:520px){
+      .play-bar{flex-wrap:nowrap; gap:8px;}
+      .play-bar .hh-picker{flex-wrap:nowrap; gap:6px;}
+      .play-bar .hh-picker .lbl, .play-bar .hh-name{display:none;}
+      .play-bar .hh-sw, .play-bar .hh-custom{width:24px; height:24px; flex:none;}
+      #immBtn{padding:8px; flex:none;}
+      #immBtn span{display:none;}
+    }
     .stage{width:100%; max-width:620px;}
     .legend{font-size:13px; color:var(--ink-2); text-align:center; line-height:1.9; max-width:62ch; margin:0;}
     .legend kbd{font-family:var(--mono); font-size:12px; color:var(--ink); background:var(--surface); border:1px solid var(--line);
@@ -81,9 +90,9 @@
 <main class="play">
   <div class="play-bar">
     <div data-hh-picker="Shell"></div>
-    <button class="btn btn-sm" id="immBtn" type="button" title="Immersive mode (F)">
+    <button class="btn btn-sm" id="immBtn" type="button" title="Immersive mode (F)" aria-label="Immersive mode">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
-      Immersive
+      <span>Immersive</span>
     </button>
   </div>
 
