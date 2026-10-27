@@ -3951,10 +3951,8 @@ function worldDraw(){
   if (G.shop) shopDraw();
   if (G.menu) menuDraw();
   if (G.toast){
-    G.toast.t--;
-    if (G.toast.t <= 0) G.toast = null;
-    else { const tw = textW(G.toast.msg) + 12;
-      box(Math.round((W-tw)/2), 96, tw, 13); textC(G.toast.msg, W/2, 100, '#f2c14e'); }
+    const tw = textW(G.toast.msg) + 12;
+    box(Math.round((W-tw)/2), 96, tw, 13); textC(G.toast.msg, W/2, 100, '#f2c14e');
   }
 }
 
@@ -4923,10 +4921,8 @@ function battleDraw(){
     if (ml[1]) text(ml[1], 14, y0 + 15, '#e9e0c8');
   }
   if (G.toast){
-    G.toast.t--;
-    if (G.toast.t <= 0) G.toast = null;
-    else { const tw = textW(G.toast.msg) + 12;
-      box(Math.round((W-tw)/2), stripH() + 34, tw, 13); textC(G.toast.msg, W/2, stripH() + 38, '#f2c14e'); }
+    const tw = textW(G.toast.msg) + 12;
+    box(Math.round((W-tw)/2), stripH() + 34, tw, 13); textC(G.toast.msg, W/2, stripH() + 38, '#f2c14e');
   }
 }
 
@@ -5050,14 +5046,17 @@ function titleDraw(){
   }
   textO(GAME_VERSION, W - 4 - textW(GAME_VERSION), 5, '#e9e0c8', '#1b3a86');
   const opts = hasSave() ? ['NEW GAME','CONTINUE'] : ['NEW GAME'];
-  if (opts.length > 1){
-    if (pressed.up || pressed.down){ titleSel = 1 - titleSel; sfx.blip(); }
-  } else titleSel = 0;
   for (let i = 0; i < opts.length; i++){
     const x = opts.length > 1 ? 62 + i*76 : 120;
     textCO(opts[i], x, 146, i === titleSel ? '#ffffff' : '#9a91b8', '#241c40');
     if (i === titleSel) drawCursor(x - textW(opts[i])/2 - 3, cursorRowY(146));
   }
+}
+function titleUpdate(){
+  const opts = hasSave() ? ['NEW GAME','CONTINUE'] : ['NEW GAME'];
+  if (opts.length > 1){
+    if (pressed.up || pressed.down){ titleSel = 1 - titleSel; sfx.blip(); }
+  } else titleSel = 0;
   if (pressed.start || pressed.a){
     sfx.ok();
     const keep = G.t;
@@ -5084,6 +5083,8 @@ function endingDraw(){
   textCO('PARTY LV ' + G.lv + ' * SPIRITS ' + spiritsFound().length + '/8', W/2, 120, '#e9e0c8', '#241c40');
   textCO('BATTLES WON: ' + G.wins + ' * ' + G.gold + ' COINS', W/2, 130, '#e9e0c8', '#241c40');
   if (G.t > 90 && (G.t >> 5) % 2 === 0) textCO('THANKS FOR PLAYING - PRESS ENTER', W/2, 146, '#ffffff', '#241c40');
+}
+function endingUpdate(){
   if (G.t > 90 && (pressed.start || pressed.a)){
     sfx.ok();
     newGame();
@@ -5092,28 +5093,43 @@ function endingDraw(){
 
 // ---------------- main loop ----------------
 newGame();
-function frame(){
+// The game logic runs at a fixed 60 steps per second, however fast the display refreshes: each animation
+// frame banks the time since the last one and runs as many steps as that covers, then draws once.
+const STEP_MS = 1000 / 60;
+let lastFrameT = 0, stepBank = 0;
+function step(){ // one tick of game logic; a key press lasts exactly one tick
   G.t++;
-  if (G.mode === 'world'){
-    if (G.battle) battleUpdate(); else worldUpdate();
-  }
+  if (G.mode === 'title') titleUpdate();
+  else if (G.mode === 'ending') endingUpdate();
+  else if (G.battle) battleUpdate();
+  else worldUpdate();
+  if (G.shake > 0) G.shake--;
+  if (G.fade > 0) G.fade--;
+  if (G.toast && --G.toast.t <= 0) G.toast = null;
+  for (const k in pressed) pressed[k] = false;
+}
+function draw(){
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.clearRect(0, 0, W, H);
-  if (G.shake > 0){
-    G.shake--;
-    ctx.setTransform(1, 0, 0, 1, rnd(-2, 2), rnd(-2, 2));
-  }
+  if (G.shake > 0) ctx.setTransform(1, 0, 0, 1, rnd(-2, 2), rnd(-2, 2));
   if (G.mode === 'title') titleDraw();
   else if (G.mode === 'ending') endingDraw();
   else if (G.battle) battleDraw();
   else worldDraw();
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   if (G.fade > 0){
-    G.fade--;
     ctx.fillStyle = 'rgba(8,6,16,' + (G.fade / 16) + ')';
     ctx.fillRect(0, 0, W, H);
   }
-  for (const k in pressed) pressed[k] = false;
+}
+function frame(now){
+  if (!lastFrameT) lastFrameT = now;
+  stepBank += Math.min(now - lastFrameT, 250); // a tab that was hidden does not catch up on more than a quarter second
+  lastFrameT = now;
+  let n = 0;
+  while (stepBank >= STEP_MS && n < 5){ step(); stepBank -= STEP_MS; n++; }
+  if (stepBank >= STEP_MS) stepBank = 0; // still behind after five steps: let the rest go rather than spiral
+  draw();
   requestAnimationFrame(frame);
 }
 if (!HEADLESS) requestAnimationFrame(frame);
