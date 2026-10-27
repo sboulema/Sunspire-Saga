@@ -1198,8 +1198,8 @@ export class BattleAnimation {
                 };
                 const start_delay = Array.isArray(seq.start_delay)
                     ? seq.start_delay[sprite_info.index]
-                    : (seq.start_delay as number) ?? 0;
-                const duration = Array.isArray(seq.duration) ? seq.duration[sprite_info.index] : seq.duration ?? 0;
+                    : ((seq.start_delay as number) ?? 0);
+                const duration = Array.isArray(seq.duration) ? seq.duration[sprite_info.index] : (seq.duration ?? 0);
                 let resolve_function;
                 const this_promise = new Promise(resolve => {
                     resolve_function = resolve;
@@ -1608,7 +1608,7 @@ export class BattleAnimation {
                 if (!Array.isArray(start_delay) && typeof start_delay === "object") {
                     start_delay = this.get_expanded_values(start_delay as CompactValuesSpecifier, count);
                 }
-                start_delay = Array.isArray(start_delay) ? start_delay[j] : (start_delay as number) ?? 0;
+                start_delay = Array.isArray(start_delay) ? start_delay[j] : ((start_delay as number) ?? 0);
                 if (start_delay < 30) {
                     cast_lighting();
                 } else {
@@ -1887,7 +1887,7 @@ export class BattleAnimation {
                     filter.y_shift;
                 const duration = Array.isArray(filter_seq.duration)
                     ? filter_seq.duration[sprite_index]
-                    : filter_seq.duration ?? 0;
+                    : (filter_seq.duration ?? 0);
                 if (duration > 30) {
                     let resolve_function;
                     const promise = new Promise(resolve => (resolve_function = resolve));
@@ -1943,7 +1943,7 @@ export class BattleAnimation {
                 const sprite = sprite_info.obj as PlayerSprite | Phaser.Sprite;
                 const start_delay = Array.isArray(shake_seq.start_delay)
                     ? shake_seq.start_delay[sprite_info.index]
-                    : (shake_seq.start_delay as number) ?? 0;
+                    : ((shake_seq.start_delay as number) ?? 0);
 
                 let resolve_function;
                 const this_promise = new Promise(resolve => (resolve_function = resolve));
@@ -2008,7 +2008,7 @@ export class BattleAnimation {
                 this.promises.push(this_promise);
                 const start_delay = Array.isArray(filter_seq.start_delay)
                     ? filter_seq.start_delay[sprite_info.index]
-                    : (filter_seq.start_delay as number) ?? 0;
+                    : ((filter_seq.start_delay as number) ?? 0);
                 const apply_blink = async () => {
                     const filter = sprite.available_filters[engine_filters.TINT] as Phaser.Filter.Tint;
                     this.manage_filter(filter as Phaser.Filter, sprite, false);

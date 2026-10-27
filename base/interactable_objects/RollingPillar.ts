@@ -313,15 +313,12 @@ export class RollablePillar extends InteractableObjects {
             }
             let rolling_pillar_will_fall = false;
             if (this._falling_pos) {
-                if (
-                    !(
-                        (char.trying_to_push_direction === directions.down && this._falling_pos.y <= this.tile_pos.y) ||
-                        (char.trying_to_push_direction === directions.up && this._falling_pos.y >= this.tile_pos.y) ||
-                        (char.trying_to_push_direction === directions.right &&
-                            this._falling_pos.x <= this.tile_pos.x) ||
-                        (char.trying_to_push_direction === directions.left && this._falling_pos.x >= this.tile_pos.x)
-                    )
-                ) {
+                if (!(
+                    (char.trying_to_push_direction === directions.down && this._falling_pos.y <= this.tile_pos.y) ||
+                    (char.trying_to_push_direction === directions.up && this._falling_pos.y >= this.tile_pos.y) ||
+                    (char.trying_to_push_direction === directions.right && this._falling_pos.x <= this.tile_pos.x) ||
+                    (char.trying_to_push_direction === directions.left && this._falling_pos.x >= this.tile_pos.x)
+                )) {
                     const distance =
                         this._pillar_direction === pillar_directions.VERTICAL
                             ? Math.abs(this._falling_pos.x - this.tile_x_pos)

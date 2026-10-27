@@ -445,7 +445,7 @@ export class Collision {
                         [x, y],
                     ],
                 ]);
-                const intersection_poly = turf.intersect(turf_poly, turf_tile_poly);
+                const intersection_poly = turf.intersect(turf.featureCollection([turf_poly, turf_tile_poly]));
                 if (intersection_poly) {
                     const tile_x = get_tile_position(x, map.tile_width);
                     const tile_y = get_tile_position(y, map.tile_height);

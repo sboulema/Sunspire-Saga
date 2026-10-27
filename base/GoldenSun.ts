@@ -55,9 +55,6 @@ export class GoldenSun {
     public force_desired_fps: boolean = false;
     public production_mode: boolean = false;
 
-    public electron_app: boolean;
-    public ipcRenderer: any;
-
     //main game states
     public menu_open: boolean = false;
     public save_open: boolean = false;
@@ -153,7 +150,6 @@ export class GoldenSun {
     public super_group: Phaser.Group = null;
 
     constructor() {
-        this.init_electron();
         this.logger = new Logger(this);
         const config: Phaser.IGameConfig = {
             width: numbers.GAME_WIDTH,
@@ -171,16 +167,6 @@ export class GoldenSun {
             },
         };
         this.game = new Phaser.Game(config);
-    }
-
-    /**
-     * If it's running under electron's engine, initializes it.
-     */
-    private init_electron() {
-        this.electron_app = Boolean((window as any).electron);
-        if (this.electron_app) {
-            this.ipcRenderer = (window as any).electron;
-        }
     }
 
     /**
@@ -333,12 +319,7 @@ export class GoldenSun {
         this.game.scale.setupScale(width, height);
         window.dispatchEvent(new Event("resize"));
         height = this.ignore_system_scaling ? (height * 1) / window.devicePixelRatio : height;
-        if (this.ipcRenderer) {
-            width = this.ignore_system_scaling ? (width * 1) / window.devicePixelRatio : width;
-            this.ipcRenderer.resize_window(width, height, Boolean(this.debug?.battle_anim_tester));
-        } else {
-            document.getElementById("game").style.height = `${height}px`;
-        }
+        document.getElementById("game").style.height = `${height}px`;
     }
 
     /**
@@ -643,9 +624,6 @@ export class GoldenSun {
     }
 
     private check_fps() {
-        if (this.electron_app) {
-            return;
-        }
         if (!this.showing_fps_banner && this.game.time.fps < numbers.MIN_FPS) {
             (document.querySelector("#fps-warning") as HTMLElement).style.display = "block";
             this.showing_fps_banner = true;
@@ -689,13 +667,11 @@ export class GoldenSun {
     private render() {
         if (this.assets_loaded && !this.production_mode) {
             this.debug.set_debug_info();
-            if (!this.electron_app) {
-                if (this.game.time.frames % 8 === 0) {
-                    this.debug.fill_key_debug_table();
-                }
-                if (this.game.time.frames % 30 === 0) {
-                    this.debug.fill_stats_debug_table();
-                }
+            if (this.game.time.frames % 8 === 0) {
+                this.debug.fill_key_debug_table();
+            }
+            if (this.game.time.frames % 30 === 0) {
+                this.debug.fill_stats_debug_table();
             }
         }
     }

@@ -149,10 +149,34 @@ docs and tools.
 2. Rename GS terms in player-facing strings (djinn -> spirit, Psynergy -> art).
 3. Add `ASSETS.md` listing the origin and licence of every asset left.
 
-### Phases 3-8
+### Phase 3 - tooling and browser support (2026-10-27)
 
-Unchanged from the plan: tooling and browser support, handheld shell, sprite packs, content
-port, saves and PWA, then the Phaser upgrade decision. The `electron/` folder is only reached
-through `window.electron` (`base/GoldenSun.ts:179`, `base/debug/Debug.ts`); dropping it means
-removing the `electron*` devDependencies, `start-desktop*` scripts, `index-electron.html` and
-those two `if (electron_app)` branches.
+- Electron is gone: `electron/`, `index-electron.html`, `scripts/generate_deploy.js`, the
+  `electron*`, `archiver`, `ajv*`, `pinst` and `@webpack-cli/serve` packages, the desktop npm
+  scripts and every `electron_app` / `ipcRenderer` branch in `base/` (GoldenSun, Logger, Debug,
+  StartMenu, TeleportEvent).
+- `npm install` works without `--legacy-peer-deps` (the conflict was `@webpack-cli/serve` 3
+  wanting webpack-cli 6). 482 packages instead of 704, 0 audit findings instead of 8. The
+  `npm-shrinkwrap.json` is replaced by a committed `package-lock.json` (`.npmrc` now sets
+  `package-lock = true`).
+- Updated: webpack 5.112, webpack-cli 7, webpack-dev-server 6 (the dev config's `watchFiles`
+  block became `static.watch.ignored`), webpack-merge 6, ts-loader 9.6, TypeScript stays 5.9,
+  prettier 3 (`.prettierrc` pins `trailingComma: es5`; the reformat touched 14 files), husky 9
+  (`prepare: husky`, plain `.husky/pre-commit`), typedoc 0.28 (`scripts/generate_docs.js`
+  rewritten for its API), rxjs 7, mathjs 15, @turf/turf 7 (`turf.intersect` now takes a
+  feature collection, `base/Collision.ts`), core-js 3.51. Node `>=20` (`.nvmrc` 22).
+- `npm run site` (`scripts/build_site.js`) assembles the static site in `site/`;
+  `.github/workflows/build.yml` runs format check, type-checked build and the site on every push
+  and PR, uploads it as an artifact, and deploys to GitHub Pages only when started by hand with
+  the deploy option (main's own workflow still publishes the legacy game there).
+- Vite: not now. The build is stable on webpack 5 and the bundle is one file; revisit with the
+  Phaser decision in Phase 8.
+- Bundle: 3.25 MiB minified, of which lodash 533 KiB (whole-library import), turf/jsts 264 KiB
+  and decimal.js (mathjs) 133 KiB. Switching to per-function lodash imports and dropping mathjs
+  for the three `evaluate` calls would roughly halve it; left for later.
+- Verified in Chromium after the update: title, New Game, Brindle, walking.
+
+### Phases 4-8
+
+Unchanged from the plan: handheld shell, sprite packs, content port, saves and PWA, then the
+Phaser upgrade decision.

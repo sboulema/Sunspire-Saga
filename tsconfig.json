@@ -63,7 +63,6 @@
         "./assets/filters/**",
         "./assets/plugins/**",
         "./code_docs/**",
-        "./electron/**",
         "./scripts/**",
         "./static/**",
 

@@ -119,8 +119,8 @@ export abstract class TileEvent {
         affected_by_reveal = Array.isArray(affected_by_reveal)
             ? TileEvent.format_activation_directions(affected_by_reveal)
             : affected_by_reveal
-            ? Array.from(this._initial_activation_directions)
-            : [];
+              ? Array.from(this._initial_activation_directions)
+              : [];
         this._affected_by_reveal = new Set(affected_by_reveal);
 
         this._origin_interactable_object = origin_interactable_object ?? null;

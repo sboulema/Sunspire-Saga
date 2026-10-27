@@ -33,9 +33,6 @@ export class Logger {
             if (this.msgs_count[message] === Logger.MESSAGE_NUMBER_LIMIT) {
                 message = `Sunspire - [${now}] [WARNING]: limit for '${message}' message reached.`;
                 console.warn(message);
-                if (this.data.electron_app) {
-                    this.data.ipcRenderer.log(message);
-                }
                 return;
             } else if (this.msgs_count[message] > Logger.MESSAGE_NUMBER_LIMIT) {
                 return;
@@ -58,9 +55,6 @@ export class Logger {
                 break;
             default:
                 return;
-        }
-        if (this.data.electron_app) {
-            this.data.ipcRenderer.log(message);
         }
     }
 }

@@ -8,26 +8,25 @@ module.exports = merge(common, {
     devServer: {
         static: {
             directory: __dirname,
-            watch: true,
+            // reload the page when the game data or assets change; the bundle is handled by webpack
+            watch: {
+                ignored: [
+                    path.resolve(__dirname, 'dist'),
+                    path.resolve(__dirname, 'site'),
+                    path.resolve(__dirname, 'node_modules'),
+                    path.resolve(__dirname, '.git'),
+                    path.resolve(__dirname, '.claude'),
+                    path.resolve(__dirname, 'code_docs'),
+                    path.resolve(__dirname, 'scripts'),
+                    path.resolve(__dirname, 'package.json'),
+                    path.resolve(__dirname, 'package-lock.json'),
+                ],
+            },
         },
         compress: true,
         liveReload: true,
         open: true,
         port: 9000,
-        watchFiles: {
-            options: {
-                ignored: [
-                    path.resolve(__dirname, 'dist'),
-                    path.resolve(__dirname, '.git'),
-                    path.resolve(__dirname, 'code_docs'),
-                    path.resolve(__dirname, 'scripts'),
-                    path.resolve(__dirname, 'electron'),
-                    path.resolve(__dirname, 'deploy'),
-                    path.resolve(__dirname, 'logs'),
-                    path.resolve(__dirname, 'package.json'),
-                ],
-            },
-        }
     },
     module: {
         rules: [

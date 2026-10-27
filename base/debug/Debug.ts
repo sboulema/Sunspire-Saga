@@ -49,16 +49,12 @@ export class Debug {
             {buttons: Button.DEBUG_BATTLE_ANIM_FIRE, on_down: this.fire_battle_animation.bind(this, false)},
             {buttons: Button.DEBUG_BATTLE_ANIM_FIRE_ALL, on_down: this.fire_battle_animation.bind(this, true)},
         ];
-        if (!this.data.electron_app) {
-            debug_controls.push(
-                ...[
-                    {buttons: Button.DEBUG_KEYS, on_down: this.toggle_keys.bind(this)},
-                    {buttons: Button.DEBUG_STATS, on_down: this.toggle_stats.bind(this)},
-                    {buttons: Button.DEBUG_SLIDERS, on_down: this.toggle_sliders.bind(this)},
-                    {buttons: Button.DEBUG_BATTLE_ANIMATION, on_down: this.toggle_animation_controls.bind(this)},
-                ]
-            );
-        }
+        debug_controls.push(
+            {buttons: Button.DEBUG_KEYS, on_down: this.toggle_keys.bind(this)},
+            {buttons: Button.DEBUG_STATS, on_down: this.toggle_stats.bind(this)},
+            {buttons: Button.DEBUG_SLIDERS, on_down: this.toggle_sliders.bind(this)},
+            {buttons: Button.DEBUG_BATTLE_ANIMATION, on_down: this.toggle_animation_controls.bind(this)}
+        );
         this.data.control_manager.add_controls(debug_controls, {persist: true});
     }
 
@@ -176,9 +172,6 @@ export class Debug {
                     this.data.game.input.enabled = true;
                 });
                 this.battle_anim_editor.refresh();
-                if (this.data.electron_app) {
-                    (document.querySelector(".CodeMirror") as HTMLInputElement).style.width = "350px";
-                }
             }
             document.getElementById("animation_tester").style.display = "block";
         } else {
@@ -399,9 +392,6 @@ export class Debug {
                     15,
                     "#00ff00"
                 );
-                if (this.data.electron_app) {
-                    return;
-                }
                 const event_key = IntegerPairKey.get_key(mouse_x_tile, mouse_y_tile);
                 if (event_key in this.data.map.events) {
                     const events = this.data.map.events[event_key].map(event => {
@@ -443,9 +433,7 @@ export class Debug {
                 this.game.debug.text(`x: --, y: --`, 60, 15, "#00ff00");
             }
         } else {
-            if (!this.data.electron_app) {
-                document.getElementById("object_inspector").innerText = "";
-            }
+            document.getElementById("object_inspector").innerText = "";
         }
     }
 

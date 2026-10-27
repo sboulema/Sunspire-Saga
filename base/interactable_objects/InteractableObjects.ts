@@ -991,7 +991,7 @@ export class InteractableObjects {
             x_pos += event_info.x_shift ?? 0;
             y_pos += event_info.y_shift ?? 0;
             const collision_layer_shift = this.tile_events_info[i]?.collision_layer_shift ?? 0;
-            const active_event = this.active ? event_info.active ?? true : false;
+            const active_event = this.active ? (event_info.active ?? true) : false;
             const target_layer = this.base_collision_layer + collision_layer_shift;
             const dont_propagate_affected_by_reveal = event_info.dont_propagate_affected_by_reveal ?? false;
             switch (event_info.type) {

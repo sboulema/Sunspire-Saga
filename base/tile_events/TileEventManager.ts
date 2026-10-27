@@ -226,9 +226,9 @@ export class TileEventManager {
                             );
                         }
                     } else {
-                        if (
-                            !((this_event as EventTriggerEvent).trigger_once && location_key === this.prev_location_key)
-                        ) {
+                        if (!(
+                            (this_event as EventTriggerEvent).trigger_once && location_key === this.prev_location_key
+                        )) {
                             this.event_queue.add(
                                 this_event,
                                 this.data.hero.current_direction,

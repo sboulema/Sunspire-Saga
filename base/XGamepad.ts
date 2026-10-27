@@ -225,13 +225,11 @@ export class Gamepad {
         // Load gamepad stick configuration
         const gamepad_stick_mapping = Object.entries(
             data.dbs.init_db.gamepad_rsticks as {[code: string]: [string, string]}
-        ).map(
-            ([button_code, game_buttons]): KeyMap => ({
-                game_button: null,
-                game_buttons: game_buttons.map(gb => ControllerButton[gb]),
-                button_code: Phaser.Gamepad[button_code],
-            })
-        );
+        ).map(([button_code, game_buttons]): KeyMap => ({
+            game_button: null,
+            game_buttons: game_buttons.map(gb => ControllerButton[gb]),
+            button_code: Phaser.Gamepad[button_code],
+        }));
         Gamepad.gamepad_stick_mapping = gamepad_stick_mapping;
         Gamepad.gamepad_mapping = gamepad_mapping.concat(gamepad_custom_mapping);
         // Load keyboard keys configuration

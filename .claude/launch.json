@@ -6,16 +6,6 @@
       "runtimeExecutable": "npx",
       "runtimeArgs": ["webpack", "serve", "--config", "webpack.config.dev.js", "--no-open"],
       "port": 9000
-    },
-    {
-      "name": "legacy-export",
-      "runtimeExecutable": "node",
-      "runtimeArgs": [
-        "C:/Users/SB883~1.BOU/AppData/Local/Temp/claude/D--Claude-Worktrees-Sunspire-Saga-golden-sun-walkthrough-f6c7bd/8db36ee6-7bde-4a55-b4f3-033e9207eda6/scratchpad/srv/save-server.js",
-        "C:/Users/SB883~1.BOU/AppData/Local/Temp/claude/D--Claude-Worktrees-Sunspire-Saga-golden-sun-walkthrough-f6c7bd/8db36ee6-7bde-4a55-b4f3-033e9207eda6/scratchpad/legacy",
-        "8138"
-      ],
-      "port": 8138
     }
   ]
 }

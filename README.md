@@ -15,11 +15,14 @@ port catches up with it.
 
 ## Running it
 
-- Node (any current version works; upstream pinned 14) and npm.
-- `ELECTRON_SKIP_BINARY_DOWNLOAD=1 npm install --legacy-peer-deps` (the desktop build is not
-  used; dropping Electron altogether is on the plan).
+- Node 20 or newer (`.nvmrc` says 22) and npm 10 or newer.
+- `npm install`.
 - `npm start` serves the game on [http://localhost:9000](http://localhost:9000) and rebuilds on
   change. Use a Chromium browser for now.
+- `npm run build` type-checks and bundles for development; `npm run build_prod` makes the
+  minified bundle; `npm run site` builds the static site in `site/` (what CI publishes);
+  `npm run build:assets` regenerates the game assets from `assets/sunspire/`; `npm run format`
+  runs Prettier over `base/` (the pre-commit hook does the same).
 - Controls: arrows to move, **Z** = A, **X** = B, **A / S** = L / R, **Backspace** = Select,
   **Enter** = Start. **M** unmutes.
 
@@ -31,6 +34,8 @@ port catches up with it.
 | `assets/dbs/` | the game data: characters, classes, abilities, items, enemies, spirits (`djinni_db`), summons, maps, NPCs, shops, inn, dialog, audio |
 | `assets/sunspire/` | Sunspire's source art: the exported sprites, the Brindle tileset and grid, the 5x5 font glyphs |
 | `scripts/build_sunspire_assets.js` | generates `assets/images`, `assets/maps`, `assets/font` and `assets/sounds` (plus `bgm_db` / `se_db`) from `assets/sunspire/`; run it after changing the source art |
+| `scripts/build_site.js` | copies the page, bundle, assets and static files into `site/` |
+| `.github/workflows/build.yml` | CI: format check, build, site artifact; deploys to GitHub Pages only when run by hand with the deploy option |
 | `assets/filters/`, `assets/plugins/` | WebGL filters and the particle plugin the engine ships with |
 | `static/` | Phaser, the site shell and the debug editor |
 | `MIGRATION.md` | the migration plan, decisions and phase log |

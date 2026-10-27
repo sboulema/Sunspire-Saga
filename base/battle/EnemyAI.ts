@@ -186,7 +186,7 @@ export class EnemyAI {
             }
             return true;
         });
-        let chosen_ability: typeof all_abilities[0];
+        let chosen_ability: (typeof all_abilities)[0];
         if (available_abilities.length) {
             const weights = available_abilities.map(ability => ability.use_weight);
             chosen_ability = weighted_random_pick(available_abilities, weights);

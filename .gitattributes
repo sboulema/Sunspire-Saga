@@ -27,6 +27,4 @@
 *.png binary
 
 ## Caches
-package-lock.json binary
-npm-shrinkwrap.json binary
-#NOTE: Set the above to `text` if `format-package-lock` in `.npmrc` is `true`.
+package-lock.json text
