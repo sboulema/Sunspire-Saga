@@ -1,0 +1,41 @@
+# Sprite packs
+
+Sunspire Saga draws every sprite, tile, background and icon from sheets under `assets/images/`,
+and any sheet can be replaced by loading a **sprite pack**: image files named after the slot they
+replace (`ari_field.png`, `wolf_battle.png`, `brindle.png` ...), loaded one by one or as a zip with
+the *Load sprite pack* button on the play page. Packs stay in the player's own browser
+(IndexedDB); nothing is uploaded.
+
+The complete, always-current list of slots is on the **pack guide page** (`pack-guide.html`): every
+sheet with its size, a preview and its frame names, with a *Copy all names* button. With a pack
+loaded, the list marks every slot the pack covers. The list is generated from the asset tree by
+`scripts/build_sunspire_assets.js` into `static/pack-slots.json`.
+
+## Quick rules
+
+- One image per slot, named exactly after the slot, in `.png`, `.gif` (first frame only) or
+  `.webp`. Folder names inside a zip are ignored.
+- The image must be the exact size of the sheet it replaces: slots are whole sheets, and the game
+  cuts them into the same frames at the same positions. Open the original sheet from the guide to
+  see the layout.
+- Partial packs are fine; everything you leave out keeps the built-in art. Files that match no slot
+  or have the wrong size are reported and skipped.
+- A loaded pack takes effect on the next reload of the play page.
+
+## Art you may use
+
+**Only art you made yourself or have the rights to use.** Do not put sprites ripped from commercial
+games in this repository, in example packs, or in packs you distribute. Pull requests containing
+such material will be closed.
+
+## Sharing a pack
+
+Zip the folder and share the zip; players load it with the file picker. A pack is a good fit for a
+separate repository or a release asset here rather than for the main tree.
+
+## For the port
+
+The legacy game had one slot per sprite (`ari_down.png`, `tree.png`). The engine build replaces
+whole sheets, which is simpler but asks pack authors to lay frames out exactly; stitching single
+frames into a sheet in the browser (the same thing `scripts/build_sunspire_assets.js` does at build
+time) is the planned follow-up, so that per-sprite packs work again.

@@ -178,6 +178,15 @@ body.immersive .imm-hint.shown{display:block; position:fixed; left:50%; bottom:m
   animation:hint-fade 3.2s ease forwards;}
 @keyframes hint-fade{0%,70%{opacity:1} 100%{opacity:0}}
 
+/* ---------- sprite packs ---------- */
+.pack-load{display:flex; flex-direction:column; align-items:center; gap:10px; width:100%; max-width:620px; padding-top:4px;}
+.pack-load .row{display:flex; flex-wrap:wrap; justify-content:center; gap:8px;}
+.pack-load .btn{cursor:pointer;}
+#packStatus{font-size:13px; line-height:1.7; text-align:center; color:var(--ink-2);}
+#packStatus:empty{display:none;}
+#packStatus .ok{color:var(--ok);} #packStatus .warn{color:var(--warn);} #packStatus .err{color:var(--err);}
+body.immersive .pack-load{display:none;}
+
 /* ---------- debug panels and footer ---------- */
 #debug{width:100%; max-width:960px; padding:0 16px; font-family:var(--mono); font-size:13px;}
 #debug[hidden]{display:none;}

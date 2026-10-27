@@ -242,7 +242,32 @@ docs and tools.
   width (375 px) at scale 1 without horizontal overflow, portrait immersive. Not yet tried on a
   real phone: touch pointer capture, the fullscreen API from a tap, iOS safe areas.
 
-### Phases 5-8
+### Phase 5 - sprite packs (2026-10-27)
 
-Unchanged from the plan: sprite packs, content port, saves and PWA, then the Phaser upgrade
-decision.
+- Slot granularity: sheet-level, as the plan said to do first. Every PNG under `assets/images`
+  is a slot named after the file (78 today; the build script fails on a duplicate name), listed
+  with size, group and frame names in `static/pack-slots.json` by
+  `scripts/build_sunspire_assets.js`. Fonts and audio are not slots yet.
+- `base/shell/SpritePacks.ts`: the stored pack is read from IndexedDB (`sunspire_engine_packs`
+  / `sheets`) before the game is created (`GoldenSun` is now constructed from
+  `SpritePacks.open()`), each sheet becomes a blob URL, and `Phaser.Loader.prototype.addToFileList`
+  is wrapped so every `image`, `textureatlas` image and `bitmapfont` page whose file name is a
+  covered slot loads from the pack. Import takes PNG / GIF / WebP files or a zip (stored or
+  deflated entries, read with `DecompressionStream`, folders ignored); a file is accepted only if
+  its name is a slot and its size equals the sheet's, otherwise it is reported and skipped.
+  Accepted files are stored and take effect on the next reload; *Built-in art* clears the store.
+- Page side: the *Load sprite pack* / *Built-in art* / *Pack guide* row on the play page with a
+  status line; `pack-guide.html` + `static/pack-guide.js` render the slot list with a preview of
+  each sheet, its size and frame names, mark the slots the stored pack covers, and copy all names.
+  `packs/README.md` is rewritten for sheet slots.
+- Verified in Chromium: a hue-shifted copy of `ari_field.png` was accepted, a 10x10 file for
+  `wolf_battle` and a file with an unknown name were rejected with the right messages, after a
+  reload Ari drew from a `blob:` URL with the new colours and the status said "Pack active",
+  the guide marked `ari_field.png`, and *clear* restored the built-in art on the next reload.
+- Follow-up (noted in `packs/README.md`): frame-level slots, so the legacy per-sprite packs
+  (`ari_down.png` ...) work again, by stitching frames into sheets in the browser the way the
+  build script does; animated GIF frames would come with that.
+
+### Phases 6-8
+
+Unchanged from the plan: content port, saves and PWA, then the Phaser upgrade decision.

@@ -32,6 +32,7 @@ import {FieldAbilities} from "./field_abilities/FieldAbilities";
 import {load_custom_field_psynergies} from "./initializers/abilities";
 import {LoaderWindow} from "./windows/LoaderWindow";
 import {HandheldShell} from "./shell/HandheldShell";
+import {SpritePacks} from "./shell/SpritePacks";
 
 /**
  * The project has basically two important folders: assets and base. All the source code is located inside base folder.
@@ -53,6 +54,8 @@ export class GoldenSun {
     public showing_fps_banner: boolean = false;
     /** The handheld shell around the canvas (inactive on a page without one). */
     public shell: HandheldShell;
+    /** The player's sprite pack: sheets that replace the built-in art. */
+    public sprite_packs: SpritePacks;
     /** Consecutive frames under MIN_FPS; the banner waits for about three seconds of them. */
     private low_fps_frames: number = 0;
     private static readonly LOW_FPS_FRAMES_FOR_BANNER = 180;
@@ -155,8 +158,10 @@ export class GoldenSun {
     /** Phaser.Group that holds underlayer, middlelayer and overlayer groups. */
     public super_group: Phaser.Group = null;
 
-    constructor() {
+    constructor(sprite_packs: SpritePacks) {
         this.logger = new Logger(this);
+        this.sprite_packs = sprite_packs;
+        this.sprite_packs.hook_loader();
         if (!GoldenSun.webgl_available()) {
             // the mode7 projection and every filter need WebGL; without it Phaser throws "No fallback"
             const banner = document.querySelector("#webgl-warning") as HTMLElement;
@@ -180,6 +185,7 @@ export class GoldenSun {
         };
         this.game = new Phaser.Game(config);
         this.shell = new HandheldShell(this);
+        this.sprite_packs.bind_page();
     }
 
     /**
@@ -740,9 +746,12 @@ export class GoldenSun {
     }
 }
 
-var golden_sun = new GoldenSun();
+// the stored sprite pack must be known before Phaser starts loading
+SpritePacks.open().then(sprite_packs => {
+    const golden_sun = new GoldenSun(sprite_packs);
 
-//debugging porpouses
-(window as any).GoldenSun = golden_sun;
-//exposing FieldAbilities for custom psynergies creation.
-(window as any).GoldenSun.FieldAbilities = FieldAbilities;
+    //debugging porpouses
+    (window as any).GoldenSun = golden_sun;
+    //exposing FieldAbilities for custom psynergies creation.
+    (window as any).GoldenSun.FieldAbilities = FieldAbilities;
+});

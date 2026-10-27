@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>Sunspire Saga pack guide</title>
+        <meta name="description" content="How to make a sprite pack for Sunspire Saga: every sheet the game draws, its size and frame layout, and the rules for packs." />
+        <meta name="theme-color" content="#100d1d" />
+        <link rel="shortcut icon" type="image/x-icon" href="/static/favicon.ico" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap">
+        <script>try{var t=localStorage.getItem('sunspire_theme'),h=localStorage.getItem('sunspire_handheld'),r=document.documentElement;if(t)r.dataset.theme=t;r.dataset.themeEff=t||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');if(h&&/^#[0-9a-f]{6}$/i.test(h))r.style.setProperty('--hh',h)}catch(e){}</script>
+        <link rel="stylesheet" href="/static/site.css">
+        <style>
+            .guide{width:100%; max-width:1120px; margin:0 auto; padding:40px 20px 0;}
+            .guide h1{font-family:var(--display); font-size:clamp(32px, 4.5vw, 44px); margin:0 0 .4em;}
+            .guide p{max-width:72ch; color:var(--ink-2);}
+            .guide h2{font-family:var(--display); font-size:22px; margin:40px 0 10px; color:var(--ink);}
+            .guide h3{font-family:var(--display); font-size:18px; margin:36px 0 8px; color:var(--ink); scroll-margin-top:84px;}
+            .guide h3 i{color:var(--ink-3); font-style:normal; font-size:.8em;}
+            .guide ol{padding-left:22px; color:var(--ink-2); max-width:72ch;}
+            .guide li{margin-bottom:6px;}
+            .toc{display:flex; flex-wrap:wrap; gap:6px; margin:10px 0 0;}
+            .toc a{font-size:13px; color:var(--ink-2); text-decoration:none; padding:4px 10px; border:1px solid var(--line); border-radius:999px; background:var(--surface);}
+            .toc a:hover{color:var(--ink); background:var(--surface-2);}
+            .row{display:flex; gap:12px; align-items:center; margin:8px 0; flex-wrap:wrap;}
+            #slotCount{color:var(--ink-2); font-size:14px;}
+            #slotList table{width:100%; border-collapse:collapse; margin:8px 0 14px; font-size:14px;}
+            #slotList th{color:var(--accent); text-align:left; font-weight:600; font-family:var(--display); letter-spacing:.04em; padding:10px 12px 5px 0; border-bottom:1px solid var(--line);}
+            #slotList td{border-bottom:1px solid var(--line); padding:7px 12px 7px 0; vertical-align:top;}
+            #slotList td:first-child{white-space:nowrap;}
+            #slotList td.wrap{color:var(--ink-2);}
+            #slotList .frames{font-family:var(--mono); font-size:12px; color:var(--ink-3);}
+            #slotList code{font-size:13px; background:var(--code-bg); padding:0 .3em; border-radius:4px;}
+            #slotList code.on{background:#1f4d2a; color:#a8f5b0;}
+            #slotList .cov{color:var(--ok); font-size:.9em;}
+            #slotList img.sheet{display:block; max-width:260px; max-height:96px; image-rendering:pixelated; background:repeating-conic-gradient(#8884 0 25%, transparent 0 50%) 0 0/12px 12px; border:1px solid var(--line); border-radius:4px;}
+            .warn{color:var(--warn);}
+        </style>
+    </head>
+    <body>
+        <header class="nav"><div class="wrap">
+            <a class="brand" href="/"><span>Sunspire Saga</span></a>
+            <a class="btn btn-sm" href="/">Play</a>
+            <button class="icon-btn theme-toggle" type="button" aria-label="Toggle colour theme">
+                <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+                <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+            </button>
+        </div></header>
+
+        <main class="guide">
+            <h1>Sprite pack guide</h1>
+            <p>Every sheet the game draws can be replaced with your own art. A pack is a set of image files, each named after the <b>slot</b> it replaces, loaded with <i>Load sprite pack</i> on the play page, one by one or as a zip. Packs stay in your own browser; nothing is uploaded.</p>
+
+            <h2>Rules</h2>
+            <ol>
+                <li>One file per slot, named exactly <code>&lt;slot&gt;.png</code> (<code>.gif</code> and <code>.webp</code> work too; only the first frame of a GIF is used). Folder names inside a zip are ignored.</li>
+                <li>The image must have the <b>exact size</b> of the sheet it replaces, listed below, because the frame layout stays the same: the game cuts your sheet into the same frames at the same positions. Open the original sheet to see where each frame sits.</li>
+                <li>Partial packs are fine; every slot you leave out keeps the built-in art. A file that does not match a slot, or has the wrong size, is reported and skipped.</li>
+                <li>Changes take effect when the play page is reloaded. <i>Built-in art</i> on the play page clears the pack.</li>
+                <li>Only art you made yourself or have the rights to use. No sprites ripped from commercial games, in packs you share or in this repository.</li>
+            </ol>
+
+            <h2>Slots</h2>
+            <div class="row"><span id="slotCount">loading&hellip;</span><button class="btn btn-sm" id="copyNames" type="button">Copy all names</button></div>
+            <nav class="toc" id="slotToc" aria-label="Slot groups"></nav>
+            <div id="slotList"></div>
+        </main>
+
+        <footer class="foot"><div class="wrap">
+            <span>Sunspire Saga &middot; original code and art, MIT licence</span>
+            <span>An independent homage; no assets from Nintendo or Camelot.</span>
+        </div></footer>
+        <script src="/static/site.js"></script>
+        <script src="/static/pack-guide.js"></script>
+    </body>
+</html>

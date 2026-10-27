@@ -105,6 +105,19 @@
                 Engine build, work in progress: one town and one battle so far.
             </p>
 
+            <section class="pack-load" aria-label="Sprite pack">
+                <div class="row">
+                    <label class="btn" for="packIn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg>
+                        Load sprite pack
+                    </label>
+                    <input type="file" id="packIn" class="sr-only" accept="image/png,image/gif,image/webp,.zip,application/zip,application/x-zip-compressed" multiple>
+                    <button class="btn" id="packClear" type="button">Built-in art</button>
+                    <a class="btn" href="/pack-guide.html" target="_self">Pack guide</a>
+                </div>
+                <div id="packStatus" aria-live="polite"></div>
+            </section>
+
             <div id="debug" hidden>
         <div id="animation_tester">
             <input type="text" id="animation_tester_enemy_party" placeholder="enemy party key name" /> <br>

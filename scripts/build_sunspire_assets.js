@@ -396,6 +396,39 @@ function audio() {
     writeJson(path.join(ROOT, "assets/dbs/se_db.json"), se);
 }
 
+// ---------------- sprite pack slot list ----------------
+// Every PNG under assets/images is a slot named after the file; a pack replaces the whole sheet.
+// static/pack-slots.json drives the loader hook (base/shell/SpritePacks.ts) and the pack guide.
+function packSlots() {
+    const slots = [];
+    const walk = dir => {
+        for (const entry of fs.readdirSync(dir, {withFileTypes: true})) {
+            const file = path.join(dir, entry.name);
+            if (entry.isDirectory()) walk(file);
+            else if (entry.name.endsWith(".png")) {
+                const img = png.decode(fs.readFileSync(file));
+                const atlas = file.replace(/\.png$/, ".json");
+                const frames = fs.existsSync(atlas) ? Object.keys(JSON.parse(fs.readFileSync(atlas, "utf8")).frames || {}) : [];
+                slots.push({
+                    slot: entry.name.replace(/\.png$/, ""),
+                    file: path.relative(ROOT, file).replace(/\\/g, "/"),
+                    width: img.width,
+                    height: img.height,
+                    frames,
+                    group: path.relative(IMG, dir).replace(/\\/g, "/") || "images",
+                });
+            }
+        }
+    };
+    walk(IMG);
+    const names = slots.map(s => s.slot);
+    const dupes = names.filter((n, i) => names.indexOf(n) !== i);
+    if (dupes.length) throw new Error("sprite pack slots must be unique file names; duplicates: " + dupes.join(", "));
+    slots.sort((a, b) => a.group.localeCompare(b.group) || a.slot.localeCompare(b.slot));
+    writeJson(path.join(ROOT, "static/pack-slots.json"), slots);
+    return slots.length;
+}
+
 // ---------------- run ----------------
 for (const id of HEROES) { fieldSheet(id); heroBattleSheet(id); }
 for (const id of NPCS) fieldSheet(id);
@@ -407,4 +440,5 @@ battleAndPortraits();
 brindleMap();
 font();
 audio();
-console.log("built assets/images, assets/maps, assets/font, assets/sounds, bgm_db and se_db");
+const slot_count = packSlots();
+console.log(`built assets/images, assets/maps, assets/font, assets/sounds, bgm_db, se_db and ${slot_count} pack slots`);

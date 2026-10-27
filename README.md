@@ -34,6 +34,7 @@ port catches up with it.
 |---|---|
 | `base/` | the engine, TypeScript (entry `base/GoldenSun.ts`; the class name is kept for now) |
 | `base/shell/HandheldShell.ts`, `index.html`, `static/site.css`, `static/site.js` | the handheld shell: on-screen buttons, integer scaling, immersive mode; the page's theme and shell colour |
+| `base/shell/SpritePacks.ts`, `pack-guide.html`, `static/pack-guide.js`, `static/pack-slots.json`, `packs/README.md` | sprite packs: sheets the player loads (PNG / GIF / WebP or a zip) replace the built-in art; the guide lists every slot |
 | `assets/dbs/` | the game data: characters, classes, abilities, items, enemies, spirits (`djinni_db`), summons, maps, NPCs, shops, inn, dialog, audio |
 | `assets/sunspire/` | Sunspire's source art: the exported sprites, the Brindle tileset and grid, the 5x5 font glyphs |
 | `scripts/build_sunspire_assets.js` | generates `assets/images`, `assets/maps`, `assets/font` and `assets/sounds` (plus `bgm_db` / `se_db`) from `assets/sunspire/`; run it after changing the source art |
