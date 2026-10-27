@@ -6,7 +6,7 @@ const cv = document.getElementById('game');
 const ctx = cv.getContext('2d');
 ctx.imageSmoothingEnabled = false;
 const W = 240, H = 160, T = 16;
-const GAME_VERSION = 'V44';
+const GAME_VERSION = 'V45';
 // pages that only need the game data (pack guide, art tools) set window.SUNSPIRE_HEADLESS before loading:
 // no input handlers and no main loop
 const HEADLESS = !!window.SUNSPIRE_HEADLESS;
@@ -939,7 +939,7 @@ function drawTile(ch, x, y){
       break;
     }
     case 'k': {
-      const open = chestLidOpen(G.mapId + ':' + x + ',' + y, 1500);
+      const open = !!G.chests[G.mapId + ':' + x + ',' + y]; // a looted chest stays open
       ctx.fillStyle = 'rgba(0,0,0,.25)'; ctx.fillRect(px+2, py+13, 12, 2);
       ctx.fillStyle = '#7a4a22'; ctx.fillRect(px+2, py+5, 12, 9);
       ctx.fillStyle = open ? '#3a2410' : '#9c6430';
@@ -1486,15 +1486,13 @@ function chestOpenMs(key){ // ms since this chest was looted in this session, or
   if (!G.chests[key] || !G.chestT || G.chestT[key] === undefined) return -1;
   return (G.t - G.chestT[key]) * 1000 / 60;
 }
-function chestLidOpen(key, ms){ const t = chestOpenMs(key); return t >= 0 && t < ms; }
 function drawChestSpr(px, py){
   const tx = px >> 4, ty = py >> 4, key = G.mapId + ':' + tx + ',' + ty;
   let f = null;
-  const ms = chestOpenMs(key), op = chestVariants(true);
-  if (ms >= 0 && op.length){
-    const u = userSpr(op[h32(tx, ty, 15) % op.length]);
-    const dur = u.frames.length > 1 ? u.total : 1500;
-    if (ms < dur) f = sprFrameAt(u, ms).img;
+  const op = chestVariants(true);
+  if (G.chests[key] && op.length){ // looted: the open GIF plays once from the moment it was opened, then holds its last frame
+    const u = userSpr(op[h32(tx, ty, 15) % op.length]), ms = chestOpenMs(key);
+    f = (ms >= 0 ? sprFrameAt(u, ms) : u.frames[u.frames.length - 1]).img; // opened before a reload: straight to the end
   }
   if (!f){
     const pool = chestVariants(false);
@@ -3097,7 +3095,7 @@ function buildSlotList(){
     { slot: 'boulder', desc: 'the boulder sealing the fence gap', v: true },
     { slot: 'sign', desc: 'signposts', v: true },
     { slot: 'chest', desc: 'treasure chest, closed', v: true },
-    { slot: 'chest_open', desc: 'treasure chest, just looted (shown briefly, a GIF plays once)', v: true },
+    { slot: 'chest_open', desc: 'treasure chest, looted (a GIF plays once, then holds its last frame for good)', v: true },
     { slot: 'well', desc: 'the healing well in Thera', v: true },
     { slot: 'spring', desc: 'the spirit spring in the Sunspire', v: true },
     { slot: 'grass', desc: 'ground tile on grassy maps', v: true },
