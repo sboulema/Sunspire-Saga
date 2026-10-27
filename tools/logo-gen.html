@@ -125,6 +125,16 @@ function drawMark(){ // favicon mark: ring and spire only, filling the square
   ctx.restore();
   return c;
 }
+function drawMaskable(){ // PWA maskable icon: full-bleed sky, ring and spire inside the 80% safe circle
+  const c = document.createElement('canvas'); c.width = c.height = 512; const ctx = c.getContext('2d');
+  const sky = ctx.createLinearGradient(0, 0, 0, 512);
+  sky.addColorStop(0, '#1b3a86'); sky.addColorStop(.7, '#2d6fc4'); sky.addColorStop(1, '#17203a');
+  ctx.fillStyle = sky; ctx.fillRect(0, 0, 512, 512);
+  ctx.fillStyle = '#17203a'; ctx.fillRect(0, 440, 512, 72);
+  ring(ctx, 256, 248, 112);
+  spire(ctx, 256, 442, 230);
+  return c;
+}
 async function post(name, canvas){ await fetch('/' + name, { method: 'POST', body: canvas.toDataURL('image/png') }); }
 function scaled(src, s){
   const c = document.createElement('canvas'); c.width = s; c.height = s;
@@ -138,6 +148,7 @@ window.generate = async function(){
   await post('sunspire-logo-512.png', logo);
   await post('sunspire-card.png', card);
   await post('sunspire-mark-512.png', mark);
+  await post('sunspire-maskable-512.png', drawMaskable());
   for (const s of [16, 32, 48, 180, 256]) await post('favicon-' + s + '.png', scaled(mark, s));
   return 'done';
 };

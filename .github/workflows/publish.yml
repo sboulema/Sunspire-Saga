@@ -29,7 +29,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  SITE_FILES: index.html play.html pack-guide.html changelog.html walkthrough.html game.js LICENSE assets
+  SITE_FILES: index.html play.html pack-guide.html changelog.html walkthrough.html game.js manifest.webmanifest sw.js LICENSE assets
 
 jobs:
   docker:

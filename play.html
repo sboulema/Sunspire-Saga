@@ -8,6 +8,7 @@
   <meta name="theme-color" content="#100d1d">
   <link rel="icon" href="assets/favicon.ico" sizes="any">
   <link rel="apple-touch-icon" href="assets/sunspire-mark-512.png">
+  <link rel="manifest" href="manifest.webmanifest">
   <!-- Social cards need an absolute address: replace YOUR-GITHUB-USER with your Pages host. -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="Play Sunspire Saga">
@@ -39,13 +40,16 @@
     .pack-load .btn{cursor:pointer;}
     #packStatus{font-size:13px; line-height:1.7; text-align:center; color:var(--ink-2);}
     #packStatus:empty{display:none;}
+    /* shown once the browser says the site can be installed (beforeinstallprompt) */
+    .install{display:flex; flex-direction:column; align-items:center; gap:8px; margin:0; font-size:13px; color:var(--ink-2); text-align:center;}
+    .install[hidden]{display:none;}
     #packStatus .ok{color:var(--ok);} #packStatus .warn{color:var(--warn);} #packStatus .err{color:var(--err);}
 
     /* ---------- immersive: the handheld alone, as large as the viewport allows ---------- */
     .imm-exit, .imm-hint{display:none;}
     body.immersive{overflow:hidden;}
     body.immersive .nav, body.immersive .play-bar, body.immersive .legend,
-    body.immersive .pack-load, body.immersive .foot{display:none;}
+    body.immersive .pack-load, body.immersive .install, body.immersive .foot{display:none;}
     body.immersive .stage{position:fixed; inset:0; z-index:100; max-width:none; display:flex; align-items:center; justify-content:center;
       padding:max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
       background:radial-gradient(1200px 760px at 50% 42%, color-mix(in oklab, var(--hh) 30%, #0b0914), #05040a 72%);}
@@ -72,6 +76,17 @@
   </style>
 </head>
 <body>
+<script>
+// opened as the installed app (the manifest's start URL, or a standalone / fullscreen window): straight into
+// the immersive handheld, and game.js resumes the save instead of showing the title screen
+(function(){
+  const app = /[?&]app=1(&|$)/.test(location.search) || navigator.standalone === true
+    || matchMedia('(display-mode: standalone), (display-mode: fullscreen)').matches;
+  if (!app) return;
+  document.body.classList.add('immersive', 'app');
+  window.SUNSPIRE_RESUME = true;
+})();
+</script>
 <header class="nav"><div class="wrap">
   <a class="brand" href="./"><img src="assets/sunspire-mark-512.png" alt=""><span>Sunspire Saga</span></a>
   <nav class="nav-links" aria-label="Site">
@@ -130,6 +145,14 @@
     Your progress saves in this browser at every inn and map change.
   </p>
 
+  <p class="install" id="install" hidden>
+    <button class="btn btn-sm" id="installBtn" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+      Install as app
+    </button>
+    <span>Opens straight into your saved game, full screen, and works offline.</span>
+  </p>
+
   <section class="pack-load" aria-label="Sprite pack">
     <label class="btn" for="packIn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg>
@@ -175,6 +198,17 @@
     viaFullscreen = false;
   }
   function toggle(){ body.classList.contains('immersive') ? leave() : enter(); }
+
+  // "Install as app": the button appears when the browser offers to install the site
+  const install = document.getElementById('install'), installBtn = document.getElementById('installBtn');
+  let installPrompt = null;
+  addEventListener('beforeinstallprompt', e => { e.preventDefault(); installPrompt = e; install.hidden = false; });
+  addEventListener('appinstalled', () => { installPrompt = null; install.hidden = true; });
+  installBtn.addEventListener('click', async () => {
+    if (!installPrompt) return;
+    const p = installPrompt; installPrompt = null; install.hidden = true;
+    try { await p.prompt(); } catch (e){}
+  });
   btn.addEventListener('click', () => { btn.blur(); enter(); });
   exit.addEventListener('click', () => { exit.blur(); leave(); });
   // Esc in real fullscreen ends fullscreen; follow it out of immersive mode too

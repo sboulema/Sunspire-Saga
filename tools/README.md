@@ -9,6 +9,8 @@ Open it through any local web server (it saves its output with `fetch` POSTs, so
 
 - `sunspire-logo-512.png` – app-icon style logo
 - `sunspire-mark-512.png` – text-free mark used for the small favicon sizes
+- `sunspire-maskable-512.png` – the mark with full-bleed sky and the art inside the safe circle, for
+  the PWA's maskable icon (`manifest.webmanifest`)
 - `sunspire-card.png` – 1200×630 social card
 - `favicon-16/32/48/180/256.png` – frames for the favicon
 

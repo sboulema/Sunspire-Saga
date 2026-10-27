@@ -138,5 +138,10 @@
     if (e.key === 'sunspire_theme'){ if (e.newValue) root.dataset.theme = e.newValue; else delete root.dataset.theme; syncTheme(); }
   });
 
+  // the service worker (sw.js, site root) makes the site installable as an app and playable offline
+  if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+
   window.SunspireSite = { setHH, presets: PRESETS };
 })();

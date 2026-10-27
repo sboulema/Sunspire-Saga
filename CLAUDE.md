@@ -1,7 +1,8 @@
 # Sunspire Saga
 
 A browser JRPG in one script, `game.js`. The site around it is `index.html`, `play.html`,
-`pack-guide.html` and `changelog.html`; `README.md` describes the layout.
+`pack-guide.html` and `changelog.html`, installable as an app through `manifest.webmanifest` and
+`sw.js`; `README.md` describes the layout.
 
 ## Keep the walkthrough in sync with the game
 

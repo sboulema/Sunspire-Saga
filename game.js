@@ -6,7 +6,7 @@ const cv = document.getElementById('game');
 const ctx = cv.getContext('2d');
 ctx.imageSmoothingEnabled = false;
 const W = 240, H = 160, T = 16;
-const GAME_VERSION = 'V46';
+const GAME_VERSION = 'V47';
 // pages that only need the game data (pack guide, art tools) set window.SUNSPIRE_HEADLESS before loading:
 // no input handlers and no main loop
 const HEADLESS = !!window.SUNSPIRE_HEADLESS;
@@ -5264,4 +5264,7 @@ function frame(now){
   draw();
   requestAnimationFrame(frame);
 }
+// the installed app (play.html sets SUNSPIRE_RESUME) opens where you left off: the save loads at once and
+// the title screen is skipped; with no save, or one that cannot be read, the title screen shows as usual
+if (!HEADLESS && window.SUNSPIRE_RESUME && hasSave()) loadGame();
 if (!HEADLESS) requestAnimationFrame(frame);

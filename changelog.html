@@ -8,6 +8,7 @@
   <meta name="theme-color" content="#100d1d">
   <link rel="icon" href="assets/favicon.ico" sizes="any">
   <link rel="apple-touch-icon" href="assets/sunspire-mark-512.png">
+  <link rel="manifest" href="manifest.webmanifest">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap">
@@ -50,6 +51,11 @@
     record of what changed in each one.</p>
   <div class="pg-body doc">
     <table>
+    <tr><td class="ver">v47</td><td>Install it as an app. The site has a web app manifest and a service worker,
+      so browsers that support it offer <em>Install as app</em> on the play page (or <em>Add to Home Screen</em>
+      on iOS). The installed app opens full screen, straight into the immersive handheld, and loads your save
+      at once instead of showing the title screen; without a save it starts on the title screen as usual. Once
+      installed, the game also runs offline.</td></tr>
     <tr><td class="ver">v46</td><td>CONTINUE works. The title screen lays NEW GAME and CONTINUE side by side
       but only up/down switched between them, so left/right never reached CONTINUE, and A on the default
       NEW GAME started over and its first auto-save wiped the old game. Now left/right (and up/down) switch,

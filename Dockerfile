@@ -8,7 +8,7 @@ COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 WORKDIR /usr/share/nginx/html
 # Keep these COPY lines in step with SITE_FILES in .github/workflows/publish.yml.
 RUN rm -f ./*
-COPY index.html play.html pack-guide.html changelog.html walkthrough.html game.js ./
+COPY index.html play.html pack-guide.html changelog.html walkthrough.html game.js manifest.webmanifest sw.js ./
 COPY assets/ ./assets/
 
 EXPOSE 80

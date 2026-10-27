@@ -50,6 +50,15 @@ Controls: arrow keys or WASD to move, **Z / Space** = A (confirm), **X / Esc** =
 **Enter** = Start / menu, **M** toggles sound, **F** toggles immersive mode. The handheld shell
 around the screen has clickable D-pad, A, B and Start buttons for touch play.
 
+## Installing as an app
+
+The site is a progressive web app: `manifest.webmanifest` describes it and `sw.js` (registered by
+`assets/site.js` on every page) caches the pages, the game and the art so it runs offline. Browsers
+that support installing show an *Install as app* button on the play page (iOS uses *Add to Home
+Screen* in Safari's share sheet). The installed app launches `play?app=1`, which opens full screen
+straight into immersive mode and resumes the saved game instead of showing the title screen. It
+shares the save with the site in the same browser. Installing needs HTTPS (or `localhost`).
+
 ## Hosting
 
 The repo is laid out for GitHub Pages: enable Pages for the `main` branch, root folder, and the
@@ -89,6 +98,7 @@ The game is then at `http://localhost:8080/play`.
 | `game.js` | the whole game – source and distribution in one file |
 | `index.html`, `play.html`, `pack-guide.html`, `changelog.html` | the site: landing page, play page, pack guide, changelog |
 | `walkthrough.html` | the walkthrough page; its text mirrors the data in `game.js` and must be updated with every game change (see `CLAUDE.md`) |
+| `manifest.webmanifest`, `sw.js` | the web app manifest and service worker that make the site installable and playable offline |
 | `assets/` | logo, social card, favicon, site CSS/JS, `screens/` (in-game screenshots) and `art/` (box art, concept sheets) |
 | `packs/` | how to make and share sprite packs |
 | `tools/` | generators for the logo, card, favicon, screenshots and promotional art |
