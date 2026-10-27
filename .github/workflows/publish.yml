@@ -1,0 +1,125 @@
+# Publish the game: a Docker image on Docker Hub and GitHub Container Registry, and a zip of the
+# static site.
+#
+#   push to main      ->  images <user>/sunspire-saga and ghcr.io/<owner>/sunspire-saga,
+#                         tagged :latest and :sha-<short sha>
+#                         + workflow artifact "sunspire-saga-sha-<short sha>" (the site, zipped)
+#   push of tag vNN   ->  the same images tagged :vNN and :sha-<short sha>
+#                         + a GitHub Release for vNN with sunspire-saga-vNN.zip attached
+#
+# GHCR uses the workflow's own GITHUB_TOKEN and always gets the image. Docker Hub is optional: it
+# is pushed only when the repository secrets DOCKERHUB_USERNAME and DOCKERHUB_TOKEN are set (an
+# access token, Docker Hub -> Account settings -> Personal access tokens, with Read & Write scope).
+#
+# The zip unpacks straight into a web root: the HTML pages, game.js, assets/ and the licence.
+# Keep SITE_FILES in step with the COPY lines in the Dockerfile.
+name: Publish
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  SITE_FILES: index.html play.html pack-guide.html changelog.html walkthrough.html game.js LICENSE assets
+
+jobs:
+  docker:
+    name: Docker image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write   # to push to ghcr.io
+    env:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        if: env.DOCKERHUB_USERNAME != ''
+        uses: docker/login-action@v3
+        with:
+          username: ${{ env.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - id: images
+        name: Pick the registries
+        run: |
+          {
+            echo "images<<EOF"
+            echo "ghcr.io/${{ github.repository_owner }}/sunspire-saga"
+            if [ -n "$DOCKERHUB_USERNAME" ]; then echo "$DOCKERHUB_USERNAME/sunspire-saga"; fi
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ steps.images.outputs.images }}
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=ref,event=tag
+            type=sha
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  site-zip:
+    name: Static site zip
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # to create the release on a tag
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: version
+        name: Pick the release name
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/* ]]; then v="$GITHUB_REF_NAME"; else v="sha-${GITHUB_SHA::7}"; fi
+          echo "name=sunspire-saga-$v" >> "$GITHUB_OUTPUT"
+
+      - name: Stage and zip the site
+        run: |
+          mkdir -p site dist
+          cp -r $SITE_FILES site/
+          (cd site && zip -r -X "../dist/${{ steps.version.outputs.name }}.zip" .)
+          unzip -l "dist/${{ steps.version.outputs.name }}.zip" | tail -1
+
+      # Every run: the staged site as a workflow artifact (GitHub serves it as a zip).
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.version.outputs.name }}
+          path: site
+          if-no-files-found: error
+
+      # Tags only: a GitHub Release with the zip attached.
+      - if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.zip
+          generate_release_notes: true

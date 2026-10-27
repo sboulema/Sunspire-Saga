@@ -29,13 +29,13 @@
 </head>
 <body>
 <header class="nav"><div class="wrap">
-  <a class="brand" href="index.html"><img src="assets/sunspire-mark-512.png" alt=""><span>Sunspire Saga</span></a>
+  <a class="brand" href="./"><img src="assets/sunspire-mark-512.png" alt=""><span>Sunspire Saga</span></a>
   <nav class="nav-links" aria-label="Site">
-    <a href="index.html">Home</a>
-    <a href="play.html">Play online</a>
-    <a href="pack-guide.html">Pack guide</a>
-    <a href="changelog.html" aria-current="page">Changelog</a>
-    <a href="walkthrough.html">Walkthrough</a>
+    <a href="./">Home</a>
+    <a href="play">Play online</a>
+    <a href="pack-guide">Pack guide</a>
+    <a href="changelog" aria-current="page">Changelog</a>
+    <a href="walkthrough">Walkthrough</a>
   </nav>
   <button class="icon-btn theme-toggle" type="button" aria-label="Toggle colour theme">
     <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
@@ -60,7 +60,16 @@
       them are pack slots (<code>item_...</code>, <code>gear_...</code>, <code>choice_yes</code>,
       <code>choice_no</code>). The shop list, the YES/NO box and the battle arts / spirit / summon / item
       window size their rows to the icons, so 16-pixel pack icons no longer spill over the next row or the
-      names; the shop window is wider and its stat column lines up against the prices.</td></tr>
+      names; the shop window is wider and its stat column lines up against the prices. EQUIP is rebuilt as a
+      screen of panels: the party's sprites along the top left with the hand on the chosen member, their card
+      below (portrait, level, HP, PP, ATK, DEF and XP to the next level), and on the right a grid of gear icons,
+      worn pieces first with a green E, then the shared pool. Hovering a piece previews the ATK or DEF it
+      would give in green or red; A equips it or takes it off. ITEMS uses the same panels: a grid of item icons
+      with their counts (Lyn's Compass at the end while you carry it), then the hand moves to the party row to
+      pick who gets it, the card previewing the HP or PP it restores; fallen members are shown faded, and you
+      stay on the item to use another until you run out or press B. New pack slots: <code>portrait_ari</code> ...
+      (32&times;32; without one the member's walking sprite stands in at 2&times;), <code>mark_equipped</code>
+      and <code>item_compass</code>.</td></tr>
     <tr><td class="ver">v41</td><td>A new battle screen in the handheld classic style. The status bar
       is a row of cards hanging from the top-right corner: HP and PP are written over bars that are blue for
       what is left and red (HP) or purple (PP) for what is gone, and the member choosing a command sits on a

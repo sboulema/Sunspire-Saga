@@ -1,10 +1,9 @@
 # Optional: deploy to GitHub Pages with Actions instead of "deploy from branch".
-# Settings -> Pages -> Source: GitHub Actions, then every push to main publishes the site.
+# Settings -> Pages -> Source: GitHub Actions. Runs only when started by hand from the Actions tab
+# (publish.yml handles the Docker image and the site zip on every push).
 name: Deploy to GitHub Pages
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
