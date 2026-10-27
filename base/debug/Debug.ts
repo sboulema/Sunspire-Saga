@@ -335,6 +335,10 @@ export class Debug {
     }
 
     set_debug_info() {
+        if (!this.show_fps && !this.grid) {
+            // nothing to draw: skip the clear, which would otherwise re-upload the debug canvas every frame
+            return;
+        }
         this.game.debug.text("", 0, 0);
 
         if (this.show_fps) {

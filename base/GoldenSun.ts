@@ -50,6 +50,9 @@ export class GoldenSun {
     public loading_what: string = "";
     public fps_reduction_active: boolean = false;
     public showing_fps_banner: boolean = false;
+    /** Consecutive frames under MIN_FPS; the banner waits for about three seconds of them. */
+    private low_fps_frames: number = 0;
+    private static readonly LOW_FPS_FRAMES_FOR_BANNER = 180;
     public ignore_system_scaling: boolean = false;
     public verbose_game_event_fire: boolean = false;
     public force_desired_fps: boolean = false;
@@ -151,6 +154,12 @@ export class GoldenSun {
 
     constructor() {
         this.logger = new Logger(this);
+        if (!GoldenSun.webgl_available()) {
+            // the mode7 projection and every filter need WebGL; without it Phaser throws "No fallback"
+            const banner = document.querySelector("#webgl-warning") as HTMLElement;
+            if (banner) banner.style.display = "block";
+            throw new Error("WebGL is not available in this browser.");
+        }
         const config: Phaser.IGameConfig = {
             width: numbers.GAME_WIDTH,
             height: numbers.GAME_HEIGHT,
@@ -167,6 +176,16 @@ export class GoldenSun {
             },
         };
         this.game = new Phaser.Game(config);
+    }
+
+    /** Whether this browser can give us a WebGL context (off in Lockdown Mode and on blocklisted GPUs). */
+    private static webgl_available() {
+        try {
+            const canvas = document.createElement("canvas");
+            return Boolean(canvas.getContext("webgl") || canvas.getContext("experimental-webgl"));
+        } catch {
+            return false;
+        }
     }
 
     /**
@@ -448,7 +467,8 @@ export class GoldenSun {
      */
     private set_fullscreen_mode(change_flag: boolean = true) {
         if (change_flag) {
-            this.fullscreen = !this.fullscreen;
+            // read the real state instead of toggling: a change event can fire twice or after an error
+            this.fullscreen = this.game.scale.isFullScreen;
         }
         this.scale_factor = 1;
         this.set_canvas_scale();
@@ -460,6 +480,19 @@ export class GoldenSun {
     private initialize_utils_controls() {
         //enable full screen
         this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
+        // otherwise Phaser passes Element.ALLOW_KEYBOARD_INPUT to the unprefixed requestFullscreen, which Safari rejects
+        (this.game.device as any).fullscreenKeyboard = false; // the runtime name; the typings spell it fullScreenKeyboard
+
+        // browsers start the audio context suspended until a user gesture; Phaser only resumes it on canvas clicks
+        const unlock_audio = () => {
+            const context = this.game.sound.context;
+            if (context && context.state !== "running" && !document.hidden) {
+                context.resume();
+            }
+        };
+        for (const event_type of ["keydown", "pointerdown", "touchend", "visibilitychange"]) {
+            window.addEventListener(event_type, unlock_audio, {passive: true});
+        }
         this.game.input.onTap.add((pointer, is_double_click) => {
             if (is_double_click) {
                 this.game.scale.startFullScreen(true);
@@ -624,10 +657,12 @@ export class GoldenSun {
     }
 
     private check_fps() {
-        if (!this.showing_fps_banner && this.game.time.fps < numbers.MIN_FPS) {
+        // show the banner only after a few seconds of low fps, not on the first dip after loading
+        this.low_fps_frames = this.game.time.fps < numbers.MIN_FPS ? this.low_fps_frames + 1 : 0;
+        if (!this.showing_fps_banner && this.low_fps_frames > GoldenSun.LOW_FPS_FRAMES_FOR_BANNER) {
             (document.querySelector("#fps-warning") as HTMLElement).style.display = "block";
             this.showing_fps_banner = true;
-        } else if (this.showing_fps_banner && this.game.time.fps >= numbers.MIN_FPS) {
+        } else if (this.showing_fps_banner && this.low_fps_frames === 0) {
             (document.querySelector("#fps-warning") as HTMLElement).style.display = "none";
             this.showing_fps_banner = false;
         }

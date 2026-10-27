@@ -319,8 +319,12 @@ export class Gamepad {
      * @param {GoldenSun} data - Master game data object
      */
     constructor(data: GoldenSun) {
-        Gamepad.initialize(data, navigator.language === "fr-FR" ? "azerty_inputs" : "default_inputs");
+        Gamepad.initialize(data, navigator.language?.startsWith("fr") ? "azerty_inputs" : "default_inputs");
         this.register_handle_events(data.game);
+        // keys released while the page is hidden or unfocused never send keyup, so drop every button then
+        for (const event_type of ["blur", "visibilitychange", "pagehide"]) {
+            window.addEventListener(event_type, () => this.release_all());
+        }
 
         // Create a state for every buttons
         AdvanceButtons.forEach(button_name => {
@@ -383,6 +387,34 @@ export class Gamepad {
         btn.is_up = true;
         btn.on_up.dispatch(event);
         return btn;
+    }
+
+    /**
+     * Presses a game button from outside the keyboard and gamepad paths, e.g. an on-screen button.
+     * @param {AnyButton} game_button - The game button to press
+     */
+    press(game_button: AnyButton) {
+        this.is_last_input_gamepad = true;
+        this._on_down(game_button);
+    }
+
+    /**
+     * Releases a game button pressed with press().
+     * @param {AnyButton} game_button - The game button to release
+     */
+    release(game_button: AnyButton) {
+        this._on_up(game_button);
+    }
+
+    /**
+     * Releases every button that is held down.
+     */
+    release_all() {
+        (Object.keys(this.buttons) as unknown as AnyButton[]).forEach(game_button => {
+            if (this.buttons[game_button].is_down) {
+                this._on_up(game_button);
+            }
+        });
     }
 
     /**
@@ -474,7 +506,7 @@ export class Gamepad {
             game_buttons.forEach(game_button => this._on_down(game_button, event));
         };
         game.input.keyboard.onUpCallback = (event: KeyboardEvent) => {
-            this.is_last_input_gamepad = true;
+            this.is_last_input_gamepad = false;
 
             const game_buttons = Gamepad.transcode_keyboard_key(event.keyCode);
             game_buttons.forEach(game_button => this._on_up(game_button, event));

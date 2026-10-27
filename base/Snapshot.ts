@@ -557,7 +557,10 @@ export class Snapshot {
         const file = new Blob([JSON.stringify(json, null, 4)], {type: "application/json"});
         a.href = URL.createObjectURL(file);
         a.download = filename;
+        // Firefox and Safari need the anchor in the document, and the URL alive until the download starts
+        document.body.appendChild(a);
         a.click();
-        URL.revokeObjectURL(a.href);
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(a.href), 30000);
     }
 }

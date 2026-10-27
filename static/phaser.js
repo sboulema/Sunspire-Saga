@@ -52026,7 +52026,7 @@ Phaser.BitmapData = function (game, key, width, height, skipPool)
      * @property {CanvasRenderingContext2D} context - The 2d context of the canvas.
      * @default
      */
-    this.context = this.canvas.getContext('2d', { alpha: true, antialias: false, powerPreference: "high-performance" });
+    this.context = this.canvas.getContext('2d', { alpha: true, willReadFrequently: true });
 
     /**
      * @property {CanvasRenderingContext2D} ctx - A reference to BitmapData.context.
@@ -85385,7 +85385,7 @@ Phaser.Utils.Debug.prototype = {
             this.game.scale.onSizeChange.add(this.resize, this);
 
             this.canvas = Phaser.CanvasPool.create(this, this.game.width, this.game.height);
-            this.context = this.canvas.getContext('2d', { antialias: false, powerPreference: "high-performance" });
+            this.context = this.canvas.getContext('2d', { willReadFrequently: true });
         }
 
         this._line = new Phaser.Line();
@@ -103000,7 +103000,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height)
      * @property {CanvasRenderingContext2D} context
      * @private
      */
-    this.context = this.canvas.getContext('2d', { antialias: false, powerPreference: "high-performance" });
+    this.context = this.canvas.getContext('2d', { willReadFrequently: true });
 
     this.setTexture(new PIXI.Texture(new PIXI.BaseTexture(this.canvas, null, this.game.resolution)));
 
@@ -103234,7 +103234,7 @@ Phaser.TilemapLayer.ensureSharedCopyCanvas = function ()
  Phaser.TilemapLayer.prototype.update = function () {
      let tile;
      // Update is called on all tilemap layers but only required, and wanted, once. Also skip if there is no defined animated tiles.
-     if (this.map.pauseAnimation || this.map.animatedTiles.updated || this.map.animatedTiles.length === 1) {
+     if (this.map.pauseAnimation || this.map.animatedTiles.updated || Object.keys(this.map.animatedTiles).length === 1) {
          return;
      }
      this.map.animatedTiles.updated = true;

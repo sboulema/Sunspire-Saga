@@ -17,5 +17,10 @@ for (const entry of ["index.html", "dist/bundle.js", "assets", "static", "LICENS
 }
 // the source art and tile grid are inputs of scripts/build_sunspire_assets.js, not game files
 fs.rmSync(path.join(OUT, "assets/sunspire"), {recursive: true, force: true});
+// production mode: no debug overlay redraw per frame, no debug hotkeys
+const init_path = path.join(OUT, "assets/init.json");
+const init = JSON.parse(fs.readFileSync(init_path, "utf8"));
+init.production_mode = true;
+fs.writeFileSync(init_path, JSON.stringify(init, null, 4) + "\n");
 fs.writeFileSync(path.join(OUT, ".nojekyll"), "");
 console.log("site/ ready");

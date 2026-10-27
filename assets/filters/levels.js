@@ -6,7 +6,11 @@ Phaser.Filter.Levels = function (game) {
     this.uniforms.gamma = { type: '1f', value: -1.0 };
 
     this.fragmentSrc = [
+        "#ifdef GL_FRAGMENT_PRECISION_HIGH",
+        "precision highp float;",
+        "#else",
         "precision mediump float;",
+        "#endif",
 
         "varying vec2       vTextureCoord;",
         "uniform sampler2D  uSampler;",
@@ -15,11 +19,11 @@ Phaser.Filter.Levels = function (game) {
         "uniform float      gamma;",
 
         "vec3 gammaCorrect(vec3 color, float gamma, float alpha){",
-            "return pow(color, alpha * vec3(1.0/gamma));",
+            "return pow(max(color, vec3(1e-5)), alpha * vec3(1.0/gamma));", // pow(0, x) is undefined in GLSL ES
         "}",
 
         "vec3 levelRange(vec3 color, float minInput, float maxInput, float alpha){",
-            "return min(max(color - alpha*vec3(minInput), vec3(0.0)) / (vec3(maxInput) - vec3(minInput)), vec3(1.0));",
+            "return min(max(color - alpha*vec3(minInput), vec3(0.0)) / max(vec3(maxInput) - vec3(minInput), vec3(1e-5)), vec3(1.0));",
         "}",
 
         "vec3 finalLevels(vec3 color, float minInput, float gamma, float maxInput, float alpha){",

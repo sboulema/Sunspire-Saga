@@ -1,18 +1,14 @@
-//Prevent arrows to scroll the page
+// Keep the keys the game uses from acting on the page: space, arrows, page up / down (volume and
+// debug camera) and backspace (Select).
 window.addEventListener("keydown", function(e) {
-    if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) { // space and arrow keys
-        if (GoldenSun.game.input.enabled) {
+    if ([8, 32, 33, 34, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+        if (window.GoldenSun && GoldenSun.game.input.enabled) {
             e.preventDefault();
         }
     }
 }, false);
 
 const dom_ready = () => {
-    //Detect Firefox browser
-    const is_firefox = navigator.userAgent.toLowerCase().indexOf("firefox") > -1;
-    if (is_firefox) {
-        document.querySelector("#firefox-warning").style.display = "block";
-    }
     const input_anim_1 = document.getElementById("animation_tester_enemy_party");
     input_anim_1.onfocus = () => (GoldenSun.game.input.enabled = false);
     input_anim_1.onblur = () => (GoldenSun.game.input.enabled = true);

@@ -67,7 +67,7 @@ export class Audio {
             {
                 buttons: Button.MUTE,
                 on_down: () => {
-                    this.game.sound.context.resume();
+                    this.game.sound.context?.resume();
                     this.game.sound.mute = !this.game.sound.mute;
                 },
             },

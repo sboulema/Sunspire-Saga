@@ -21,7 +21,11 @@ Phaser.Filter.Glow.prototype.init = function(distance, quality, distance_increme
     this.initial_distance = initial_distance ? initial_distance : 1;
 
     this.fragmentSrc = `
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+        precision highp float;
+#else
         precision mediump float;
+#endif
 
         varying vec2 vTextureCoord;
         uniform sampler2D uSampler;

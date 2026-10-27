@@ -175,6 +175,46 @@ docs and tools.
   and decimal.js (mathjs) 133 KiB. Switching to per-function lodash imports and dropping mathjs
   for the three `evaluate` calls would roughly halve it; left for later.
 - Verified in Chromium after the update: title, New Game, Brindle, walking.
+- Firefox and Safari: a code review (no Firefox or Safari was available here, so nothing below
+  is tested in them; the first run on a real Firefox, macOS Safari and iPhone is still owed)
+  found no Chrome-only API in the engine. What it found, and what was applied:
+  - WebGL is required (mode7 and every filter) and Phaser throws "No fallback" without it:
+    `GoldenSun` now probes for a context first and shows the `#webgl-warning` banner.
+  - The debug overlay re-uploaded a texture every frame even in the shipped build:
+    `Debug.set_debug_info` skips the clear when nothing is shown, and `build_site.js` sets
+    `production_mode: true` in the site's `init.json` (which also turns the debug hotkeys off).
+  - Phaser's Canvas2D contexts (BitmapData, TilemapLayer, Debug) carried WebGL-only options;
+    they now ask for `willReadFrequently`, which keeps those canvases in CPU memory so Firefox
+    and Safari don't read back from the GPU on every upload. The `animatedTiles.length` check in
+    `TilemapLayer.update` compared an object's length and is now `Object.keys(...).length`.
+  - GLSL: `reveal.js` used `pow` with a negative base (NaN on Metal), `levels.js` `pow(0, x)`;
+    both rewritten. Every filter now asks for `highp` where `GL_FRAGMENT_PRECISION_HIGH` is
+    defined, since iOS really runs `mediump` as fp16.
+  - Fullscreen: `device.fullscreenKeyboard = false` (Safari rejects the numeric argument Phaser
+    passes otherwise) and the fullscreen flag is read from `scale.isFullScreen`, not toggled.
+  - Audio: the context is resumed on keydown / pointerdown / touchend / visibilitychange, not
+    only on canvas clicks and the M key; the M handler no longer crashes without Web Audio.
+  - Keys stuck down after Cmd+Tab or a hidden tab: `Gamepad.release_all()` runs on blur,
+    visibilitychange and pagehide. The keyup handler wrongly marked the last input as gamepad.
+  - AZERTY detection accepts any `fr*` locale. The save download attaches the anchor and
+    keeps the blob URL alive; the load input is attached to the body for iOS.
+  - The Firefox user-agent banner is gone; the FPS banner needs about three seconds of low FPS
+    before it shows. `home.js` also prevents PageUp/PageDown and Backspace from acting on the page.
+  - New for Phase 4: `Gamepad.press(button)` / `release(button)` are the way to drive the game
+    from on-screen buttons (the `Button` enum is numeric: A 0, B 1, ..., LEFT 6, RIGHT 7, UP 8,
+    DOWN 9); synthesised KeyboardEvents are not reliable across browsers and cannot unlock audio.
+  - Left for later, with the review's pointers: battle trails read pixels back from the GPU per
+    frame (`BattleAnimation.ts` ~2224, keep them in a RenderTexture); the particle plugin's pixel
+    renderer calls `getImageData` per emitter per frame (`particle-storm.js` ~6046); tile layers
+    redraw on the CPU each scrolling frame (bake small maps once); one Glow shader per character
+    compiles on first use; `ignore_system_scaling` shrinks the canvas by the device pixel ratio
+    (the shell will size the canvas instead, Phase 4); gamepads with non-standard mapping;
+    `force_target_fps` (inactive) returns no RAF id. iPhone cannot play without a keyboard until
+    the shell lands.
+  - `static/phaser.js` is Phaser CE 2.19.0 plus about 30 upstream patches (mode7 sprite
+    projection, sub-pixel camera, Tiled tile animations, object-layer format, tween/animation
+    semantics, audio sprite offsets, p2 polygon bodies). Stock `phaser-ce` from npm is not a
+    drop-in; `patch-package` over it, or a `phaser_patches.ts`, are the routes for Phase 8.
 
 ### Phases 4-8
 

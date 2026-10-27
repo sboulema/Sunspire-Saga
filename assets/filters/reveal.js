@@ -27,8 +27,9 @@ Phaser.Filter.Reveal = function (game) {
             //gain = 0.0684, freq = 66, phase = 0, a = 0.2, b = 0.16
             "float aux = -a*b*(2736.*a*pow(y,4.)*sin(phase+freq*y)-5472.*a*pow(y,3.)*sin(phase+freq*y)+4104.*a*y*y*sin(phase+freq*y)-1368.*a*y*sin(phase+freq*y)-2500.*a+2500.*y*y-2500.*y+625.);",
             "float x = aux < 0. ? -1. : (25.*a + (vTextureCoord.x >= .5 ? sqrt(aux) : -sqrt(aux)))/(50.*a);",
-            "float sqr_rho = x < 0. ? -1. : pow(x - .5, 2.) + pow(y - .5, 2.);",
-            "float sqr_orig_rho = pow(vTextureCoord.x - .5, 2.) + pow(vTextureCoord.y - .5, 2.);",
+            // squares written out: pow() with a negative base is undefined and gives NaN on Metal (Safari, iOS)
+            "float sqr_rho = x < 0. ? -1. : (x - .5) * (x - .5) + (y - .5) * (y - .5);",
+            "float sqr_orig_rho = (vTextureCoord.x - .5) * (vTextureCoord.x - .5) + (vTextureCoord.y - .5) * (vTextureCoord.y - .5);",
             "gl_FragColor.rgba = vec4(0,0,0,sqr_orig_rho<sqr_rho ? 0 : 1);",
         "}",
     ];

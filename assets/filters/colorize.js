@@ -8,7 +8,11 @@ Phaser.Filter.Colorize = function (game) {
     this.uniforms.b = { type: '1f', value: 1.0 };
 
     this.fragmentSrc = [
+        "#ifdef GL_FRAGMENT_PRECISION_HIGH",
+        "precision highp float;",
+        "#else",
         "precision mediump float;",
+        "#endif",
 
         "varying vec2       vTextureCoord;",
         "uniform sampler2D  uSampler;",

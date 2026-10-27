@@ -111,6 +111,7 @@ export class StartMenu {
         this.input.style.display = "none";
         this.input.type = "file";
         this.input.accept = ".json";
+        document.body.appendChild(this.input); // iOS Safari ignores click() on a detached input
         this.input.onchange = async e => {
             const file = (<HTMLInputElement>e.target).files[0];
             try {

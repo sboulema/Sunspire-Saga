@@ -9,7 +9,11 @@ Phaser.Filter.BlurY = function (game) {
 
     this.fragmentSrc = [
 
+      "#ifdef GL_FRAGMENT_PRECISION_HIGH",
+      "precision highp float;",
+      "#else",
       "precision mediump float;",
+      "#endif",
       "varying vec2 vTextureCoord;",
       "varying vec4 vColor;",
       "uniform float blur;",
