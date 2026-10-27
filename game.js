@@ -6,7 +6,7 @@ const cv = document.getElementById('game');
 const ctx = cv.getContext('2d');
 ctx.imageSmoothingEnabled = false;
 const W = 240, H = 160, T = 16;
-const GAME_VERSION = 'V43';
+const GAME_VERSION = 'V44';
 // pages that only need the game data (pack guide, art tools) set window.SUNSPIRE_HEADLESS before loading:
 // no input handlers and no main loop
 const HEADLESS = !!window.SUNSPIRE_HEADLESS;
@@ -2832,6 +2832,7 @@ function summonFigSlot(def){
 }
 function drawSummonFig(def, cx, cy, t, s, shadowPass){
   const bob = (t >> 3) % 2, name = summonFigSlot(def);
+  if (userSpr(name)) s = 1; // a pack figure is drawn at its own size; only the small built-in ones are scaled up
   if (shadowPass) drawSpr(name, cx + 2, cy + bob + 2, s, 'k');
   else drawSpr(name, cx, cy + bob, s, '');
 }
