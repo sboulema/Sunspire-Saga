@@ -6,7 +6,7 @@ const cv = document.getElementById('game');
 const ctx = cv.getContext('2d');
 ctx.imageSmoothingEnabled = false;
 const W = 240, H = 160, T = 16;
-const GAME_VERSION = 'V45';
+const GAME_VERSION = 'V46';
 // pages that only need the game data (pack guide, art tools) set window.SUNSPIRE_HEADLESS before loading:
 // no input handlers and no main loop
 const HEADLESS = !!window.SUNSPIRE_HEADLESS;
@@ -592,13 +592,14 @@ function saveGame(){
   } catch(e){ return false; }
 }
 function hasSave(){ try { return !!localStorage.getItem('sunspire2'); } catch(e){ return false; } }
-function loadGame(){
+function loadGame(){ // false (and a fresh title-screen game) when the save is missing or unreadable
   try {
     const s = JSON.parse(localStorage.getItem('sunspire2'));
     newGame();
-    G.lv = s.lv; G.xp = s.xp; G.gold = s.gold; G.inv = s.inv; G.gear = s.gear;
-    G.spirits = s.spirits; G.flags = s.flags; G.chests = s.chests;
-    G.wins = s.wins; G.steps = s.steps;
+    if (!s || !Array.isArray(s.party) || !s.party.length || !MAPS[s.mapId]) throw new Error('bad save');
+    G.lv = s.lv || 1; G.xp = s.xp || 0; G.gold = s.gold || 0; G.inv = s.inv || {}; G.gear = s.gear || [];
+    G.spirits = s.spirits || {}; G.flags = s.flags || {}; G.chests = s.chests || {};
+    G.wins = s.wins || 0; G.steps = s.steps || 0;
     G.party = s.party.map(p => {
       const m = makeMember(p.id, G.lv);
       m.hp = Math.min(p.hp, m.maxhp); m.pp = Math.min(p.pp, m.maxpp);
@@ -611,7 +612,7 @@ function loadGame(){
     applyFlagsToMaps();
     G.mode = 'world'; G.fade = 16; G.flags.intro = true;
     return true;
-  } catch(e){ return false; }
+  } catch(e){ newGame(); return false; }
 }
 function toast(msg){ G.toast = { msg, t: 90 }; }
 
@@ -5042,7 +5043,9 @@ function battleDraw(){
 }
 
 // ---------------- title and ending ----------------
-let titleSel = 0;
+// title menu: titleSel is the highlighted option (-1 until first shown: CONTINUE when there is a save);
+// titleAsk is -1, or the YES (0) / NO (1) choice while NEW GAME asks before replacing a save
+let titleSel = -1, titleAsk = -1, titleMsg = '';
 // ---- title logo: gold-bevelled lettering built once from a crisp text mask ----
 let TITLE_LOGO = null;
 function tintMask(mask, col){
@@ -5160,29 +5163,43 @@ function titleDraw(){
     textCO('SAGA', rx + rw / 2, 83, '#ffe9a0', '#2a1608', ssc);
   }
   textO(GAME_VERSION, W - 4 - textW(GAME_VERSION), 5, '#e9e0c8', '#1b3a86');
-  const opts = hasSave() ? ['NEW GAME','CONTINUE'] : ['NEW GAME'];
+  if (titleAsk >= 0) textCO('NEW GAME REPLACES YOUR SAVE', 120, 133, '#f2c14e', '#241c40');
+  else if (titleMsg) textCO(titleMsg, 120, 133, '#e2543a', '#241c40');
+  const { opts, sel } = titleMenu();
   for (let i = 0; i < opts.length; i++){
     const x = opts.length > 1 ? 62 + i*76 : 120;
-    textCO(opts[i], x, 146, i === titleSel ? '#ffffff' : '#9a91b8', '#241c40');
-    if (i === titleSel) drawCursor(x - textW(opts[i])/2 - 3, cursorRowY(146));
+    textCO(opts[i], x, 146, i === sel ? '#ffffff' : '#9a91b8', '#241c40');
+    if (i === sel) drawCursor(x - textW(opts[i])/2 - 3, cursorRowY(146));
   }
 }
+function titleMenu(){ // the options on show and the highlighted one (the last by default: CONTINUE, or NO when asking)
+  const opts = titleAsk >= 0 ? ['YES', 'NO'] : hasSave() ? ['NEW GAME', 'CONTINUE'] : ['NEW GAME'];
+  let sel = titleAsk >= 0 ? titleAsk : titleSel;
+  if (sel < 0 || sel >= opts.length) sel = opts.length - 1;
+  return { opts, sel };
+}
 function titleUpdate(){
-  const opts = hasSave() ? ['NEW GAME','CONTINUE'] : ['NEW GAME'];
-  if (opts.length > 1){
-    if (pressed.up || pressed.down){ titleSel = 1 - titleSel; sfx.blip(); }
-  } else titleSel = 0;
-  if (pressed.start || pressed.a){
-    sfx.ok();
+  let { opts, sel } = titleMenu();
+  if (opts.length > 1 && (pressed.left || pressed.right || pressed.up || pressed.down)){ sel = 1 - sel; sfx.blip(); titleMsg = ''; }
+  if (titleAsk >= 0) titleAsk = sel; else titleSel = sel;
+  if (titleAsk >= 0 && pressed.b){ titleAsk = -1; sfx.blip(); return; }
+  if (!(pressed.start || pressed.a)) return;
+  if (titleAsk < 0 && opts[sel] === 'CONTINUE'){
     const keep = G.t;
-    if (titleSel === 1 && hasSave() && loadGame()){ G.t = keep; return; }
-    newGame();
-    G.mode = 'world'; G.t = keep; G.fade = 16; G.flags.intro = true;
-    say(["SORIN: 'Ari... the Sunspire has gone dark. Monsters prowl every road.'",
-         "'Eight elemental spirits fled the spire. SET, they strengthen you. Unleashed, they fuel the great SUMMONS.'",
-         "'FLINT hides west of the houses. Start there. And take coin for MARA's shop.'",
-         "'LYN went scouting north and is holed up in Brindle. Crack that boulder and go ask her along.'"]);
+    if (loadGame()){ sfx.ok(); G.t = keep; return; }
+    sfx.no(); titleMsg = 'THE SAVE COULD NOT BE LOADED'; return;
   }
+  if (titleAsk < 0 && hasSave()){ sfx.blip(); titleAsk = 1; return; } // NEW GAME over a save: ask first, NO highlighted
+  if (titleAsk >= 0 && sel === 1){ sfx.blip(); titleAsk = -1; return; }
+  titleAsk = -1;
+  sfx.ok();
+  const keep = G.t;
+  newGame();
+  G.mode = 'world'; G.t = keep; G.fade = 16; G.flags.intro = true;
+  say(["SORIN: 'Ari... the Sunspire has gone dark. Monsters prowl every road.'",
+       "'Eight elemental spirits fled the spire. SET, they strengthen you. Unleashed, they fuel the great SUMMONS.'",
+       "'FLINT hides west of the houses. Start there. And take coin for MARA's shop.'",
+       "'LYN went scouting north and is holed up in Brindle. Crack that boulder and go ask her along.'"]);
 }
 function endingDraw(){
   const sky = ['#f2c14e','#e8a05a','#c9756a','#8a5a8f','#463a78'];

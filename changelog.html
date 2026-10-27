@@ -50,6 +50,12 @@
     record of what changed in each one.</p>
   <div class="pg-body doc">
     <table>
+    <tr><td class="ver">v46</td><td>CONTINUE works. The title screen lays NEW GAME and CONTINUE side by side
+      but only up/down switched between them, so left/right never reached CONTINUE, and A on the default
+      NEW GAME started over and its first auto-save wiped the old game. Now left/right (and up/down) switch,
+      CONTINUE is highlighted from the start whenever there is a save, NEW GAME asks before replacing a save
+      (NO highlighted, B backs out), and a save that cannot be read leaves you on the title screen with a
+      message instead of quietly starting a new game over it.</td></tr>
     <tr><td class="ver">v45</td><td>Looted chests stay open. A pack's <code>chest_open</code> GIF plays once
       when you loot a chest and then holds its last frame for good, and the built-in chest keeps its lid
       up; before, both went back to looking closed after a moment and after loading a save.</td></tr>

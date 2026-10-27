@@ -72,8 +72,8 @@
 ===============================================================================
                     SUNSPIRE SAGA - FAQ / WALKTHROUGH
                         For the browser (play.html)
-                           Game version: V45
-                         Guide version: 1.6
+                           Game version: V46
+                         Guide version: 1.7
                        Last updated: 27 October 2026
 ===============================================================================
 
@@ -161,6 +161,11 @@ show them.
 <b id="VER02">  2. VERSION HISTORY                                                   [VER02]</b>
 ===============================================================================
 
+Guide 1.7 - 27 October 2026
+   Updated for game version V46: the title screen's CONTINUE works with
+   left/right and is highlighted first, and NEW GAME asks before
+   replacing a save. Section 5.7.
+
 Guide 1.6 - 27 October 2026
    Updated for game version V45: looted chests stay open on the map.
    Section 10.
@@ -200,6 +205,8 @@ Guide 1.0 - 23 October 2026
 The game's own version history lives on its changelog page (changelog.html).
 The bits of it that matter for a walkthrough:
 
+   V46  CONTINUE is highlighted on the title screen when there is a save
+        and left/right reach it; NEW GAME asks before replacing a save.
    V45  A looted chest stays open on the map (also after loading a save)
         instead of closing again, so finished chests are easy to spot.
    V44  Sprite-pack summon figures are drawn at their own size in the
@@ -473,8 +480,12 @@ afterwards.
    - SAVE in the pause menu, any time outside battle.
    - The game also saves by itself whenever you change maps, win a battle,
      recruit a spirit or sleep at an inn.
-   - One save slot, kept in the browser (localStorage). CONTINUE on the
-     title screen loads it. Clearing site data deletes it.
+   - One save slot, kept in the browser (localStorage). Clearing site data
+     deletes it, and each site address keeps its own save.
+   - On the title screen CONTINUE is already highlighted when a save
+     exists; press A to load it. Left/right (or up/down) switches to NEW
+     GAME, which asks first ("NEW GAME REPLACES YOUR SAVE", NO highlighted)
+     because the new game's first auto-save overwrites the old one.
 
 5.8 Shops, inns, wells and the spring
 -------------------------------------
@@ -1601,7 +1612,7 @@ affiliated with or endorsed by Nintendo or Camelot.
 This walkthrough is part of the Sunspire Saga repository and is released
 under the same MIT licence as the game. You may copy, host and share it
 freely as long as this notice stays attached. All numbers were taken from
-the game's data for version V45; if you find a mistake, open an issue in
+the game's data for version V46; if you find a mistake, open an issue in
 the repository.
 
 Thanks to everyone who ever wrote a plain-text FAQ with an ASCII logo at
