@@ -66,11 +66,25 @@ p{text-wrap:pretty;}
 .theme-toggle .moon{display:none;}
 :root[data-theme-eff="dark"] .theme-toggle .sun{display:none;}
 :root[data-theme-eff="dark"] .theme-toggle .moon{display:block;}
+.menu-toggle{display:none;}
+.menu-toggle .cross{display:none;}
+.nav.open .menu-toggle .bars{display:none;}
+.nav.open .menu-toggle .cross{display:block;}
 @media (max-width:640px){
   .nav .wrap{gap:8px; padding:0 12px;}
-  .brand span{display:none;}
   .nav-links{gap:0;}
   .nav-links a{padding:6px 8px; font-size:13px;}
+  .nav:not(.has-menu) .brand span{display:none;}
+}
+/* with site.js loaded, narrow screens fold the links into a drop-down under the bar */
+@media (max-width:820px){
+  .nav.has-menu .menu-toggle{display:inline-grid;}
+  .nav.has-menu .theme-toggle{margin-left:auto;}
+  .nav.has-menu .nav-links{display:none; position:absolute; top:100%; left:0; right:0; margin:0;
+    flex-direction:column; align-items:stretch; gap:2px; padding:8px 12px 12px;
+    background:var(--bg); border-bottom:1px solid var(--line); box-shadow:var(--shadow);}
+  .nav.has-menu.open .nav-links{display:flex;}
+  .nav.has-menu .nav-links a{padding:12px 14px; font-size:16px;}
 }
 
 /* ---------- buttons ---------- */
