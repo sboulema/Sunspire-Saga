@@ -50,6 +50,18 @@
     record of what changed in each one.</p>
   <div class="pg-body doc">
     <table>
+    <tr><td class="ver">v43</td><td>Steady speed and a tidier battle. The game's logic now runs at a fixed
+      60 steps per second whatever the display's refresh rate, so walking, battles and cutscenes no longer
+      run fast on 120 or 144&nbsp;Hz screens. In the target view only the member whose turn it is zooms into
+      the bottom-right corner; the rest of the party fades out. The gold ring around the chosen command icon
+      and the coloured ring that spread from an enemy when an art landed are both gone. Summon rows in the
+      arts window show the number of spirits needed next to a badge per element (the SOL AVATAR shows 1 with
+      all four). Every summon has a cutscene figure of its own: Gnome, Salamand, Nixie and Tempest are new,
+      and each summon has a pack slot (<code>sum_gnome</code> ... <code>sum_sol_avatar</code>) with the
+      element slot as fallback. Pack cast overlays (<code>fx_...</code>) are scaled to the screen width and
+      pinned to the top-left corner, so a 240&times;160 effect lines up with the screen exactly. On the site,
+      pages are served on clean URLs without <code>.html</code>, the nav folds into a menu button on narrow
+      screens, and each release publishes a Docker image (Docker Hub and GHCR) and a static-site zip.</td></tr>
     <tr><td class="ver">v42</td><td>A balance and polish pass. The paddock behind the boulder in Thera
       Fields now sends packs of two or three monsters at any level, instead of the gentle singles of the
       fields below. Brindle Mine is a touch tougher: Ore Beetles (80 HP, ATK 26) and Ruin Golems (108 HP,
@@ -73,22 +85,17 @@
     <tr><td class="ver">v41</td><td>A new battle screen in the handheld classic style. The status bar
       is a row of cards hanging from the top-right corner: HP and PP are written over bars that are blue for
       what is left and red (HP) or purple (PP) for what is gone, and the member choosing a command sits on a
-      lit, gold-framed card. Targeting zooms the camera in over the acting member's shoulder (the rest of the party fades out), with a pink droplet
+      lit, gold-framed card. Targeting zooms the camera in over the party's shoulder, with a pink droplet
       bobbing over the chosen enemy and a soft white sheen on its sprite; area arts and SQUALL now ask for a
       focus too (big droplet, full damage) and hit every other enemy (small droplets) for 70%. ARTS, SPIRIT,
       SUMMON and ITEM open a proper window: a description strip, the caster in the corner, and a list with
-      icon, name, PP cost (for summons: the number of spirits needed, with a badge per element), an element badge and a range badge (sprites, replaceable from a pack as
+      icon, name, PP cost, an element badge and a range badge (sprites, replaceable from a pack as
       <code>el_...</code> and <code>range_...</code>), with greyed rows for arts you cannot afford and
-      scrolling for long lists. Cast effects (<code>fx_...</code> pack overlays) are scaled to the screen width, pinned to the
-      top-left corner, and the party is drawn on top of them. The inn at Mira Farmstead is now the pack slot
+      scrolling for long lists. Cast effects (<code>fx_...</code> pack overlays) are scaled over the whole
+      screen and the party is drawn on top of them. The inn at Mira Farmstead is now the pack slot
       <code>house_thera_far_inn</code> (was <code>house_thera_inn</code>), matching the other far-side
       buildings; Thera itself has no inn. Every list menu marks its selection with a pointing-hand cursor
-      (pack slot <code>cursor</code>) instead of a gold square. The gold ring around the chosen command
-      icon and the coloured ring that spread from an enemy when an art landed are both gone. Every summon
-      has a figure of its own in its cutscene: Gnome, Salamand, Nixie and Tempest are new, and each summon
-      has a pack slot (<code>sum_gnome</code> ... <code>sum_sol_avatar</code>) with the element slot as
-      fallback. The game's logic now runs at a fixed 60 steps per second whatever the display's refresh
-      rate, so walking, battles and cutscenes no longer run fast on 120 or 144&nbsp;Hz screens.</td></tr>
+      (pack slot <code>cursor</code>) instead of a gold square.</td></tr>
     <tr><td class="ver">v40</td><td>Lyn and Bram trade elements. Lyn is now the water adept and the
       party's healer (CURE, ICE HORN, PURE PLY), dressed in blue; Bram is the fire adept (FLARE, FIRE BOMB,
       INFERNO), dressed in red, and his fire arts now ride on the party's biggest ATK. Their stats are
