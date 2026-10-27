@@ -5,7 +5,7 @@
 An original GBA-style pixel-art JRPG that runs in the browser. Gather eight elemental spirits,
 master arts and summons, and bring the dawn back to the Sunspire.
 
-**[Play it here](https://YOUR-GITHUB-USER.github.io/sunspire-saga/play.html)** · no install, no build step, saves in your browser.
+**[Play it here](https://YOUR-GITHUB-USER.github.io/sunspire-saga/play)** · no install, no build step, saves in your browser.
 
 <p align="center"><img src="assets/art/box-front.png" width="300" alt="Sunspire Saga box art"></p>
 
@@ -37,8 +37,10 @@ in the browser.
 
 ## Playing locally
 
-Open `play.html` in a browser. If your browser blocks storage for `file://` pages (saves and
-sprite packs use localStorage / IndexedDB), serve the folder instead, for example:
+Open `play.html` in a browser to play. The site links between pages without `.html` (`play`,
+`walkthrough`, ...), so to browse the whole site, or if your browser blocks storage for `file://`
+pages (saves and sprite packs use localStorage / IndexedDB), serve the folder instead with a
+server that maps `/play` to `play.html`, for example:
 
 ```bash
 npx serve .
@@ -53,10 +55,11 @@ around the screen has clickable D-pad, A, B and Start buttons for touch play.
 The repo is laid out for GitHub Pages: enable Pages for the `main` branch, root folder, and the
 site is live at `https://<user>.github.io/sunspire-saga/`. Then replace `YOUR-GITHUB-USER` in the
 social-card URLs in the `<head>` of `index.html` and `play.html` (and in this README) so link
-previews show `assets/sunspire-card.png`. Alternatively copy the three HTML files, `game.js` and
-`assets/` to any static host. A workflow for Pages deployment via Actions is included in
-`.github/workflows/pages.yml` if you prefer that over branch deployment (it only runs when started
-by hand from the Actions tab).
+previews show `assets/sunspire-card.png`. Alternatively copy the HTML files, `game.js` and
+`assets/` to any static host that serves `/play` as `play.html` (GitHub Pages, Netlify and
+Cloudflare Pages do; the nginx config in `docker/` shows the rules for nginx). A workflow for
+Pages deployment via Actions is included in `.github/workflows/pages.yml` if you prefer that over
+branch deployment (it only runs when started by hand from the Actions tab).
 
 To self-host, `.github/workflows/publish.yml` publishes two things on every push to `main` and
 every `v*` tag:
@@ -77,7 +80,7 @@ Or build it yourself from the included `Dockerfile`:
 docker build -t sunspire-saga . && docker run --rm -p 8080:80 sunspire-saga
 ```
 
-The game is then at `http://localhost:8080/play.html`.
+The game is then at `http://localhost:8080/play`.
 
 ## Repository layout
 
