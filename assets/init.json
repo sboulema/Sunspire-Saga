@@ -2,10 +2,10 @@
     "hero_key_name": "ari",
     "initial_action": "idle",
     "initial_direction": "down",
-    "map_key_name": "brindle",
+    "map_key_name": "fields",
     "initial_scale_factor": 2,
-    "x_tile_position": 15,
-    "y_tile_position": 15,
+    "x_tile_position": 18,
+    "y_tile_position": 22,
     "collision_layer": 0,
     "coins": 30,
     "max_chars_level": 30,
@@ -16,11 +16,11 @@
     "verbose_game_event_fire": false,
     "artifacts_global_list": [],
     "last_visited_town_with_sanctum": {
-        "map_key": "brindle",
+        "map_key": "fields",
         "collision_layer": 0,
         "tile_position": {
-            "x": 15,
-            "y": 15
+            "x": 18,
+            "y": 22
         }
     },
     "initial_shortcuts": [
@@ -29,11 +29,11 @@
             "adept": "ari"
         },
         {
-            "ability": "growth",
+            "ability": "move",
             "adept": "ari"
         },
         {
-            "ability": "reveal",
+            "ability": "move",
             "adept": "ari"
         },
         {

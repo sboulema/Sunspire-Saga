@@ -62,6 +62,10 @@ export class BattleStatusDjinn extends StatusComponent {
     }
 
     public on_change() {
+        if (!this.char_djinn.length || !this.char_djinn.some(page => page.length)) {
+            this.update_description("No spirits set."); // the character has no spirits yet
+            return;
+        }
         if (!this.char_djinn[this.current_col]) this.current_col = this.char_djinn.length - 1;
 
         if (!this.char_djinn[this.current_col][this.current_line])

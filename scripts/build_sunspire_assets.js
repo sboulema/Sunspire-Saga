@@ -17,7 +17,6 @@ const ROOT = path.join(__dirname, "..");
 const SRC = path.join(ROOT, "assets/sunspire");
 const IMG = path.join(ROOT, "assets/images");
 const glyphs = JSON.parse(fs.readFileSync(path.join(SRC, "glyphs.json")));
-const grid = JSON.parse(fs.readFileSync(path.join(SRC, "brindle_grid.json")));
 
 const COL = {
     earth: [207, 140, 42], fire: [226, 84, 58], wind: [155, 110, 224], water: [79, 168, 232], sol: [255, 217, 78],
@@ -139,6 +138,9 @@ function fieldSheet(id) {
             frames.push(F(`${action}/${dir}/00`, cell(step, CW, CH)));
             frames.push(F(`${action}/${dir}/01`, cell(stand, CW, CH)));
         }
+        // the nod and the head shake the hero plays on a yes / no answer
+        [stand, step, stand].forEach((img, i) => frames.push(F(`yes/${dir}/${String(i).padStart(2, "0")}`, cell(img, CW, CH))));
+        [stand, shift(stand, -1, 0), stand, shift(stand, 1, 0)].forEach((img, i) => frames.push(F(`no/${dir}/${String(i).padStart(2, "0")}`, cell(img, CW, CH))));
     }
     writeAtlas(path.join(IMG, "spritesheets/field"), id + "_field", frames);
 }
@@ -175,6 +177,33 @@ function spiritSheet(id) {
         frames.push(F(`${action}/${dir}/00`, cell(action === "standby" ? face : shift(face, 0, 0), img.width, img.height + 1)));
     }
     writeAtlas(path.join(IMG, "spritesheets/spirit"), id, frames);
+}
+
+// map objects placed as NPCs: chests, signs, wells, the boulder, the gate, the bosses, and an
+// invisible marker that stands on door tiles so the hero can talk to a house
+function objectSheets() {
+    const dir = path.join(IMG, "spritesheets/objects");
+    const single = (id, name, img) => writeAtlas(dir, id, [F(`${name}/down/00`, img)]);
+    const chest = spr("chest"), chest_open = spr("chest_open");
+    // the chest event plays closed / opening / shining / empty (and open) in turn
+    const closed = cell(chest, 16, 16), open = cell(chest_open, 16, 16);
+    writeAtlas(dir, "chest", [
+        F("chest/closed/00", closed), F("chest/open/00", open),
+        F("chest/opening/00", closed), F("chest/opening/01", open),
+        F("chest/shining/00", open), F("chest/shining/01", shift(open, 0, -1)),
+        F("chest/empty/00", open),
+    ]);
+    single("sign", "idle", cell(spr("sign"), 16, 16));
+    single("well", "idle", cell(spr("well"), 16, 16));
+    single("spring", "idle", cell(spr("spring"), 16, 16));
+    single("boulder", "idle", cell(spr("boulder"), 16, 16));
+    single("gate", "idle", (() => { const g = png.create(16, 16); png.fill(g, 1, 0, 14, 16, [120, 110, 90]); png.fill(g, 3, 2, 10, 12, [60, 50, 40]); png.fill(g, 7, 7, 2, 3, COL.gold); return g; })());
+    single("marker", "idle", png.create(16, 16));
+    // the two bosses on the map, bobbing
+    for (const id of ["ogre_s", "wyrm_s"]) {
+        const img = spr(id);
+        writeAtlas(dir, id, [0, 1].map(i => F(`idle/down/${String(i).padStart(2, "0")}`, shift(cell(img, img.width + 2, img.height + 2), 0, -i))));
+    }
 }
 
 // ---------------- fixed engine atlases ----------------
@@ -260,6 +289,7 @@ function battleAndPortraits() {
         ...Object.keys(SPIRITS).map(s => F(s, spr("spirit_" + s))),
         ...summons.map(s => F(s, spr("summon_" + s))),
         F("attack", spr("icon_fight")), F("defend", spr("icon_defend")), F("flee", spr("icon_flee")), F("set_djinn", spr("icon_spirit")),
+        F("move", spr("art_earth")), // the Shove field art
         F("herb", spr("item_herb")), F("potion", spr("item_potion")), F("pdrop", spr("item_pdrop")), F("elixir", spr("item_elixir")),
     ];
     writeAtlas(path.join(IMG, "icons/abilities"), "abilities_icons", abilityIcons);
@@ -275,46 +305,14 @@ function battleAndPortraits() {
     writePng(path.join(IMG, "misc/start_screen.png"), title);
 }
 
-// ---------------- tileset and map ----------------
-const SOLID = new Set(["t", "r", "v", "C", "R", "Q", "W", "D", "s"]);
-function brindleMap() {
-    const tiles = png.decode(fs.readFileSync(path.join(SRC, "brindle_tiles.png")));
-    writePng(path.join(IMG, "tilesets/brindle.png"), tiles);
-    const { w, h, chars } = grid, T = 16;
-    const data = []; for (const row of grid.grid) for (const t of row) data.push(t + 1);
-    // collision: every solid tile, horizontal runs merged into one rectangle; the two exits lead
-    // to maps that are not ported yet, so they stay blocked
-    const objects = []; let id = 1;
-    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
-        const solid = c => SOLID.has(c) || (y === h - 1) || (y === 1);
-        if (!solid(chars[y][x])) continue;
-        let x1 = x; while (x1 + 1 < w && solid(chars[y][x1 + 1])) x1++;
-        objects.push({ id: id++, name: "", type: "", x: x * T, y: y * T, width: (x1 - x + 1) * T, height: T, rotation: 0, visible: true });
-        x = x1;
+// ---------------- tilesets ----------------
+// One tileset per map, captured from the legacy map builders (assets/sunspire/maps/<id>_tiles.png);
+// the Tiled maps themselves come from scripts/build_sunspire_content.js.
+function tilesets() {
+    const dir = path.join(SRC, "maps");
+    for (const file of fs.readdirSync(dir).filter(f => f.endsWith("_tiles.png"))) {
+        writePng(path.join(IMG, "tilesets", file.replace("_tiles.png", ".png")), png.decode(fs.readFileSync(path.join(dir, file))));
     }
-    const say = lines => lines.join("${BREAK}");
-    const npcs = {
-        "npc/01": { key_name: "dov", x: 8, y: 9, npc_type: "shop", shop_key: "brindle", movement_type: "idle", avatar: "dov", base_collision_layer: 0, initial_action: "idle", animation: "down" },
-        "npc/02": { key_name: "ina", x: 24, y: 13, npc_type: "inn", inn_key: "brindle_inn", movement_type: "idle", avatar: "ina", base_collision_layer: 0 },
-        "npc/03": { key_name: "miner", x: 20, y: 11, npc_type: "normal", movement_type: "random", avatar: "miner", base_collision_layer: 0,
-            message: say(["MINER: 'A FANG WOLF followed me out of the seams!'", "'It's right behind me, isn't it. Ari, do something!'"]),
-            events: [{ type: "battle", background_key: "bg_field", bgm: "battle", enemy_party_key: "wolf_pair" }] },
-        "npc/04": { key_name: "lyn", x: 13, y: 10, npc_type: "normal", movement_type: "random", avatar: "lyn", base_collision_layer: 0,
-            message: say(["LYN: 'Ari! Took you long enough to crack that boulder.'", "'I'd come along, but I lost my COMPASS scouting the paddock north of the fence.'"]) },
-    };
-    const properties = {}, propertytypes = {};
-    for (const [k, v] of Object.entries(npcs)) { properties[k] = JSON.stringify(v); propertytypes[k] = "string"; }
-    const map = {
-        version: 1.1, tiledversion: "1.1.0", type: "map", orientation: "orthogonal", renderorder: "right-down", infinite: false,
-        width: w, height: h, tilewidth: T, tileheight: T, nextobjectid: id,
-        properties, propertytypes,
-        layers: [
-            { name: "ground", type: "tilelayer", x: 0, y: 0, width: w, height: h, opacity: 1, visible: true, data },
-            { name: "0", type: "objectgroup", x: 0, y: 0, opacity: 1, visible: true, draworder: "topdown", objects },
-        ],
-        tilesets: [{ name: "brindle", firstgid: 1, image: "../../images/tilesets/brindle.png", imagewidth: tiles.width, imageheight: tiles.height, tilewidth: T, tileheight: T, columns: tiles.width / T, tilecount: (tiles.width / T) * (tiles.height / T), margin: 0, spacing: 0 }],
-    };
-    writeJson(path.join(ROOT, "assets/maps/brindle/brindle.json"), map);
 }
 
 // ---------------- font ----------------
@@ -434,10 +432,11 @@ for (const id of HEROES) { fieldSheet(id); heroBattleSheet(id); }
 for (const id of NPCS) fieldSheet(id);
 for (const id of ENEMIES) enemyBattleSheet(id);
 for (const id of Object.keys(SPIRITS)) spiritSheet(id);
+objectSheets();
 miscSheets();
 buttonSheets();
 battleAndPortraits();
-brindleMap();
+tilesets();
 font();
 audio();
 const slot_count = packSlots();

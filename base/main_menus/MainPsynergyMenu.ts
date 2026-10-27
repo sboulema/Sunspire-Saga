@@ -200,7 +200,7 @@ export class MainPsynergyMenu {
             this.psynergy_choose_window.close();
             this.psynergy_choose_window.open(this.selected_char_index);
         } else if (this.choosing_target && this.selected_ability) {
-            this.set_description_window_text(this.selected_ability.description);
+            this.set_description_window_text(this.selected_ability?.description ?? "");
         }
     }
 
@@ -250,7 +250,8 @@ export class MainPsynergyMenu {
     }
 
     psynergy_change(ability: Ability) {
-        this.set_description_window_text(ability.description);
+        // a character without field psynergy has an empty list
+        this.set_description_window_text(ability?.description ?? "");
     }
 
     psynergy_choose(

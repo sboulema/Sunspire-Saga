@@ -2,6 +2,91 @@
     {
         "key_name": "gnome",
         "available": true,
-        "requirements": {"venus": 1, "mercury": 0, "mars": 0, "jupiter": 0}
+        "requirements": {
+            "venus": 1,
+            "mercury": 0,
+            "mars": 0,
+            "jupiter": 0
+        }
+    },
+    {
+        "key_name": "titan",
+        "available": true,
+        "requirements": {
+            "venus": 2,
+            "mercury": 0,
+            "mars": 0,
+            "jupiter": 0
+        }
+    },
+    {
+        "key_name": "salamand",
+        "available": true,
+        "requirements": {
+            "venus": 0,
+            "mercury": 0,
+            "mars": 1,
+            "jupiter": 0
+        }
+    },
+    {
+        "key_name": "phoenix",
+        "available": true,
+        "requirements": {
+            "venus": 0,
+            "mercury": 0,
+            "mars": 2,
+            "jupiter": 0
+        }
+    },
+    {
+        "key_name": "nixie",
+        "available": true,
+        "requirements": {
+            "venus": 0,
+            "mercury": 1,
+            "mars": 0,
+            "jupiter": 0
+        }
+    },
+    {
+        "key_name": "leviath",
+        "available": true,
+        "requirements": {
+            "venus": 0,
+            "mercury": 2,
+            "mars": 0,
+            "jupiter": 0
+        }
+    },
+    {
+        "key_name": "sylph",
+        "available": true,
+        "requirements": {
+            "venus": 0,
+            "mercury": 0,
+            "mars": 0,
+            "jupiter": 1
+        }
+    },
+    {
+        "key_name": "tempest",
+        "available": true,
+        "requirements": {
+            "venus": 0,
+            "mercury": 0,
+            "mars": 0,
+            "jupiter": 2
+        }
+    },
+    {
+        "key_name": "sol_avatar",
+        "available": true,
+        "requirements": {
+            "venus": 1,
+            "mercury": 1,
+            "mars": 1,
+            "jupiter": 1
+        }
     }
 ]

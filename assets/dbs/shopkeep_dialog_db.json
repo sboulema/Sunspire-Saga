@@ -1,48 +1,340 @@
 [
     {
+        "key_name": "thera",
+        "messages": [
+            {
+                "key": "welcome",
+                "text": "Blades, mail and herbs - dawn prices, dear. What'll it be?"
+            },
+            {
+                "key": "artifacts_menu",
+                "text": "Nothing rare this week, dear."
+            },
+            {
+                "key": "repair_menu",
+                "text": "Bent your blade? Hand it over."
+            },
+            {
+                "key": "buy_select",
+                "text": "Pick what you need."
+            },
+            {
+                "key": "sell_select",
+                "text": "What are you selling?"
+            },
+            {
+                "key": "repair_select",
+                "text": "Which piece needs fixing?"
+            },
+            {
+                "key": "character_select",
+                "text": "Who is it for?"
+            },
+            {
+                "key": "equip_now",
+                "text": "Want ${HERO} to equip the ${ITEM} right away?"
+            },
+            {
+                "key": "cant_equip",
+                "text": "${HERO} can't use the ${ITEM}."
+            },
+            {
+                "key": "equip_compliment",
+                "text": "Suits ${HERO} well."
+            },
+            {
+                "key": "buy_quantity",
+                "text": "How many?"
+            },
+            {
+                "key": "inventory_full",
+                "text": "${HERO} can't carry any more."
+            },
+            {
+                "key": "stack_full",
+                "text": "${HERO} already has as many ${ITEM} as one can carry."
+            },
+            {
+                "key": "after_buy",
+                "text": "Anything else?"
+            },
+            {
+                "key": "sell_equipped_cursed",
+                "text": "That ${ITEM} is cursed. I won't touch it."
+            },
+            {
+                "key": "sell_follow_up",
+                "text": "Anything else to sell?"
+            },
+            {
+                "key": "sell_quantity_select",
+                "text": "How many ${ITEM}?"
+            },
+            {
+                "key": "sell_quantity_confirm",
+                "text": "I'll give you ${PRICE} coins. Deal?"
+            },
+            {
+                "key": "sell_current",
+                "text": "I'll give you ${PRICE} coins for that ${ITEM}. Deal?"
+            },
+            {
+                "key": "sell_normal",
+                "text": "I'll give you ${PRICE} coins for the ${ITEM}. Deal?"
+            },
+            {
+                "key": "sell_artifact",
+                "text": "A rare one! ${PRICE} coins for the ${ITEM}. Deal?"
+            },
+            {
+                "key": "cant_sell_important",
+                "text": "You'll want to keep that ${ITEM}."
+            },
+            {
+                "key": "cant_sell_equipped_cursed",
+                "text": "That ${ITEM} won't come off. I can't buy it."
+            },
+            {
+                "key": "decline_sell_normal",
+                "text": "Keeping it, then."
+            },
+            {
+                "key": "decline_sell_artifact",
+                "text": "Hold on to it, then."
+            },
+            {
+                "key": "after_sell_normal",
+                "text": "Thanks. Anything else?"
+            },
+            {
+                "key": "after_sell_artifact",
+                "text": "I'll put that on the shelf. Anything else?"
+            },
+            {
+                "key": "game_ticket",
+                "text": "You've earned a lottery ticket!"
+            },
+            {
+                "key": "game_ticket_select",
+                "text": "Want to try your luck?"
+            },
+            {
+                "key": "game_ticket_decline",
+                "text": "Maybe next time."
+            },
+            {
+                "key": "repair_decline",
+                "text": "Leave it as it is, then."
+            },
+            {
+                "key": "cant_repair",
+                "text": "Nothing here needs mending."
+            },
+            {
+                "key": "repair_deal",
+                "text": "I can fix the ${ITEM} for ${PRICE} coins. Deal?"
+            },
+            {
+                "key": "repair_deal_accept",
+                "text": "Come back in a while and it'll be done."
+            },
+            {
+                "key": "repair_deal_decline",
+                "text": "Suit yourself."
+            },
+            {
+                "key": "repair_done",
+                "text": "Here's your ${ITEM}, good as new."
+            },
+            {
+                "key": "repair_follow_up",
+                "text": "Anything else to fix?"
+            },
+            {
+                "key": "cancel_option",
+                "text": "Changed your mind?"
+            },
+            {
+                "key": "not_enough_coins",
+                "text": "That's not enough coin for that."
+            },
+            {
+                "key": "no_artifacts",
+                "text": "No rare finds this week. Try again later."
+            },
+            {
+                "key": "goodbye",
+                "text": "Mind the tall grass, dear!"
+            }
+        ]
+    },
+    {
         "key_name": "brindle",
         "messages": [
-            {"key": "welcome", "text": "Iron from our own seams. Best gear north of Thera. What'll it be?"},
-            {"key": "artifacts_menu", "text": "Rare finds from the mine. Have a look."},
-            {"key": "repair_menu", "text": "Bent your blade? Hand it over."},
-            {"key": "buy_select", "text": "Pick what you need."},
-            {"key": "sell_select", "text": "What are you selling?"},
-            {"key": "repair_select", "text": "Which piece needs fixing?"},
-            {"key": "character_select", "text": "Who is it for?"},
-            {"key": "equip_now", "text": "Want ${HERO} to equip the ${ITEM} right away?"},
-            {"key": "cant_equip", "text": "${HERO} can't use the ${ITEM}."},
-            {"key": "equip_compliment", "text": "Suits ${HERO} well."},
-            {"key": "buy_quantity", "text": "How many?"},
-            {"key": "inventory_full", "text": "${HERO} can't carry any more."},
-            {"key": "stack_full", "text": "${HERO} already has as many ${ITEM} as one can carry."},
-            {"key": "after_buy", "text": "Anything else?"},
-            {"key": "sell_equipped_cursed", "text": "That ${ITEM} is cursed. I won't touch it."},
-            {"key": "sell_follow_up", "text": "Anything else to sell?"},
-            {"key": "sell_quantity_select", "text": "How many ${ITEM}?"},
-            {"key": "sell_quantity_confirm", "text": "I'll give you ${PRICE} coins. Deal?"},
-            {"key": "sell_current", "text": "I'll give you ${PRICE} coins for that ${ITEM}. Deal?"},
-            {"key": "sell_normal", "text": "I'll give you ${PRICE} coins for the ${ITEM}. Deal?"},
-            {"key": "sell_artifact", "text": "A rare one! ${PRICE} coins for the ${ITEM}. Deal?"},
-            {"key": "cant_sell_important", "text": "You'll want to keep that ${ITEM}."},
-            {"key": "cant_sell_equipped_cursed", "text": "That ${ITEM} won't come off. I can't buy it."},
-            {"key": "decline_sell_normal", "text": "Keeping it, then."},
-            {"key": "decline_sell_artifact", "text": "Hold on to it, then."},
-            {"key": "after_sell_normal", "text": "Thanks. Anything else?"},
-            {"key": "after_sell_artifact", "text": "I'll put that on the shelf. Anything else?"},
-            {"key": "game_ticket", "text": "You've earned a ticket for the mine lottery!"},
-            {"key": "game_ticket_select", "text": "Want to try your luck?"},
-            {"key": "game_ticket_decline", "text": "Maybe next time."},
-            {"key": "repair_decline", "text": "Leave it as it is, then."},
-            {"key": "cant_repair", "text": "Nothing here needs mending."},
-            {"key": "repair_deal", "text": "I can fix the ${ITEM} for ${PRICE} coins. Deal?"},
-            {"key": "repair_deal_accept", "text": "Come back in a while and it'll be done."},
-            {"key": "repair_deal_decline", "text": "Suit yourself."},
-            {"key": "repair_done", "text": "Here's your ${ITEM}, good as new."},
-            {"key": "repair_follow_up", "text": "Anything else to fix?"},
-            {"key": "cancel_option", "text": "Changed your mind?"},
-            {"key": "not_enough_coins", "text": "That's not enough coin for that."},
-            {"key": "no_artifacts", "text": "No rare finds this week. Try again later."},
-            {"key": "goodbye", "text": "Mind the ogre in the east gallery!"}
+            {
+                "key": "welcome",
+                "text": "Iron from our own seams. Best gear north of Thera. What'll it be?"
+            },
+            {
+                "key": "artifacts_menu",
+                "text": "Rare finds from the mine. Have a look."
+            },
+            {
+                "key": "repair_menu",
+                "text": "Bent your blade? Hand it over."
+            },
+            {
+                "key": "buy_select",
+                "text": "Pick what you need."
+            },
+            {
+                "key": "sell_select",
+                "text": "What are you selling?"
+            },
+            {
+                "key": "repair_select",
+                "text": "Which piece needs fixing?"
+            },
+            {
+                "key": "character_select",
+                "text": "Who is it for?"
+            },
+            {
+                "key": "equip_now",
+                "text": "Want ${HERO} to equip the ${ITEM} right away?"
+            },
+            {
+                "key": "cant_equip",
+                "text": "${HERO} can't use the ${ITEM}."
+            },
+            {
+                "key": "equip_compliment",
+                "text": "Suits ${HERO} well."
+            },
+            {
+                "key": "buy_quantity",
+                "text": "How many?"
+            },
+            {
+                "key": "inventory_full",
+                "text": "${HERO} can't carry any more."
+            },
+            {
+                "key": "stack_full",
+                "text": "${HERO} already has as many ${ITEM} as one can carry."
+            },
+            {
+                "key": "after_buy",
+                "text": "Anything else?"
+            },
+            {
+                "key": "sell_equipped_cursed",
+                "text": "That ${ITEM} is cursed. I won't touch it."
+            },
+            {
+                "key": "sell_follow_up",
+                "text": "Anything else to sell?"
+            },
+            {
+                "key": "sell_quantity_select",
+                "text": "How many ${ITEM}?"
+            },
+            {
+                "key": "sell_quantity_confirm",
+                "text": "I'll give you ${PRICE} coins. Deal?"
+            },
+            {
+                "key": "sell_current",
+                "text": "I'll give you ${PRICE} coins for that ${ITEM}. Deal?"
+            },
+            {
+                "key": "sell_normal",
+                "text": "I'll give you ${PRICE} coins for the ${ITEM}. Deal?"
+            },
+            {
+                "key": "sell_artifact",
+                "text": "A rare one! ${PRICE} coins for the ${ITEM}. Deal?"
+            },
+            {
+                "key": "cant_sell_important",
+                "text": "You'll want to keep that ${ITEM}."
+            },
+            {
+                "key": "cant_sell_equipped_cursed",
+                "text": "That ${ITEM} won't come off. I can't buy it."
+            },
+            {
+                "key": "decline_sell_normal",
+                "text": "Keeping it, then."
+            },
+            {
+                "key": "decline_sell_artifact",
+                "text": "Hold on to it, then."
+            },
+            {
+                "key": "after_sell_normal",
+                "text": "Thanks. Anything else?"
+            },
+            {
+                "key": "after_sell_artifact",
+                "text": "I'll put that on the shelf. Anything else?"
+            },
+            {
+                "key": "game_ticket",
+                "text": "You've earned a lottery ticket!"
+            },
+            {
+                "key": "game_ticket_select",
+                "text": "Want to try your luck?"
+            },
+            {
+                "key": "game_ticket_decline",
+                "text": "Maybe next time."
+            },
+            {
+                "key": "repair_decline",
+                "text": "Leave it as it is, then."
+            },
+            {
+                "key": "cant_repair",
+                "text": "Nothing here needs mending."
+            },
+            {
+                "key": "repair_deal",
+                "text": "I can fix the ${ITEM} for ${PRICE} coins. Deal?"
+            },
+            {
+                "key": "repair_deal_accept",
+                "text": "Come back in a while and it'll be done."
+            },
+            {
+                "key": "repair_deal_decline",
+                "text": "Suit yourself."
+            },
+            {
+                "key": "repair_done",
+                "text": "Here's your ${ITEM}, good as new."
+            },
+            {
+                "key": "repair_follow_up",
+                "text": "Anything else to fix?"
+            },
+            {
+                "key": "cancel_option",
+                "text": "Changed your mind?"
+            },
+            {
+                "key": "not_enough_coins",
+                "text": "That's not enough coin for that."
+            },
+            {
+                "key": "no_artifacts",
+                "text": "No rare finds this week. Try again later."
+            },
+            {
+                "key": "goodbye",
+                "text": "Mind the ogre in the east gallery!"
+            }
         ]
     }
 ]

@@ -316,6 +316,9 @@ export class ItemPsynergyChooseWindow {
 
     /** Sets the scaling effect for the selected item. */
     set_element_tween(index: number) {
+        if (!this.icon_sprites_in_window[index]) {
+            return; // nothing listed, e.g. a character without field psynergy
+        }
         this.window.group.bringToTop(this.icon_sprites_in_window[index]);
         this.selected_element_tween = this.game.add
             .tween(this.icon_sprites_in_window[index].scale)

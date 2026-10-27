@@ -1,5 +1,28 @@
 [
     {
+        "key_name": "loose_boulder",
+        "anchor_x": 0.5,
+        "anchor_y": 0.6,
+        "body_radius": 7.0,
+        "collision_body_bevel": 3,
+        "pushable": true,
+        "psynergies_info": {"move": {"interaction_type": "infinite"}},
+        "initial_action": "idle",
+        "actions": {
+            "idle": {
+                "frame_rate": 1,
+                "animations": ["down"],
+                "frames_count": 1,
+                "initial_animation": "down",
+                "loop": false,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/objects/boulder.png",
+                    "json": "assets/images/spritesheets/objects/boulder.json"
+                }
+            }
+        }
+    },
+    {
         "key_name": "crate",
         "anchor_x": 0.5,
         "anchor_y": 0.8,

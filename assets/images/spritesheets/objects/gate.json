@@ -1,0 +1,35 @@
+{
+    "frames": {
+        "idle/down/00": {
+            "frame": {
+                "x": 0,
+                "y": 0,
+                "w": 16,
+                "h": 16
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 16,
+                "h": 16
+            },
+            "sourceSize": {
+                "w": 16,
+                "h": 16
+            }
+        }
+    },
+    "meta": {
+        "app": "scripts/build_sunspire_assets.js",
+        "version": "1.0",
+        "image": "gate.png",
+        "format": "RGBA8888",
+        "size": {
+            "w": 17,
+            "h": 16
+        },
+        "scale": "1"
+    }
+}

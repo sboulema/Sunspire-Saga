@@ -1,11 +1,600 @@
 [
     {
-        "key_name": "wolf_pair",
-        "name": "Fang wolves",
+        "key_name": "field_1",
+        "name": "Mire Ooze",
         "can_escape": true,
         "members": [
-            {"key": "wolf", "min": 1, "max": 1},
-            {"key": "wolf", "min": 0, "max": 1}
+            {
+                "key": "ooze",
+                "min": 1,
+                "max": 1
+            }
+        ]
+    },
+    {
+        "key_name": "field_2",
+        "name": "Mire Ooze",
+        "can_escape": true,
+        "members": [
+            {
+                "key": "ooze",
+                "min": 1,
+                "max": 1
+            }
+        ]
+    },
+    {
+        "key_name": "field_3",
+        "name": "Fang Wolf",
+        "can_escape": true,
+        "members": [
+            {
+                "key": "wolf",
+                "min": 1,
+                "max": 1
+            }
+        ]
+    },
+    {
+        "key_name": "field_4",
+        "name": "Dusk Bat",
+        "can_escape": true,
+        "members": [
+            {
+                "key": "bat",
+                "min": 1,
+                "max": 1
+            }
+        ]
+    },
+    {
+        "key_name": "field_5",
+        "name": "Pit Spider",
+        "can_escape": true,
+        "members": [
+            {
+                "key": "spider",
+                "min": 1,
+                "max": 1
+            }
+        ]
+    },
+    {
+        "key_name": "field_6",
+        "name": "Mire Ooze and Mire Ooze",
+        "can_escape": true,
+        "members": [
+            {
+                "key": "ooze",
+                "min": 2,
+                "max": 2
+            }
+        ]
+    },
+    {
+        "key_name": "field_7",
+        "name": "Mire Ooze and Dusk Bat",
+        "can_escape": true,
+        "members": [
+            {
+                "key": "ooze",
+                "min": 1,
+                "max": 1
+            },
+            {
+                "key": "bat",
+                "min": 1,
+                "max": 1
+            }
+        ]
+    },
+    {
+        "key_name": "field_8",
+        "name": "Fang Wolf and Mire Ooze",
+        "can_escape": true,
+        "members": [
+            {
+                "key": "wolf",
+                "min": 1,
+                "max": 1
+            },
+            {
+                "key": "ooze",
+                "min": 1,
+                "max": 1
+            }
+        ]
+    },
+    {
+        "key_name": "field_9",
+        "name": "Pit Spider and Dusk Bat",
+        "can_escape": true,
+        "members": [
+            {
+                "key": "spider",
+                "min": 1,
+                "max": 1
+            },
+            {
+                "key": "bat",
+                "min": 1,
+                "max": 1
+            }
+        ]
+    },
+    {
+        "key_name": "paddock_1",
+        "name": "Fang Wolf and Mire Ooze",
+        "can_escape": true,
+        "members": [
+            {
+                "key": "wolf",
+                "min": 1,
+                "max": 1
+            },
+            {
+                "key": "ooze",
+                "min": 1,
+                "max": 1
+            }
+        ]
+    },
+    {
+        "key_name": "paddock_2",
+        "name": "Fang Wolf and Fang Wolf",
+        "can_escape": true,
+        "members": [
+            {
+                "key": "wolf",
+                "min": 2,
+                "max": 2
+            }
+        ]
+    },
+    {
+        "key_name": "paddock_3",
+        "name": "Pit Spider and Dusk Bat",
+        "can_escape": true,
+        "members": [
+            {
+                "key": "spider",
+                "min": 1,
+                "max": 1
+            },
+            {
+                "key": "bat",
+                "min": 1,
+                "max": 1
+            }
+        ]
+    },
+    {
+        "key_name": "paddock_4",
+        "name": "Fang Wolf and Pit Spider",
+        "can_escape": true,
+        "members": [
+            {
+                "key": "wolf",
+                "min": 1,
+                "max": 1
+            },
+            {
+                "key": "spider",
+                "min": 1,
+                "max": 1
+            }
+        ]
+    },
+    {
+        "key_name": "paddock_5",
+        "name": "Pit Spider and Pit Spider",
+        "can_escape": true,
+        "members": [
+            {
+                "key": "spider",
+                "min": 2,
+                "max": 2
+            }
+        ]
+    },
+    {
+        "key_name": "paddock_6",
+        "name": "Mire Ooze and Mire Ooze and Dusk Bat",
+        "can_escape": true,
+        "members": [
+            {
+                "key": "ooze",
+                "min": 2,
+                "max": 2
+            },
+            {
+                "key": "bat",
+                "min": 1,
+                "max": 1
+            }
+        ]
+    },
+    {
+        "key_name": "mine_1",
+        "name": "Ore Beetle",
+        "can_escape": true,
+        "members": [
+            {
+                "key": "beetle",
+                "min": 1,
+                "max": 1
+            }
+        ]
+    },
+    {
+        "key_name": "mine_2",
+        "name": "Ruin Golem",
+        "can_escape": true,
+        "members": [
+            {
+                "key": "golem",
+                "min": 1,
+                "max": 1
+            }
+        ]
+    },
+    {
+        "key_name": "mine_3",
+        "name": "Ore Beetle and Ore Beetle",
+        "can_escape": true,
+        "members": [
+            {
+                "key": "beetle",
+                "min": 2,
+                "max": 2
+            }
+        ]
+    },
+    {
+        "key_name": "mine_4",
+        "name": "Dusk Bat and Dusk Bat and Dusk Bat",
+        "can_escape": true,
+        "members": [
+            {
+                "key": "bat",
+                "min": 3,
+                "max": 3
+            }
+        ]
+    },
+    {
+        "key_name": "mine_5",
+        "name": "Ruin Golem and Ore Beetle",
+        "can_escape": true,
+        "members": [
+            {
+                "key": "golem",
+                "min": 1,
+                "max": 1
+            },
+            {
+                "key": "beetle",
+                "min": 1,
+                "max": 1
+            }
+        ]
+    },
+    {
+        "key_name": "mine_6",
+        "name": "Pit Spider and Pit Spider",
+        "can_escape": true,
+        "members": [
+            {
+                "key": "spider",
+                "min": 2,
+                "max": 2
+            }
+        ]
+    },
+    {
+        "key_name": "mine_7",
+        "name": "Ruin Golem and Dusk Bat and Dusk Bat",
+        "can_escape": true,
+        "members": [
+            {
+                "key": "golem",
+                "min": 1,
+                "max": 1
+            },
+            {
+                "key": "bat",
+                "min": 2,
+                "max": 2
+            }
+        ]
+    },
+    {
+        "key_name": "trail_1",
+        "name": "Crag Harpy",
+        "can_escape": true,
+        "members": [
+            {
+                "key": "harpy",
+                "min": 1,
+                "max": 1
+            }
+        ]
+    },
+    {
+        "key_name": "trail_2",
+        "name": "Iron Boar",
+        "can_escape": true,
+        "members": [
+            {
+                "key": "boar",
+                "min": 1,
+                "max": 1
+            }
+        ]
+    },
+    {
+        "key_name": "trail_3",
+        "name": "Crag Harpy and Crag Harpy",
+        "can_escape": true,
+        "members": [
+            {
+                "key": "harpy",
+                "min": 2,
+                "max": 2
+            }
+        ]
+    },
+    {
+        "key_name": "trail_4",
+        "name": "Iron Boar and Fang Wolf",
+        "can_escape": true,
+        "members": [
+            {
+                "key": "boar",
+                "min": 1,
+                "max": 1
+            },
+            {
+                "key": "wolf",
+                "min": 1,
+                "max": 1
+            }
+        ]
+    },
+    {
+        "key_name": "trail_5",
+        "name": "Crag Harpy and Iron Boar",
+        "can_escape": true,
+        "members": [
+            {
+                "key": "harpy",
+                "min": 1,
+                "max": 1
+            },
+            {
+                "key": "boar",
+                "min": 1,
+                "max": 1
+            }
+        ]
+    },
+    {
+        "key_name": "trail_6",
+        "name": "Crag Harpy and Dusk Bat and Dusk Bat",
+        "can_escape": true,
+        "members": [
+            {
+                "key": "harpy",
+                "min": 1,
+                "max": 1
+            },
+            {
+                "key": "bat",
+                "min": 2,
+                "max": 2
+            }
+        ]
+    },
+    {
+        "key_name": "shrine_1",
+        "name": "Pale Shade",
+        "can_escape": true,
+        "members": [
+            {
+                "key": "shade",
+                "min": 1,
+                "max": 1
+            }
+        ]
+    },
+    {
+        "key_name": "shrine_2",
+        "name": "Gargoyle",
+        "can_escape": true,
+        "members": [
+            {
+                "key": "gargoyle",
+                "min": 1,
+                "max": 1
+            }
+        ]
+    },
+    {
+        "key_name": "shrine_3",
+        "name": "Pale Shade and Pale Shade",
+        "can_escape": true,
+        "members": [
+            {
+                "key": "shade",
+                "min": 2,
+                "max": 2
+            }
+        ]
+    },
+    {
+        "key_name": "shrine_4",
+        "name": "Gargoyle and Pale Shade",
+        "can_escape": true,
+        "members": [
+            {
+                "key": "gargoyle",
+                "min": 1,
+                "max": 1
+            },
+            {
+                "key": "shade",
+                "min": 1,
+                "max": 1
+            }
+        ]
+    },
+    {
+        "key_name": "shrine_5",
+        "name": "Pale Shade and Dusk Bat and Dusk Bat",
+        "can_escape": true,
+        "members": [
+            {
+                "key": "shade",
+                "min": 1,
+                "max": 1
+            },
+            {
+                "key": "bat",
+                "min": 2,
+                "max": 2
+            }
+        ]
+    },
+    {
+        "key_name": "shrine_6",
+        "name": "Gargoyle and Gargoyle",
+        "can_escape": true,
+        "members": [
+            {
+                "key": "gargoyle",
+                "min": 2,
+                "max": 2
+            }
+        ]
+    },
+    {
+        "key_name": "duel_flint",
+        "name": "Flint the spirit",
+        "can_escape": false,
+        "members": [
+            {
+                "key": "duel_flint",
+                "min": 1,
+                "max": 1
+            }
+        ]
+    },
+    {
+        "key_name": "duel_granite",
+        "name": "Granite the spirit",
+        "can_escape": false,
+        "members": [
+            {
+                "key": "duel_granite",
+                "min": 1,
+                "max": 1
+            }
+        ]
+    },
+    {
+        "key_name": "duel_forge",
+        "name": "Forge the spirit",
+        "can_escape": false,
+        "members": [
+            {
+                "key": "duel_forge",
+                "min": 1,
+                "max": 1
+            }
+        ]
+    },
+    {
+        "key_name": "duel_ember",
+        "name": "Ember the spirit",
+        "can_escape": false,
+        "members": [
+            {
+                "key": "duel_ember",
+                "min": 1,
+                "max": 1
+            }
+        ]
+    },
+    {
+        "key_name": "duel_dew",
+        "name": "Dew the spirit",
+        "can_escape": false,
+        "members": [
+            {
+                "key": "duel_dew",
+                "min": 1,
+                "max": 1
+            }
+        ]
+    },
+    {
+        "key_name": "duel_mist",
+        "name": "Mist the spirit",
+        "can_escape": false,
+        "members": [
+            {
+                "key": "duel_mist",
+                "min": 1,
+                "max": 1
+            }
+        ]
+    },
+    {
+        "key_name": "duel_breeze",
+        "name": "Breeze the spirit",
+        "can_escape": false,
+        "members": [
+            {
+                "key": "duel_breeze",
+                "min": 1,
+                "max": 1
+            }
+        ]
+    },
+    {
+        "key_name": "duel_squall",
+        "name": "Squall the spirit",
+        "can_escape": false,
+        "members": [
+            {
+                "key": "duel_squall",
+                "min": 1,
+                "max": 1
+            }
+        ]
+    },
+    {
+        "key_name": "boss_ogre",
+        "name": "Maw Ogre",
+        "can_escape": false,
+        "members": [
+            {
+                "key": "ogre",
+                "min": 1,
+                "max": 1
+            }
+        ]
+    },
+    {
+        "key_name": "boss_wyrm",
+        "name": "Shadow Wyrm",
+        "can_escape": false,
+        "members": [
+            {
+                "key": "wyrm",
+                "min": 1,
+                "max": 1
+            }
         ]
     }
 ]
