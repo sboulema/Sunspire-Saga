@@ -1,42 +1,48 @@
 {
-    "hero_key_name": "isaac",
+    "hero_key_name": "ari",
     "initial_action": "idle",
     "initial_direction": "down",
-    "map_key_name": "madra",
+    "map_key_name": "brindle",
     "initial_scale_factor": 2,
-    "x_tile_position": 30,
-    "y_tile_position": 13,
-    "collision_layer": 1,
-    "coins": 10000,
-    "max_chars_level": 25,
+    "x_tile_position": 15,
+    "y_tile_position": 15,
+    "collision_layer": 0,
+    "coins": 30,
+    "max_chars_level": 30,
     "skip_start_menu": false,
     "production_mode": false,
     "ignore_system_scaling": true,
     "start_battle_tester_on_init": false,
     "verbose_game_event_fire": false,
-    "artifacts_global_list": [
-        {
-            "key_name":"apollos_axe",
-            "quantity": 1
-        }
-    ],
+    "artifacts_global_list": [],
     "last_visited_town_with_sanctum": {
-        "map_key": "madra_church",
+        "map_key": "brindle",
         "collision_layer": 0,
         "tile_position": {
-            "x": 15.5,
-            "y": 24
+            "x": 15,
+            "y": 15
         }
     },
     "initial_shortcuts": [
-        { "ability": "move", "adept": "isaac" },
-        { "ability": "whirlwind", "adept": "sheba" },
-        { "ability": "growth", "adept": "isaac" },
-        { "ability": "reveal", "adept": "sheba" }
+        {
+            "ability": "move",
+            "adept": "ari"
+        },
+        {
+            "ability": "growth",
+            "adept": "ari"
+        },
+        {
+            "ability": "reveal",
+            "adept": "ari"
+        },
+        {
+            "ability": "move",
+            "adept": "ari"
+        }
     ],
     "battle_bgms": {
-        "default": "battle_isaac",
-        "piers": "battle_jenna"
+        "default": "battle"
     },
     "default_inputs": {
         "LEFT": "LEFT",
@@ -117,7 +123,6 @@
         "XBOX360_RIGHT_BUMPER": "R",
         "XBOX360_BACK": "SELECT",
         "XBOX360_START": "START",
-
         "XBOX360_X": "X",
         "XBOX360_Y": "Y",
         "XBOX360_LEFT_TRIGGER": "LT",
@@ -126,10 +131,22 @@
         "XBOX360_STICK_RIGHT_BUTTON": "RS"
     },
     "gamepad_rsticks": {
-        "XBOX360_STICK_LEFT_X": [ "LLEFT", "LRIGHT" ],
-        "XBOX360_STICK_LEFT_Y": [ "LUP", "LDOWN" ],
-        "XBOX360_STICK_RIGHT_X": [ "RLEFT", "RRIGHT" ],
-        "XBOX360_STICK_RIGHT_Y": [ "RUP", "RDOWN" ]
+        "XBOX360_STICK_LEFT_X": [
+            "LLEFT",
+            "LRIGHT"
+        ],
+        "XBOX360_STICK_LEFT_Y": [
+            "LUP",
+            "LDOWN"
+        ],
+        "XBOX360_STICK_RIGHT_X": [
+            "RLEFT",
+            "RRIGHT"
+        ],
+        "XBOX360_STICK_RIGHT_Y": [
+            "RUP",
+            "RDOWN"
+        ]
     },
     "gamepad_inputs": {
         "STICK_DASHING": "LS",

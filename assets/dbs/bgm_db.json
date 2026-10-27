@@ -1,30 +1,26 @@
 [
     {
-        "key": "battle_isaac",
-        "path": "assets/sounds/bgm/battle_isaac.ogg"
+        "key": "page_one",
+        "path": "assets/sounds/bgm/page_one.wav"
     },
     {
-        "key": "battle_jenna",
-        "path": "assets/sounds/bgm/battle_jenna.ogg"
+        "key": "town",
+        "path": "assets/sounds/bgm/town.wav"
     },
     {
-        "key": "battle_non_adept",
-        "path": "assets/sounds/bgm/battle_non_adept.ogg"
+        "key": "battle",
+        "path": "assets/sounds/bgm/battle.wav"
     },
     {
         "key": "battle_boss",
-        "path": "assets/sounds/bgm/battle_boss.ogg"
+        "path": "assets/sounds/bgm/battle_boss.wav"
     },
     {
         "key": "victory",
-        "path": "assets/sounds/bgm/victory.ogg"
+        "path": "assets/sounds/bgm/victory.wav"
     },
     {
         "key": "fallen_heroes",
-        "path": "assets/sounds/bgm/fallen_heroes.ogg"
-    },
-    {
-        "key": "page_one",
-        "path": "assets/sounds/bgm/page_one.ogg"
+        "path": "assets/sounds/bgm/fallen_heroes.wav"
     }
 ]

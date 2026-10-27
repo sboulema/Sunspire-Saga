@@ -31,7 +31,7 @@ export class Logger {
         if (message in this.msgs_count) {
             ++this.msgs_count[message];
             if (this.msgs_count[message] === Logger.MESSAGE_NUMBER_LIMIT) {
-                message = `GSHTML5 - [${now}] [WARNING]: limit for '${message}' message reached.`;
+                message = `Sunspire - [${now}] [WARNING]: limit for '${message}' message reached.`;
                 console.warn(message);
                 if (this.data.electron_app) {
                     this.data.ipcRenderer.log(message);
@@ -45,15 +45,15 @@ export class Logger {
         }
         switch (type) {
             case msg_types.INFO:
-                message = `GSHTML5 - [${now}] [INFO]: ${message}`;
+                message = `Sunspire - [${now}] [INFO]: ${message}`;
                 console.log(message);
                 break;
             case msg_types.WARNING:
-                message = `GSHTML5 - [${now}] [WARNING]: ${message}`;
+                message = `Sunspire - [${now}] [WARNING]: ${message}`;
                 console.warn(message);
                 break;
             case msg_types.ERROR:
-                message = `GSHTML5 - [${now}] [ERROR]: ${message}`;
+                message = `Sunspire - [${now}] [ERROR]: ${message}`;
                 console.error(message);
                 break;
             default:

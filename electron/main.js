@@ -20,7 +20,7 @@ function createWindow() {
         autoHideMenuBar: true,
         maximizable: false,
         backgroundColor: '#000000',
-        title: "Golden Sun Engine - HTML5",
+        title: "Sunspire Saga",
         icon: path.join(__dirname, "../static/favicon.ico"),
         show: false,
         webPreferences: {
@@ -81,15 +81,15 @@ function initializeLogger() {
     if (!fs.existsSync(log_dir)){
         fs.mkdirSync(log_dir);
     }
-    const log_filename = `gshtml5.${Date.now()}.log`;
+    const log_filename = `sunspire.${Date.now()}.log`;
     const log_full_path = path.join(log_dir, log_filename);
     const log_stream = fs.createWriteStream(log_full_path, {flags: 'a'});
     const writeLine = msg => log_stream.write(msg + "\n");
     try {
-        const version_info = fs.readFileSync('gshtml5.version', 'utf8');
+        const version_info = fs.readFileSync('sunspire.version', 'utf8');
         writeLine(`VERSION: ${version_info.toString()}`);
     } catch(e) {
-        writeLine("Could not get GSHTML5 version.");
+        writeLine("Could not get Sunspire version.");
     }
     ipcMain.on('register-log', (event, msg) => {
         writeLine(msg);

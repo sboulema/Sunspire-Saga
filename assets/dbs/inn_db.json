@@ -1,14 +1,14 @@
 [
     {
-        "inn_id": "madra_inn",
-        "cost": 6,
+        "inn_id": "brindle_inn",
+        "cost": 12,
         "messages": {
-            "welcome_message": "Welcome to our inn.",
-            "price_message": "It's ${PRICE} coins for a room. Would you like to stay?",
-            "cancel_message": "Please, come again.",
-            "stay_message": "Please enjoy your stay.",
-            "goodbye_message": "Have a nice trip!",
-            "not_enough_coins": "You don't have enough coins."
+            "welcome_message": "Welcome to the Brindle inn. Papa's asleep, so I'm minding the desk.",
+            "price_message": "A bed is ${PRICE} coins a night. Will you stay?",
+            "cancel_message": "Suit yourself. Mind the mine carts.",
+            "stay_message": "Sleep well! Papa snores, you did not hear that from me.",
+            "goodbye_message": "Morning! You look rested. Off you go.",
+            "not_enough_coins": "That's not twelve coins. Come back when it is."
         }
     }
 ]

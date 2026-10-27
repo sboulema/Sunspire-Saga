@@ -37,7 +37,7 @@ function load_db_files(game) {
 
 function load_misc(game) {
     game.load.image("start_screen", "assets/images/misc/start_screen.png");
-    game.load.image("shadow", "assets/images/misc/shadow.jpg");
+    game.load.image("shadow", "assets/images/misc/shadow.png");
     game.load.image("psynergy_aura", "assets/images/psynergies/psynergy_aura.png");
     game.load.atlasJSONHash("menu", "assets/images/misc/menu.png", "assets/images/misc/menu.json");
     game.load.image("frost_snowflake", "assets/images/interactable_objects/snowflake.png");
@@ -81,14 +81,14 @@ function load_assets(game) {
 }
 
 function load_fonts(game) {
-    game.load.bitmapFont("gs-bmp-font", "assets/font/golden-sun.png", "assets/font/golden-sun.fnt");
+    game.load.bitmapFont("gs-bmp-font", "assets/font/sunspire.png", "assets/font/sunspire.fnt");
     game.load.bitmapFont(
         "gs-italic-bmp-font",
-        "assets/font/golden-sun-italic.png",
-        "assets/font/golden-sun-italic.fnt"
+        "assets/font/sunspire.png",
+        "assets/font/sunspire.fnt"
     );
-    game.load.bitmapFont("gs-item-bmp-font", "assets/font/gs-item-font.png", "assets/font/gs-item-font.fnt");
-    game.load.bitmapFont("gs-shop-bmp-font", "assets/font/gs-shop-font.png", "assets/font/gs-shop-font.fnt");
+    game.load.bitmapFont("gs-item-bmp-font", "assets/font/sunspire.png", "assets/font/sunspire.fnt");
+    game.load.bitmapFont("gs-shop-bmp-font", "assets/font/sunspire.png", "assets/font/sunspire.fnt");
 }
 
 function load_filters(game) {

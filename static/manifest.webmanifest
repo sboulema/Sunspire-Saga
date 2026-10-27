@@ -1,25 +1,25 @@
 {
-	"start_url": "gshtml5.org",
+	"start_url": "/",
 	"scope": "/",
 
-	"background_color": "#000",
-	"theme_color": "#fff",
+	"background_color": "#0c0a16",
+	"theme_color": "#f2c14e",
 
 	"display": "browser",
-	"orientation": "portrait-primary",
+	"orientation": "landscape",
 
 	"icons": [{
-		"type": "image/ico",
-		"sizes": "22x22",
+		"type": "image/x-icon",
+		"sizes": "16x16 32x32 48x48",
 		"src": "/static/favicon.ico"
 	}],
 
 	"lang": "en-US",
 	"dir": "ltr",
 
-	"short_name": "GSHTML5",
-	"name": "Golden Sun Engine - HTML5",
-	"description": "An online Golden Sun Engine entirely built in HTML5 with Phaser 2. This project is 100% open source and MIT licensed. Build your own GS game without programming skills.",
+	"short_name": "Sunspire",
+	"name": "Sunspire Saga",
+	"description": "An original GBA-style pixel-art JRPG in the browser. Open source, MIT licensed.",
 
 	"iarc_rating_id": "",
 	"categories": ["games"],

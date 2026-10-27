@@ -1,17 +1,22 @@
 {
-  "name": "goldensun_html5",
+  "name": "sunspire-saga",
   "version": "0.0.1",
   "license": "MIT",
-  "author": "jjppof",
-  "description": "An online Golden Sun Engine entirely built in HTML5 with Phaser 2.",
-  "keywords": [
-    "Golden Sun"
+  "author": "Samir Boulema",
+  "contributors": [
+    "jjppof (goldensun_html5 engine)"
   ],
-  "homepage": "https://github.com/jjppof/goldensun_html5#readme",
-  "bugs": "https://github.com/jjppof/goldensun_html5/issues",
+  "description": "Sunspire Saga: an original GBA-style JRPG in the browser, on a fork of the goldensun_html5 engine (Phaser CE).",
+  "keywords": [
+    "jrpg",
+    "phaser",
+    "pixel-art"
+  ],
+  "homepage": "https://github.com/sboulema/Sunspire-Saga#readme",
+  "bugs": "https://github.com/sboulema/Sunspire-Saga/issues",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jjppof/goldensun_html5.git"
+    "url": "git+https://github.com/sboulema/Sunspire-Saga.git"
   },
   "private": true,
   "directories": {

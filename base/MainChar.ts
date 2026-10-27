@@ -45,7 +45,7 @@ export const item_equip_slot = {
 
 /**
  * This class represents a main char of the game, the ones that can be integrated
- * into the party like Isaac, Felix, Jenna, Mia, Garet etc.
+ * into the party like Ari, Lyn, Bram and Sera.
  */
 export class MainChar extends Player {
     private static readonly ELEM_LV_DELTA = 1;

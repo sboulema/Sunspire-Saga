@@ -15,7 +15,7 @@ node_modules/
 *.old
 *.swp
 *.tmp
-gshtml5.version
+sunspire.version
 
 ## System files
 .directory

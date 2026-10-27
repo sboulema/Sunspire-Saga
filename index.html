@@ -10,9 +10,9 @@
         <link  rel="robots" type="text/plain" href="/static/robots.txt" />
         <meta name="robots"        content="" />
         <meta name="revisit-after" content="90 day" />
-        <meta name="keywords"      content="golden sun, golden sun the lost age, golden sun engine, golden sun html5, golden sun online, golden sun 4, opengs, open golden sun, gshtml5" />
-        <title>Golden Sun Engine - HTML5</title>
-        <meta name="description"   content="An online Golden Sun Engine entirely built in HTML5 with Phaser 2. This project is 100% open source and MIT licensed. Build your own GS game without programming skills." />
+        <meta name="keywords"      content="sunspire saga, jrpg, pixel art, browser game, phaser" />
+        <title>Sunspire Saga</title>
+        <meta name="description"   content="Sunspire Saga: an original GBA-style pixel-art JRPG in the browser. Open source, MIT licensed." />
 
         <!-- MISC -->
         <link  rel="manifest" type="application/manifest+json" href="/static/manifest.webmanifest" />
@@ -35,26 +35,23 @@
     </head>
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <body>
-        <div id="firefox-warning" class="warning-banner">You are using Firefox. GS HTML5 does not run smoothly on it. Please consider switching to a Chromium based browser.</div>
+        <div id="firefox-warning" class="warning-banner">You are using Firefox. The engine does not run smoothly on it yet. Please consider switching to a Chromium based browser.</div>
         <div id="fps-warning" class="warning-banner bottom-warning">You're running low FPS. The engine may not work as expected.</div>
         <div class="intro">
             <pre>
-<b>Golden Sun Engine - HTML5</b>
-<small>MIT License. Open source project. Beta version available.</small>
+<b>Sunspire Saga</b> - engine build
+<small>MIT License. Open source project. Work in progress: one town, one battle.</small>
 
-For this demo, please use <b>Chromium</b> based browsers instead of Firefox.
-<small>The engine is not working properly on Firefox. Don't use it.</small>
+For now, please use a <b>Chromium</b> based browser instead of Firefox.
+<small>Firefox support is on the migration plan.</small>
 
-• Use the same controls of VBA: arrows, Z, X, A, S, Backspace and Enter.
-• Press 1,2, 3, or 4 for zoom. Double click on screen to fullscreen.
+• Controls: arrows to move, Z = A, X = B, A / S = L / R, Backspace = Select, Enter = Start.
+• Press 1, 2, 3 or 4 for zoom. Double click on the screen for full screen.
 • Press M to unmute. Press SHIFT + PGUP/PGDN to control the volume.
-• D for debug colision. F for fps. G for grid. K for keys debug. T for battle stats. L for sliders. Y for battle animation tester.
-• Use Q to cast Move. Use W to cast Whirlwind. Use E to cast Growth (swap djinn first). Use R to cast Reveal.
+• Debug: D collision, F fps, G grid, K keys, T battle stats, L sliders, Y battle animation tester.
 
-Check the <a href="https://github.com/jjppof/goldensun_html5">source code</a> on github.
-Download latest release <a href="https://github.com/jjppof/goldensun_html5/releases">here</a> (Windows only available).
-Please visit our <a href="https://github.com/jjppof/goldensun_html5/wiki">wiki</a> to find docs and tutorials on how to use the engine.
-Join our <b><a href="https://discord.gg/fYFSxPMjmS">discord</a></b> server, feel free to drop questions.
+Check the <a href="https://github.com/sboulema/Sunspire-Saga">source code</a> on GitHub.
+The engine is a fork of <a href="https://github.com/jjppof/goldensun_html5">goldensun_html5</a> (MIT).
             </pre>
         </div>
         <div id="game"></div>
@@ -236,6 +233,6 @@ Join our <b><a href="https://discord.gg/fYFSxPMjmS">discord</a></b> server, feel
             <button onclick="GoldenSun.debug.add_slider()">Add slider</button>
             <div id="sliders"></div>
         </div>
-        <p class="disclaimer">All Golden Sun games and their media are property of Camelot Software Planning Ltd., Nintendo and/or Nintendo of America Inc., and are protected by United States and international copyright, trademark and other intellectual property laws.</p>
+        <p class="disclaimer">Sunspire Saga is an independent homage to the GBA JRPGs of the early 2000s. It contains no assets from Nintendo or Camelot; all art, names and data are original.</p>
     </body>
 </html>

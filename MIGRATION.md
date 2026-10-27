@@ -45,7 +45,44 @@ animations, menus, Psynergy usage and djinn (spirit) usage.
   [developer guidelines](https://github.com/jjppof/goldensun_html5/wiki/Introduction-for-developers#some-coding-guidelines)
   and the [API docs](https://gshtml5.org/docs/) (or `npm run docs`).
 
-### Phase 2 - strip Golden Sun content (inventory done, removal pending)
+### Phase 2 - strip Golden Sun content (done 2026-10-27)
+
+- Removed: `assets/images`, `assets/maps`, `assets/sounds`, `assets/font`, every database, every
+  battle animation recipe that referenced GS sprites, `help/docs/battle_mechanics.txt`, the GS
+  logo, `static/gtag.js`. The GS text in `index.html`, `index-electron.html`, `electron/main.js`,
+  `package.json`, `static/manifest.webmanifest`, `humans.txt`, the logger prefix and one code
+  comment was rewritten. The `GoldenSun` class and the `djinn` / `psynergy` identifiers in the
+  code and database keys stay (player-facing text says spirit / art); renaming them is a
+  code-only pass for later.
+- Added `assets/sunspire/` (the 255 sprites exported from the legacy game with
+  `tools/export-pack.js`, the Brindle tileset and grid rendered from `buildBrindle`, the 5x5
+  glyphs) and `scripts/build_sunspire_assets.js`, which generates the engine's atlases, map, font
+  and placeholder audio from them. `ASSETS.md` lists the origin of everything left.
+- Placeholder set: map `brindle` (30x20, one tile layer, collision object layer `0`, both exits
+  blocked until their maps exist), NPCs Dov (shop `brindle`), Ina (inn `brindle_inn`), Miner
+  (dialog, then battle `wolf_pair`) and Lyn (dialog); hero `ari` with class `adept`
+  (Quake / Spire / Gaia Blade), spirit `flint`, summon `gnome`, items herb / potion / wood blade /
+  travel vest; enemy `wolf`. The engine's placeholder art for widgets it needs (menu arrows,
+  status icons, battle cursor, emoticons, most buttons) is drawn by the build script as labelled
+  boxes.
+- Engine facts learned the hard way (all verified in code; keep them in mind when adding data):
+  - initializers that queue nothing for Phaser's loader hang on "Loading...": `bgm_db`,
+    `enemies_db`, `npc_db`, `main_chars_db` (needs a non-empty `weapons_sprites`),
+    `misc_animations_db`, `interactable_objects_db` each need at least one entry;
+  - `misc_animations_db` must have `move_hand`, `pound_hand`, `sand` (field psynergy
+    constructors), `dialog_crystal` and `battle_status_sprites`;
+  - `npc_db` must have `venus_djinn`, `mercury_djinn`, `mars_djinn` and `jupiter_djinn` with `set`
+    and `standby` actions (the spirit menu is built at boot for all four);
+  - `abilities_db` must have `attack`, `defend`, `set_djinn` and `flee`; `bgm_db` must have
+    `page_one`, `victory`, `fallen_heroes` and the `battle_bgms.default` key;
+  - Tiled maps must be the 1.1 JSON format with object-form `properties`, one embedded tileset,
+    and the tileset image comes from `maps_db.tileset_files.image`, loaded under the map key;
+  - atlases are TexturePacker JSON hash, frames `<action>/<animation>/NN`;
+  - `frame_rate` is mandatory on every action.
+- Verified in Chromium: title (Sunspire font), New Game, Brindle with the four NPCs, walking, Dov's
+  shop (buy list, prices, coins), the Miner's dialog, the wolf battle through Fight / Attack to
+  victory (coins 30 -> 42). Note for testing in a hidden browser pane: Phaser drops to ~2 fps, so
+  drive `GoldenSun.game.update()` from a Web Worker timer and synthesise key holds.
 
 How the engine takes content: `base/initializers/assets_loader.ts` queues every database JSON
 and the shared atlases with Phaser's loader (`game.load.json`, `game.load.atlasJSONHash`,

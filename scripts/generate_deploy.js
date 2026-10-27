@@ -9,8 +9,8 @@ const packagerOptions = {
     out: 'deploy',
     arch: 'x64',
     icon: 'static/favicon.ico',
-    name: 'gshtml5',
-    executableName: 'gshtml5',
+    name: 'sunspire-saga',
+    executableName: 'sunspire-saga',
     platform: 'win32',
     overwrite: true,
     ignore: '^\/(?!(dist|package\.json|assets|electron|static|index-electron\.html))'
@@ -23,7 +23,7 @@ promise.then(() => {
     const today = new Date(Date.now()).toLocaleString();
     const base_path = `${packagerOptions.out}/${packagerOptions.name}-${packagerOptions.platform}-${packagerOptions.arch}`;
 
-    const version_file_path = path.join(base_path, "gshtml5.version");
+    const version_file_path = path.join(base_path, "sunspire.version");
     spawnSync(`echo ${today} : ${version} > ${version_file_path}`, {shell: true});
 
     const locales_dir = path.join(base_path, 'locales');

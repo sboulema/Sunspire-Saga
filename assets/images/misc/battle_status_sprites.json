@@ -1,0 +1,295 @@
+{
+    "frames": {
+        "battle_status_sprites/death_curse_0/00": {
+            "frame": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "battle_status_sprites/death_curse_1/00": {
+            "frame": {
+                "x": 15,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "battle_status_sprites/death_curse_2/00": {
+            "frame": {
+                "x": 30,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "battle_status_sprites/death_curse_3/00": {
+            "frame": {
+                "x": 45,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "battle_status_sprites/death_curse_4/00": {
+            "frame": {
+                "x": 60,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "battle_status_sprites/death_curse_5/00": {
+            "frame": {
+                "x": 75,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "battle_status_sprites/death_curse_6/00": {
+            "frame": {
+                "x": 90,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "battle_status_sprites/delusion/00": {
+            "frame": {
+                "x": 105,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "battle_status_sprites/haunt/00": {
+            "frame": {
+                "x": 120,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "battle_status_sprites/poison/00": {
+            "frame": {
+                "x": 135,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "battle_status_sprites/seal/00": {
+            "frame": {
+                "x": 150,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "battle_status_sprites/sleep/00": {
+            "frame": {
+                "x": 165,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "battle_status_sprites/stun/00": {
+            "frame": {
+                "x": 180,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "battle_status_sprites/venom/00": {
+            "frame": {
+                "x": 195,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        }
+    },
+    "meta": {
+        "app": "scripts/build_sunspire_assets.js",
+        "version": "1.0",
+        "image": "battle_status_sprites.png",
+        "format": "RGBA8888",
+        "size": {
+            "w": 210,
+            "h": 9
+        },
+        "scale": "1"
+    }
+}

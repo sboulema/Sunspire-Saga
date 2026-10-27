@@ -1,56 +1,48 @@
-# Golden Sun Engine - HTML5
+# Sunspire Saga (engine build)
 
-![golden sun html5](assets/images/misc/logo.jpg?raw=true)
+An original GBA-style pixel-art JRPG for the browser, being moved onto a fork of
+[goldensun_html5](https://github.com/jjppof/goldensun_html5) (MIT, Phaser CE 2.19.0) for its Tiled
+maps with height, puzzles, overworld, battle animations, menus and ability/spirit systems.
 
-An **Golden Sun Engine** entirely built in HTML5 with [PhaserJS CE 2.19.0](http://phaser.io/).
+Sunspire Saga is an independent homage, with no assets from Nintendo or Camelot. Every sprite,
+tile, name, line of dialog and number in this repository is original; `ASSETS.md` lists where each
+asset comes from. The engine code keeps its MIT licence and copyright notice (`LICENSE.txt`).
 
-**See the [DEMO](https://jjppof.github.io/goldensun_html5/index).** Use Chromium-based browsers. Don't use Firefox.
+**Status:** Phase 2 of the migration (see `MIGRATION.md`). The engine boots on a placeholder set
+of Sunspire content: the town of Brindle, its shop and inn, four villagers and a Fang Wolf battle.
+The finished game (`game.js`, one script with no build step) lives on the `main` branch until the
+port catches up with it.
 
-- With this project, **people should be able to make a GS-like game without any programming skills**.
-- **This repository is just the engine**. I'm not planning to do many maps, animations, items etc. Content here is just enough to show the functionalities.
-- This project does not aim to do exactly the same engine as GS, but very similar.
-- **WE NEED HELP!** Please feel free to reach out to me if you want to do so. Join our [**discord server**](https://discord.gg/fYFSxPMjmS).
-- If you found any bug, please create an [issue](https://github.com/jjppof/goldensun_html5/issues/new) for it.
-- Issues are not very well explained. Feel free to reach out to me for details about them.
-- Check the [wiki](https://github.com/jjppof/goldensun_html5/wiki) for database configuration, tutorials and project tech information.
-- This project deployment is a desktop application.
-- Check the [latest updates](https://github.com/jjppof/goldensun_html5/discussions/categories/updates).
+## Running it
 
-## Development environment
+- Node (any current version works; upstream pinned 14) and npm.
+- `ELECTRON_SKIP_BINARY_DOWNLOAD=1 npm install --legacy-peer-deps` (the desktop build is not
+  used; dropping Electron altogether is on the plan).
+- `npm start` serves the game on [http://localhost:9000](http://localhost:9000) and rebuilds on
+  change. Use a Chromium browser for now.
+- Controls: arrows to move, **Z** = A, **X** = B, **A / S** = L / R, **Backspace** = Select,
+  **Enter** = Start. **M** unmutes.
 
-GS-HTML5 supports both Javascript (legacy) and Typescript. We use [Webpack](https://webpack.js.org/) to build the bundle and serve the development environment.
-- I strongly recommend using [Visual Studio Code](https://code.visualstudio.com/download) to develop.
-- Install dev dependencies by running `npm install --legacy-peer-deps` in the root folder.
-- Use `npm start` to start the development server.
-- Check the [general guidelines](https://github.com/jjppof/goldensun_html5/wiki/Introduction-for-developers#some-coding-guidelines) in order to contribute.
-- Learn Phaser 2 by [examples](https://phaser.io/examples/v2) or by this [tutorial](https://phaser.io/tutorials/making-your-first-phaser-2-game). For reference, check their [API](https://photonstorm.github.io/phaser-ce/index.html).
-- Check our [API docs](https://gshtml5.org/docs/) for quick reference.
+## Layout
 
-## Utils
+| Path | What |
+|---|---|
+| `base/` | the engine, TypeScript (entry `base/GoldenSun.ts`; the class name is kept for now) |
+| `assets/dbs/` | the game data: characters, classes, abilities, items, enemies, spirits (`djinni_db`), summons, maps, NPCs, shops, inn, dialog, audio |
+| `assets/sunspire/` | Sunspire's source art: the exported sprites, the Brindle tileset and grid, the 5x5 font glyphs |
+| `scripts/build_sunspire_assets.js` | generates `assets/images`, `assets/maps`, `assets/font` and `assets/sounds` (plus `bgm_db` / `se_db`) from `assets/sunspire/`; run it after changing the source art |
+| `assets/filters/`, `assets/plugins/` | WebGL filters and the particle plugin the engine ships with |
+| `static/` | Phaser, the site shell and the debug editor |
+| `MIGRATION.md` | the migration plan, decisions and phase log |
+| `ASSETS.md` | origin and licence of every asset |
 
-Some useful tools that I use to manage the resources:
-- [Visual Studio Code](https://code.visualstudio.com/download) (for developing the game)
-- [Tiledmap Editor](https://www.mapeditor.org/)
-- [Golden Sun Editor](https://drive.google.com/file/d/1NafC8KpM1VJ21o6IqRg3WrpU4ur7NwbN/view?usp=sharing) (for game info and media)
-- [TexturePacker 4.6.1](https://www.codeandweb.com/texturepacker) (for creating spritesheets)
-  - [Free texture packer](http://free-tex-packer.com/) (free alternative for TexturePacker)
-  - [Sprite Sheet Packer](https://www.codeandweb.com/free-sprite-sheet-packer) (free alternative for TexturePacker)
-  
-#### Minor utils
-
-- [Shoebox](https://renderhjs.net/shoebox/) (for creating fonts)
-- [Paint.NET](https://www.getpaint.net/) (for images editing)
-- [XnConvert](https://www.xnview.com/en/xnconvert/) (for batch image convertion)
-- [Format Factory](http://www.pcfreetime.com/formatfactory/index.php) (for converting audio files)
-- [Audacity](https://www.audacityteam.org/) (for editing audio files)
-- [ScreenToGif](https://www.screentogif.com/) (for creating gifs and reporting bugs)
+Engine documentation: the upstream [wiki](https://github.com/jjppof/goldensun_html5/wiki)
+(database configuration, tutorials) and [API docs](https://gshtml5.org/docs/); `npm run docs`
+generates the latter locally. Learn Phaser 2 from its
+[examples](https://phaser.io/examples/v2) and [API](https://photonstorm.github.io/phaser-ce/index.html).
 
 ## Credits
-- **http://www.goldensunhacking.net/** (This project would be impossible without these guys)
-- https://gamefaqs.gamespot.com/gba/561356-golden-sun-the-lost-age/faqs
-- http://www.goldensun-syndicate.net/sprites/
-- https://www.spriters-resource.com/game_boy_advance/gs/
-- https://www.spriters-resource.com/game_boy_advance/gs2/
-- Golden Sun is copyright 2001-2003 Nintendo / CAMELOT.
 
-All Golden Sun games and their media are property of Camelot Software Planning Ltd., Nintendo and/or Nintendo of America Inc., and are protected by United States and international copyright, trademark, and other intellectual property laws.
+- Engine: [goldensun_html5](https://github.com/jjppof/goldensun_html5) by jjppof and contributors, MIT.
+- [Phaser CE](https://github.com/photonstorm/phaser-ce), MIT.
+- Game, art, data and text: Sunspire Saga.

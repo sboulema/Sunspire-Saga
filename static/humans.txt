@@ -1,0 +1,6 @@
+/* TEAM */
+Sunspire Saga: Samir Boulema
+Engine: goldensun_html5 by jjppof and contributors (MIT)
+
+/* SITE */
+Built with: Phaser CE 2.19.0, TypeScript, webpack
