@@ -54,13 +54,15 @@
       padding:max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
       background:radial-gradient(1200px 760px at 50% 42%, color-mix(in oklab, var(--hh) 30%, #0b0914), #05040a 72%);}
     /* portrait: screen above the controls, sized so the whole shell fits the height */
-    body.immersive .shell{width:min(100%, calc((100dvh - 214px) * 1.5 + 56px));}
-    /* landscape: the wide handheld, d-pad left and buttons right of the screen */
+    body.immersive .shell{width:min(100%, calc((100dvh - 246px) * 1.5 + 56px));}
+    /* landscape: the wide handheld, shoulders at the top corners, d-pad left and buttons right of the screen */
     @media (orientation: landscape){
-      body.immersive .shell{display:grid; grid-template-columns:auto auto auto; grid-template-areas:"dpad screen ab" "dpad start ab";
+      body.immersive .shell{display:grid; grid-template-columns:auto auto auto; grid-template-areas:"l screen r" "dpad screen ab" "dpad start ab";
         align-items:center; justify-items:center; column-gap:clamp(18px, 3vw, 44px); row-gap:10px; width:auto;
         padding:18px clamp(18px, 3vw, 40px) 12px; border-radius:44px;}
-      body.immersive .controls{display:contents;}
+      body.immersive .controls, body.immersive .shoulders{display:contents;}
+      body.immersive .shoulder.l{grid-area:l; justify-self:start; align-self:start;}
+      body.immersive .shoulder.r{grid-area:r; justify-self:end; align-self:start;}
       body.immersive .dpad{grid-area:dpad;}
       body.immersive .ab{grid-area:ab;}
       body.immersive .mid{grid-area:start; flex-direction:row; gap:18px;}
@@ -113,6 +115,10 @@
 
   <div class="stage" id="stage">
     <div class="shell" id="shell">
+      <div class="shoulders">
+        <button class="shoulder l" data-k="l" aria-label="L: previous member or target">L</button>
+        <button class="shoulder r" data-k="r" aria-label="R: next member or target">R</button>
+      </div>
       <div class="screen">
         <span class="led"></span><span class="tag">SPIRIT&nbsp;VISION</span>
         <canvas id="game" width="240" height="160" aria-label="Sunspire Saga game screen"></canvas>
@@ -141,7 +147,7 @@
 
   <p class="legend">
     Move <kbd>arrows</kbd> / <kbd>WASD</kbd> &middot; confirm <kbd>Z</kbd> / <kbd>Space</kbd> &middot; cancel <kbd>X</kbd> &middot;
-    menu <kbd>Enter</kbd> &middot; sound <kbd>M</kbd> &middot; immersive <kbd>F</kbd><br>
+    menu <kbd>Enter</kbd> &middot; L / R <kbd>Q</kbd> / <kbd>E</kbd> &middot; sound <kbd>M</kbd> &middot; immersive <kbd>F</kbd><br>
     Your progress saves in this browser at every inn and map change.
   </p>
 

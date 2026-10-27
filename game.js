@@ -6,7 +6,7 @@ const cv = document.getElementById('game');
 const ctx = cv.getContext('2d');
 ctx.imageSmoothingEnabled = false;
 const W = 240, H = 160, T = 16;
-const GAME_VERSION = 'V47';
+const GAME_VERSION = 'V48';
 // pages that only need the game data (pack guide, art tools) set window.SUNSPIRE_HEADLESS before loading:
 // no input handlers and no main loop
 const HEADLESS = !!window.SUNSPIRE_HEADLESS;
@@ -159,7 +159,8 @@ const held = {}, pressed = {};
 const KEYMAP = {
   ArrowUp:'up', ArrowDown:'down', ArrowLeft:'left', ArrowRight:'right',
   w:'up', s:'down', a:'left', d:'right',
-  z:'a', ' ':'a', x:'b', Enter:'start', Escape:'b'
+  z:'a', ' ':'a', x:'b', Enter:'start', Escape:'b',
+  q:'l', e:'r' // the shoulder buttons: previous / next party member or target
 };
 if (!HEADLESS) addEventListener('keydown', e => {
   if (document.querySelector('dialog[open]')) return;
@@ -3690,8 +3691,8 @@ function menuUpdate(){
   }
   if (pressed.b){ sfx.blip(); if (M.sub) M.sub = null; else M.view = 'main'; return; }
   if (M.view === 'status'){
-    if (pressed.left){ M.mem = (M.mem + G.party.length - 1) % G.party.length; sfx.blip(); }
-    if (pressed.right){ M.mem = (M.mem + 1) % G.party.length; sfx.blip(); }
+    if (pressed.left || pressed.l){ M.mem = (M.mem + G.party.length - 1) % G.party.length; sfx.blip(); }
+    if (pressed.right || pressed.r){ M.mem = (M.mem + 1) % G.party.length; sfx.blip(); }
     return;
   }
   if (M.view === 'spirits') return;
@@ -3706,8 +3707,8 @@ function menuUpdate(){
         else { M.sub = c.key; M.subSel = M.mem; sfx.blip(); }
       }
     } else {
-      if (pressed.left){ M.subSel = (M.subSel + G.party.length - 1) % G.party.length; sfx.blip(); }
-      if (pressed.right){ M.subSel = (M.subSel + 1) % G.party.length; sfx.blip(); }
+      if (pressed.left || pressed.l){ M.subSel = (M.subSel + G.party.length - 1) % G.party.length; sfx.blip(); }
+      if (pressed.right || pressed.r){ M.subSel = (M.subSel + 1) % G.party.length; sfx.blip(); }
       if (pressed.a && useItemOn(M.sub, G.party[M.subSel], false)){
         M.mem = M.subSel;
         if (!G.inv[M.sub]) M.sub = null; // that was the last one: back to the grid
@@ -3718,8 +3719,8 @@ function menuUpdate(){
   if (M.view === 'equip'){ // first pick a member (M.sub null), then a piece of gear in the grid (M.sub 'grid')
     const m = G.party[M.mem];
     if (!M.sub){
-      if (pressed.left){ M.mem = (M.mem + G.party.length - 1) % G.party.length; sfx.blip(); }
-      if (pressed.right){ M.mem = (M.mem + 1) % G.party.length; sfx.blip(); }
+      if (pressed.left || pressed.l){ M.mem = (M.mem + G.party.length - 1) % G.party.length; sfx.blip(); }
+      if (pressed.right || pressed.r){ M.mem = (M.mem + 1) % G.party.length; sfx.blip(); }
       if (pressed.a){ M.sub = 'grid'; M.subSel = 0; M.scroll = 0; sfx.blip(); }
       return;
     }
@@ -4240,16 +4241,16 @@ function battleUpdate(){
   if (b.phase === 'target'){
     const alive = b.enemies.map((e,i) => e.hp > 0 ? i : -1).filter(i => i >= 0);
     let cur = alive.indexOf(b.targetSel); if (cur < 0) cur = 0;
-    if (pressed.left){ cur = (cur + alive.length - 1) % alive.length; sfx.blip(); }
-    if (pressed.right){ cur = (cur + 1) % alive.length; sfx.blip(); }
+    if (pressed.left || pressed.l){ cur = (cur + alive.length - 1) % alive.length; sfx.blip(); }
+    if (pressed.right || pressed.r){ cur = (cur + 1) % alive.length; sfx.blip(); }
     b.targetSel = alive[cur];
     if (pressed.b){ b.phase = b.sub ? 'sub' : 'input'; sfx.blip(); return; }
     if (pressed.a){ const c = b.pendCmd; c.target = b.targetSel; setCmd(c); }
     return;
   }
   if (b.phase === 'targetAlly'){
-    if (pressed.left){ b.targetSel = (b.targetSel + G.party.length - 1) % G.party.length; sfx.blip(); }
-    if (pressed.right){ b.targetSel = (b.targetSel + 1) % G.party.length; sfx.blip(); }
+    if (pressed.left || pressed.l){ b.targetSel = (b.targetSel + G.party.length - 1) % G.party.length; sfx.blip(); }
+    if (pressed.right || pressed.r){ b.targetSel = (b.targetSel + 1) % G.party.length; sfx.blip(); }
     if (pressed.b){ b.phase = b.sub ? 'sub' : 'input'; sfx.blip(); return; }
     if (pressed.a){ const c = b.pendCmd; c.mtarget = b.targetSel; setCmd(c); }
     return;
