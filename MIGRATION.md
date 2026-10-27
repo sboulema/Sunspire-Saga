@@ -1,0 +1,121 @@
+# Sunspire Saga on the gshtml5 engine
+
+This branch (`claude/sunspire-gshtml5-migration-c37ec5`) carries a copy of
+[jjppof/goldensun_html5](https://github.com/jjppof/goldensun_html5) (MIT, Phaser CE 2.19.0),
+fetched from upstream `master` at `b8b086dc` on 2026-10-27, as the base for moving Sunspire Saga
+onto it. The current game (`game.js` and the site around it) stays on `main` until the port is
+done; nothing here is published yet.
+
+Target engine features: Tiled maps with height differences, puzzles, overworld, battle
+animations, menus, Psynergy usage and djinn (spirit) usage.
+
+## Guardrails
+
+- The engine code is MIT. `LICENSE.txt` and its copyright notice stay in the repo; Sunspire's
+  own code is added under the same licence.
+- **No Golden Sun assets, names or data in the finished fork.** MIT covers the code, not
+  Nintendo/Camelot media. Everything listed under "Inventory" below gets removed or replaced.
+- The README keeps the line that Sunspire Saga is an independent homage with no assets from
+  Nintendo or Camelot.
+- `upstream` is the engine remote (`git remote add upstream
+  https://github.com/jjppof/goldensun_html5.git`); pull engine fixes from `upstream/master`.
+
+## Phase log
+
+### Phase 0 - decisions
+
+- Fork lives on this branch of the Sunspire-Saga repo, not in a new repo. `main` keeps `game.js`
+  as the live game; it becomes the `legacy` branch when this branch replaces it.
+- Repo name and GitHub account: unchanged (`sboulema/Sunspire-Saga`).
+
+### Phase 1 - fork and run (done 2026-10-27)
+
+- Node `.nvmrc` says `14/*`; Node 26.12 / npm 11.20 work fine.
+- `ELECTRON_SKIP_BINARY_DOWNLOAD=1 npm install --legacy-peer-deps` installs 704 packages
+  (8 audit findings, 3 moderate / 5 high, not yet looked at). The Electron binary is not needed
+  for the web build.
+- `npx webpack serve --config webpack.config.dev.js --no-open` serves on port 9000; the bundle is
+  25.6 MiB in dev mode (2128 node_modules modules + 232 under `base/`) and compiles in ~25 s.
+  `.claude/launch.json` has this as `engine-dev`.
+- Verified in Chromium: title screen -> PRESS START (Enter) -> New Game (Z) -> loads the `madra`
+  map at tile (30, 13) as `isaac` and plays the welcome dialog. Keyboard: arrows, Z = A, X = B,
+  A/S = L/R, Enter = Start, Backspace = Select, Q/W/E/R = Psynergy shortcuts.
+- Still to read: the [wiki](https://github.com/jjppof/goldensun_html5/wiki) (database
+  configuration, tutorials, project tech info), the
+  [developer guidelines](https://github.com/jjppof/goldensun_html5/wiki/Introduction-for-developers#some-coding-guidelines)
+  and the [API docs](https://gshtml5.org/docs/) (or `npm run docs`).
+
+### Phase 2 - strip Golden Sun content (inventory done, removal pending)
+
+How the engine takes content: `base/initializers/assets_loader.ts` queues every database JSON
+and the shared atlases with Phaser's loader (`game.load.json`, `game.load.atlasJSONHash`,
+`game.load.image`, `game.load.audio`, `game.load.bitmapFont`, `game.load.tilemap`); the per-type
+initializers under `base/initializers/` then load the sheets each database entry names. All
+asset paths are strings under `assets/`, which is what the sprite-pack hook in Phase 5 will
+rewrite.
+
+## Inventory of Golden Sun-derived content
+
+Everything below is GS media or data and must go, except where marked *keep*.
+
+**Databases** (`assets/dbs/`, 503 KB):
+
+| file | entries | GS content |
+|---|---|---|
+| `main_chars_db.json` | 4 | isaac, garet, sheba, piers |
+| `classes_db.json` | 2 | GS class table |
+| `djinni_db.json` | 21 | flint ... chill (GS djinn names) |
+| `summons_db.json` | 17 | venus ... thor (GS summon names) |
+| `abilities_db.json` | 165 | GS Psynergy names and numbers |
+| `items_db.json` | 35 | GS items (gaia_blade, apollos_axe, ...) |
+| `enemies_db.json` / `enemies_parties_db.json` | 8 / 7 | briggs, sea_fighter, mini_goblin, ... |
+| `npc_db.json` | 18 | isaac, garet, sheba, piers, alex, briggs, ... |
+| `maps_db.json` | 10 | madra (6 maps), snowland, world_map, cave, nyungwe |
+| `shops_db.json`, `inn_db.json`, `shopkeep_dialog_db.json` | 1 each | GS shop text |
+| `bgm_db.json`, `se_db.json`, `misc_animations_db.json`, `storage_db.json`, `interactable_objects_db.json` | 7 / 9 / 12 / 24 / 13 | mostly structural; names reference GS sounds and sprites |
+| `custom_field_psynergies_db.json` | 0 | *keep* (empty) |
+| `abilities_animations/`, `common_abilities_animations/` | dirs | GS battle animation recipes |
+| `assets/init.json` | - | hero `isaac`, map `madra`, GS shortcuts; *keep* the input tables |
+
+**Images** (`assets/images/`, 2.1 MB): `spritesheets/` (101 files: battle, djinn, main_chars,
+npc, places), `tilesets/` (cave, forest, madra, madra_interior, snowland, world_map),
+`abilities_animations/` (44), `interactable_objects/` (30), `misc/` (31, incl. `logo.jpg` and
+`start_screen.png`), `psynergies/` (14), `icons/` (abilities, battle_effects, items),
+`battle_backgrounds/`, `avatars/`, `buttons/`, `keyboard/`, `debug/`. All ripped or redrawn GS
+art except possibly `debug/`, `keyboard/` and `buttons/` (check each before keeping).
+
+**Fonts** (`assets/font/`): `golden-sun.fnt/.png`, `golden-sun-italic`, `gs-item-font`, all GS
+bitmap fonts. Sunspire's 5x5 bitmap font replaces them (Shoebox or a script makes the `.fnt`).
+
+**Maps** (`assets/maps/`, 1.7 MB): Tiled JSON for cave, forest, madra (+ church, cave, corner,
+houses, side), snowland, world_map. GS layouts, remove; use as reference for the Tiled
+conventions (height layers, collision, events) while building Sunspire's maps.
+
+**Audio** (`assets/sounds/`, 11 MB): 12 BGM `.ogg` (battle_isaac, little_madra, ...) and 9 SE
+`.ogg` (actions, battle, psynergy, ...). All GS. Sunspire's WebAudio synth sound needs either a
+rendered `.ogg` set or an engine hook for synthesised SE.
+
+**Code and site** (`base/`, `static/`, `index.html`, `README.md`, `package.json`): 208 source
+files mention GS terms; almost all are the `GoldenSun` class/namespace (393 hits), which stays
+until a rename pass. Character names in code are 1 hit each (Isaac, Garet, Felix, Jenna, Mia).
+`index.html` has the GS logo, keywords, demo text and copyright notice; `static/manifest.webmanifest`,
+`humans.txt` and `gtag.js` are the upstream site's. `help/docs` and `help/utils` are upstream's
+docs and tools.
+
+**Keep**: `assets/filters/` (shaders), `assets/plugins/particle-storm.js` (check its licence),
+`static/phaser.js`, `static/codemirror*` (debug editor), `static/styles.css`.
+
+### Phase 2 next steps
+
+1. Build the minimal placeholder set (one map, one NPC, one battle) with Sunspire art so the
+   engine still boots, then delete the rest in one commit.
+2. Rename GS terms in player-facing strings (djinn -> spirit, Psynergy -> art).
+3. Add `ASSETS.md` listing the origin and licence of every asset left.
+
+### Phases 3-8
+
+Unchanged from the plan: tooling and browser support, handheld shell, sprite packs, content
+port, saves and PWA, then the Phaser upgrade decision. The `electron/` folder is only reached
+through `window.electron` (`base/GoldenSun.ts:179`, `base/debug/Debug.ts`); dropping it means
+removing the `electron*` devDependencies, `start-desktop*` scripts, `index-electron.html` and
+those two `if (electron_app)` branches.
