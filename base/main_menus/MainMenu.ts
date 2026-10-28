@@ -69,7 +69,10 @@ export class MainMenu {
                 this.button_press_action(this.psynergy_menu);
                 break;
             case "djinni":
-                this.button_press_action(this.djinn_menu);
+                // the spirit list crashes on an empty party roster; nothing to show before the first spirit
+                if (this.data.info.party_data.members.some(char => char.djinni.length)) {
+                    this.button_press_action(this.djinn_menu);
+                }
                 break;
             case "item":
                 this.button_press_action(this.item_menu);
