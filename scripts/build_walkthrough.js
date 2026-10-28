@@ -75,6 +75,19 @@ function asciiMap(id) {
     line();
 }
 
+// ---------------- the logo ----------------
+// the sun ring and the name, as the title screen shows them
+const LOGO = [
+    '      \\   |   /       ____                        _',
+    '    .-"""""""-.      / ___| _   _ _ __  ___ _ __ (_)_ __ ___',
+    '   /   .---.   \\     \\___ \\| | | | \'_ \\/ __| \'_ \\| | \'__/ _ \\',
+    ' - |  ( (*) )  | -    ___) | |_| | | | \\__ \\ |_) | | | |  __/',
+    '   \\   \'---\'   /    |____/ \\__,_|_| |_|___/ .__/|_|_|  \\___|',
+    '    \'-.......-\'                           |_|',
+    '      /   |   \\                         +-----------------+',
+    '                                        |    S  A  G  A   |',
+    '                                        +-----------------+',
+];
 // ---------------- 1-5 ----------------
 section("INT01", 1, "INTRODUCTION");
 para("Sunspire Saga is an original homage to the handheld JRPGs of the early 2000s: a party of four elemental adepts, eight collectible spirits that boost your stats when set and power great summons when unleashed, turn-based battles, towns, shops, inns, treasure chests and a dark tower at the end of the road.");
@@ -286,7 +299,9 @@ const html = `<!DOCTYPE html>
         <main class="guide">
             <h1>Walkthrough</h1>
             <p>A classic plain-text FAQ for the whole game, generated from the game's own data. Jump to a section from the contents; the codes in brackets are stable anchors.</p>
-            <div class="well"><pre>${esc("SUNSPIRE SAGA - FAQ / WALKTHROUGH").padStart(55)}
+            <div class="well"><pre>${LOGO.map(esc).join("\n")}
+
+${esc("SUNSPIRE SAGA - FAQ / WALKTHROUGH").padStart(55)}
 ${esc(`Game version: ${C.version} (engine build ${pkg.version})`.padStart(55))}
 ${esc(`Guide version: ${GUIDE_VERSION}   Last updated: ${TODAY}`.padStart(55))}
 

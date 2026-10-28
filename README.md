@@ -1,89 +1,103 @@
-# Sunspire Saga (engine build)
+<p align="center">
+  <img src="assets/sunspire/sprites/title_sun.png" alt="Sunspire Saga" width="456">
+</p>
 
-An original GBA-style pixel-art JRPG for the browser, being moved onto a fork of
-[goldensun_html5](https://github.com/jjppof/goldensun_html5) (MIT, Phaser CE 2.19.0) for its Tiled
-maps with height, puzzles, overworld, battle animations, menus and ability/spirit systems.
+An original GBA-style pixel-art JRPG for the browser. Four elemental adepts travel from the
+village of Thera to the Sunspire, duel and recruit eight spirits, call down the great summons and
+face the Shadow Wyrm. It runs in any modern browser, saves as you play, installs as an app and
+works offline.
 
-Sunspire Saga is an independent homage, with no assets from Nintendo or Camelot. Every sprite,
-tile, name, line of dialog and number in this repository is original; `ASSETS.md` lists where each
-asset comes from. The engine code keeps its MIT licence and copyright notice (`LICENSE.txt`).
+Sunspire Saga is an independent homage: every sprite, tile, name, line of dialog and number is
+original, and `ASSETS.md` lists where each asset comes from. The engine is
+[goldensun_html5](https://github.com/jjppof/goldensun_html5) (MIT), kept with its licence in
+`LICENSE.txt`.
 
-**Status:** Phase 7 of the migration (see `MIGRATION.md`): the whole game is on the engine, from
-Thera to the Sunspire, with every map, character, art, spirit, summon, enemy, chest, shop and
-boss of the single-script game, a push puzzle and a field art; it saves in the browser, installs
-as an app and plays offline. The migration plan is complete; the engine stays on Phaser CE 2.19
-(Phase 8, the decision and what is still owed, is in `MIGRATION.md`). This is `main` since
-2026-10-28; the single-script game (`game.js`) and its site live on the `legacy` branch.
+<p align="center">
+  <img src="assets/screens/engine/title.png" alt="Title screen" width="240">
+  <img src="assets/screens/engine/thera.png" alt="Thera, by the well" width="240">
+  <img src="assets/screens/engine/battle.png" alt="Ari casts Quake" width="240">
+</p>
+
+## Playing
+
+Play online at [sboulema.github.io/Sunspire-Saga](https://sboulema.github.io/Sunspire-Saga/).
+
+- **Controls:** arrows to move, **Z** = A, **X** = B, **A / S** = L / R, **Enter** = Start,
+  **Backspace** = Select, **M** sound, **F** immersive mode. The handheld shell around the screen
+  has the same buttons for touch, and its colour and the light / dark theme are remembered.
+- **Saving:** the game autosaves on every map change, after battles and at the inns; Start saves
+  on demand. *Continue* on the title screen resumes. Saves live in the browser you play in.
+- **Installing:** the site is a progressive web app. Browsers that support it show *Install as
+  app* under the shell (iOS: *Add to Home Screen* in Safari's share sheet); the installed app
+  opens straight into the saved game, full screen, offline.
+- **Sprite packs:** every sheet the game draws can be replaced with your own art from the play
+  page (*Load sprite pack*). The pack guide page lists every slot; `packs/README.md` has the rules.
+- **Walkthrough:** the complete plain-text walkthrough with maps is on the walkthrough page.
 
 ## Running it
 
-- Node 20 or newer (`.nvmrc` says 22) and npm 10 or newer.
-- `npm install`.
-- `npm start` serves the game on [http://localhost:9000](http://localhost:9000) and rebuilds on
-  change. Use a Chromium browser for now.
-- `npm run build` type-checks and bundles for development; `npm run build_prod` makes the
-  minified bundle; `npm run site` builds the static site in `site/` (what CI publishes);
-  `npm run build:content` regenerates the assets, the databases, the maps and the walkthrough
-  from `assets/sunspire/` (run it after any change there); `npm run format` runs Prettier over
-  `base/` (the pre-commit hook does the same).
-- Controls: arrows to move, **Z** = A, **X** = B, **A / S** = L / R, **Backspace** = Select,
-  **Enter** = Start, **M** sound, **F** immersive mode. The handheld shell around the screen has
-  the same buttons for touch; the shell colour and the light / dark theme are remembered in the
-  browser. `?debug=1` shows the engine's debug panels.
+You need Node 20 or newer (`.nvmrc` says 22) and npm 10 or newer. Run `npm install` once.
 
-## The site
+### Locally, while developing
 
-| Page | What it is |
-|---|---|
-| `index.html` | landing page: the story, in-game screenshots, concept art and box art |
-| `play.html` | the game in its handheld shell, with the immersive toggle, the sprite pack loader and the install button |
-| `pack-guide.html` | the sprite pack guide with the generated slot list |
-| `changelog.html` | what changed in each version |
-| `walkthrough.html` | the plain-text walkthrough, generated from the game data |
+```bash
+npm start
+```
 
-Every page has the light / dark toggle and the handheld colour choice, remembered in the browser.
-The nginx config in `docker/` serves clean URLs (`/play`), and `npm run preview` does the same
-locally; the pages link to each other with `.html` so they also work from a plain static host.
+Serves the game on [http://localhost:9000](http://localhost:9000) and rebuilds on every change.
+Use a Chromium browser for now. `?debug=1` on the play page shows the engine's debug panels.
 
-## Saving and installing
+### As a static website
 
-The game autosaves to the browser on every map change, after battles and at the inns, and Start
-saves on demand; *Continue* on the title screen resumes it. The site is a progressive web app:
-`static/manifest.webmanifest` and the service worker written by the site build cache every file,
-so the installed app launches straight into the saved game, full screen, and works offline.
-Browsers that support installing show an *Install as app* button under the shell (iOS uses *Add
-to Home Screen* in Safari's share sheet). Installing needs HTTPS or `localhost`; `npm run site`
-then `npm run preview` tries it locally on port 9100.
+```bash
+npm run site
+```
 
-## Layout
+Builds the whole site into `site/`: the pages, the game bundle, the assets, the manifest and a
+service worker that caches everything for offline play. Copy that folder to any static host. The
+pages link each other as `.html`, so a plain file host works; `docker/nginx.conf` shows the clean
+URLs (`/play`) the Docker image serves. To try it locally with the same clean URLs:
 
-| Path | What |
-|---|---|
-| `base/` | the engine, TypeScript (entry `base/GoldenSun.ts`; the class name is kept for now) |
-| `base/shell/HandheldShell.ts`, `index.html`, `static/site.css`, `static/site.js` | the handheld shell: on-screen buttons, integer scaling, immersive mode; the page's theme and shell colour |
-| `base/shell/SpritePacks.ts`, `pack-guide.html`, `static/pack-guide.js`, `static/pack-slots.json`, `packs/README.md` | sprite packs: sheets the player loads (PNG / GIF / WebP or a zip) replace the built-in art; the guide lists every slot |
-| `assets/sunspire/content.json` | **the game**: characters, arts, gear, items, shops, chests, spirits, summons, enemies, encounters, maps, villagers, dialog and story. Edit this, not the databases. |
-| `assets/sunspire/` | Sunspire's source art: the exported sprites, the five map grids and tilesets, the 5x5 font glyphs |
-| `assets/dbs/`, `assets/maps/`, `walkthrough.html` | **generated** from `content.json` by the scripts below (`misc_animations_db`, `interactable_objects_db`, the attack, jump and cure battle recipes and `init.json` are hand-written; the arts' recipes are generated) |
-| `scripts/build_sunspire_assets.js` | generates `assets/images`, `assets/font`, `assets/sounds`, `bgm_db` / `se_db` and the pack slot list from `assets/sunspire/` |
-| `scripts/build_sunspire_content.js` | generates the databases and the Tiled maps from `content.json` and the map grids |
-| `scripts/build_walkthrough.js` | generates `walkthrough.html`, the plain-text walkthrough, from the same data |
-| `scripts/build_site.js`, `scripts/serve_site.js` | assembles `site/` with its service worker; serves it locally (`npm run preview`) |
-| `base/shell/SaveSlot.ts` | the versioned browser save slot |
-| `static/manifest.webmanifest`, `static/icons/` | the web app manifest and icons |
-| `.github/workflows/build.yml` | CI: format check, build, site artifact; deploys to GitHub Pages only when run by hand with the deploy option |
-| `.github/workflows/publish.yml`, `Dockerfile`, `docker/nginx.conf` | on `main` and `vNN` tags: the site as a Docker image (GHCR, optionally Docker Hub) and a zip, with a GitHub Release on tags |
-| `tools/` | the logo / icon generator, the favicon builder and the pack zipper |
-| `assets/art/`, `assets/screens/` | the box art, concept sheets, hero portraits and screenshots on the landing page |
-| `assets/filters/`, `assets/plugins/` | WebGL filters and the particle plugin the engine ships with |
-| `static/` | Phaser, the site shell and the debug editor |
-| `MIGRATION.md` | the migration plan, decisions and phase log |
-| `ASSETS.md` | origin and licence of every asset |
+```bash
+npm run preview
+```
 
-Engine documentation: the upstream [wiki](https://github.com/jjppof/goldensun_html5/wiki)
-(database configuration, tutorials) and [API docs](https://gshtml5.org/docs/); `npm run docs`
-generates the latter locally. Learn Phaser 2 from its
-[examples](https://phaser.io/examples/v2) and [API](https://photonstorm.github.io/phaser-ce/index.html).
+That serves `site/` on [http://localhost:9100](http://localhost:9100). Installing as an app needs
+HTTPS or `localhost`, so this is also where to test the install flow. The Publish workflow builds
+the same folder on every push to `main` and attaches it as a zip to each `vNN` release.
+
+### With Docker
+
+```bash
+docker build -t sunspire-saga .
+```
+
+```bash
+docker run --rm -p 8080:80 sunspire-saga
+```
+
+The image builds the site with Node and serves it with nginx on port 80; open
+[http://localhost:8080](http://localhost:8080). Every push to `main` also publishes the image as
+`ghcr.io/sboulema/sunspire-saga:latest` (and `:vNN` for releases), so without building:
+
+```bash
+docker run --rm -p 8080:80 ghcr.io/sboulema/sunspire-saga:latest
+```
+
+## Changing the game
+
+The game is generated from `assets/sunspire/`: `content.json` holds the characters, arts, gear,
+items, shops, chests, spirits, summons, enemies, encounters, maps, villagers, dialog and story,
+and `sprites/`, `maps/` and `glyphs.json` hold the source art. After any change there run
+
+```bash
+npm run build:content
+```
+
+which regenerates the images, the font, the sounds, the databases, the Tiled maps, the pack slot
+list and the walkthrough. Edit the sources, never the generated files. `npm run build`
+type-checks and bundles the engine, `npm run format` runs Prettier over `base/` (the pre-commit
+hook does the same), and `npm run docs` generates the engine's API documentation.
 
 ## Credits
 

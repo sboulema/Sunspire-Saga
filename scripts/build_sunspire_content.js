@@ -8,7 +8,7 @@
 // misc_animations_db, interactable_objects_db, bgm_db and se_db are not touched. Run
 // build_sunspire_assets.js first: the sprite sheets referenced here come from it.
 //
-// How Sunspire's rules map onto the engine (see MIGRATION.md, Phase 6):
+// How Sunspire's rules map onto the engine:
 // - the engine levels characters one by one, so a member joins at the level the party should
 //   have by then (starting_level) instead of the shared party level;
 // - plain attacks do max(0, atk - def) / 2, so bosses and spirits "shrug off steel" through a

@@ -1,7 +1,7 @@
 # Sunspire Saga (engine build)
 
 The browser JRPG Sunspire Saga on a fork of the goldensun_html5 engine (Phaser CE, TypeScript
-under `base/`). `README.md` describes the layout, `MIGRATION.md` the port and the engine's quirks,
+under `base/`). `README.md` says how to run and change it, `packs/README.md` the sprite packs,
 `ASSETS.md` where every asset comes from. No Nintendo / Camelot assets, names or data, ever.
 
 ## The game is generated from `assets/sunspire/`
@@ -28,9 +28,10 @@ under `base/`). `README.md` describes the layout, `MIGRATION.md` the port and th
   do not regenerate assets in the middle of a browser test).
 - `npm run build` type-checks; `npm run format` (also the pre-commit hook) runs Prettier over
   `base/`; `npm run site` builds the static site in `site/`.
-- Engine quirks that bite when adding content (details in `MIGRATION.md`, Phase 6): events in a
+- Engine quirks that bite when adding content: events in a
   list fire at once, so chain through `finish_events`; deactivate an NPC only as the last step of
   its chain; declare every storage flag in the generator; map properties the engine reads as
   strings are not JSON-encoded; NPCs are reached by walking into them.
 - Testing in a hidden browser pane: Phaser drops to ~2 fps, so drive `GoldenSun.game.update()`
-  from a Web Worker timer and synthesise key holds (`MIGRATION.md`, Phase 2 and 6 notes).
+  from a Web Worker timer and synthesise keydown / keyup events carrying `keyCode`; NPCs must
+  be reached by walking (teleporting the body does not set `transition_direction`).
