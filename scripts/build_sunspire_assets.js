@@ -335,6 +335,31 @@ function battleAndPortraits() {
     writePng(path.join(IMG, "misc/start_screen.png"), title);
 }
 
+// ---------------- battle effect sheets ----------------
+// Sheets the arts' battle recipes animate (assets/sunspire/recipes). The engine loads
+// assets/images/abilities_animations/<art>.png with a TexturePacker atlas next to it; the built-in
+// sheet is a placeholder drawn here with the geometry the recipe expects, and a sprite pack
+// replaces it (slot name = the art) at the same size, or at any size with its own atlas.
+function effectSheets() {
+    const dir = path.join(IMG, "abilities_animations");
+    // quake: a 40x96 column of earth that the recipe pushes up from under the targets, three times
+    const col = png.create(40, 96);
+    for (let y = 0; y < 96; y++) for (let x = 0; x < 40; x++) {
+        const top = 4 + ((x * 7) % 5); // a jagged crown
+        if (y < top) continue;
+        const crack = (y + (x >> 2)) % 14 === 0 || (x + (y >> 3)) % 13 === 0;
+        const c = crack ? COL.earth_dark || [95, 65, 35] : x < 4 ? [190, 145, 90] : x > 35 ? [120, 82, 46] : [150, 105, 60];
+        png.fill(col, x, y, 1, 1, c);
+    }
+    const sheet = png.create(42, 98);
+    png.blit(sheet, col, 1, 1);
+    writePng(path.join(dir, "quake.png"), sheet);
+    writeJson(path.join(dir, "quake.json"), {
+        frames: { "quake/000": { frame: { x: 1, y: 1, w: 40, h: 96 }, rotated: false, trimmed: false, spriteSourceSize: { x: 0, y: 0, w: 40, h: 96 }, sourceSize: { w: 40, h: 96 } } },
+        meta: { app: "scripts/build_sunspire_assets.js", image: "quake.png", format: "RGBA8888", size: { w: 42, h: 98 }, scale: "1" },
+    });
+}
+
 // ---------------- tilesets ----------------
 // One tileset per map, captured from the legacy map builders (assets/sunspire/maps/<id>_tiles.png);
 // the Tiled maps themselves come from scripts/build_sunspire_content.js.
@@ -463,6 +488,7 @@ for (const id of NPCS) fieldSheet(id);
 for (const id of ENEMIES) enemyBattleSheet(id);
 for (const id of Object.keys(SPIRITS)) spiritSheet(id);
 objectSheets();
+effectSheets();
 miscSheets();
 buttonSheets();
 battleAndPortraits();

@@ -29,6 +29,9 @@ loaded, the list marks every slot the pack covers. The list is generated from th
   `well` and `spring` are sprites, not tiles: they stand on the bottom row of their tile and may
   be taller or wider than it (a tree can cover several tiles), and they sort with the hero by
   that row. Give them any size you like with an atlas.
+- Battle effect sheets are slots too, named after the art (`quake`): the built-in one is a
+  placeholder with the frame layout the art's recipe expects, so a sheet of the same size and
+  frame names (or any size with its atlas) replaces it.
 - A loaded pack takes effect at once: the play page reloads itself and confirms how many sheets
   the pack replaced. *Built-in art* clears the pack the same way.
 

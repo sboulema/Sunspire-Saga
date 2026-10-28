@@ -1,5 +1,15 @@
 [
     {
+        "slot": "quake",
+        "file": "assets/images/abilities_animations/quake.png",
+        "width": 42,
+        "height": 98,
+        "frames": [
+            "quake/000"
+        ],
+        "group": "abilities_animations"
+    },
+    {
         "slot": "avatars",
         "file": "assets/images/avatars/avatars.png",
         "width": 495,

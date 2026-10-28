@@ -107,8 +107,10 @@ function artRecipe(key, el) {
     return recipe;
 }
 const ELEMENT_ART = {earth: "quake", fire: "flare", water: "ice_horn", wind: "gust"}; // the spirits' attacks borrow the element's first art
+// a hand-written recipe under assets/sunspire/recipes/<art>_db.json wins over the generated one
 for (const [key, a] of Object.entries(C.arts)) {
-    if (!a.heal) writeJson(path.join(DBS, "abilities_animations", key + "_db.json"), artRecipe(key, a.el));
+    const own = path.join(SRC, "recipes", key + "_db.json");
+    if (!a.heal) writeJson(path.join(DBS, "abilities_animations", key + "_db.json"), fs.existsSync(own) ? JSON.parse(fs.readFileSync(own, "utf8")) : artRecipe(key, a.el));
     abilities.push(
         a.heal
             ? ability(key, a.name, {description: a.desc, type: "healing", element: EL[a.el], battle_target: "ally", pp_cost: a.cost, ability_power: a.heal, effects_outside_battle: true, ability_category: "psynergy", battle_animation_key: "cure"})

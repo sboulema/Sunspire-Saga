@@ -307,6 +307,7 @@ Object.assign(RULES, {
     boulder: atlasMap("interactable_objects/lift_rock", {"idle/down": "lift_rock/rock"}, "bottom"),
     ogre_s: atlasMap(NPC + "briggs_idle", {}, "bottom"),
     wyrm_s: atlasMap(NPC + "avimander_idle", {}, "bottom"),
+    quake: atlasMap("abilities_animations/quake"), // the Quake recipe's column of earth
     psynergy_aura: image("psynergies/psynergy_aura"),
     djinn_ball: image("misc/djinn_ball"),
     snowflake: image("interactable_objects/snowflake"),
