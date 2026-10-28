@@ -202,5 +202,6 @@ export class InnMenu {
             member.current_hp = member.max_hp;
             member.current_pp = member.max_pp;
         });
+        this.data.autosave();
     }
 }

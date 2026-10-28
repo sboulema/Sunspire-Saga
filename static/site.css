@@ -178,6 +178,10 @@ body.immersive .imm-hint.shown{display:block; position:fixed; left:50%; bottom:m
   animation:hint-fade 3.2s ease forwards;}
 @keyframes hint-fade{0%,70%{opacity:1} 100%{opacity:0}}
 
+/* ---------- install as app ---------- */
+.install{display:flex; flex-direction:column; align-items:center; gap:8px; margin:0; font-size:13px; color:var(--ink-2); text-align:center;}
+.install[hidden], body.immersive .install{display:none;}
+
 /* ---------- sprite packs ---------- */
 .pack-load{display:flex; flex-direction:column; align-items:center; gap:10px; width:100%; max-width:620px; padding-top:4px;}
 .pack-load .row{display:flex; flex-wrap:wrap; justify-content:center; gap:8px;}

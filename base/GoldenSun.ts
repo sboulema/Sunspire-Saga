@@ -1,3 +1,4 @@
+import {SaveSlot} from "./shell/SaveSlot";
 import "core-js";
 import * as numbers from "./magic_numbers";
 import {Debug} from "./debug/Debug";
@@ -189,6 +190,17 @@ export class GoldenSun {
     }
 
     /**
+     * Saves the game to the browser slot when it is safe to: on map changes, after battles and
+     * at inns. Does nothing while loading, in battle or when a reveal is running.
+     */
+    public autosave() {
+        if (!this.assets_loaded || this.in_battle || !this.snapshot_manager || this.hero?.on_reveal) {
+            return;
+        }
+        this.snapshot_manager.save_to_browser();
+    }
+
+    /**
      * Sets the canvas scale from outside, e.g. by the shell fitting the screen to the page.
      * @param scale_factor integer multiple of the game resolution.
      */
@@ -336,6 +348,9 @@ export class GoldenSun {
 
         if (this.dbs.init_db.skip_start_menu) {
             start_game(null);
+        } else if (document.body.classList.contains("app") && SaveSlot.exists()) {
+            // launched as the installed app: straight into the saved game
+            start_game(SaveSlot.load());
         } else {
             //initializes start menu
             this.start_menu = new StartMenu(this.game, this);

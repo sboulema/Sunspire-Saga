@@ -8,10 +8,11 @@ Sunspire Saga is an independent homage, with no assets from Nintendo or Camelot.
 tile, name, line of dialog and number in this repository is original; `ASSETS.md` lists where each
 asset comes from. The engine code keeps its MIT licence and copyright notice (`LICENSE.txt`).
 
-**Status:** Phase 6 of the migration (see `MIGRATION.md`): the whole game is on the engine, from
+**Status:** Phase 7 of the migration (see `MIGRATION.md`): the whole game is on the engine, from
 Thera to the Sunspire, with every map, character, art, spirit, summon, enemy, chest, shop and
-boss of the single-script game, a push puzzle and a field art. Saves and the installable app
-(Phase 7) are next. The single-script game (`game.js`) lives on the `main` branch until then.
+boss of the single-script game, a push puzzle and a field art; it saves in the browser, installs
+as an app and plays offline. The Phaser upgrade decision (Phase 8) is next. The single-script
+game (`game.js`) lives on the `main` branch until the switch.
 
 ## Running it
 
@@ -29,6 +30,16 @@ boss of the single-script game, a push puzzle and a field art. Saves and the ins
   the same buttons for touch; the shell colour and the light / dark theme are remembered in the
   browser. `?debug=1` shows the engine's debug panels.
 
+## Saving and installing
+
+The game autosaves to the browser on every map change, after battles and at the inns, and Start
+saves on demand; *Continue* on the title screen resumes it. The site is a progressive web app:
+`static/manifest.webmanifest` and the service worker written by the site build cache every file,
+so the installed app launches straight into the saved game, full screen, and works offline.
+Browsers that support installing show an *Install as app* button under the shell (iOS uses *Add
+to Home Screen* in Safari's share sheet). Installing needs HTTPS or `localhost`; `npm run site`
+then `npm run preview` tries it locally on port 9100.
+
 ## Layout
 
 | Path | What |
@@ -42,7 +53,9 @@ boss of the single-script game, a push puzzle and a field art. Saves and the ins
 | `scripts/build_sunspire_assets.js` | generates `assets/images`, `assets/font`, `assets/sounds`, `bgm_db` / `se_db` and the pack slot list from `assets/sunspire/` |
 | `scripts/build_sunspire_content.js` | generates the databases and the Tiled maps from `content.json` and the map grids |
 | `scripts/build_walkthrough.js` | generates `walkthrough.html`, the plain-text walkthrough, from the same data |
-| `scripts/build_site.js` | copies the page, bundle, assets and static files into `site/` |
+| `scripts/build_site.js`, `scripts/serve_site.js` | assembles `site/` with its service worker; serves it locally (`npm run preview`) |
+| `base/shell/SaveSlot.ts` | the versioned browser save slot |
+| `static/manifest.webmanifest`, `static/icons/` | the web app manifest and icons |
 | `.github/workflows/build.yml` | CI: format check, build, site artifact; deploys to GitHub Pages only when run by hand with the deploy option |
 | `assets/filters/`, `assets/plugins/` | WebGL filters and the particle plugin the engine ships with |
 | `static/` | Phaser, the site shell and the debug editor |

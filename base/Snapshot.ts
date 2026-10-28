@@ -1,3 +1,4 @@
+import {SaveSlot} from "./shell/SaveSlot";
 import {djinn_status} from "./Djinn";
 import {GoldenSun} from "./GoldenSun";
 import {GameInfo} from "./initializers/initialize_info";
@@ -242,6 +243,21 @@ export class Snapshot {
      * Generates a snapshot of the current game state and opens the download box.
      */
     generate_snapshot() {
+        Snapshot.download_json(this.build_snapshot(), Snapshot.SNAPSHOT_FILENAME);
+    }
+
+    /**
+     * Generates a snapshot of the current game state and stores it in the browser save slot.
+     * @returns whether the browser accepted it.
+     */
+    save_to_browser() {
+        return SaveSlot.store(this.build_snapshot());
+    }
+
+    /**
+     * Builds a snapshot of the current game state.
+     */
+    build_snapshot(): SnapshotData {
         const snapshot: SnapshotData = {
             storage_data: _.mapValues(this.data.storage.internal_storage, record => record.value),
             engine_storage_data: _.mapValues(this.data.storage.engine_storage, record => record.value),
@@ -535,7 +551,7 @@ export class Snapshot {
                 }
             });
         }
-        Snapshot.download_json(snapshot, Snapshot.SNAPSHOT_FILENAME);
+        return snapshot;
     }
 
     /**

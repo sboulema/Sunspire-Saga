@@ -43,7 +43,11 @@ export class SaveMenu {
 
     download_snapshot() {
         if (!this.data.hero.on_reveal) {
-            this.data.snapshot_manager.generate_snapshot();
+            // the save goes to the browser; a JSON file is still offered when the browser refuses
+            if (!this.data.snapshot_manager.save_to_browser()) {
+                this.data.snapshot_manager.generate_snapshot();
+            }
+            this.close_menu();
         }
     }
 

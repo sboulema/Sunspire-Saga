@@ -1,31 +1,21 @@
 {
-	"start_url": "/",
+	"name": "Sunspire Saga",
+	"short_name": "Sunspire",
+	"description": "An original GBA-style pixel-art RPG: gather eight elemental spirits and bring the dawn back to the Sunspire.",
+	"id": "sunspire-saga",
+	"start_url": "/?app=1",
 	"scope": "/",
-
-	"background_color": "#0c0a16",
-	"theme_color": "#f2c14e",
-
-	"display": "browser",
-	"orientation": "landscape",
-
-	"icons": [{
-		"type": "image/x-icon",
-		"sizes": "16x16 32x32 48x48",
-		"src": "/static/favicon.ico"
-	}],
-
+	"display": "fullscreen",
+	"display_override": ["fullscreen", "standalone"],
+	"orientation": "any",
+	"background_color": "#100d1d",
+	"theme_color": "#100d1d",
 	"lang": "en-US",
 	"dir": "ltr",
-
-	"short_name": "Sunspire",
-	"name": "Sunspire Saga",
-	"description": "An original GBA-style pixel-art JRPG in the browser. Open source, MIT licensed.",
-
-	"iarc_rating_id": "",
 	"categories": ["games"],
-
-	"related_applications": [],
-	"prefer_related_applications": false,
-
-	"screenshots": []
+	"icons": [
+		{"src": "/static/icons/sunspire-mark-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+		{"src": "/static/icons/sunspire-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+	],
+	"prefer_related_applications": false
 }

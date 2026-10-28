@@ -18,7 +18,8 @@ Camelot or any other commercial game; if you add an asset, add a line.
 | `assets/plugins/particle-storm.js` | Phaser Particle Storm plugin, bundled by the engine | Photon Storm, as shipped with goldensun_html5 | see the file header |
 | `static/phaser.js` | Phaser CE 2.19.0 with the engine's patches | Photon Storm / Phaser CE | MIT |
 | `static/codemirror*.js`, `mode-javascript.js` | CodeMirror for the debug editor | CodeMirror | MIT |
-| `static/styles.css`, `home.js`, `favicon.ico`, `manifest.webmanifest`, `humans.txt`, `robots.txt` | site shell | goldensun_html5 engine, edited for Sunspire; the favicon still needs replacing with Sunspire's | MIT |
+| `static/favicon.ico`, `static/icons/*.png` | Sunspire's favicon, app icons and logo, from the legacy site's `tools/logo-gen.html` | Sunspire Saga | MIT |
+| `static/styles.css`, `home.js`, `site.css`, `site.js`, `manifest.webmanifest`, `humans.txt`, `robots.txt` | site shell | goldensun_html5 engine and the legacy Sunspire site, edited | MIT |
 
 Removed from the upstream engine in the Sunspire fork: every Golden Sun sprite, tileset, map,
 font, sound, database entry and battle animation, the GS battle-mechanics FAQ under `help/docs`,

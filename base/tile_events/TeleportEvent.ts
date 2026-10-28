@@ -477,6 +477,7 @@ export class TeleportEvent extends TileEvent {
             if (!this.skip_map_change_events) {
                 this.data.map.fire_game_events();
             }
+            this.data.autosave();
         };
 
         if (this.fade_camera) {

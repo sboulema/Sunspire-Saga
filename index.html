@@ -12,6 +12,10 @@
         <link rel="manifest" type="application/manifest+json" href="/static/manifest.webmanifest" />
         <link rel="author" type="text/plain" href="/static/humans.txt" />
         <link rel="shortcut icon" type="image/x-icon" href="/static/favicon.ico" />
+        <link rel="apple-touch-icon" href="/static/icons/sunspire-mark-512.png" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap">
@@ -102,7 +106,15 @@
             <p class="legend">
                 Move <kbd>arrows</kbd> &middot; A <kbd>Z</kbd> &middot; B <kbd>X</kbd> &middot; L / R <kbd>A</kbd> / <kbd>S</kbd> &middot;
                 Start <kbd>Enter</kbd> &middot; Select <kbd>Backspace</kbd> &middot; sound <kbd>M</kbd> &middot; immersive <kbd>F</kbd><br>
-                Engine build, work in progress: one town and one battle so far.
+                Engine build: the whole game, saved in this browser as you play.
+            </p>
+
+            <p class="install" id="install" hidden>
+                <button class="btn btn-sm" id="installBtn" type="button">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+                    Install as app
+                </button>
+                <span>Opens straight into your saved game, full screen, and works offline.</span>
             </p>
 
             <section class="pack-load" aria-label="Sprite pack">

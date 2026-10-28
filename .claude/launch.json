@@ -4,8 +4,23 @@
     {
       "name": "engine-dev",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["webpack", "serve", "--config", "webpack.config.dev.js", "--no-open"],
+      "runtimeArgs": [
+        "webpack",
+        "serve",
+        "--config",
+        "webpack.config.dev.js",
+        "--no-open"
+      ],
       "port": 9000
+    },
+    {
+      "name": "site",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "scripts/serve_site.js",
+        "9100"
+      ],
+      "port": 9100
     }
   ]
 }

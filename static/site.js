@@ -132,5 +132,21 @@
     input.onblur = () => (GoldenSun.game.input.enabled = true);
   }
 
+  // ---------------- installable app ----------------
+  // the service worker (sw.js, written by the site build; absent on the dev server) makes the site
+  // installable and playable offline; the install button appears when the browser offers it
+  if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  }
+  const install = document.getElementById('install'), installBtn = document.getElementById('installBtn');
+  let installPrompt = null;
+  addEventListener('beforeinstallprompt', e => { e.preventDefault(); installPrompt = e; if (install) install.hidden = false; });
+  addEventListener('appinstalled', () => { installPrompt = null; if (install) install.hidden = true; });
+  installBtn?.addEventListener('click', async () => {
+    if (!installPrompt) return;
+    const p = installPrompt; installPrompt = null; install.hidden = true;
+    try { await p.prompt(); } catch (e){}
+  });
+
   window.SunspireSite = { setHH, presets: PRESETS };
 })();

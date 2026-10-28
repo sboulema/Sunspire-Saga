@@ -1,3 +1,4 @@
+import {SaveSlot} from "../shell/SaveSlot";
 import {GoldenSun} from "../GoldenSun";
 import {FONT_SIZE, GAME_WIDTH} from "../magic_numbers";
 import {SnapshotData} from "../Snapshot";
@@ -98,7 +99,15 @@ export class StartMenu {
 
     private on_horizontal_menu_chose() {
         if (this.horizontal_menu.selected_button_index === 1) {
-            this.input.click();
+            // continue from the browser save when there is one, else from a save file
+            const saved = SaveSlot.load();
+            if (saved) {
+                this.horizontal_menu.close(() => {
+                    this.choose_callback(saved);
+                });
+            } else {
+                this.input.click();
+            }
         } else {
             this.horizontal_menu.close(() => {
                 this.choose_callback(null);

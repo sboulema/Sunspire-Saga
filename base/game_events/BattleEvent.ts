@@ -156,6 +156,9 @@ export class BattleEvent extends GameEvent {
                 if (this.finish_callback) {
                     this.finish_callback(victory, all_party_fled);
                 }
+                if (victory) {
+                    this.data.autosave();
+                }
                 if (victory && !all_party_fled) {
                     this.all_enemies_fled_events.forEach(event => event.fire(this.origin_npc));
                 } else if (victory) {

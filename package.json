@@ -30,7 +30,8 @@
     "format-check": "prettier --check \"base/**/*.ts\"",
     "format": "prettier --write \"base/**/*.ts\"",
     "docs": "node scripts/generate_docs.js",
-    "prepare": "husky"
+    "prepare": "husky",
+    "preview": "node scripts/serve_site.js"
   },
   "engines": {
     "node": ">=20",

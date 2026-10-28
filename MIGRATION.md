@@ -327,6 +327,41 @@ docs and tools.
   engine's damage formulas against the legacy numbers (the Flint duel at level 1 is as tight as
   it was).
 
-### Phases 7-8
+### Phase 7 - saves and the installable app (2026-10-28)
 
-Unchanged from the plan: saves and PWA, then the Phaser upgrade decision.
+- Save format: the engine's own `SnapshotData` (storage flags, party, items, spirits, map,
+  position, direction, encounter counter, sanctum, scale, sound) wrapped as
+  `{version, saved_at, snapshot}` in one `localStorage` slot, `sunspire_engine_save`
+  (`base/shell/SaveSlot.ts`). `SaveSlot.VERSION` is 1; a save of another version is ignored
+  with a console warning rather than loaded. `Snapshot.build_snapshot()` is the pure part of
+  the engine's save; `generate_snapshot()` (the JSON download) still exists and is the fallback
+  when the browser refuses storage.
+- Legacy saves (`localStorage.sunspire2` from `game.js`) are **not imported**: the shared
+  party level, the chest and flag names and the engine's per-character state do not map one
+  to one, and the game is a couple of hours long. The old key is left untouched for the legacy
+  site.
+- Autosave (`GoldenSun.autosave()`, skipped while loading, in battle or during a reveal): on
+  every map change (`TeleportEvent`, after the map's events are fired), after every battle won
+  (`BattleEvent`), at the inns (`InnMenu.inn_recovery`). The Start prompt ("Save your quest")
+  saves to the slot and closes; the title's Continue loads the slot and falls back to the file
+  picker when there is none.
+- Installable app: `static/manifest.webmanifest` (start URL `/?app=1`, fullscreen, the
+  Sunspire icons now under `static/icons/`, which also replaced the engine's favicon),
+  Apple meta tags in `index.html`, an *Install as app* button that appears on
+  `beforeinstallprompt`, and `?app=1` or a standalone display mode opening immersive play and
+  resuming the slot without the title screen.
+- Offline: `scripts/build_site.js` writes `site/sw.js`, which precaches every file of the
+  built site (259 today, about 10 MB with the placeholder audio) under a cache named after the
+  content; pages, the bundle and game data come from the network first, art, sounds and fonts
+  from the cache first; a new build replaces the old cache on activation. `static/site.js`
+  registers `/sw.js` (absent on the dev server, so development is never cached).
+  `npm run preview` serves `site/` locally to try it.
+- Verified in Chromium: autosave on arriving in Brindle, a second save from the Start prompt,
+  Continue resuming at the saved tile with the flags intact, `?app=1` resuming straight into
+  the immersive shell with no title screen, and the service worker installing with the whole
+  site in its cache. Not verified: an actual install and offline launch on iOS and Android
+  (needs HTTPS and a phone).
+
+### Phase 8
+
+Unchanged from the plan: the Phaser upgrade decision.
