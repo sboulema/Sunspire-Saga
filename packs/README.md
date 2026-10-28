@@ -18,6 +18,9 @@ loaded, the list marks every slot the pack covers. The list is generated from th
 - The image must be the exact size of the sheet it replaces: slots are whole sheets, and the game
   cuts them into the same frames at the same positions. Open the original sheet from the guide to
   see the layout.
+- Or bring your own layout: a `<slot>.json` TexturePacker atlas next to the sheet, with exactly
+  the frame names the guide lists for that slot, lets the sheet be any size that holds those
+  frames. Plain images (no frames in the guide) take no atlas.
 - Partial packs are fine; everything you leave out keeps the built-in art. Files that match no slot
   or have the wrong size are reported and skipped.
 - A loaded pack takes effect at once: the play page reloads itself and confirms how many sheets
@@ -37,6 +40,6 @@ separate repository or a release asset here rather than for the main tree.
 ## For the port
 
 The legacy game had one slot per sprite (`ari_down.png`, `tree.png`). The engine build replaces
-whole sheets, which is simpler but asks pack authors to lay frames out exactly; stitching single
-frames into a sheet in the browser (the same thing `scripts/build_sunspire_assets.js` does at build
-time) is the planned follow-up, so that per-sprite packs work again.
+whole sheets, laid out either like the built-in sheet or by the pack's own atlas; stitching
+single frames into a sheet in the browser (the same thing `scripts/build_sunspire_assets.js` does
+at build time) is the planned follow-up, so that per-sprite packs work again.

@@ -34,6 +34,8 @@ Notes
 - Field characters (*_field) hold the walk, idle and cast frames per direction; the game mirrors
   right to left itself. Battle sheets (*_battle) hold the battle set.
 - .gif (first frame) and .webp files may replace any .png here, same file name.
+- A sheet may be another size if a <slot>.json TexturePacker atlas with the same frame names
+  comes with it in the pack; the game then cuts the sheet by that atlas instead.
 - Folder names inside the zip are ignored; only the file name counts.
 
 Only load and share art you made yourself or have the rights to use.
@@ -42,7 +44,7 @@ Only load and share art you made yourself or have the rights to use.
 const files = [{name: "README.md", data: Buffer.from(readme, "utf8")}];
 if (src) {
     for (const f of fs.readdirSync(src).sort()) {
-        if (/\.(png|gif|webp)$/i.test(f)) files.push({name: f, data: fs.readFileSync(path.join(src, f))});
+        if (/\.(png|gif|webp|json)$/i.test(f)) files.push({name: f, data: fs.readFileSync(path.join(src, f))});
     }
 } else {
     const slots = JSON.parse(fs.readFileSync(path.join(root, "static", "pack-slots.json"), "utf8"));

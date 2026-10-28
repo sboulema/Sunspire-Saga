@@ -63,6 +63,7 @@
             <ol>
                 <li>One file per slot, named exactly <code>&lt;slot&gt;.png</code> (<code>.gif</code> and <code>.webp</code> work too; only the first frame of a GIF is used). Folder names inside a zip are ignored.</li>
                 <li>The image must have the <b>exact size</b> of the sheet it replaces, listed below, because the frame layout stays the same: the game cuts your sheet into the same frames at the same positions. Open the original sheet to see where each frame sits.</li>
+                <li>To use another size or layout, add a <code>&lt;slot&gt;.json</code> TexturePacker atlas (hash or array) next to the sheet, with <b>exactly the frame names</b> listed below; the game then cuts the sheet by your atlas. Plain images have no frames and take no atlas.</li>
                 <li>Partial packs are fine; every slot you leave out keeps the built-in art. A file that does not match a slot, or has the wrong size, is reported and skipped.</li>
                 <li>A loaded pack takes effect at once: the play page reloads and confirms how many sheets it replaced. <i>Built-in art</i> on the play page clears the pack.</li>
                 <li>Only art you made yourself or have the rights to use. No sprites ripped from commercial games, in packs you share or in this repository.</li>

@@ -33,7 +33,8 @@ Assembles `favicon.ico` (16, 32, 48 and 256 px frames) from the PNGs above. The 
 ## make-pack-zip.js
 
 Builds a sprite pack zip players can load with *Load sprite pack* (see `packs/README.md` and the
-pack guide page). Without arguments it exports every built-in sheet listed in
+pack guide page); a folder's `<slot>.json` atlases go in with its sheets. Without arguments it
+exports every built-in sheet listed in
 `static/pack-slots.json` to `sunspire-engine-pack.zip` at the repository root: a complete
 reference pack and a template to redraw from. Its sheets are the built-in art itself, so loading
 it unchanged alters nothing on screen; redraw a sheet to see the pack take effect. With a folder (and optionally an output name) it
@@ -64,10 +65,12 @@ node tools/make-upstream-pack.js
 node tools/make-pack-zip.js pack-upstream sunspire-upstream-pack.zip
 ```
 
-The sprites are read straight out of git. Every sheet starts as a copy of the built-in one and
-each frame with an upstream counterpart is replaced by that frame shrunk to the Sunspire cell
-(upstream frames are 32x32 or 64x64 against Sunspire's 16x22 and smaller), nearest-neighbour by
-default or averaged with `--smooth`; frames without a counterpart keep the built-in art. The
+The sprites are read straight out of git. For every slot with an upstream counterpart the tool
+lays the upstream frames out in a new sheet at their own size, under Sunspire's frame names, and
+writes the `<slot>.json` atlas the pack loader accepts next to it; frames without a counterpart
+keep the built-in art. With `--fit` it keeps the built-in sheets instead and shrinks each
+upstream frame into its Sunspire cell (upstream frames are 32x32 or 64x64 against Sunspire's
+16x22 and smaller), nearest-neighbour or averaged with `--smooth`. The
 mapping table at the top of the script says which upstream sheet stands in for which Sunspire
 character, enemy, spirit and icon; upstream has fewer of each, so several share a source. The
 tilesets, the map objects (sign, well, gate, marker, spring, crate), the summon backdrops and

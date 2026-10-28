@@ -267,6 +267,10 @@ docs and tools.
 - Follow-up (noted in `packs/README.md`): frame-level slots, so the legacy per-sprite packs
   (`ari_down.png` ...) work again, by stitching frames into sheets in the browser the way the
   build script does; animated GIF frames would come with that.
+- Added 2026-10-28: a pack sheet may bring its own `<slot>.json` TexturePacker atlas (checked
+  against the slot's frame names) and then be any size; the loader swaps the atlas URL the way
+  it swaps the image URL. `tools/make-upstream-pack.js` uses this to carry the upstream
+  engine's sprites at native size (shrinking them into Sunspire's cells looked squashed).
 
 ### Phase 6 - the content (2026-10-27/28)
 

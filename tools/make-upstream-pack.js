@@ -1,17 +1,17 @@
 // Builds a sprite pack for the engine build out of the sprites of the upstream engine repository
 // (the `upstream` git remote, goldensun_html5), re-cut into Sunspire's own sheet layout.
 //
-//   node tools/make-upstream-pack.js [--ref upstream/master] [--out pack-upstream] [--smooth]
+//   node tools/make-upstream-pack.js [--ref upstream/master] [--out pack-upstream] [--fit] [--smooth]
 //
 // then zip the folder:  node tools/make-pack-zip.js pack-upstream sunspire-upstream-pack.zip
 //
-// The sprites are read straight out of git (nothing is checked out), every pack sheet starts as a
-// copy of the built-in sheet, and each frame that has a counterpart upstream is replaced by that
-// frame scaled down to fit the Sunspire cell (never up), feet on the cell's bottom row for
-// characters, centred for everything else. Frames without a counterpart keep the built-in art, so
-// every sheet stays complete. Upstream frames are 32x32 or 64x64 where Sunspire's are 16x22 or
-// smaller, so everything is shrunk; the default is nearest-neighbour (crisp, some rows dropped),
-// --smooth averages pixels instead (complete shapes, soft edges).
+// The sprites are read straight out of git (nothing is checked out). For every slot with an
+// upstream counterpart the tool lays the upstream frames out in a new sheet at their own size,
+// under Sunspire's frame names, and writes the matching `<slot>.json` atlas next to it, which the
+// pack loader accepts in place of the built-in layout. Frames without a counterpart keep the
+// built-in art, so every sheet stays complete. With --fit the built-in sheets and layout are kept
+// instead and each upstream frame is shrunk into its Sunspire cell (upstream frames are 32x32 or
+// 64x64 where Sunspire's are 16x22 or smaller), nearest-neighbour or averaged with --smooth.
 //
 // The upstream sprites are not free to redistribute: this pack is for your own browser. Keep the
 // output folder and the zip out of the repository (both are git-ignored).
@@ -29,6 +29,7 @@ const opt = (name, dflt) => {
 const REF = opt("--ref", "upstream/master");
 const OUT = path.resolve(opt("--out", "pack-upstream"));
 const SMOOTH = args.includes("--smooth");
+const FIT = args.includes("--fit");
 
 // ---------------------------------------------------------------- git + images
 
@@ -314,21 +315,53 @@ for (const slot of slots) {
     const cells = atlas ? Object.entries(atlas.frames) : [["*", {x: 0, y: 0, w: base.width, h: base.height}]];
     const counts = {};
     for (const [name] of cells) counts[parse(name).group] = (counts[parse(name).group] || 0) + 1;
-    let replaced = 0;
-    for (const [name, cell] of cells) {
-        const got = rule(name, counts[parse(name).group]);
-        if (!got) continue;
-        place(base, cell, fit(got.img, cell.w, cell.h), got.anchor);
-        replaced++;
+    if (FIT || !atlas) {
+        // the built-in layout: every upstream frame shrunk into its Sunspire cell
+        let replaced = 0;
+        for (const [name, cell] of cells) {
+            const got = rule(name, counts[parse(name).group]);
+            if (!got) continue;
+            place(base, cell, fit(got.img, cell.w, cell.h), got.anchor);
+            replaced++;
+        }
+        if (!replaced) {
+            report.push(`${slot.slot}: built-in (nothing matched)`);
+            continue;
+        }
+        fs.writeFileSync(path.join(OUT, slot.slot + ".png"), png.encode(base));
+        written++;
+        report.push(`${slot.slot}: ${replaced} of ${cells.length} frames from upstream, shrunk to the built-in cells`);
+        continue;
     }
+    // native size: a new sheet whose cells hold the upstream frames as they are, with its own atlas
+    const items = cells.map(([name, cell]) => {
+        const got = rule(name, counts[parse(name).group]);
+        return got ? {name, img: got.img, anchor: got.anchor, replaced: true} : {name, img: cut(base, cell), anchor: "center", replaced: false};
+    });
+    const replaced = items.filter(it => it.replaced).length;
     if (!replaced) {
         report.push(`${slot.slot}: built-in (nothing matched)`);
         continue;
     }
-    fs.writeFileSync(path.join(OUT, slot.slot + ".png"), png.encode(base));
+    const cw = Math.max(...items.map(it => it.img.width)),
+        ch = Math.max(...items.map(it => it.img.height));
+    const cols = Math.max(1, Math.min(items.length, Math.floor(1024 / (cw + 1))));
+    const rows = Math.ceil(items.length / cols);
+    const out = png.create(cols * (cw + 1) - 1, rows * (ch + 1) - 1);
+    const frames = {};
+    items.forEach((it, i) => {
+        const cell = {x: (i % cols) * (cw + 1), y: Math.floor(i / cols) * (ch + 1), w: cw, h: ch};
+        place(out, cell, it.img, it.anchor);
+        frames[it.name] = {frame: cell, rotated: false, trimmed: false, spriteSourceSize: {x: 0, y: 0, w: cw, h: ch}, sourceSize: {w: cw, h: ch}};
+    });
+    fs.writeFileSync(path.join(OUT, slot.slot + ".png"), png.encode(out));
+    fs.writeFileSync(
+        path.join(OUT, slot.slot + ".json"),
+        JSON.stringify({frames, meta: {app: "tools/make-upstream-pack.js", image: slot.slot + ".png", size: {w: out.width, h: out.height}, scale: "1"}})
+    );
     written++;
-    report.push(`${slot.slot}: ${replaced} of ${cells.length} frames from upstream`);
+    report.push(`${slot.slot}: ${replaced} of ${cells.length} frames from upstream at native size (${cw}x${ch} cells, own atlas)`);
 }
 fs.writeFileSync(path.join(OUT, "REPORT.txt"), report.join("\n") + "\n");
 console.log(report.join("\n"));
-console.log(`\n${written} sheets written to ${OUT} (${SMOOTH ? "smooth" : "nearest"}); zip them with: node tools/make-pack-zip.js ${path.relative(root, OUT)} sunspire-upstream-pack.zip`);
+console.log(`\n${written} sheets written to ${OUT} (${FIT ? (SMOOTH ? "shrunk, smooth" : "shrunk, nearest") : "native size with atlases"}); zip them with: node tools/make-pack-zip.js ${path.relative(root, OUT)} sunspire-upstream-pack.zip`);

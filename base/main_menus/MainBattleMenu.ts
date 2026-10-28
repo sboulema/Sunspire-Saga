@@ -182,7 +182,10 @@ export class MainBattleMenu {
                 this.on_ability_choose(this.psynergy_window, false, "psynergy");
                 break;
             case "djinni":
-                this.on_ability_choose(this.djinn_window, true, "djinni", this.psynergy_window);
+                // a character without spirits has nothing to list; the window would crash on an empty list
+                if (this.data.info.party_data.members[this.current_char_index].djinni.length) {
+                    this.on_ability_choose(this.djinn_window, true, "djinni", this.psynergy_window);
+                }
                 break;
             case "summon":
                 this.on_ability_choose(this.summon_window, true, "summon", this.djinni_already_used);
