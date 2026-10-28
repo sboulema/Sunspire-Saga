@@ -25,7 +25,11 @@ animations, menus, Psynergy usage and djinn (spirit) usage.
 ### Phase 0 - decisions
 
 - Fork lives on this branch of the Sunspire-Saga repo, not in a new repo. `main` keeps `game.js`
-  as the live game; it becomes the `legacy` branch when this branch replaces it.
+  as the live game; it becomes the `legacy` branch when this branch replaces it. **Done on
+  2026-10-28:** the old `main` was saved as `legacy`, and `main` is a merge commit whose tree is
+  this branch's (both histories kept, nothing of the single-script game left in the tree).
+  GitHub Pages still serves the legacy site until the Build workflow is run by hand with its
+  deploy option; the Publish workflow builds the Docker image and the site zip from `main`.
 - Repo name and GitHub account: unchanged (`sboulema/Sunspire-Saga`).
 
 ### Phase 1 - fork and run (done 2026-10-27)

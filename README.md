@@ -12,8 +12,8 @@ asset comes from. The engine code keeps its MIT licence and copyright notice (`L
 Thera to the Sunspire, with every map, character, art, spirit, summon, enemy, chest, shop and
 boss of the single-script game, a push puzzle and a field art; it saves in the browser, installs
 as an app and plays offline. The migration plan is complete; the engine stays on Phaser CE 2.19
-(Phase 8, the decision and what is still owed, is in `MIGRATION.md`). The single-script game
-(`game.js`) lives on the `main` branch until the switch.
+(Phase 8, the decision and what is still owed, is in `MIGRATION.md`). This is `main` since
+2026-10-28; the single-script game (`game.js`) and its site live on the `legacy` branch.
 
 ## Running it
 
