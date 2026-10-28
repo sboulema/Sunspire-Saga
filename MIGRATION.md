@@ -271,6 +271,14 @@ docs and tools.
   against the slot's frame names) and then be any size; the loader swaps the atlas URL the way
   it swaps the image URL. `tools/make-upstream-pack.js` uses this to carry the upstream
   engine's sprites at native size (shrinking them into Sunspire's cells looked squashed).
+- Added 2026-10-28: trees, fences, houses, wells and springs are sprites again (as in the
+  single-script game), not tiles: body-less NPCs (`ignore_physics`, no interaction, no shadow)
+  placed by the generator on every `t` / `F` grid cell, on each house's bottom-middle cell and on
+  the wells, over plain ground; the grid still blocks. They are anchored at the bottom with the
+  new npc_db `sprite_y_offset` (7 px below the tile centre, applied in `NPC.init_npc` unless a
+  snapshot or custom position gives pixels), so a pack can swap in a sheet of any height and it
+  still stands on its tile and sorts with the hero. Thera carries 472 of them; the map update
+  stayed under a few ms in the hidden pane. The hero walks at 70 (dash 100), up from 60 / 85.
 
 ### Phase 6 - the content (2026-10-27/28)
 

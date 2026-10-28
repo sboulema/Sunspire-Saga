@@ -2280,12 +2280,74 @@
         "group": "spritesheets/objects"
     },
     {
+        "slot": "fence_h",
+        "file": "assets/images/spritesheets/objects/fence_h.png",
+        "width": 17,
+        "height": 15,
+        "frames": [
+            "idle/down/00"
+        ],
+        "group": "spritesheets/objects"
+    },
+    {
+        "slot": "fence_post",
+        "file": "assets/images/spritesheets/objects/fence_post.png",
+        "width": 18,
+        "height": 15,
+        "frames": [
+            "idle/right/00",
+            "idle/left/00"
+        ],
+        "group": "spritesheets/objects"
+    },
+    {
+        "slot": "fence_v",
+        "file": "assets/images/spritesheets/objects/fence_v.png",
+        "width": 9,
+        "height": 16,
+        "frames": [
+            "idle/down/00"
+        ],
+        "group": "spritesheets/objects"
+    },
+    {
+        "slot": "fence_v2",
+        "file": "assets/images/spritesheets/objects/fence_v2.png",
+        "width": 9,
+        "height": 15,
+        "frames": [
+            "idle/down/00"
+        ],
+        "group": "spritesheets/objects"
+    },
+    {
         "slot": "gate",
         "file": "assets/images/spritesheets/objects/gate.png",
         "width": 17,
         "height": 16,
         "frames": [
             "idle/down/00"
+        ],
+        "group": "spritesheets/objects"
+    },
+    {
+        "slot": "houses",
+        "file": "assets/images/spritesheets/objects/houses.png",
+        "width": 490,
+        "height": 97,
+        "frames": [
+            "house/brindle_1/00",
+            "house/brindle_2/00",
+            "house/brindle_3/00",
+            "house/brindle_inn/00",
+            "house/inn/00",
+            "house/shop/00",
+            "house/thera_1/00",
+            "house/thera_2/00",
+            "house/thera_far_1/00",
+            "house/thera_far_2/00",
+            "house/thera_far_inn/00",
+            "house/thera_shop/00"
         ],
         "group": "spritesheets/objects"
     },
@@ -2325,6 +2387,26 @@
         "file": "assets/images/spritesheets/objects/spring.png",
         "width": 17,
         "height": 16,
+        "frames": [
+            "idle/down/00"
+        ],
+        "group": "spritesheets/objects"
+    },
+    {
+        "slot": "tree",
+        "file": "assets/images/spritesheets/objects/tree.png",
+        "width": 16,
+        "height": 18,
+        "frames": [
+            "idle/down/00"
+        ],
+        "group": "spritesheets/objects"
+    },
+    {
+        "slot": "tree_trail",
+        "file": "assets/images/spritesheets/objects/tree_trail.png",
+        "width": 16,
+        "height": 18,
         "frames": [
             "idle/down/00"
         ],

@@ -6,6 +6,7 @@ Camelot or any other commercial game; if you add an asset, add a line.
 | Path | What | Origin | Licence |
 |---|---|---|---|
 | `assets/sunspire/sprites/*.png` | 255 sprites: the four adepts and their battle poses, villagers, spirits, enemies, summons, effects, map objects, battle backgrounds, icons, title | Sunspire Saga's own pixel art, exported from the legacy `game.js` with `tools/export-pack.js` | MIT (this repo) |
+| `assets/sunspire/sprites/fence_h.png`, `fence_post.png`, `fence_v.png`, `fence_v2.png` | the fence run tile and three posts | drawn by the project's author for the engine build (2026-10-28), converted from GIF with `tools/gif2png.js` | MIT (this repo) |
 | `assets/sunspire/maps/<id>_tiles.png`, `<id>_grid.json` | the five maps' tilesets and tile grids (Thera Fields, Brindle, Brindle Mine, Sunspire Trail, the Sunspire), rendered from the legacy map builders | Sunspire Saga | MIT |
 | `assets/sunspire/glyphs.json` | the 5x5 bitmap font as bit strings | Sunspire Saga | MIT |
 | `assets/sunspire/content.json` | the game's data and story, ported from the legacy `game.js` | Sunspire Saga | MIT |

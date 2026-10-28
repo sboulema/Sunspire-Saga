@@ -6,8 +6,8 @@
         "collision_body_bevel": 3,
         "interaction_pattern": "cross",
         "body_radius": 7,
-        "walk_speed": 60,
-        "dash_speed": 85,
+        "walk_speed": 70,
+        "dash_speed": 100,
         "climb_speed": 50,
         "voice_key": "hero_1",
         "actions": {
@@ -190,8 +190,8 @@
         "collision_body_bevel": 3,
         "interaction_pattern": "cross",
         "body_radius": 7,
-        "walk_speed": 60,
-        "dash_speed": 85,
+        "walk_speed": 70,
+        "dash_speed": 100,
         "climb_speed": 50,
         "voice_key": "adult_female_1",
         "actions": {
@@ -374,8 +374,8 @@
         "collision_body_bevel": 3,
         "interaction_pattern": "cross",
         "body_radius": 7,
-        "walk_speed": 60,
-        "dash_speed": 85,
+        "walk_speed": 70,
+        "dash_speed": 100,
         "climb_speed": 50,
         "voice_key": "adult_male_1",
         "actions": {
@@ -558,8 +558,8 @@
         "collision_body_bevel": 3,
         "interaction_pattern": "cross",
         "body_radius": 7,
-        "walk_speed": 60,
-        "dash_speed": 85,
+        "walk_speed": 70,
+        "dash_speed": 100,
         "climb_speed": 50,
         "voice_key": "adult_female_1",
         "actions": {
@@ -1472,6 +1472,325 @@
                 "spritesheet": {
                     "image": "assets/images/spritesheets/objects/wyrm_s.png",
                     "json": "assets/images/spritesheets/objects/wyrm_s.json"
+                }
+            }
+        }
+    },
+    {
+        "key_name": "tree",
+        "anchor_x": 0.5,
+        "anchor_y": 1,
+        "sprite_y_offset": 7,
+        "initial_action": "idle",
+        "no_shadow": true,
+        "ignore_physics": true,
+        "interaction_pattern": "no_interaction",
+        "actions": {
+            "idle": {
+                "frame_rate": [
+                    1
+                ],
+                "animations": [
+                    "down"
+                ],
+                "frames_count": [
+                    1
+                ],
+                "initial_animation": "down",
+                "loop": [
+                    false
+                ],
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/objects/tree.png",
+                    "json": "assets/images/spritesheets/objects/tree.json"
+                }
+            }
+        }
+    },
+    {
+        "key_name": "tree_trail",
+        "anchor_x": 0.5,
+        "anchor_y": 1,
+        "sprite_y_offset": 7,
+        "initial_action": "idle",
+        "no_shadow": true,
+        "ignore_physics": true,
+        "interaction_pattern": "no_interaction",
+        "actions": {
+            "idle": {
+                "frame_rate": [
+                    1
+                ],
+                "animations": [
+                    "down"
+                ],
+                "frames_count": [
+                    1
+                ],
+                "initial_animation": "down",
+                "loop": [
+                    false
+                ],
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/objects/tree_trail.png",
+                    "json": "assets/images/spritesheets/objects/tree_trail.json"
+                }
+            }
+        }
+    },
+    {
+        "key_name": "fence_h",
+        "anchor_x": 0.5,
+        "anchor_y": 1,
+        "sprite_y_offset": 7,
+        "initial_action": "idle",
+        "no_shadow": true,
+        "ignore_physics": true,
+        "interaction_pattern": "no_interaction",
+        "actions": {
+            "idle": {
+                "frame_rate": [
+                    1
+                ],
+                "animations": [
+                    "down"
+                ],
+                "frames_count": [
+                    1
+                ],
+                "initial_animation": "down",
+                "loop": [
+                    false
+                ],
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/objects/fence_h.png",
+                    "json": "assets/images/spritesheets/objects/fence_h.json"
+                }
+            }
+        }
+    },
+    {
+        "key_name": "fence_v",
+        "anchor_x": 0.5,
+        "anchor_y": 1,
+        "sprite_y_offset": 7,
+        "initial_action": "idle",
+        "no_shadow": true,
+        "ignore_physics": true,
+        "interaction_pattern": "no_interaction",
+        "actions": {
+            "idle": {
+                "frame_rate": [
+                    1
+                ],
+                "animations": [
+                    "down"
+                ],
+                "frames_count": [
+                    1
+                ],
+                "initial_animation": "down",
+                "loop": [
+                    false
+                ],
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/objects/fence_v.png",
+                    "json": "assets/images/spritesheets/objects/fence_v.json"
+                }
+            }
+        }
+    },
+    {
+        "key_name": "fence_v2",
+        "anchor_x": 0.5,
+        "anchor_y": 1,
+        "sprite_y_offset": 7,
+        "initial_action": "idle",
+        "no_shadow": true,
+        "ignore_physics": true,
+        "interaction_pattern": "no_interaction",
+        "actions": {
+            "idle": {
+                "frame_rate": [
+                    1
+                ],
+                "animations": [
+                    "down"
+                ],
+                "frames_count": [
+                    1
+                ],
+                "initial_animation": "down",
+                "loop": [
+                    false
+                ],
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/objects/fence_v2.png",
+                    "json": "assets/images/spritesheets/objects/fence_v2.json"
+                }
+            }
+        }
+    },
+    {
+        "key_name": "fence_post",
+        "anchor_x": 0.5,
+        "anchor_y": 1,
+        "sprite_y_offset": 7,
+        "initial_action": "idle",
+        "no_shadow": true,
+        "ignore_physics": true,
+        "interaction_pattern": "no_interaction",
+        "actions": {
+            "idle": {
+                "frame_rate": [
+                    1,
+                    1
+                ],
+                "animations": [
+                    "right",
+                    "left"
+                ],
+                "frames_count": [
+                    1,
+                    1
+                ],
+                "initial_animation": "right",
+                "loop": [
+                    false,
+                    false
+                ],
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/objects/fence_post.png",
+                    "json": "assets/images/spritesheets/objects/fence_post.json"
+                }
+            }
+        }
+    },
+    {
+        "key_name": "houses",
+        "anchor_x": 0.5,
+        "anchor_y": 1,
+        "sprite_y_offset": 7,
+        "initial_action": "house",
+        "no_shadow": true,
+        "ignore_physics": true,
+        "interaction_pattern": "no_interaction",
+        "actions": {
+            "house": {
+                "frame_rate": [
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1
+                ],
+                "animations": [
+                    "thera_1",
+                    "thera_2",
+                    "thera_shop",
+                    "thera_far_1",
+                    "thera_far_2",
+                    "thera_far_inn",
+                    "brindle_1",
+                    "brindle_2",
+                    "brindle_3",
+                    "brindle_inn"
+                ],
+                "frames_count": [
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1
+                ],
+                "initial_animation": "thera_1",
+                "loop": [
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                ],
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/objects/houses.png",
+                    "json": "assets/images/spritesheets/objects/houses.json"
+                }
+            }
+        }
+    },
+    {
+        "key_name": "well",
+        "anchor_x": 0.5,
+        "anchor_y": 0.5,
+        "sprite_y_offset": 0,
+        "initial_action": "idle",
+        "no_shadow": true,
+        "ignore_physics": true,
+        "interaction_pattern": "no_interaction",
+        "actions": {
+            "idle": {
+                "frame_rate": [
+                    1
+                ],
+                "animations": [
+                    "down"
+                ],
+                "frames_count": [
+                    1
+                ],
+                "initial_animation": "down",
+                "loop": [
+                    false
+                ],
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/objects/well.png",
+                    "json": "assets/images/spritesheets/objects/well.json"
+                }
+            }
+        }
+    },
+    {
+        "key_name": "spring",
+        "anchor_x": 0.5,
+        "anchor_y": 0.5,
+        "sprite_y_offset": 0,
+        "initial_action": "idle",
+        "no_shadow": true,
+        "ignore_physics": true,
+        "interaction_pattern": "no_interaction",
+        "actions": {
+            "idle": {
+                "frame_rate": [
+                    1
+                ],
+                "animations": [
+                    "down"
+                ],
+                "frames_count": [
+                    1
+                ],
+                "initial_animation": "down",
+                "loop": [
+                    false
+                ],
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/objects/spring.png",
+                    "json": "assets/images/spritesheets/objects/spring.json"
                 }
             }
         }

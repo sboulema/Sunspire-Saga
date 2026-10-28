@@ -140,65 +140,6 @@ function resample(img, ow, oh, smooth) {
     return out;
 }
 
-/** The 16x16 tile `id` of a tileset image. */
-function tileAt(img, id) {
-    const cols = img.width / 16;
-    return cut(img, {x: (id % cols) * 16, y: Math.floor(id / cols) * 16, w: 16, h: 16});
-}
-
-/** Which edges of a Sunspire fence tile its brown rails reach: the piece's connections. */
-function fenceLinks(tile) {
-    const brown = i => tile.data[i] > 90 && tile.data[i] < 230 && tile.data[i] > tile.data[i + 1] + 15 && tile.data[i + 1] > tile.data[i + 2];
-    const at = (x, y) => brown((y * 16 + x) * 4);
-    const range = [...Array(16).keys()];
-    return {left: range.some(y => at(0, y)), right: range.some(y => at(15, y)), up: range.some(x => at(x, 0)), down: range.some(x => at(x, 15))};
-}
-
-/**
- * An outdoor tileset: the built-in tiles, with every tree tile and fence tile of the map's grid
- * redrawn with an upstream tree (shrunk, smooth) and upstream fence pieces on the map's own grass.
- * Tile ids come from the map's grid source, where `t` is a tree, `F` a fence and `.` plain grass.
- */
-function tileset(mapId) {
-    return () => {
-        const madra = sheet("tilesets/madra");
-        if (!madra) return null;
-        const grid = JSON.parse(fs.readFileSync(path.join(root, "assets", "sunspire", "maps", `${mapId}_grid.json`), "utf8"));
-        const out = png.decode(fs.readFileSync(path.join(root, "assets", "images", "tilesets", `${mapId}.png`)));
-        const ids = {};
-        grid.chars.forEach((row, y) =>
-            [...row].forEach((c, x) => {
-                const id = grid.grid[y][x];
-                ids[c] = ids[c] || {};
-                ids[c][id] = (ids[c][id] || 0) + 1;
-            })
-        );
-        const most = c => +Object.entries(ids[c] || {}).sort((a, b) => b[1] - a[1])[0][0];
-        const grass = tileAt(out, most("."));
-        const piece = (x, y) => cut(madra.img, {x: x * 16, y: y * 16, w: 16, h: 16});
-        const fence = {left: piece(7, 24), mid: piece(7, 25), right: piece(8, 24), top: piece(9, 25), vmid: piece(9, 26), bottom: piece(9, 27)};
-        const tree = resample(cut(madra.img, {x: 80, y: 288, w: 48, h: 64}), 12, 16, true); // the orange tree
-        const draw = (id, img, anchor) => place(out, {x: (id % (out.width / 16)) * 16, y: Math.floor(id / (out.width / 16)) * 16, w: 16, h: 16}, over(grass, img, anchor), "center");
-        for (const id of Object.keys(ids.t || {})) draw(+id, tree, "bottom");
-        for (const id of Object.keys(ids.F || {})) {
-            const l = fenceLinks(tileAt(out, +id));
-            const p = l.left && l.right ? fence.mid : l.right ? fence.left : l.left ? fence.right : l.up && l.down ? fence.vmid : l.up ? fence.bottom : l.down ? fence.top : fence.vmid;
-            draw(+id, p, "center");
-        }
-        return {img: out, anchor: "center"};
-    };
-}
-
-/** img drawn over a copy of base, feet on the bottom row or centred. */
-function over(base, img, anchor) {
-    const out = png.create(base.width, base.height);
-    png.blit(out, base, 0, 0);
-    const ox = Math.floor((base.width - img.width) / 2);
-    const oy = anchor === "bottom" ? base.height - img.height : Math.floor((base.height - img.height) / 2);
-    png.blit(out, img, ox, oy);
-    return out;
-}
-
 /** Clears a cell of the sheet and draws img into it, feet on the bottom row or centred. */
 function place(dst, cell, img, anchor) {
     png.fill(dst, cell.x, cell.y, cell.w, cell.h, [0, 0, 0, 0]);
@@ -285,6 +226,16 @@ function image(file, anchor = "center") {
     };
 }
 
+/** A fixed cut of the upstream town tileset, standing on its bottom row. */
+function madraCut(x, y, w, h, ow, oh) {
+    return () => {
+        const s = sheet("tilesets/madra");
+        if (!s) return null;
+        const img = cut(s.img, {x, y, w, h});
+        return {img: ow ? resample(img, ow, oh, true) : img, anchor: "bottom"};
+    };
+}
+
 const MC = "spritesheets/main_chars/",
     NPC = "spritesheets/npc/",
     BT = "spritesheets/battle/";
@@ -357,9 +308,14 @@ Object.assign(RULES, {
     keyboard_arrow: image("debug/keyboard_arrow"),
     mind_read_arrow: image("psynergies/mind_read_arrow"),
     water_drop: image("misc/water_drop"),
-    fields: tileset("fields"),
-    brindle: tileset("brindle"),
-    trail: tileset("trail"),
+    // decorations are sprites with their own sheets: the upstream trees and fence pieces at native size
+    // the upstream trees are 48x64; at two tiles wide they hide less of a map whose trees stand on single tiles
+    tree: madraCut(80, 288, 48, 64, 32, 43),
+    tree_trail: madraCut(32, 288, 48, 64, 32, 43),
+    fence_h: madraCut(112, 400, 16, 16),
+    fence_v: madraCut(144, 416, 16, 16),
+    fence_v2: madraCut(144, 432, 16, 16),
+    fence_post: name => madraCut(name.startsWith('idle/left') ? 112 : 128, 384, 16, 16)(),
 });
 
 // ---------------------------------------------------------------- build

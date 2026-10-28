@@ -874,6 +874,11 @@ export class NPC extends ControllableChar {
             custom_pos?.x ?? snapshot_info?.position.x_px,
             custom_pos?.y ?? snapshot_info?.position.y_px
         );
+        if (npc_db.sprite_y_offset && custom_pos?.y === undefined && snapshot_info?.position.y_px === undefined) {
+            // decorations anchored at their bottom row stand this many px below the tile centre,
+            // whatever the height of the sheet that draws them
+            this.sprite.y += npc_db.sprite_y_offset;
+        }
         this._initial_x = this.sprite.x;
         this._initial_y = this.sprite.y;
         this._angle_direction = directions_angles[this.current_direction];

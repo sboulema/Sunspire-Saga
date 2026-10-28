@@ -225,7 +225,7 @@ const fieldActions = (id, walks) => {
 const BATTLE_CHAR_ANIMS = ["attack_back", "attack_front", "idle_back", "idle_front", "cast_back", "cast_front", "cast_init_back", "cast_init_front", "damage_back", "damage_front", "downed_back", "downed_front", "attack_init_back", "attack_init_front"];
 const npcs = [];
 for (const [id, ch] of Object.entries(C.chars)) {
-    npcs.push({key_name: id, anchor_y: 0.8, initial_action: "idle", collision_body_bevel: 3, interaction_pattern: "cross", body_radius: 7.0, walk_speed: 60, dash_speed: 85, climb_speed: 50, voice_key: ch.voice, actions: {
+    npcs.push({key_name: id, anchor_y: 0.8, initial_action: "idle", collision_body_bevel: 3, interaction_pattern: "cross", body_radius: 7.0, walk_speed: 70, dash_speed: 100, climb_speed: 50, voice_key: ch.voice, actions: {
         ...fieldActions(id, true),
         dash: {frame_rate: 10, animations: DIRS8, frames_count: 2, initial_animation: "down", loop: true, spritesheet: sheet("field", `${id}_field`)},
         yes: {frame_rate: 6, animations: DIRS8, frames_count: 3, initial_animation: "down", loop: false, spritesheet: sheet("field", `${id}_field`)},
@@ -247,6 +247,16 @@ const objectAction = (id, animations, frames_count, frame_rate, loop) => ({frame
 npcs.push(objectNpc("chest", {chest: objectAction("chest", ["closed", "open", "opening", "shining", "empty"], [1, 1, 2, 2, 1], [1, 1, 6, 10, 1], [false, false, false, true, false])}, {anchor_y: 0.6}));
 for (const id of ["marker", "sign", "boulder", "gate"]) npcs.push(objectNpc(id, {idle: objectAction(id, ["down"], 1, 1, false)}, {anchor_y: 0.6}));
 for (const id of ["ogre_s", "wyrm_s"]) npcs.push(objectNpc(id, {idle: objectAction(id, ["down"], 2, 2, true)}, {anchor_y: 0.7, no_shadow: false}));
+// decorations: trees, fences, houses and wells are body-less sprites over plain ground (the grid
+// still blocks), so a sprite pack can replace them at any size; they stand on their tile's bottom
+// row (anchored at the bottom, 7 px below the tile centre) and sort with the hero by that row
+const HOUSE_IDS = [...new Set(Object.values(C.maps).flatMap(M => (M.houses || []).map(h => h.id)))];
+const decor = (key, animations, over = {}, action = "idle") => ({key_name: key, anchor_x: 0.5, anchor_y: 1, sprite_y_offset: 7, initial_action: action, no_shadow: true, ignore_physics: true, interaction_pattern: "no_interaction",
+    actions: {[action]: objectAction(key, animations, animations.map(() => 1), animations.map(() => 1), animations.map(() => false))}, ...over});
+for (const id of ["tree", "tree_trail", "fence_h", "fence_v", "fence_v2"]) npcs.push(decor(id, ["down"]));
+npcs.push(decor("fence_post", ["right", "left"]));
+npcs.push(decor("houses", HOUSE_IDS, {}, "house")); // the sheet's frames are house/<id>/00
+for (const id of ["well", "spring"]) npcs.push(decor(id, ["down"], {anchor_y: 0.5, sprite_y_offset: 0})); // walked onto, so centred under the hero
 db("npc", npcs);
 
 // ---------------- maps ----------------
@@ -277,6 +287,26 @@ for (const id of C.map_order) {
         objects.push({id: objectId++, name: "", type: "", x: x * T, y: y * T, width: (x1 - x + 1) * T, height: T, rotation: 0, visible: true});
         x = x1;
     }
+
+    // decorations as sprites: every tree and fence tile, the houses and the wells (the tiles under
+    // them become plain ground below)
+    const dec = (key_name, x, y, over = {}) => addNpc({key_name, x, y, npc_type: "normal", movement_type: "idle", base_collision_layer: 0, ...over});
+    const hash = (x, y, s) => ((x * 73856093) ^ (y * 19349663) ^ (s * 83492791)) >>> 0;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+        const c = at(x, y);
+        if (c === "t") dec(M.kind === "trail" ? "tree_trail" : "tree", x, y);
+        else if (c === "F") {
+            // a run tile between two fence tiles, a post at the end of a run (its mirror on the
+            // left end) or a vertical piece, the second variant now and then
+            const L = at(x - 1, y) === "F", R = at(x + 1, y) === "F";
+            const hc = +L + +R;
+            if (hc === 2) dec("fence_h", x, y);
+            else if (hc === 1) dec("fence_post", x, y, {animation: R ? "left" : "right"});
+            else dec(hash(x, y, 19) % 3 === 0 ? "fence_v2" : "fence_v", x, y);
+        }
+    }
+    for (const house of M.houses || []) dec("houses", house.x + 1, house.y + 2, {animation: house.id});
+    for (const well of M.wells || []) dec(at(well.x, well.y) === "E" ? "spring" : "well", well.x, well.y);
 
     // exits
     for (const exit of M.exits) {
@@ -399,8 +429,15 @@ for (const id of C.map_order) {
         propertytypes[k] = "string";
     }
     const tileset = png.decode(fs.readFileSync(path.join(SRC, "maps", `${id}_tiles.png`)));
+    // the ground layer: the tiles under the decorations drawn as sprites become the map's plain ground
+    const DECOR = new Set(["t", "F", "+", "E", "R", "Q", "W", "D", "s"]);
+    const groundCount = {};
+    chars.forEach((row, y) => [...row].forEach((c, x) => {
+        if (c === "." || c === "f") groundCount[grid.grid[y][x]] = (groundCount[grid.grid[y][x]] || 0) + 1;
+    }));
+    const ground = +Object.entries(groundCount).sort((a, b) => b[1] - a[1])[0][0];
     const data = [];
-    for (const row of grid.grid) for (const t of row) data.push(t + 1);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) data.push((DECOR.has(at(x, y)) ? ground : grid.grid[y][x]) + 1);
     const layers = [
         {name: "ground", type: "tilelayer", x: 0, y: 0, width: w, height: h, opacity: 1, visible: true, data},
         {name: "0", type: "objectgroup", x: 0, y: 0, opacity: 1, visible: true, draworder: "topdown", objects},

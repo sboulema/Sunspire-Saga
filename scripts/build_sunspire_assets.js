@@ -199,6 +199,17 @@ function objectSheets() {
     single("boulder", "idle", cell(spr("boulder"), 16, 16));
     single("gate", "idle", (() => { const g = png.create(16, 16); png.fill(g, 1, 0, 14, 16, [120, 110, 90]); png.fill(g, 3, 2, 10, 12, [60, 50, 40]); png.fill(g, 7, 7, 2, 3, COL.gold); return g; })());
     single("marker", "idle", png.create(16, 16));
+    // decorations drawn as sprites over plain ground, so a pack can replace them at any size:
+    // trees, the fence pieces (the post faces right; the left end is its mirror) and the houses,
+    // one frame per house_*.png
+    single("tree", "idle", spr("tree"));
+    single("tree_trail", "idle", spr("tree_trail"));
+    single("fence_h", "idle", spr("fence_h"));
+    single("fence_v", "idle", spr("fence_v"));
+    single("fence_v2", "idle", spr("fence_v2"));
+    writeAtlas(dir, "fence_post", [F("idle/right/00", spr("fence_post")), F("idle/left/00", png.flipX(spr("fence_post")))]);
+    const houseIds = fs.readdirSync(path.join(ROOT, "assets/sunspire/sprites")).filter(f => /^house_.+\.png$/.test(f)).map(f => f.slice(6, -4)).sort();
+    writeAtlas(dir, "houses", houseIds.map(id => F(`house/${id}/00`, spr("house_" + id))));
     // the two bosses on the map, bobbing
     for (const id of ["ogre_s", "wyrm_s"]) {
         const img = spr(id);
