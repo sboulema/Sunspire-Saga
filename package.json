@@ -1,0 +1,60 @@
+{
+  "name": "sunspire-saga",
+  "version": "0.0.1",
+  "license": "MIT",
+  "author": "Samir Boulema",
+  "contributors": [
+    "jjppof (goldensun_html5 engine)"
+  ],
+  "description": "Sunspire Saga: an original GBA-style JRPG in the browser, on a fork of the goldensun_html5 engine (Phaser CE).",
+  "keywords": [
+    "jrpg",
+    "phaser",
+    "pixel-art"
+  ],
+  "homepage": "https://github.com/sboulema/Sunspire-Saga#readme",
+  "bugs": "https://github.com/sboulema/Sunspire-Saga/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sboulema/Sunspire-Saga.git"
+  },
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "start": "webpack serve --config webpack.config.dev.js",
+    "build": "webpack --config webpack.config.dev.js",
+    "build_prod": "webpack --config webpack.config.prod.js",
+    "build:assets": "node scripts/build_sunspire_assets.js",
+    "build:content": "node scripts/build_sunspire_assets.js && node scripts/build_sunspire_content.js && node scripts/build_walkthrough.js",
+    "site": "npm run build_prod && node scripts/build_site.js",
+    "format-check": "prettier --check \"base/**/*.ts\"",
+    "format": "prettier --write \"base/**/*.ts\"",
+    "docs": "node scripts/generate_docs.js",
+    "prepare": "husky",
+    "preview": "node scripts/serve_site.js"
+  },
+  "engines": {
+    "node": ">=20",
+    "npm": ">=10"
+  },
+  "devDependencies": {
+    "@types/lodash": "~4.17.27",
+    "husky": "~9.1.7",
+    "prettier": "~3.9.10",
+    "ts-loader": "~9.6.2",
+    "tslib": "~2.8.1",
+    "typedoc": "~0.28.20",
+    "typescript": "~5.9.3",
+    "webpack": "~5.112.2",
+    "webpack-cli": "~7.2.3",
+    "webpack-dev-server": "~6.1.0",
+    "webpack-merge": "~6.0.1"
+  },
+  "dependencies": {
+    "@turf/turf": "~7.4.0",
+    "core-js": "~3.51.0",
+    "lodash": "^4.17.21",
+    "mathjs": "~15.2.0",
+    "rxjs": "~7.8.2"
+  }
+}

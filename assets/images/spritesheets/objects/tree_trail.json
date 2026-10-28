@@ -1,0 +1,75 @@
+{
+    "frames": {
+        "idle/down/00": {
+            "frame": {
+                "x": 0,
+                "y": 0,
+                "w": 15,
+                "h": 18
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 15,
+                "h": 18
+            },
+            "sourceSize": {
+                "w": 15,
+                "h": 18
+            }
+        },
+        "idle/alt1/00": {
+            "frame": {
+                "x": 16,
+                "y": 0,
+                "w": 15,
+                "h": 18
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 15,
+                "h": 18
+            },
+            "sourceSize": {
+                "w": 15,
+                "h": 18
+            }
+        },
+        "idle/alt2/00": {
+            "frame": {
+                "x": 32,
+                "y": 0,
+                "w": 15,
+                "h": 18
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 15,
+                "h": 18
+            },
+            "sourceSize": {
+                "w": 15,
+                "h": 18
+            }
+        }
+    },
+    "meta": {
+        "app": "scripts/build_sunspire_assets.js",
+        "version": "1.0",
+        "image": "tree_trail.png",
+        "format": "RGBA8888",
+        "size": {
+            "w": 48,
+            "h": 18
+        },
+        "scale": "1"
+    }
+}

@@ -1,0 +1,21 @@
+{
+	"name": "Sunspire Saga",
+	"short_name": "Sunspire",
+	"description": "An original GBA-style pixel-art RPG: gather eight elemental spirits and bring the dawn back to the Sunspire.",
+	"id": "sunspire-saga",
+	"start_url": "/play.html?app=1",
+	"scope": "/",
+	"display": "fullscreen",
+	"display_override": ["fullscreen", "standalone"],
+	"orientation": "any",
+	"background_color": "#100d1d",
+	"theme_color": "#100d1d",
+	"lang": "en-US",
+	"dir": "ltr",
+	"categories": ["games"],
+	"icons": [
+		{"src": "/static/icons/sunspire-mark-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+		{"src": "/static/icons/sunspire-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+	],
+	"prefer_related_applications": false
+}

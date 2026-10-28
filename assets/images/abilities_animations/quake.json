@@ -1,0 +1,34 @@
+{
+    "frames": {
+        "quake/000": {
+            "frame": {
+                "x": 1,
+                "y": 1,
+                "w": 40,
+                "h": 96
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 40,
+                "h": 96
+            },
+            "sourceSize": {
+                "w": 40,
+                "h": 96
+            }
+        }
+    },
+    "meta": {
+        "app": "scripts/build_sunspire_assets.js",
+        "image": "quake.png",
+        "format": "RGBA8888",
+        "size": {
+            "w": 42,
+            "h": 98
+        },
+        "scale": "1"
+    }
+}

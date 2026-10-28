@@ -1,0 +1,170 @@
+{
+    "hero_key_name": "ari",
+    "initial_action": "idle",
+    "initial_direction": "down",
+    "map_key_name": "fields",
+    "initial_scale_factor": 2,
+    "x_tile_position": 18,
+    "y_tile_position": 22,
+    "collision_layer": 0,
+    "coins": 30,
+    "max_chars_level": 30,
+    "skip_start_menu": false,
+    "production_mode": false,
+    "ignore_system_scaling": false,
+    "start_battle_tester_on_init": false,
+    "verbose_game_event_fire": false,
+    "artifacts_global_list": [],
+    "last_visited_town_with_sanctum": {
+        "map_key": "fields",
+        "collision_layer": 0,
+        "tile_position": {
+            "x": 18,
+            "y": 22
+        }
+    },
+    "initial_shortcuts": [
+        {
+            "ability": "move",
+            "adept": "ari"
+        },
+        {
+            "ability": "move",
+            "adept": "ari"
+        },
+        {
+            "ability": "move",
+            "adept": "ari"
+        },
+        {
+            "ability": "move",
+            "adept": "ari"
+        }
+    ],
+    "battle_bgms": {
+        "default": "battle"
+    },
+    "default_inputs": {
+        "LEFT": "LEFT",
+        "RIGHT": "RIGHT",
+        "UP": "UP",
+        "DOWN": "DOWN",
+        "A": "Z",
+        "B": "X",
+        "L": "A",
+        "R": "S",
+        "SELECT": "BACKSPACE",
+        "START": "ENTER",
+        "PSY1": "Q",
+        "PSY2": "W",
+        "PSY3": "E",
+        "PSY4": "R",
+        "ZOOM1": "ONE",
+        "ZOOM2": "TWO",
+        "ZOOM3": "THREE",
+        "ZOOM4": "FOUR",
+        "MUTE": "M",
+        "VOL_UP": "SHIFT+PAGE_UP",
+        "VOL_DOWN": "SHIFT+PAGE_DOWN",
+        "DEBUG_PHYSICS": "D",
+        "DEBUG_GRID": "G",
+        "DEBUG_KEYS": "K",
+        "DEBUG_STATS": "T",
+        "DEBUG_FPS": "SHIFT+F",
+        "DEBUG_SLIDERS": "L",
+        "DEBUG_CAM_MINUS": "PAGE_DOWN",
+        "DEBUG_CAM_PLUS": "PAGE_UP",
+        "DEBUG_BATTLE_ANIMATION": "Y",
+        "DEBUG_BATTLE_ANIM_FIRE": "O",
+        "DEBUG_BATTLE_ANIM_FIRE_ALL": "P"
+    },
+    "azerty_inputs": {
+        "LEFT": "LEFT",
+        "RIGHT": "RIGHT",
+        "UP": "UP",
+        "DOWN": "DOWN",
+        "A": "W",
+        "B": "X",
+        "L": "Q",
+        "R": "S",
+        "SELECT": "BACKSPACE",
+        "START": "ENTER",
+        "PSY1": "A",
+        "PSY2": "Z",
+        "PSY3": "E",
+        "PSY4": "R",
+        "ZOOM1": "ONE",
+        "ZOOM2": "TWO",
+        "ZOOM3": "THREE",
+        "ZOOM4": "FOUR",
+        "MUTE": "M",
+        "VOL_UP": "SHIFT+PAGE_UP",
+        "VOL_DOWN": "SHIFT+PAGE_DOWN",
+        "DEBUG_PHYSICS": "D",
+        "DEBUG_GRID": "G",
+        "DEBUG_KEYS": "K",
+        "DEBUG_STATS": "T",
+        "DEBUG_FPS": "SHIFT+F",
+        "DEBUG_SLIDERS": "L",
+        "DEBUG_CAM_MINUS": "ALT+PAGE_DOWN",
+        "DEBUG_CAM_PLUS": "ALT+PAGE_UP",
+        "DEBUG_BATTLE_ANIMATION": "Y",
+        "DEBUG_BATTLE_ANIM_FIRE": "O",
+        "DEBUG_BATTLE_ANIM_FIRE_ALL": "P"
+    },
+    "gamepad_rinputs": {
+        "XBOX360_DPAD_LEFT": "LEFT",
+        "XBOX360_DPAD_RIGHT": "RIGHT",
+        "XBOX360_DPAD_UP": "UP",
+        "XBOX360_DPAD_DOWN": "DOWN",
+        "XBOX360_A": "A",
+        "XBOX360_B": "B",
+        "XBOX360_LEFT_BUMPER": "L",
+        "XBOX360_RIGHT_BUMPER": "R",
+        "XBOX360_BACK": "SELECT",
+        "XBOX360_START": "START",
+        "XBOX360_X": "X",
+        "XBOX360_Y": "Y",
+        "XBOX360_LEFT_TRIGGER": "LT",
+        "XBOX360_RIGHT_TRIGGER": "RT",
+        "XBOX360_STICK_LEFT_BUTTON": "LS",
+        "XBOX360_STICK_RIGHT_BUTTON": "RS"
+    },
+    "gamepad_rsticks": {
+        "XBOX360_STICK_LEFT_X": [
+            "LLEFT",
+            "LRIGHT"
+        ],
+        "XBOX360_STICK_LEFT_Y": [
+            "LUP",
+            "LDOWN"
+        ],
+        "XBOX360_STICK_RIGHT_X": [
+            "RLEFT",
+            "RRIGHT"
+        ],
+        "XBOX360_STICK_RIGHT_Y": [
+            "RUP",
+            "RDOWN"
+        ]
+    },
+    "gamepad_inputs": {
+        "STICK_DASHING": "LS",
+        "PSY1": "LT+A",
+        "PSY2": "LT+B",
+        "PSY3": "LT+X",
+        "PSY4": "LT+Y",
+        "MUTE": "LT+RT+RS",
+        "VOL_UP": "LT+RT+UP",
+        "VOL_DOWN": "LT+RT+DOWN",
+        "DEBUG_PHYSICS": "LT+RS",
+        "DEBUG_GRID": "RT+RS"
+    },
+    "gamepad": {
+        "use_trigger_as_button": false,
+        "left_stick_as_dpad": true,
+        "right_stick_as_dpad": true,
+        "trigger_dead_zone": 0.6,
+        "stick_dead_zone": 0.5
+    }
+}

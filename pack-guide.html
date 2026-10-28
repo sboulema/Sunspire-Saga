@@ -1,377 +1,85 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Sunspire Saga Pack Guide</title>
-  <meta name="description" content="How to make a sprite pack for Sunspire Saga: every slot name, sizes, variants, fonts and backgrounds, plus the complete generated slot list.">
-  <meta name="theme-color" content="#100d1d">
-  <link rel="icon" href="assets/favicon.ico" sizes="any">
-  <link rel="apple-touch-icon" href="assets/sunspire-mark-512.png">
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap">
-  <script>try{var t=localStorage.getItem('sunspire_theme'),h=localStorage.getItem('sunspire_handheld'),r=document.documentElement;if(t)r.dataset.theme=t;r.dataset.themeEff=t||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');if(h&&/^#[0-9a-f]{6}$/i.test(h))r.style.setProperty('--hh',h)}catch(e){}</script>
-  <link rel="stylesheet" href="assets/site.css">
-  <style>
-    .guide{display:grid; grid-template-columns:230px minmax(0, 1fr); gap:48px; padding-top:40px; align-items:start;}
-    .toc{position:sticky; top:84px; font-size:14px;}
-    .toc b{display:block; font-family:var(--display); font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); margin-bottom:8px;}
-    .toc a{display:block; color:var(--ink-2); text-decoration:none; padding:5px 10px; border-left:2px solid var(--line); margin-left:1px;}
-    .toc a:hover{color:var(--ink);}
-    .toc a.on{color:var(--accent); border-left-color:var(--accent);}
-    .intro h1{font-size:clamp(32px, 4.5vw, 44px);}
-    .intro p{font-size:17px; color:var(--ink-2); max-width:70ch;}
-    .load-box{display:flex; flex-wrap:wrap; gap:12px 16px; align-items:center; background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin:22px 0 10px;}
-    .load-box .btn{cursor:pointer;}
-    .load-box .hint{font-size:13px; color:var(--ink-2); flex:1 1 30ch;}
-    #packStatus{font-size:13.5px; line-height:1.7; margin:4px 0 0; color:var(--ink-2);}
-    #packStatus:empty{display:none;}
-    #packStatus .ok{color:var(--ok);} #packStatus .warn{color:var(--warn);} #packStatus .err{color:var(--err);}
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>Sunspire Saga pack guide</title>
+        <meta name="description" content="How to make a sprite pack for Sunspire Saga: every sheet the game draws, its size and frame layout, and the rules for packs." />
+        <meta name="theme-color" content="#100d1d" />
+        <link rel="shortcut icon" type="image/x-icon" href="/static/favicon.ico" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap">
+        <script>try{var t=localStorage.getItem('sunspire_theme'),h=localStorage.getItem('sunspire_handheld'),r=document.documentElement;if(t)r.dataset.theme=t;r.dataset.themeEff=t||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');if(h&&/^#[0-9a-f]{6}$/i.test(h))r.style.setProperty('--hh',h)}catch(e){}</script>
+        <link rel="stylesheet" href="/static/site.css">
+        <style>
+            .guide{width:100%; max-width:1120px; margin:0 auto; padding:40px 20px 0;}
+            .guide h1{font-family:var(--display); font-size:clamp(32px, 4.5vw, 44px); margin:0 0 .4em;}
+            .guide p{max-width:72ch; color:var(--ink-2);}
+            .guide h2{font-family:var(--display); font-size:22px; margin:40px 0 10px; color:var(--ink);}
+            .guide h3{font-family:var(--display); font-size:18px; margin:36px 0 8px; color:var(--ink); scroll-margin-top:84px;}
+            .guide h3 i{color:var(--ink-3); font-style:normal; font-size:.8em;}
+            .guide ol{padding-left:22px; color:var(--ink-2); max-width:72ch;}
+            .guide li{margin-bottom:6px;}
+            .toc{display:flex; flex-wrap:wrap; gap:6px; margin:10px 0 0;}
+            .toc a{font-size:13px; color:var(--ink-2); text-decoration:none; padding:4px 10px; border:1px solid var(--line); border-radius:999px; background:var(--surface);}
+            .toc a:hover{color:var(--ink); background:var(--surface-2);}
+            .row{display:flex; gap:12px; align-items:center; margin:8px 0; flex-wrap:wrap;}
+            #slotCount{color:var(--ink-2); font-size:14px;}
+            #slotList table{width:100%; border-collapse:collapse; margin:8px 0 14px; font-size:14px;}
+            #slotList th{color:var(--accent); text-align:left; font-weight:600; font-family:var(--display); letter-spacing:.04em; padding:10px 12px 5px 0; border-bottom:1px solid var(--line);}
+            #slotList td{border-bottom:1px solid var(--line); padding:7px 12px 7px 0; vertical-align:top;}
+            #slotList td:first-child{white-space:nowrap;}
+            #slotList td.wrap{color:var(--ink-2);}
+            #slotList .frames{font-family:var(--mono); font-size:12px; color:var(--ink-3);}
+            #slotList code{font-size:13px; background:var(--code-bg); padding:0 .3em; border-radius:4px;}
+            #slotList code.on{background:#1f4d2a; color:#a8f5b0;}
+            #slotList .cov{color:var(--ok); font-size:.9em;}
+            #slotList img.sheet{display:block; max-width:260px; max-height:96px; image-rendering:pixelated; background:repeating-conic-gradient(#8884 0 25%, transparent 0 50%) 0 0/12px 12px; border:1px solid var(--line); border-radius:4px;}
+            .warn{color:var(--warn);}
+        </style>
+    </head>
+    <body>
+        <header class="nav"><div class="wrap">
+            <a class="brand" href="/index.html"><img src="/static/icons/sunspire-mark-512.png" alt=""><span>Sunspire Saga</span></a>
+            <nav class="nav-links" aria-label="Site">
+                <a href="/index.html">Home</a>
+                <a href="/play.html">Play online</a>
+                <a href="/pack-guide.html" aria-current="page">Pack guide</a>
+                <a href="/changelog.html">Changelog</a>
+                <a href="/walkthrough.html">Walkthrough</a>
+            </nav>
+            <button class="icon-btn theme-toggle" type="button" aria-label="Toggle colour theme">
+                <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+                <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+            </button>
+        </div></header>
 
-    /* the guide body is the original in-game text; its selectors are kept */
-    .pg-body.doc{max-height:none; overflow:visible; padding:0; font-size:15px; line-height:1.75; color:var(--ink-2);}
-    .doc h3{color:var(--ink); font-size:24px; margin:48px 0 10px; scroll-margin-top:84px;}
-    .doc h3:first-child{margin-top:28px;}
-    .doc table{width:100%; border-collapse:collapse; margin:8px 0 14px;}
-    .doc td{border-bottom:1px solid var(--line); padding:7px 12px 7px 0; vertical-align:top;}
-    .doc td:first-child{white-space:nowrap;}
-    .doc table.glyphs td:first-child{white-space:normal; width:38%; line-height:2.1;} /* the punctuation list is long */
-    .doc th{color:var(--accent); text-align:left; font-weight:600; font-family:var(--display); font-size:15px; letter-spacing:.04em; padding:14px 0 5px; border-bottom:1px solid var(--line);}
-    .doc td.wrap{white-space:normal; width:38%; line-height:2.1;} /* long name lists wrap instead of widening the column */
-    .doc td.wrap code{white-space:nowrap;}
-    .doc td i{color:var(--ink-3); font-style:normal; font-size:.85em;}
-    .doc code.on{background:var(--cov-bg); color:var(--cov-ink);}
-    .doc code.off{opacity:.8;}
-    .doc .cov{color:var(--ok); font-size:.9em;}
-    .doc .warn{color:var(--warn);}
-    .doc .row{display:flex; gap:12px; align-items:center; margin:8px 0; flex-wrap:wrap;}
-    .doc .row button{font-family:var(--body);}
-    #slotCount{color:var(--ink-2); font-size:14px;}
-    .doc ol{margin:4px 0 8px; padding-left:22px;}
-    .doc ol li{margin-bottom:4px;}
-    #slotList table td{font-size:14px;}
-    @media (max-width:860px){ .guide{grid-template-columns:1fr; gap:24px;} .toc{position:static;} .toc a{display:inline-block; border-left:none; padding:4px 10px; border-radius:8px; background:var(--surface-2); margin:0 6px 6px 0;} .toc a.on{color:var(--accent);} .doc td:first-child{white-space:normal;} }
-  </style>
-</head>
-<body>
-<header class="nav"><div class="wrap">
-  <a class="brand" href="./"><img src="assets/sunspire-mark-512.png" alt=""><span>Sunspire Saga</span></a>
-  <nav class="nav-links" aria-label="Site">
-    <a href="./">Home</a>
-    <a href="play">Play online</a>
-    <a href="pack-guide" aria-current="page">Pack guide</a>
-    <a href="changelog">Changelog</a>
-    <a href="walkthrough">Walkthrough</a>
-  </nav>
-  <button class="icon-btn theme-toggle" type="button" aria-label="Toggle colour theme">
-    <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-    <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
-  </button>
-</div></header>
+        <main class="guide">
+            <h1>Sprite pack guide</h1>
+            <p>Every sheet the game draws can be replaced with your own art. A pack is a set of image files, each named after the <b>slot</b> it replaces, loaded with <i>Load sprite pack</i> on the play page, one by one or as a zip. Packs stay in your own browser; nothing is uploaded.</p>
 
-<main class="wrap guide">
-  <aside class="toc" aria-label="On this page">
-    <b>On this page</b>
-    <nav id="toc"></nav>
-  </aside>
+            <h2>Rules</h2>
+            <ol>
+                <li>One file per slot, named exactly <code>&lt;slot&gt;.png</code> (<code>.gif</code> and <code>.webp</code> work too; only the first frame of a GIF is used). Folder names inside a zip are ignored.</li>
+                <li>The image must have the <b>exact size</b> of the sheet it replaces, listed below, because the frame layout stays the same: the game cuts your sheet into the same frames at the same positions. Open the original sheet to see where each frame sits.</li>
+                <li>To use another size or layout, add a <code>&lt;slot&gt;.json</code> TexturePacker atlas (hash or array) next to the sheet, with <b>exactly the frame names</b> listed below; the game then cuts the sheet by your atlas. Plain images have no frames and take no atlas.</li>
+                <li>Partial packs are fine; every slot you leave out keeps the built-in art. A file that does not match a slot, or has the wrong size, is reported and skipped.</li>
+                <li>A loaded pack takes effect at once: the play page reloads and confirms how many sheets it replaced. <i>Built-in art</i> on the play page clears the pack.</li>
+                <li>Only art you made yourself or have the rights to use. No sprites ripped from commercial games, in packs you share or in this repository.</li>
+            </ol>
 
-  <div>
-    <div class="intro">
-      <p class="eyebrow" style="font-family:var(--display); font-size:14px; letter-spacing:.18em; text-transform:uppercase; color:var(--accent); margin:0 0 10px; font-weight:600;">Sprite packs</p>
-      <h1>Reskin the whole game</h1>
-      <p>Every sprite, tile, background, icon and letter in Sunspire Saga can be replaced with your own art.
-        A pack is nothing more than image files named after the slot they replace. This page lists every slot,
-        the sizes that fit, and how to load what you make.</p>
-      <div class="load-box">
-        <label class="btn btn-gold" for="packIn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg>
-          Load sprite pack
-        </label>
-        <input type="file" id="packIn" class="sr-only" accept="image/png,image/gif,image/webp,.zip,application/zip,application/x-zip-compressed" multiple>
-        <button class="btn" id="packClear" type="button">Reset to built-in art</button>
-        <span class="hint">Loads PNG, GIF or WebP files, or one zip. The pack stays in this browser and the play page uses it
-          at once; the slot list below marks what it covers.</span>
-        <div id="packStatus" aria-live="polite" style="flex-basis:100%"></div>
-      </div>
-    </div>
+            <h2>Slots</h2>
+            <div class="row"><span id="slotCount">loading&hellip;</span><button class="btn btn-sm" id="copyNames" type="button">Copy all names</button></div>
+            <nav class="toc" id="slotToc" aria-label="Slot groups"></nav>
+            <div id="slotList"></div>
+        </main>
 
-    <div class="pg-body doc">
-    <h3>What a pack is</h3>
-    One image file per thing you want to reskin, named exactly after its slot
-    (<code>wolf.png</code> replaces the Fang Wolf, and so on). Load files with the button above,
-    or zip any number of them &mdash; folder names inside a zip are ignored, so a zipped
-    folder from your file manager works as-is. Accepted formats: <code>.png</code>,
-    <code>.gif</code> (animated GIFs play their frames), <code>.webp</code>, and
-    <code>.zip</code> containing those. Anything you load is kept in this browser's own
-    database (IndexedDB, with room for large packs); nothing is uploaded. Only load art you made or have the rights to use.
-    <h3>Battle enemies</h3>
-    Centered in their battle slot and drawn at their own pixel size (built-ins are 20&ndash;30&nbsp;px tall).
-    A white hit-flash version is generated automatically.
-    <table>
-      <tr><td><code>ooze</code></td><td>Mire Ooze</td><td><code>harpy</code></td><td>Crag Harpy</td></tr>
-      <tr><td><code>bat</code></td><td>Dusk Bat</td><td><code>boar</code></td><td>Iron Boar</td></tr>
-      <tr><td><code>wolf</code></td><td>Fang Wolf</td><td><code>shade</code></td><td>Pale Shade</td></tr>
-      <tr><td><code>spider</code></td><td>Pit Spider</td><td><code>gargoyle</code></td><td>Gargoyle</td></tr>
-      <tr><td><code>beetle</code></td><td>Ore Beetle</td><td><code>ogre</code></td><td>Maw Ogre (boss)</td></tr>
-      <tr><td><code>golem</code></td><td>Ruin Golem</td><td><code>wyrm</code></td><td>Shadow Wyrm (boss)</td></tr>
-    </table>
-    The eight spirits fight you before they join; their battle forms are
-    <code>djinn_battle_flint</code> ... <code>djinn_battle_squall</code> (one per spirit name).
-    <h3>Summons</h3>
-    Shown in the summon cutscene at its own pixel size (the built-in figures are about 28&times;26 and are
-    scaled up 3&times;, so draw a pack figure at roughly 80&times;80 to fill the same space); the drop-shadow
-    pass is generated for you. Each summon has a
-    slot of its own, with the element slot as fallback.
-    <table>
-      <tr><td><code>sum_gnome</code> <code>sum_titan</code></td><td>Gnome, Titan (fallback <code>sum_earth</code>)</td></tr>
-      <tr><td><code>sum_salamand</code> <code>sum_phoenix</code></td><td>Salamand, Phoenix (fallback <code>sum_fire</code>)</td></tr>
-      <tr><td><code>sum_nixie</code> <code>sum_leviath</code></td><td>Nixie, Leviath (fallback <code>sum_water</code>)</td></tr>
-      <tr><td><code>sum_sylph</code> <code>sum_tempest</code></td><td>Sylph, Tempest (fallback <code>sum_wind</code>)</td></tr>
-      <tr><td><code>sum_sol_avatar</code></td><td>Sol Avatar (fallback <code>sum_sol</code>)</td></tr>
-    </table>
-    <h3>Characters</h3>
-    Six frames per character, drawn at native pixel size with the feet on the tile
-    (built-ins are 16&times;22). <code>2</code> is the walking frame; left-facing is
-    mirrored from <code>right</code> automatically. In battle the four adepts are drawn at native
-    size (1&times;) from seven more frames named like the walk frames: the idle back stance
-    <code>back</code>, the two-frame attack <code>attack</code>/<code>attack2</code> and cast
-    <code>cast</code>/<code>cast2</code>, the single recoil frame <code>hit</code> when taking damage,
-    and <code>downed</code> while knocked out (lying on the ground, bottom-anchored like the rest) &mdash;
-    <code>hero_back</code>, <code>ari_cast2</code>, <code>lyn_hit</code>... Townsfolk never fight, so they
-    take only the six walk frames.
-    <table>
-      <tr><td><code>hero_down</code> / <code>hero_down2</code></td><td rowspan="3">Generic set: applies to every
-        character that has no personal skin loaded.</td></tr>
-      <tr><td><code>hero_up</code> / <code>hero_up2</code></td></tr>
-      <tr><td><code>hero_right</code> / <code>hero_right2</code></td></tr>
-    </table>
-    For one specific character, replace the <code>hero</code> prefix with their id, e.g.
-    <code>ari_down.png</code>:
-    <table>
-      <tr><td><code>ari</code></td><td>Ari, earth adept and party leader (13 frames)</td></tr>
-      <tr><td><code>lyn</code></td><td>Lyn, water adept; wanders Brindle's plaza until she joins (13 frames)</td></tr>
-      <tr><td><code>bram</code></td><td>Bram, fire adept, the miner who joins at the mine (13 frames)</td></tr>
-      <tr><td><code>sera</code></td><td>Sera, wind adept, the scout who joins on the trail (13 frames)</td></tr>
-      <tr><td><code>elder</code></td><td>Elder Sorin, Thera's village elder; stands on the lane by the west
-        houses (6 walk frames)</td></tr>
-      <tr><td><code>mara</code></td><td>Mara, the Thera shopkeeper; picks mint outside her shop on the lane
-        (6 walk frames)</td></tr>
-      <tr><td><code>polly</code></td><td>Polly, a Thera village kid; wanders the east end of the lane and
-        hints at Flint. The story never gives Polly a gender &mdash; the built-in art is a small child with
-        brown hair, a green tunic and a yellow scarf, so draw them as you like (6 walk frames)</td></tr>
-      <tr><td><code>dov</code></td><td>Dov, the Brindle shopkeeper; stands at the west side of the plaza
-        (6 walk frames)</td></tr>
-      <tr><td><code>miner</code></td><td>A Brindle miner; wanders near the inn and warns about the ogre
-        (6 walk frames)</td></tr>
-      <tr><td><code>ina</code></td><td>Ina, the innkeeper's daughter; wanders by the Brindle inn
-        (6 walk frames)</td></tr>
-      <tr><td><code>hob</code></td><td>Hob, the farmer of Mira Farmstead east of Thera; wanders the yard
-        by the inn (6 walk frames)</td></tr>
-    </table>
-    <h3>Map objects</h3>
-    Native pixel size, bottom edge anchored to the tile.
-    <table>
-      <tr><td><code>djinn</code></td><td>fallback for every collectible spirit (~14&times;11)</td></tr>
-      <tr><td><code>djinn_&lt;name&gt;</code></td><td>one specific spirit: <code>djinn_flint</code>,
-        <code>djinn_granite</code>, <code>djinn_forge</code>, <code>djinn_ember</code>,
-        <code>djinn_dew</code>, <code>djinn_mist</code>, <code>djinn_breeze</code>,
-        <code>djinn_squall</code></td></tr>
-      <tr><td><code>tree</code></td><td>trees on every map (~16&times;18); add more variants with any
-        suffix (<code>tree_2</code>, <code>tree_pine</code>...) and each tree on the map keeps a
-        stable random pick from them</td></tr>
-      <tr><td><code>tree_trail_...</code></td><td>variants used only on the Sunspire Trail
-        (<code>tree_trail</code>, <code>tree_trail_2</code>...); without any, trail trees use the
-        generic pool</td></tr>
-      <tr><td><code>house</code></td><td>whole buildings, drawn as one sprite over a 48&times;48
-        footprint (taller is fine), bottom-anchored, door at the bottom-middle tile. Resolution order:
-        a sprite for the exact building (<code>house_thera_1</code>, <code>house_thera_2</code>,
-        <code>house_thera_shop</code>, <code>house_thera_far_1</code>..<code>2</code> and
-        <code>house_thera_far_inn</code> at Mira Farmstead, <code>house_brindle_1</code>..<code>3</code>,
-        <code>house_brindle_inn</code>), else its kind (<code>house_inn</code>, <code>house_shop</code>,
-        plus suffix variants), else the generic pool (<code>house</code>, <code>house_2</code>...), else
-        the built-in tile house &mdash; per building, so partial packs work.</td></tr>
-      <tr><td><code>fence_h</code> <code>fence_post</code><br><code>fence_v</code>
-        <code>fence_v2</code></td><td>the fences around the Thera paddock, four 16&times;16 tiles
-        chosen by neighbours: <code>fence_h</code> for a run (draw the post at the left, x&nbsp;2&ndash;5,
-        with rails to both edges, so corners clip cleanly), <code>fence_post</code> for the end of a run
-        (post at the right with rails arriving from the left; mirrored automatically for left ends),
-        <code>fence_v</code> / <code>fence_v2</code> for vertical runs (post at the left, plank at
-        x&nbsp;6&ndash;7 running top to bottom), mixed per tile</td></tr>
-      <tr><td><code>boulder</code></td><td>the boulder sealing the fence gap (~16&times;16, taller is
-        fine), bottom-anchored; <code>boulder_2</code>... variants work like trees</td></tr>
-      <tr><td><code>sign</code></td><td>the signposts in Thera and Brindle (~16&times;16),
-        bottom-anchored; <code>sign_2</code>... variants, stable pick per signpost</td></tr>
-      <tr><td><code>chest</code></td><td>treasure chests, closed state (~16&times;16, bottom-anchored,
-        <code>chest_2</code>... variants, stable pick per chest); <code>chest_open</code> (and
-        <code>chest_open_2</code>...) is shown the moment a chest is looted and from then on: an animated
-        GIF plays once and then holds its last frame, so a looted chest always looks open (also after
-        a reload)</td></tr>
-      <tr><td><code>well</code></td><td>the healing well in Thera (16&times;16 fits best &mdash; you
-        can stand on it); <code>well_2</code>... variants</td></tr>
-      <tr><td><code>spring</code></td><td>the spirit spring in the Sunspire;
-        <code>spring_2</code>... variants</td></tr>
-      <tr><td><code>grass</code></td><td>the 16&times;16 ground tile on grassy maps;
-        <code>grass_2</code>... variants mix per tile, <code>grass_trail_...</code> applies only on
-        the Sunspire Trail</td></tr>
-      <tr><td><code>wyrm_s</code></td><td>Shadow Wyrm on the shrine map (~22&times;18)</td></tr>
-      <tr><td><code>ogre_s</code></td><td>Maw Ogre in the mine (~18&times;18)</td></tr>
-    </table>
-    <h3>Battle backgrounds</h3>
-    Drawn behind the combatants, stretched to the 240&times;160 screen
-    (make them exactly that size for crisp pixels; animated GIFs work here too).
-    Each battle picks the background of the place you are fighting in.
-    <table>
-      <tr><td><code>bg</code></td><td>fallback for every battle</td></tr>
-      <tr><td><code>bg_field</code></td><td>outdoors: Thera Fields and around Brindle</td></tr>
-      <tr><td><code>bg_mine</code></td><td>inside Brindle Mine</td></tr>
-      <tr><td><code>bg_trail</code></td><td>the Sunspire Trail</td></tr>
-      <tr><td><code>bg_tower</code></td><td>inside the Sunspire</td></tr>
-    </table>
-    Load several variants of one environment by adding any suffix after the type
-    (<code>bg_field_2</code>, <code>bg_mine_deep</code>...) &mdash; each battle picks one at
-    random. Any other <code>bg_...</code> name (or plain <code>bg</code>) is a generic
-    variant, used wherever no typed background exists.
-    <h3>Battle interface</h3>
-    All interface art resolves most-specific slot first, then falls back to the built-in look.
-    <table>
-      <tr><td><code>icon_fight</code> ... <code>icon_flee</code></td><td>the seven toolbar command
-        icons (<code>fight arts spirit summon item defend flee</code>), ~18&times;18, centered;
-        the chosen one is drawn two pixels higher, nothing else is added</td></tr>
-      <tr><td><code>fx_quake</code> ...</td><td>cast effect per art (slug names: spaces become
-        underscores, e.g. <code>fx_gaia_blade</code>, <code>fx_ice_horn</code>). Scaled to the screen width
-        (240&nbsp;px, aspect kept) with its top-left corner on the screen's top-left corner, so a
-        240&times;160 image fits exactly and a taller one is cut off at the bottom; drawn under the party
-        sprites; pure black (#000) is transparent; an animated GIF plays once from the moment of the
-        cast at its native speed, and the effect stays on screen for the whole animation</td></tr>
-      <tr><td><code>fx_earth</code> / <code>fire</code> / <code>water</code> / <code>wind</code> /
-        <code>heal</code></td><td>element fallback for cast effects</td></tr>
-      <tr><td><code>art_quake</code> ... / <code>art_earth</code> ...</td><td>submenu icon per art
-        (~8&times;8), with <code>art_&lt;element&gt;</code> and <code>art_heal</code> as
-        fallbacks</td></tr>
-      <tr><td><code>spirit_flint</code> ... / <code>spirit_earth</code> ...</td><td>submenu icon per
-        spirit, element fallback</td></tr>
-      <tr><td><code>summon_gnome</code> ... <code>summon_sol_avatar</code> /
-        <code>summon_earth</code> ...</td><td>submenu icon per summon, element fallback
-        (including <code>summon_sol</code>)</td></tr>
-      <tr><td class="wrap"><code>item_herb</code> <code>item_potion</code> <code>item_pdrop</code>
-        <code>item_elixir</code></td><td>item icons in the battle ITEM window, the shops and the ITEMS grid
-        (built in 7&times;7; rows and grid cells grow to fit icons up to 16&times;16, and bigger ones are shrunk
-        to fit)</td></tr>
-      <tr><td><code>item_compass</code></td><td>Lyn's Compass, the key item, in the ITEMS grid (built in: a
-        brass compass, 7&times;7)</td></tr>
-      <tr><td class="wrap"><code>gear_wood</code> <code>gear_bronze</code> <code>gear_iron</code> <code>gear_steel</code>
-        <code>gear_sol</code> <code>gear_vest</code> <code>gear_leather</code> <code>gear_chain</code>
-        <code>gear_aegis</code></td><td>gear icons in the shops and the EQUIP grid, one per weapon or armour
-        (built in 7&times;7; rows and grid cells grow to fit up to 16&times;16, bigger ones are shrunk)</td></tr>
-      <tr><td><code>mark_equipped</code></td><td>the E drawn over the bottom-right corner of gear a member is
-        wearing in the EQUIP grid (built in: a green E, 6&times;7)</td></tr>
-      <tr><td class="wrap"><code>portrait_ari</code> <code>portrait_lyn</code> <code>portrait_bram</code>
-        <code>portrait_sera</code></td><td>the portrait on the member card of the ITEMS and EQUIP screens, 32&times;32
-        (bigger ones are shrunk); without one the member's walking sprite is shown at 2&times;, framed on the
-        head and shoulders</td></tr>
-      <tr><td><code>choice_yes</code> <code>choice_no</code></td><td>icons beside YES and NO in the
-        yes/no box (built in: a green tick and a red cross, 7&times;6; the box grows to fit icons up to
-        24&times;24)</td></tr>
-      <tr><td><code>el_earth</code> <code>el_fire</code> <code>el_water</code> <code>el_wind</code>
-        <code>el_sol</code> <code>el_heal</code></td><td>element badge at the right of each arts-window row
-        (~7&times;7, centred; <code>el_heal</code> for CURE and PURE PLY, <code>el_sol</code> for the
-        SOL AVATAR)</td></tr>
-      <tr><td><code>range_one</code> <code>range_all</code> <code>range_ally</code>
-        <code>range_party</code></td><td>range badge at the far right of each arts-window row: one enemy,
-        every enemy, one ally, the whole party (~7&times;7, centred)</td></tr>
-      <tr><td><code>cursor</code></td><td>the menu cursor, a hand pointing right at the selected row in every
-        list (arts window, pause menu, shops, yes/no choices, title screen); ~12&times;9, drawn with its
-        right edge at the fingertip and nudged a pixel to and fro while it waits</td></tr>
-      <tr><td><code>bg_summon</code> / <code>bg_summon_earth</code> ...</td><td>summon cutscene
-        backdrop, generic or per element: <code>bg_summon_earth</code>, <code>fire</code>,
-        <code>water</code>, <code>wind</code> for the summons of that element, and
-        <code>bg_summon_sol</code> for the SOL AVATAR, the special summon that needs one spirit of every
-        element on standby. It replaces the whole cutscene background: stretched to the full 240&times;160
-        screen (make it that size for crisp pixels), no built-in glow or rays underneath, and an animated
-        GIF plays once from the start with the cutscene stretched to last at least as long as the GIF.
-        The summon figure (<code>sum_...</code>) stands in the centre</td></tr>
-    </table>
-    <h3>Title screen</h3>
-    <table>
-      <tr><td><code>title</code></td><td>replaces the built-in logo, ring and ribbon on the title screen;
-        drawn centered from 8&nbsp;px down over the sky and spire, scaled down only if wider than 240&nbsp;px
-        (animated GIFs play)</td></tr>
-    </table>
-    <h3>Font</h3>
-    The game font can be replaced one character at a time with small images, the way a bitmap font
-    sheet is cut up. Load them like any other sprite (or in the zip); every character you leave out
-    keeps the built-in 5&times;5 letter, so a partial set works. File names are case-sensitive here.
-    <table class="glyphs">
-      <tr><td><code>A</code> ... <code>Z</code></td><td>uppercase letters, 6&times;8</td></tr>
-      <tr><td><code>lowercase-a</code> ... <code>lowercase-z</code></td><td>lowercase letters, usually 6&times;6 (ascenders such
-        as <code>l</code> and <code>h</code> may use an 8-row cell)</td></tr>
-      <tr><td><code>0</code> ... <code>9</code></td><td>digits</td></tr>
-      <tr><td><code>period comma colin semicolin questionmark exclaimationpoint apostrophe quote dash
-        underline plus equals slash percent dollar number and at tilde line bracket-left bracket-right
-        parentheses1 parentheses2 arrow arrow-left arrow-right space</code></td><td>punctuation
-        (<code>colon</code>, <code>semicolon</code> and <code>exclamationpoint</code> are accepted
-        spellings too); <code>space</code> is optional and only sets the width of a space</td></tr>
-    </table>
-    All cells are bottom-aligned on one line: give every image the same bottom edge (the baseline plus a
-    shadow row, if your letters have one) and draw descenders inside the cell. Glyphs are drawn at their
-    own pixel size with one pixel of air after each (none if the image already ends in an empty column),
-    so sets may be proportional; text wrapping follows the real widths and
-    capitals are 8&nbsp;px tall, so menus and the battle strip grow to fit. Plain dialogue text shows
-    the glyphs in their own colours (a white glyph with a dark shadow stays that way); coloured labels
-    such as gold headings or red HP tint the glyph in that colour.
-    <h3>Complete slot list</h3>
-    Every file name the loader accepts, generated from the game's own data so it is always
-    current. With a pack loaded, covered slots are marked green with a tick, loaded variants are
-    listed after their slot, and files that match no slot are called out above the list. Slots marked <i>variants</i> also take any suffix (<code>name_2</code>,
-    <code>name_anything</code>...) for extra random variants. Add <code>.png</code>,
-    <code>.gif</code> or <code>.webp</code> to each name.
-    <div class="row"><button id="slotCopy" type="button">Copy all names</button>
-      <span id="slotCount"></span></div>
-    <div id="slotList"></div>
-    <h3>Making a pack</h3>
-    <ol>
-      <li>Draw sprites in any pixel editor (Aseprite, Piskel, GIMP...). Use a transparent
-        background and sizes near the built-ins for the cleanest fit.</li>
-      <li>Export one file per slot with the exact slot name, e.g. <code>wolf.png</code>.
-        For animation, export an animated <code>.gif</code> instead.</li>
-      <li>Load the files with the button at the top of this page &mdash; or zip the folder and load the zip. Partial packs are
-        fine; unlisted slots keep the built-in art.</li>
-      <li>Swap art any time by loading a file with the same name again, or press
-        <i>Reset to built-in art</i> to remove everything.</li>
-    </ol>
-    Packs live in this browser only &mdash; on another device or after clearing site data,
-    load the zip again.
-    </div>
-  </div>
-</main>
-
-<footer class="foot"><div class="wrap">
-  <span>Sunspire Saga &middot; original code and art, MIT licence</span>
-  <span>Only load art you made or have the rights to use.</span>
-</div></footer>
-
-<!-- game.js draws its slot previews on this canvas; the page never shows it -->
-<canvas id="game" width="240" height="160" hidden></canvas>
-<script>window.SUNSPIRE_HEADLESS = true;</script>
-<script src="assets/site.js"></script>
-<script src="game.js"></script>
-<script>
-(function(){
-  // table of contents from the guide headings, with the current one highlighted while scrolling
-  const toc = document.getElementById('toc'), heads = Array.from(document.querySelectorAll('.doc h3'));
-  heads.forEach((h, i) => {
-    h.id = h.id || 'g-' + h.textContent.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-    const a = document.createElement('a'); a.href = '#' + h.id; a.textContent = h.textContent; toc.appendChild(a);
-  });
-  const links = Array.from(toc.querySelectorAll('a'));
-  const io = new IntersectionObserver(es => {
-    for (const e of es) if (e.isIntersecting){ links.forEach(l => l.classList.toggle('on', l.getAttribute('href') === '#' + e.target.id)); }
-  }, { rootMargin: '-80px 0px -70% 0px' });
-  heads.forEach(h => io.observe(h));
-  renderSlotList();
-})();
-</script>
-</body>
+        <footer class="foot"><div class="wrap">
+            <span>Sunspire Saga &middot; original code and art, MIT licence</span>
+            <span>An independent homage; no assets from Nintendo or Camelot.</span>
+        </div></footer>
+        <script src="/static/site.js"></script>
+        <script src="/static/pack-guide.js"></script>
+    </body>
 </html>

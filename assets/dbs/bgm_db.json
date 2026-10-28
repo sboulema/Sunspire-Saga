@@ -1,0 +1,26 @@
+[
+    {
+        "key": "page_one",
+        "path": "assets/sounds/bgm/page_one.wav"
+    },
+    {
+        "key": "town",
+        "path": "assets/sounds/bgm/town.wav"
+    },
+    {
+        "key": "battle",
+        "path": "assets/sounds/bgm/battle.wav"
+    },
+    {
+        "key": "battle_boss",
+        "path": "assets/sounds/bgm/battle_boss.wav"
+    },
+    {
+        "key": "victory",
+        "path": "assets/sounds/bgm/victory.wav"
+    },
+    {
+        "key": "fallen_heroes",
+        "path": "assets/sounds/bgm/fallen_heroes.wav"
+    }
+]

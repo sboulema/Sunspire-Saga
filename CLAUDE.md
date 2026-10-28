@@ -1,38 +1,36 @@
-# Sunspire Saga
+# Sunspire Saga (engine build)
 
-A browser JRPG in one script, `game.js`. The site around it is `index.html`, `play.html`,
-`pack-guide.html` and `changelog.html`, installable as an app through `manifest.webmanifest` and
-`sw.js`; `README.md` describes the layout.
+The browser JRPG Sunspire Saga on a fork of the goldensun_html5 engine (Phaser CE, TypeScript
+under `base/`). `README.md` describes the layout, `MIGRATION.md` the port and the engine's quirks,
+`ASSETS.md` where every asset comes from. No Nintendo / Camelot assets, names or data, ever.
 
-## Keep the walkthrough in sync with the game
+## The game is generated from `assets/sunspire/`
 
-`walkthrough.html` holds a classic plain-text FAQ/walkthrough inside a `<pre>` in a white well;
-every number and position in it is taken from the data in `game.js`. **Any change to the game that
-a player could notice must be reflected in the walkthrough in the same change.** That includes,
-but is not limited to:
+- `assets/sunspire/content.json` is the single source of the game: characters, arts, gear,
+  items, shops, inns, chests, spirits, summons, enemies, encounters, maps (exits, houses, signs,
+  wells, boulder, gate, puzzle, bosses, joins), villagers, dialog, story and rules.
+- `assets/sunspire/sprites/`, `maps/` and `glyphs.json` are the source art.
+- `npm run build:content` regenerates everything derived from them: `assets/images`,
+  `assets/font`, `assets/sounds`, `static/pack-slots.json`, the databases in `assets/dbs/`, the
+  Tiled maps in `assets/maps/` and `walkthrough.html`. **Edit the sources and regenerate; never
+  edit a generated file by hand** (the next regeneration would silently undo it). The
+  hand-written exceptions are `assets/dbs/misc_animations_db.json`,
+  `interactable_objects_db.json`, the attack, jump and cure recipes under
+  `assets/dbs/*_animations/` (the arts' own recipes are generated next to them) and
+  `assets/init.json`.
+- Any change a player could notice must therefore go into `content.json` (or the generators),
+  and the regenerated `walkthrough.html` is committed with it: that is how the walkthrough stays
+  in sync with the game.
 
-- maps and map builders (`build*` functions, `TRANS`): redraw the affected ASCII map in section 7
-  and fix every coordinate that moved (chests, spirits, bosses, villagers, doors, exits, the well
-  and spring, safe lanes);
-- `CHEST_DEFS` (section 10 and the per-area lists), `SPIRIT_DEFS` / `SPIRIT_ORDER` (section 8),
-  `SUMMON_DEFS` (section 9), `ENEMY_DEFS` / `ENC` (section 13 and the per-area enemy lists),
-  `CHAR_DEFS` / `ART_DEFS` (sections 5.3 and 6), `GEAR_DEFS` / `ITEM_DEFS` / `SHOPS` (sections 11
-  and 12);
-- battle rules and formulas (damage, set bonus, stagger, flee chance, encounter rate, PP regen,
-  XP curve, boss behaviour): sections 5 and the boss strategies in 7.8 and 7.11;
-- story flow, who joins where, key items, dialogue hints, controls and the menu: sections 3, 4
-  and the walkthrough steps;
-- `GAME_VERSION`: update the "Game version" line in the header, bump the guide version, set the
-  "Last updated" date and add a line to the guide's version history (section 2).
+## Working on it
 
-When a change is bigger than a number, re-check the recommended levels and the boss plans still
-hold against the formulas in section 5.9. Edit the text inside the `<pre>` only: keep it at 79
-columns or narrower and plain ASCII, escape `&`, `<` and `>` as entities, and keep the section
-codes (`[WLK07]` etc.) stable, since each heading carries `<b id="CODE">` and the contents list
-links to them. The page shell around the `<pre>` (nav, intro, `.well` styles) matches the other
-site pages and should change only when they do.
-
-The ASCII maps in the walkthrough can be regenerated from the builders: extract `h32`, `makeGrid`,
-`house`, the `build*` functions and `TRANS` from `game.js` into a Node script and print each grid
-with the legend from section 7 (`f`→`.`, `e`→`:`, `R`/`Q`/`W`→`H`, `B`→`O`, `E`→`>`, `C`→`^`,
-`G`→`=`, chests numbered, spirits `*`, bosses `X`, villagers `@`).
+- `npm install`, `npm start` (port 9000; the dev server reloads the page on any file change, so
+  do not regenerate assets in the middle of a browser test).
+- `npm run build` type-checks; `npm run format` (also the pre-commit hook) runs Prettier over
+  `base/`; `npm run site` builds the static site in `site/`.
+- Engine quirks that bite when adding content (details in `MIGRATION.md`, Phase 6): events in a
+  list fire at once, so chain through `finish_events`; deactivate an NPC only as the last step of
+  its chain; declare every storage flag in the generator; map properties the engine reads as
+  strings are not JSON-encoded; NPCs are reached by walking into them.
+- Testing in a hidden browser pane: Phaser drops to ~2 fps, so drive `GoldenSun.game.update()`
+  from a Web Worker timer and synthesise key holds (`MIGRATION.md`, Phase 2 and 6 notes).

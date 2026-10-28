@@ -1,0 +1,1974 @@
+[
+    {
+        "key_name": "ari",
+        "anchor_y": 0.8,
+        "initial_action": "idle",
+        "collision_body_bevel": 3,
+        "interaction_pattern": "cross",
+        "body_radius": 7,
+        "walk_speed": 70,
+        "dash_speed": 100,
+        "climb_speed": 50,
+        "voice_key": "hero_1",
+        "actions": {
+            "idle": {
+                "frame_rate": 1,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 1,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/ari_field.png",
+                    "json": "assets/images/spritesheets/field/ari_field.json"
+                }
+            },
+            "walk": {
+                "frame_rate": 6,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 2,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/ari_field.png",
+                    "json": "assets/images/spritesheets/field/ari_field.json"
+                }
+            },
+            "dash": {
+                "frame_rate": 10,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 2,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/ari_field.png",
+                    "json": "assets/images/spritesheets/field/ari_field.json"
+                }
+            },
+            "yes": {
+                "frame_rate": 6,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 3,
+                "initial_animation": "down",
+                "loop": false,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/ari_field.png",
+                    "json": "assets/images/spritesheets/field/ari_field.json"
+                }
+            },
+            "no": {
+                "frame_rate": 8,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 4,
+                "initial_animation": "down",
+                "loop": false,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/ari_field.png",
+                    "json": "assets/images/spritesheets/field/ari_field.json"
+                }
+            },
+            "cast": {
+                "frame_rate": 6,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 2,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/ari_field.png",
+                    "json": "assets/images/spritesheets/field/ari_field.json"
+                }
+            },
+            "grant": {
+                "frame_rate": 1,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 1,
+                "initial_animation": "down",
+                "loop": false,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/ari_field.png",
+                    "json": "assets/images/spritesheets/field/ari_field.json"
+                }
+            },
+            "battle": {
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/battle/ari_battle.png",
+                    "json": "assets/images/spritesheets/battle/ari_battle.json"
+                },
+                "animations": [
+                    "attack_back",
+                    "attack_front",
+                    "idle_back",
+                    "idle_front",
+                    "cast_back",
+                    "cast_front",
+                    "cast_init_back",
+                    "cast_init_front",
+                    "damage_back",
+                    "damage_front",
+                    "downed_back",
+                    "downed_front",
+                    "attack_init_back",
+                    "attack_init_front"
+                ],
+                "frames_count": [
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1
+                ],
+                "frame_rate": [
+                    10,
+                    10,
+                    3,
+                    3,
+                    10,
+                    10,
+                    12,
+                    6,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1
+                ],
+                "loop": [
+                    false,
+                    false,
+                    true,
+                    true,
+                    true,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                ]
+            }
+        }
+    },
+    {
+        "key_name": "lyn",
+        "anchor_y": 0.8,
+        "initial_action": "idle",
+        "collision_body_bevel": 3,
+        "interaction_pattern": "cross",
+        "body_radius": 7,
+        "walk_speed": 70,
+        "dash_speed": 100,
+        "climb_speed": 50,
+        "voice_key": "adult_female_1",
+        "actions": {
+            "idle": {
+                "frame_rate": 1,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 1,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/lyn_field.png",
+                    "json": "assets/images/spritesheets/field/lyn_field.json"
+                }
+            },
+            "walk": {
+                "frame_rate": 6,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 2,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/lyn_field.png",
+                    "json": "assets/images/spritesheets/field/lyn_field.json"
+                }
+            },
+            "dash": {
+                "frame_rate": 10,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 2,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/lyn_field.png",
+                    "json": "assets/images/spritesheets/field/lyn_field.json"
+                }
+            },
+            "yes": {
+                "frame_rate": 6,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 3,
+                "initial_animation": "down",
+                "loop": false,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/lyn_field.png",
+                    "json": "assets/images/spritesheets/field/lyn_field.json"
+                }
+            },
+            "no": {
+                "frame_rate": 8,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 4,
+                "initial_animation": "down",
+                "loop": false,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/lyn_field.png",
+                    "json": "assets/images/spritesheets/field/lyn_field.json"
+                }
+            },
+            "cast": {
+                "frame_rate": 6,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 2,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/lyn_field.png",
+                    "json": "assets/images/spritesheets/field/lyn_field.json"
+                }
+            },
+            "grant": {
+                "frame_rate": 1,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 1,
+                "initial_animation": "down",
+                "loop": false,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/lyn_field.png",
+                    "json": "assets/images/spritesheets/field/lyn_field.json"
+                }
+            },
+            "battle": {
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/battle/lyn_battle.png",
+                    "json": "assets/images/spritesheets/battle/lyn_battle.json"
+                },
+                "animations": [
+                    "attack_back",
+                    "attack_front",
+                    "idle_back",
+                    "idle_front",
+                    "cast_back",
+                    "cast_front",
+                    "cast_init_back",
+                    "cast_init_front",
+                    "damage_back",
+                    "damage_front",
+                    "downed_back",
+                    "downed_front",
+                    "attack_init_back",
+                    "attack_init_front"
+                ],
+                "frames_count": [
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1
+                ],
+                "frame_rate": [
+                    10,
+                    10,
+                    3,
+                    3,
+                    10,
+                    10,
+                    12,
+                    6,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1
+                ],
+                "loop": [
+                    false,
+                    false,
+                    true,
+                    true,
+                    true,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                ]
+            }
+        }
+    },
+    {
+        "key_name": "bram",
+        "anchor_y": 0.8,
+        "initial_action": "idle",
+        "collision_body_bevel": 3,
+        "interaction_pattern": "cross",
+        "body_radius": 7,
+        "walk_speed": 70,
+        "dash_speed": 100,
+        "climb_speed": 50,
+        "voice_key": "adult_male_1",
+        "actions": {
+            "idle": {
+                "frame_rate": 1,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 1,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/bram_field.png",
+                    "json": "assets/images/spritesheets/field/bram_field.json"
+                }
+            },
+            "walk": {
+                "frame_rate": 6,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 2,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/bram_field.png",
+                    "json": "assets/images/spritesheets/field/bram_field.json"
+                }
+            },
+            "dash": {
+                "frame_rate": 10,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 2,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/bram_field.png",
+                    "json": "assets/images/spritesheets/field/bram_field.json"
+                }
+            },
+            "yes": {
+                "frame_rate": 6,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 3,
+                "initial_animation": "down",
+                "loop": false,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/bram_field.png",
+                    "json": "assets/images/spritesheets/field/bram_field.json"
+                }
+            },
+            "no": {
+                "frame_rate": 8,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 4,
+                "initial_animation": "down",
+                "loop": false,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/bram_field.png",
+                    "json": "assets/images/spritesheets/field/bram_field.json"
+                }
+            },
+            "cast": {
+                "frame_rate": 6,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 2,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/bram_field.png",
+                    "json": "assets/images/spritesheets/field/bram_field.json"
+                }
+            },
+            "grant": {
+                "frame_rate": 1,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 1,
+                "initial_animation": "down",
+                "loop": false,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/bram_field.png",
+                    "json": "assets/images/spritesheets/field/bram_field.json"
+                }
+            },
+            "battle": {
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/battle/bram_battle.png",
+                    "json": "assets/images/spritesheets/battle/bram_battle.json"
+                },
+                "animations": [
+                    "attack_back",
+                    "attack_front",
+                    "idle_back",
+                    "idle_front",
+                    "cast_back",
+                    "cast_front",
+                    "cast_init_back",
+                    "cast_init_front",
+                    "damage_back",
+                    "damage_front",
+                    "downed_back",
+                    "downed_front",
+                    "attack_init_back",
+                    "attack_init_front"
+                ],
+                "frames_count": [
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1
+                ],
+                "frame_rate": [
+                    10,
+                    10,
+                    3,
+                    3,
+                    10,
+                    10,
+                    12,
+                    6,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1
+                ],
+                "loop": [
+                    false,
+                    false,
+                    true,
+                    true,
+                    true,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                ]
+            }
+        }
+    },
+    {
+        "key_name": "sera",
+        "anchor_y": 0.8,
+        "initial_action": "idle",
+        "collision_body_bevel": 3,
+        "interaction_pattern": "cross",
+        "body_radius": 7,
+        "walk_speed": 70,
+        "dash_speed": 100,
+        "climb_speed": 50,
+        "voice_key": "adult_female_1",
+        "actions": {
+            "idle": {
+                "frame_rate": 1,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 1,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/sera_field.png",
+                    "json": "assets/images/spritesheets/field/sera_field.json"
+                }
+            },
+            "walk": {
+                "frame_rate": 6,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 2,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/sera_field.png",
+                    "json": "assets/images/spritesheets/field/sera_field.json"
+                }
+            },
+            "dash": {
+                "frame_rate": 10,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 2,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/sera_field.png",
+                    "json": "assets/images/spritesheets/field/sera_field.json"
+                }
+            },
+            "yes": {
+                "frame_rate": 6,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 3,
+                "initial_animation": "down",
+                "loop": false,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/sera_field.png",
+                    "json": "assets/images/spritesheets/field/sera_field.json"
+                }
+            },
+            "no": {
+                "frame_rate": 8,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 4,
+                "initial_animation": "down",
+                "loop": false,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/sera_field.png",
+                    "json": "assets/images/spritesheets/field/sera_field.json"
+                }
+            },
+            "cast": {
+                "frame_rate": 6,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 2,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/sera_field.png",
+                    "json": "assets/images/spritesheets/field/sera_field.json"
+                }
+            },
+            "grant": {
+                "frame_rate": 1,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 1,
+                "initial_animation": "down",
+                "loop": false,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/sera_field.png",
+                    "json": "assets/images/spritesheets/field/sera_field.json"
+                }
+            },
+            "battle": {
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/battle/sera_battle.png",
+                    "json": "assets/images/spritesheets/battle/sera_battle.json"
+                },
+                "animations": [
+                    "attack_back",
+                    "attack_front",
+                    "idle_back",
+                    "idle_front",
+                    "cast_back",
+                    "cast_front",
+                    "cast_init_back",
+                    "cast_init_front",
+                    "damage_back",
+                    "damage_front",
+                    "downed_back",
+                    "downed_front",
+                    "attack_init_back",
+                    "attack_init_front"
+                ],
+                "frames_count": [
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1
+                ],
+                "frame_rate": [
+                    10,
+                    10,
+                    3,
+                    3,
+                    10,
+                    10,
+                    12,
+                    6,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1
+                ],
+                "loop": [
+                    false,
+                    false,
+                    true,
+                    true,
+                    true,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                ]
+            }
+        }
+    },
+    {
+        "key_name": "elder",
+        "anchor_y": 0.8,
+        "initial_action": "idle",
+        "collision_body_bevel": 3,
+        "interaction_pattern": "cross",
+        "body_radius": 7,
+        "walk_speed": 40,
+        "voice_key": "elder_1",
+        "actions": {
+            "idle": {
+                "frame_rate": 1,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 1,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/elder_field.png",
+                    "json": "assets/images/spritesheets/field/elder_field.json"
+                }
+            }
+        }
+    },
+    {
+        "key_name": "mara",
+        "anchor_y": 0.8,
+        "initial_action": "idle",
+        "collision_body_bevel": 3,
+        "interaction_pattern": "cross",
+        "body_radius": 7,
+        "walk_speed": 40,
+        "voice_key": "adult_female_1",
+        "actions": {
+            "idle": {
+                "frame_rate": 1,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 1,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/mara_field.png",
+                    "json": "assets/images/spritesheets/field/mara_field.json"
+                }
+            },
+            "walk": {
+                "frame_rate": 6,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 2,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/mara_field.png",
+                    "json": "assets/images/spritesheets/field/mara_field.json"
+                }
+            }
+        }
+    },
+    {
+        "key_name": "polly",
+        "anchor_y": 0.8,
+        "initial_action": "idle",
+        "collision_body_bevel": 3,
+        "interaction_pattern": "cross",
+        "body_radius": 7,
+        "walk_speed": 40,
+        "voice_key": "child_1",
+        "actions": {
+            "idle": {
+                "frame_rate": 1,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 1,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/polly_field.png",
+                    "json": "assets/images/spritesheets/field/polly_field.json"
+                }
+            },
+            "walk": {
+                "frame_rate": 6,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 2,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/polly_field.png",
+                    "json": "assets/images/spritesheets/field/polly_field.json"
+                }
+            }
+        }
+    },
+    {
+        "key_name": "hob",
+        "anchor_y": 0.8,
+        "initial_action": "idle",
+        "collision_body_bevel": 3,
+        "interaction_pattern": "cross",
+        "body_radius": 7,
+        "walk_speed": 40,
+        "voice_key": "adult_male_1",
+        "actions": {
+            "idle": {
+                "frame_rate": 1,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 1,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/hob_field.png",
+                    "json": "assets/images/spritesheets/field/hob_field.json"
+                }
+            },
+            "walk": {
+                "frame_rate": 6,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 2,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/hob_field.png",
+                    "json": "assets/images/spritesheets/field/hob_field.json"
+                }
+            }
+        }
+    },
+    {
+        "key_name": "dov",
+        "anchor_y": 0.8,
+        "initial_action": "idle",
+        "collision_body_bevel": 3,
+        "interaction_pattern": "cross",
+        "body_radius": 7,
+        "walk_speed": 40,
+        "voice_key": "adult_male_1",
+        "actions": {
+            "idle": {
+                "frame_rate": 1,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 1,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/dov_field.png",
+                    "json": "assets/images/spritesheets/field/dov_field.json"
+                }
+            }
+        }
+    },
+    {
+        "key_name": "miner",
+        "anchor_y": 0.8,
+        "initial_action": "idle",
+        "collision_body_bevel": 3,
+        "interaction_pattern": "cross",
+        "body_radius": 7,
+        "walk_speed": 40,
+        "voice_key": "adult_male_1",
+        "actions": {
+            "idle": {
+                "frame_rate": 1,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 1,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/miner_field.png",
+                    "json": "assets/images/spritesheets/field/miner_field.json"
+                }
+            },
+            "walk": {
+                "frame_rate": 6,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 2,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/miner_field.png",
+                    "json": "assets/images/spritesheets/field/miner_field.json"
+                }
+            }
+        }
+    },
+    {
+        "key_name": "ina",
+        "anchor_y": 0.8,
+        "initial_action": "idle",
+        "collision_body_bevel": 3,
+        "interaction_pattern": "cross",
+        "body_radius": 7,
+        "walk_speed": 40,
+        "voice_key": "child_1",
+        "actions": {
+            "idle": {
+                "frame_rate": 1,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 1,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/ina_field.png",
+                    "json": "assets/images/spritesheets/field/ina_field.json"
+                }
+            },
+            "walk": {
+                "frame_rate": 6,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 2,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/ina_field.png",
+                    "json": "assets/images/spritesheets/field/ina_field.json"
+                }
+            }
+        }
+    },
+    {
+        "key_name": "venus_djinn",
+        "anchor_y": 0.8,
+        "initial_action": "set",
+        "collision_body_bevel": 3,
+        "interaction_pattern": "tik_tak_toe",
+        "body_radius": 7,
+        "walk_speed": 60,
+        "actions": {
+            "set": {
+                "frame_rate": 1,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 1,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/spirit/flint.png",
+                    "json": "assets/images/spritesheets/spirit/flint.json"
+                }
+            },
+            "standby": {
+                "frame_rate": 1,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 1,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/spirit/flint.png",
+                    "json": "assets/images/spritesheets/spirit/flint.json"
+                }
+            }
+        },
+        "action_aliases": {
+            "idle": "standby",
+            "walk": "set"
+        }
+    },
+    {
+        "key_name": "mercury_djinn",
+        "anchor_y": 0.8,
+        "initial_action": "set",
+        "collision_body_bevel": 3,
+        "interaction_pattern": "tik_tak_toe",
+        "body_radius": 7,
+        "walk_speed": 60,
+        "actions": {
+            "set": {
+                "frame_rate": 1,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 1,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/spirit/dew.png",
+                    "json": "assets/images/spritesheets/spirit/dew.json"
+                }
+            },
+            "standby": {
+                "frame_rate": 1,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 1,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/spirit/dew.png",
+                    "json": "assets/images/spritesheets/spirit/dew.json"
+                }
+            }
+        },
+        "action_aliases": {
+            "idle": "standby",
+            "walk": "set"
+        }
+    },
+    {
+        "key_name": "mars_djinn",
+        "anchor_y": 0.8,
+        "initial_action": "set",
+        "collision_body_bevel": 3,
+        "interaction_pattern": "tik_tak_toe",
+        "body_radius": 7,
+        "walk_speed": 60,
+        "actions": {
+            "set": {
+                "frame_rate": 1,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 1,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/spirit/forge.png",
+                    "json": "assets/images/spritesheets/spirit/forge.json"
+                }
+            },
+            "standby": {
+                "frame_rate": 1,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 1,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/spirit/forge.png",
+                    "json": "assets/images/spritesheets/spirit/forge.json"
+                }
+            }
+        },
+        "action_aliases": {
+            "idle": "standby",
+            "walk": "set"
+        }
+    },
+    {
+        "key_name": "jupiter_djinn",
+        "anchor_y": 0.8,
+        "initial_action": "set",
+        "collision_body_bevel": 3,
+        "interaction_pattern": "tik_tak_toe",
+        "body_radius": 7,
+        "walk_speed": 60,
+        "actions": {
+            "set": {
+                "frame_rate": 1,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 1,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/spirit/breeze.png",
+                    "json": "assets/images/spritesheets/spirit/breeze.json"
+                }
+            },
+            "standby": {
+                "frame_rate": 1,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 1,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/spirit/breeze.png",
+                    "json": "assets/images/spritesheets/spirit/breeze.json"
+                }
+            }
+        },
+        "action_aliases": {
+            "idle": "standby",
+            "walk": "set"
+        }
+    },
+    {
+        "key_name": "chest",
+        "anchor_x": 0.5,
+        "anchor_y": 0.6,
+        "initial_action": "chest",
+        "collision_body_bevel": 3,
+        "interaction_pattern": "tik_tak_toe",
+        "no_shadow": true,
+        "body_radius": 7,
+        "actions": {
+            "chest": {
+                "frame_rate": [
+                    1,
+                    1,
+                    6,
+                    10,
+                    1
+                ],
+                "animations": [
+                    "closed",
+                    "open",
+                    "opening",
+                    "shining",
+                    "empty"
+                ],
+                "frames_count": [
+                    1,
+                    1,
+                    2,
+                    2,
+                    1
+                ],
+                "initial_animation": "closed",
+                "loop": [
+                    false,
+                    false,
+                    false,
+                    true,
+                    false
+                ],
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/objects/chest.png",
+                    "json": "assets/images/spritesheets/objects/chest.json"
+                }
+            }
+        }
+    },
+    {
+        "key_name": "marker",
+        "anchor_x": 0.5,
+        "anchor_y": 0.6,
+        "initial_action": "idle",
+        "collision_body_bevel": 3,
+        "interaction_pattern": "tik_tak_toe",
+        "no_shadow": true,
+        "body_radius": 7,
+        "actions": {
+            "idle": {
+                "frame_rate": 1,
+                "animations": [
+                    "down"
+                ],
+                "frames_count": 1,
+                "initial_animation": "down",
+                "loop": false,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/objects/marker.png",
+                    "json": "assets/images/spritesheets/objects/marker.json"
+                }
+            }
+        }
+    },
+    {
+        "key_name": "sign",
+        "anchor_x": 0.5,
+        "anchor_y": 0.6,
+        "initial_action": "idle",
+        "collision_body_bevel": 3,
+        "interaction_pattern": "tik_tak_toe",
+        "no_shadow": true,
+        "body_radius": 7,
+        "actions": {
+            "idle": {
+                "frame_rate": 1,
+                "animations": [
+                    "down"
+                ],
+                "frames_count": 1,
+                "initial_animation": "down",
+                "loop": false,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/objects/sign.png",
+                    "json": "assets/images/spritesheets/objects/sign.json"
+                }
+            }
+        }
+    },
+    {
+        "key_name": "boulder",
+        "anchor_x": 0.5,
+        "anchor_y": 0.6,
+        "initial_action": "idle",
+        "collision_body_bevel": 3,
+        "interaction_pattern": "tik_tak_toe",
+        "no_shadow": true,
+        "body_radius": 7,
+        "actions": {
+            "idle": {
+                "frame_rate": 1,
+                "animations": [
+                    "down"
+                ],
+                "frames_count": 1,
+                "initial_animation": "down",
+                "loop": false,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/objects/boulder.png",
+                    "json": "assets/images/spritesheets/objects/boulder.json"
+                }
+            }
+        }
+    },
+    {
+        "key_name": "gate",
+        "anchor_x": 0.5,
+        "anchor_y": 0.6,
+        "initial_action": "idle",
+        "collision_body_bevel": 3,
+        "interaction_pattern": "tik_tak_toe",
+        "no_shadow": true,
+        "body_radius": 7,
+        "actions": {
+            "idle": {
+                "frame_rate": 1,
+                "animations": [
+                    "down"
+                ],
+                "frames_count": 1,
+                "initial_animation": "down",
+                "loop": false,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/objects/gate.png",
+                    "json": "assets/images/spritesheets/objects/gate.json"
+                }
+            }
+        }
+    },
+    {
+        "key_name": "ogre_s",
+        "anchor_x": 0.5,
+        "anchor_y": 0.7,
+        "initial_action": "idle",
+        "collision_body_bevel": 3,
+        "interaction_pattern": "tik_tak_toe",
+        "no_shadow": false,
+        "body_radius": 7,
+        "actions": {
+            "idle": {
+                "frame_rate": 2,
+                "animations": [
+                    "down"
+                ],
+                "frames_count": 2,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/objects/ogre_s.png",
+                    "json": "assets/images/spritesheets/objects/ogre_s.json"
+                }
+            }
+        }
+    },
+    {
+        "key_name": "wyrm_s",
+        "anchor_x": 0.5,
+        "anchor_y": 0.7,
+        "initial_action": "idle",
+        "collision_body_bevel": 3,
+        "interaction_pattern": "tik_tak_toe",
+        "no_shadow": false,
+        "body_radius": 7,
+        "actions": {
+            "idle": {
+                "frame_rate": 2,
+                "animations": [
+                    "down"
+                ],
+                "frames_count": 2,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/objects/wyrm_s.png",
+                    "json": "assets/images/spritesheets/objects/wyrm_s.json"
+                }
+            }
+        }
+    },
+    {
+        "key_name": "tree",
+        "anchor_x": 0.5,
+        "anchor_y": 1,
+        "sprite_y_offset": 7,
+        "initial_action": "idle",
+        "no_shadow": true,
+        "ignore_physics": true,
+        "interaction_pattern": "no_interaction",
+        "actions": {
+            "idle": {
+                "frame_rate": [
+                    1,
+                    1,
+                    1
+                ],
+                "animations": [
+                    "down",
+                    "alt1",
+                    "alt2"
+                ],
+                "frames_count": [
+                    1,
+                    1,
+                    1
+                ],
+                "initial_animation": "down",
+                "loop": [
+                    false,
+                    false,
+                    false
+                ],
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/objects/tree.png",
+                    "json": "assets/images/spritesheets/objects/tree.json"
+                }
+            }
+        }
+    },
+    {
+        "key_name": "tree_trail",
+        "anchor_x": 0.5,
+        "anchor_y": 1,
+        "sprite_y_offset": 7,
+        "initial_action": "idle",
+        "no_shadow": true,
+        "ignore_physics": true,
+        "interaction_pattern": "no_interaction",
+        "actions": {
+            "idle": {
+                "frame_rate": [
+                    1,
+                    1,
+                    1
+                ],
+                "animations": [
+                    "down",
+                    "alt1",
+                    "alt2"
+                ],
+                "frames_count": [
+                    1,
+                    1,
+                    1
+                ],
+                "initial_animation": "down",
+                "loop": [
+                    false,
+                    false,
+                    false
+                ],
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/objects/tree_trail.png",
+                    "json": "assets/images/spritesheets/objects/tree_trail.json"
+                }
+            }
+        }
+    },
+    {
+        "key_name": "fence_h",
+        "anchor_x": 0.5,
+        "anchor_y": 1,
+        "sprite_y_offset": 7,
+        "initial_action": "idle",
+        "no_shadow": true,
+        "ignore_physics": true,
+        "interaction_pattern": "no_interaction",
+        "actions": {
+            "idle": {
+                "frame_rate": [
+                    1
+                ],
+                "animations": [
+                    "down"
+                ],
+                "frames_count": [
+                    1
+                ],
+                "initial_animation": "down",
+                "loop": [
+                    false
+                ],
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/objects/fence_h.png",
+                    "json": "assets/images/spritesheets/objects/fence_h.json"
+                }
+            }
+        }
+    },
+    {
+        "key_name": "fence_v",
+        "anchor_x": 0.5,
+        "anchor_y": 1,
+        "sprite_y_offset": 7,
+        "initial_action": "idle",
+        "no_shadow": true,
+        "ignore_physics": true,
+        "interaction_pattern": "no_interaction",
+        "actions": {
+            "idle": {
+                "frame_rate": [
+                    1
+                ],
+                "animations": [
+                    "down"
+                ],
+                "frames_count": [
+                    1
+                ],
+                "initial_animation": "down",
+                "loop": [
+                    false
+                ],
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/objects/fence_v.png",
+                    "json": "assets/images/spritesheets/objects/fence_v.json"
+                }
+            }
+        }
+    },
+    {
+        "key_name": "fence_v2",
+        "anchor_x": 0.5,
+        "anchor_y": 1,
+        "sprite_y_offset": 7,
+        "initial_action": "idle",
+        "no_shadow": true,
+        "ignore_physics": true,
+        "interaction_pattern": "no_interaction",
+        "actions": {
+            "idle": {
+                "frame_rate": [
+                    1
+                ],
+                "animations": [
+                    "down"
+                ],
+                "frames_count": [
+                    1
+                ],
+                "initial_animation": "down",
+                "loop": [
+                    false
+                ],
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/objects/fence_v2.png",
+                    "json": "assets/images/spritesheets/objects/fence_v2.json"
+                }
+            }
+        }
+    },
+    {
+        "key_name": "fence_post",
+        "anchor_x": 0.5,
+        "anchor_y": 1,
+        "sprite_y_offset": 7,
+        "initial_action": "idle",
+        "no_shadow": true,
+        "ignore_physics": true,
+        "interaction_pattern": "no_interaction",
+        "actions": {
+            "idle": {
+                "frame_rate": [
+                    1,
+                    1
+                ],
+                "animations": [
+                    "right",
+                    "left"
+                ],
+                "frames_count": [
+                    1,
+                    1
+                ],
+                "initial_animation": "right",
+                "loop": [
+                    false,
+                    false
+                ],
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/objects/fence_post.png",
+                    "json": "assets/images/spritesheets/objects/fence_post.json"
+                }
+            }
+        }
+    },
+    {
+        "key_name": "houses",
+        "anchor_x": 0.5,
+        "anchor_y": 1,
+        "sprite_y_offset": 7,
+        "initial_action": "house",
+        "no_shadow": true,
+        "ignore_physics": true,
+        "interaction_pattern": "no_interaction",
+        "actions": {
+            "house": {
+                "frame_rate": [
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1
+                ],
+                "animations": [
+                    "thera_1",
+                    "thera_2",
+                    "thera_shop",
+                    "thera_far_1",
+                    "thera_far_2",
+                    "thera_far_inn",
+                    "brindle_1",
+                    "brindle_2",
+                    "brindle_3",
+                    "brindle_inn"
+                ],
+                "frames_count": [
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1
+                ],
+                "initial_animation": "thera_1",
+                "loop": [
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                ],
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/objects/houses.png",
+                    "json": "assets/images/spritesheets/objects/houses.json"
+                }
+            }
+        }
+    },
+    {
+        "key_name": "well",
+        "anchor_x": 0.5,
+        "anchor_y": 0.5,
+        "sprite_y_offset": 0,
+        "initial_action": "idle",
+        "no_shadow": true,
+        "ignore_physics": true,
+        "interaction_pattern": "no_interaction",
+        "actions": {
+            "idle": {
+                "frame_rate": [
+                    1
+                ],
+                "animations": [
+                    "down"
+                ],
+                "frames_count": [
+                    1
+                ],
+                "initial_animation": "down",
+                "loop": [
+                    false
+                ],
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/objects/well.png",
+                    "json": "assets/images/spritesheets/objects/well.json"
+                }
+            }
+        }
+    },
+    {
+        "key_name": "spring",
+        "anchor_x": 0.5,
+        "anchor_y": 0.5,
+        "sprite_y_offset": 0,
+        "initial_action": "idle",
+        "no_shadow": true,
+        "ignore_physics": true,
+        "interaction_pattern": "no_interaction",
+        "actions": {
+            "idle": {
+                "frame_rate": [
+                    1
+                ],
+                "animations": [
+                    "down"
+                ],
+                "frames_count": [
+                    1
+                ],
+                "initial_animation": "down",
+                "loop": [
+                    false
+                ],
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/objects/spring.png",
+                    "json": "assets/images/spritesheets/objects/spring.json"
+                }
+            }
+        }
+    }
+]

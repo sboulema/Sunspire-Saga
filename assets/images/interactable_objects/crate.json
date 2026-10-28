@@ -1,0 +1,35 @@
+{
+    "frames": {
+        "crate/idle/00": {
+            "frame": {
+                "x": 0,
+                "y": 0,
+                "w": 12,
+                "h": 12
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 12,
+                "h": 12
+            },
+            "sourceSize": {
+                "w": 12,
+                "h": 12
+            }
+        }
+    },
+    "meta": {
+        "app": "scripts/build_sunspire_assets.js",
+        "version": "1.0",
+        "image": "crate.png",
+        "format": "RGBA8888",
+        "size": {
+            "w": 13,
+            "h": 12
+        },
+        "scale": "1"
+    }
+}

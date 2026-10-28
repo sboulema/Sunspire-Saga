@@ -1,0 +1,425 @@
+{
+    "menu": {
+        "audio": "assets/sounds/se/menu.wav",
+        "json": {
+            "spritemap": {
+                "move": {
+                    "start": 0,
+                    "end": 0.14
+                },
+                "negative": {
+                    "start": 0.2,
+                    "end": 0.34
+                },
+                "positive": {
+                    "start": 0.4,
+                    "end": 0.54
+                },
+                "positive_2": {
+                    "start": 0.6,
+                    "end": 0.74
+                },
+                "positive_3": {
+                    "start": 0.8,
+                    "end": 0.94
+                },
+                "positive_4": {
+                    "start": 1,
+                    "end": 1.14
+                },
+                "positive_5": {
+                    "start": 1.2,
+                    "end": 1.34
+                },
+                "item_equip": {
+                    "start": 1.4,
+                    "end": 1.54
+                },
+                "item_unequip": {
+                    "start": 1.6,
+                    "end": 1.74
+                },
+                "djinn_set": {
+                    "start": 1.8,
+                    "end": 1.94
+                },
+                "djinn_unset": {
+                    "start": 2,
+                    "end": 2.14
+                },
+                "shop_buy": {
+                    "start": 2.2,
+                    "end": 2.34
+                },
+                "shop_sell": {
+                    "start": 2.4,
+                    "end": 2.54
+                }
+            }
+        }
+    },
+    "battle": {
+        "audio": "assets/sounds/se/battle.wav",
+        "json": {
+            "spritemap": {
+                "heal_1": {
+                    "start": 0,
+                    "end": 0.14
+                },
+                "hit_1": {
+                    "start": 0.2,
+                    "end": 0.34
+                },
+                "hit_2": {
+                    "start": 0.4,
+                    "end": 0.54
+                },
+                "poison_hit": {
+                    "start": 0.6,
+                    "end": 0.74
+                }
+            }
+        }
+    },
+    "monster_defeat": {
+        "audio": "assets/sounds/se/monster_defeat.wav",
+        "json": {
+            "spritemap": {
+                "monster_1": {
+                    "start": 0,
+                    "end": 0.14
+                },
+                "monster_2": {
+                    "start": 0.2,
+                    "end": 0.34
+                },
+                "monster_3": {
+                    "start": 0.4,
+                    "end": 0.54
+                }
+            }
+        }
+    },
+    "misc": {
+        "audio": "assets/sounds/se/misc.wav",
+        "json": {
+            "spritemap": {
+                "level_up": {
+                    "start": 0,
+                    "end": 0.14
+                },
+                "item_get": {
+                    "start": 0.2,
+                    "end": 0.34
+                },
+                "party_join": {
+                    "start": 0.4,
+                    "end": 0.54
+                },
+                "inn": {
+                    "start": 0.6,
+                    "end": 0.74
+                },
+                "chest_open": {
+                    "start": 0.8,
+                    "end": 0.94
+                },
+                "djinn_excite": {
+                    "start": 1,
+                    "end": 1.14
+                },
+                "fall": {
+                    "start": 1.2,
+                    "end": 1.34
+                },
+                "fall_into_water": {
+                    "start": 1.4,
+                    "end": 1.54
+                },
+                "ice_hitting": {
+                    "start": 1.6,
+                    "end": 1.74
+                },
+                "item_repair": {
+                    "start": 1.8,
+                    "end": 1.94
+                },
+                "on_equip_curse": {
+                    "start": 2,
+                    "end": 2.14
+                },
+                "remove_curse": {
+                    "start": 2.2,
+                    "end": 2.34
+                },
+                "repel_evil": {
+                    "start": 2.4,
+                    "end": 2.54
+                },
+                "power": {
+                    "start": 2.6,
+                    "end": 2.74
+                },
+                "rock_drop": {
+                    "start": 2.8,
+                    "end": 2.94
+                },
+                "rolling": {
+                    "start": 3,
+                    "end": 3.14
+                },
+                "on_rolling_fall": {
+                    "start": 3.2,
+                    "end": 3.34
+                },
+                "psynergy_stone_shatter": {
+                    "start": 3.4,
+                    "end": 3.54
+                },
+                "stat_boost": {
+                    "start": 3.6,
+                    "end": 3.74
+                },
+                "whirlwind_emit": {
+                    "start": 3.8,
+                    "end": 3.94
+                },
+                "wind_blowing": {
+                    "start": 4,
+                    "end": 4.14
+                },
+                "venus_djinn_get": {
+                    "start": 4.2,
+                    "end": 4.34
+                },
+                "mars_djinn_get": {
+                    "start": 4.4,
+                    "end": 4.54
+                },
+                "jupiter_djinn_get": {
+                    "start": 4.6,
+                    "end": 4.74
+                },
+                "mercury_djinn_get": {
+                    "start": 4.8,
+                    "end": 4.94
+                }
+            }
+        }
+    },
+    "actions": {
+        "audio": "assets/sounds/se/actions.wav",
+        "json": {
+            "spritemap": {
+                "push": {
+                    "start": 0,
+                    "end": 0.14
+                },
+                "jump": {
+                    "start": 0.2,
+                    "end": 0.34
+                },
+                "jump_2": {
+                    "start": 0.4,
+                    "end": 0.54
+                },
+                "slide": {
+                    "start": 0.6,
+                    "end": 0.74
+                },
+                "first_break": {
+                    "start": 0.8,
+                    "end": 0.94
+                },
+                "full_break": {
+                    "start": 1,
+                    "end": 1.14
+                },
+                "ground_hit": {
+                    "start": 1.2,
+                    "end": 1.34
+                }
+            }
+        }
+    },
+    "door": {
+        "audio": "assets/sounds/se/door.wav",
+        "json": {
+            "spritemap": {
+                "default": {
+                    "start": 0,
+                    "end": 0.14
+                },
+                "open_door": {
+                    "start": 0.2,
+                    "end": 0.34
+                },
+                "stair_up": {
+                    "start": 0.4,
+                    "end": 0.54
+                },
+                "stair_down": {
+                    "start": 0.6,
+                    "end": 0.74
+                }
+            }
+        }
+    },
+    "psynergy": {
+        "audio": "assets/sounds/se/psynergy.wav",
+        "json": {
+            "spritemap": {
+                "1": {
+                    "start": 0,
+                    "end": 0.14
+                },
+                "4": {
+                    "start": 0.2,
+                    "end": 0.34
+                },
+                "5": {
+                    "start": 0.4,
+                    "end": 0.54
+                },
+                "6": {
+                    "start": 0.6,
+                    "end": 0.74
+                },
+                "7": {
+                    "start": 0.8,
+                    "end": 0.94
+                },
+                "8": {
+                    "start": 1,
+                    "end": 1.14
+                },
+                "9": {
+                    "start": 1.2,
+                    "end": 1.34
+                },
+                "10": {
+                    "start": 1.4,
+                    "end": 1.54
+                },
+                "11": {
+                    "start": 1.6,
+                    "end": 1.74
+                },
+                "12": {
+                    "start": 1.8,
+                    "end": 1.94
+                },
+                "13": {
+                    "start": 2,
+                    "end": 2.14
+                },
+                "14": {
+                    "start": 2.2,
+                    "end": 2.34
+                },
+                "15": {
+                    "start": 2.4,
+                    "end": 2.54
+                },
+                "16": {
+                    "start": 2.6,
+                    "end": 2.74
+                },
+                "17": {
+                    "start": 2.8,
+                    "end": 2.94
+                },
+                "18": {
+                    "start": 3,
+                    "end": 3.14
+                },
+                "19": {
+                    "start": 3.2,
+                    "end": 3.34
+                },
+                "20": {
+                    "start": 3.4,
+                    "end": 3.54
+                },
+                "21": {
+                    "start": 3.6,
+                    "end": 3.74
+                },
+                "ply": {
+                    "start": 3.8,
+                    "end": 3.94
+                },
+                "revive": {
+                    "start": 4,
+                    "end": 4.14
+                },
+                "sand_in_1": {
+                    "start": 4.2,
+                    "end": 4.34
+                },
+                "sand_in_2": {
+                    "start": 4.4,
+                    "end": 4.54
+                },
+                "sand_out": {
+                    "start": 4.6,
+                    "end": 4.74
+                },
+                "sand_trail": {
+                    "start": 4.8,
+                    "end": 4.94
+                }
+            }
+        }
+    },
+    "summon_tablet": {
+        "audio": "assets/sounds/se/summon_tablet.wav",
+        "json": {
+            "spritemap": {
+                "disassemble": {
+                    "start": 0,
+                    "end": 0.14
+                },
+                "piece": {
+                    "start": 0.2,
+                    "end": 0.34
+                },
+                "finish": {
+                    "start": 0.4,
+                    "end": 0.54
+                },
+                "absorb": {
+                    "start": 0.6,
+                    "end": 0.74
+                }
+            }
+        }
+    },
+    "voices": {
+        "audio": "assets/sounds/se/voices.wav",
+        "json": {
+            "spritemap": {
+                "adult_male_1": {
+                    "start": 0,
+                    "end": 0.14
+                },
+                "adult_female_1": {
+                    "start": 0.2,
+                    "end": 0.34
+                },
+                "child_1": {
+                    "start": 0.4,
+                    "end": 0.54
+                },
+                "elder_1": {
+                    "start": 0.6,
+                    "end": 0.74
+                },
+                "hero_1": {
+                    "start": 0.8,
+                    "end": 0.94
+                }
+            }
+        }
+    }
+}

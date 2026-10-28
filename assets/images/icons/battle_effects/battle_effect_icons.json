@@ -1,0 +1,455 @@
+{
+    "frames": {
+        "agility_down": {
+            "frame": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "agility_up": {
+            "frame": {
+                "x": 15,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "attack_down": {
+            "frame": {
+                "x": 30,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "attack_up": {
+            "frame": {
+                "x": 45,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "death_curse": {
+            "frame": {
+                "x": 60,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "defense_down": {
+            "frame": {
+                "x": 75,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "defense_up": {
+            "frame": {
+                "x": 90,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "delusion": {
+            "frame": {
+                "x": 105,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "downed": {
+            "frame": {
+                "x": 120,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "equip_curse": {
+            "frame": {
+                "x": 135,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "haunt": {
+            "frame": {
+                "x": 150,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "poison": {
+            "frame": {
+                "x": 165,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "power_down": {
+            "frame": {
+                "x": 180,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "power_up": {
+            "frame": {
+                "x": 195,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "power_up_down": {
+            "frame": {
+                "x": 210,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "resist_down": {
+            "frame": {
+                "x": 225,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "resist_up": {
+            "frame": {
+                "x": 240,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "resist_up_down": {
+            "frame": {
+                "x": 255,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "seal": {
+            "frame": {
+                "x": 270,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "sleep": {
+            "frame": {
+                "x": 285,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "stun": {
+            "frame": {
+                "x": 300,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "venom": {
+            "frame": {
+                "x": 315,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        }
+    },
+    "meta": {
+        "app": "scripts/build_sunspire_assets.js",
+        "version": "1.0",
+        "image": "battle_effect_icons.png",
+        "format": "RGBA8888",
+        "size": {
+            "w": 330,
+            "h": 9
+        },
+        "scale": "1"
+    }
+}

@@ -1,0 +1,35 @@
+{
+    "frames": {
+        "idle/down/00": {
+            "frame": {
+                "x": 0,
+                "y": 0,
+                "w": 8,
+                "h": 15
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 8,
+                "h": 15
+            },
+            "sourceSize": {
+                "w": 8,
+                "h": 15
+            }
+        }
+    },
+    "meta": {
+        "app": "scripts/build_sunspire_assets.js",
+        "version": "1.0",
+        "image": "fence_v2.png",
+        "format": "RGBA8888",
+        "size": {
+            "w": 9,
+            "h": 15
+        },
+        "scale": "1"
+    }
+}

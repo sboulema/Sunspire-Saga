@@ -1,0 +1,55 @@
+# Build the engine build of Sunspire Saga: format check, type-checked build, production bundle,
+# then the static site as a workflow artifact. Deploying that site to GitHub Pages is a manual
+# run (workflow_dispatch) until this branch replaces main, since main's own workflow publishes
+# the legacy game there.
+name: Build
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      deploy_pages:
+        description: Deploy the site to GitHub Pages
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run format-check
+      - run: npm run build
+      - run: npm run site
+      - uses: actions/upload-artifact@v5
+        with:
+          name: sunspire-saga-site-${{ github.sha }}
+          path: site
+      - if: inputs.deploy_pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    if: github.event_name == 'workflow_dispatch' && inputs.deploy_pages
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

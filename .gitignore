@@ -1,16 +1,29 @@
-# scratch output from the tools
-tools/*.png
-tools/favicon-*.png
-*.bak.html
-check.js
+## Version control
+.git/
 
-# sprite packs: keep only the instructions, never the art itself
-packs/*
-!packs/README.md
+## Dynamic/Unversionable
+code_docs/
+dist/
+node_modules/
+*.bak
+*.db
+*.log
+*.jar
+*.old
+*.swp
+*.tmp
 
-# editors / OS
+## System files
+.directory
 .DS_Store
-Thumbs.db
-.vscode/
-.idea/
 desktop.ini
+thumbs.db
+.fuse_hidden*
+
+# Keep .keep files
+!.keep
+site/
+
+# Pack zips built by tools/make-pack-zip.js
+/*.zip
+/pack-*/

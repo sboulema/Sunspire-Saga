@@ -1,0 +1,70 @@
+/* The play page: the game in its handheld shell. Shared styles (theme, nav, shell, picker) are in site.css. */
+.play{display:flex; flex-direction:column; align-items:center; gap:16px; padding:28px 16px 0;}
+.play-bar{width:100%; max-width:620px; display:flex; justify-content:space-between; align-items:center; gap:12px 16px; flex-wrap:wrap;}
+.play-bar .actions{display:flex; gap:8px; align-items:center;}
+@media (max-width:520px){
+  .play-bar{flex-wrap:nowrap; gap:8px;}
+  .play-bar .hh-picker{flex-wrap:nowrap; gap:6px;}
+  .play-bar .hh-picker .lbl, .play-bar .hh-name{display:none;}
+  .play-bar .hh-sw, .play-bar .hh-custom{width:24px; height:24px; flex:none;}
+  #immBtn{padding:8px; flex:none;}
+  #immBtn span{display:none;}
+}
+.stage{width:100%; max-width:620px; display:flex; justify-content:center;}
+.legend{font-size:13px; color:var(--ink-2); text-align:center; line-height:1.9; max-width:62ch; margin:0;}
+.legend kbd{font-family:var(--mono); font-size:12px; color:var(--ink); background:var(--surface); border:1px solid var(--line);
+  border-bottom-width:2px; border-radius:5px; padding:0 5px;}
+.icon-btn[aria-pressed="false"] .on, .icon-btn[aria-pressed="true"] .off{display:none;}
+.warning-banner{position:fixed; left:50%; transform:translateX(-50%); z-index:120; max-width:94vw; border-radius:12px;}
+#webgl-warning{top:max(12px, env(safe-area-inset-top));}
+#fps-warning{bottom:max(12px, env(safe-area-inset-bottom)); width:auto;}
+
+/* the engine sizes the canvas itself to an integer multiple of 240x160; it is never stretched */
+.screen #game{display:block; min-width:240px; min-height:160px; background:#000; border-radius:4px; overflow:hidden;}
+.screen #game canvas{display:block; image-rendering:pixelated; image-rendering:crisp-edges;}
+
+/* ---------- immersive: the handheld alone, as large as the viewport allows ---------- */
+.imm-exit, .imm-hint{display:none;}
+body.immersive{overflow:hidden;}
+body.immersive .nav, body.immersive .play-bar, body.immersive .legend, body.immersive .foot, body.immersive #debug,
+body.immersive .install, body.immersive .pack-load{display:none;}
+body.immersive .play{padding:0;}
+body.immersive .stage{position:fixed; inset:0; z-index:100; max-width:none; display:flex; align-items:center; justify-content:center;
+  padding:max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+  background:radial-gradient(1200px 760px at 50% 42%, color-mix(in oklab, var(--hh) 30%, #0b0914), #05040a 72%);}
+/* landscape: the wide handheld, shoulders at the top corners, d-pad left and buttons right of the screen */
+@media (orientation: landscape){
+  body.immersive .shell{display:grid; grid-template-columns:auto auto auto; grid-template-areas:"l screen r" "dpad screen ab" "dpad start ab";
+    align-items:center; justify-items:center; column-gap:clamp(18px, 3vw, 44px); row-gap:10px; width:auto;
+    padding:18px clamp(18px, 3vw, 40px) 12px; border-radius:44px;}
+  body.immersive .controls, body.immersive .shoulders{display:contents;}
+  body.immersive .shoulder.l{grid-area:l; justify-self:start; align-self:start;}
+  body.immersive .shoulder.r{grid-area:r; justify-self:end; align-self:start;}
+  body.immersive .dpad{grid-area:dpad;}
+  body.immersive .ab{grid-area:ab;}
+  body.immersive .mid{grid-area:start; flex-direction:row; gap:18px;}
+  body.immersive .screen{grid-area:screen;}
+}
+body.immersive .imm-exit{display:inline-flex; position:fixed; top:max(12px, env(safe-area-inset-top)); right:max(12px, env(safe-area-inset-right)); z-index:101;
+  background:rgba(20,16,33,.6); color:#e9e0c8; border-color:rgba(255,255,255,.18); opacity:.55; transition:opacity .2s;}
+body.immersive .imm-exit:hover, body.immersive .imm-exit:focus-visible{opacity:1;}
+body.immersive .imm-hint.shown{display:block; position:fixed; left:50%; bottom:max(16px, env(safe-area-inset-bottom)); transform:translateX(-50%); z-index:101;
+  background:rgba(20,16,33,.75); color:#e9e0c8; font-size:13px; padding:6px 14px; border-radius:20px; pointer-events:none;
+  animation:hint-fade 3.2s ease forwards;}
+@keyframes hint-fade{0%,70%{opacity:1} 100%{opacity:0}}
+
+/* ---------- install as app ---------- */
+.install{display:flex; flex-direction:column; align-items:center; gap:8px; margin:0; font-size:13px; color:var(--ink-2); text-align:center;}
+.install[hidden]{display:none;}
+
+/* ---------- sprite packs ---------- */
+.pack-load{display:flex; flex-direction:column; align-items:center; gap:10px; width:100%; max-width:620px; padding-top:4px;}
+.pack-load .row{display:flex; flex-wrap:wrap; justify-content:center; gap:8px;}
+.pack-load .btn{cursor:pointer;}
+#packStatus{font-size:13px; line-height:1.7; text-align:center; color:var(--ink-2);}
+#packStatus:empty{display:none;}
+#packStatus .ok{color:var(--ok);} #packStatus .warn{color:var(--warn);} #packStatus .err{color:var(--err);}
+
+/* ---------- the engine's debug panels ---------- */
+#debug{width:100%; max-width:960px; padding:0 16px; font-family:var(--mono); font-size:13px;}
+#debug[hidden]{display:none;}

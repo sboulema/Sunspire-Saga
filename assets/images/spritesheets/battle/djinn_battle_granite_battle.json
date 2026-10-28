@@ -1,0 +1,255 @@
+{
+    "frames": {
+        "battle/idle_back/00": {
+            "frame": {
+                "x": 0,
+                "y": 0,
+                "w": 20,
+                "h": 13
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 20,
+                "h": 13
+            },
+            "sourceSize": {
+                "w": 20,
+                "h": 13
+            }
+        },
+        "battle/idle_front/00": {
+            "frame": {
+                "x": 21,
+                "y": 0,
+                "w": 20,
+                "h": 13
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 20,
+                "h": 13
+            },
+            "sourceSize": {
+                "w": 20,
+                "h": 13
+            }
+        },
+        "battle/attack_init_back/00": {
+            "frame": {
+                "x": 42,
+                "y": 0,
+                "w": 20,
+                "h": 13
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 20,
+                "h": 13
+            },
+            "sourceSize": {
+                "w": 20,
+                "h": 13
+            }
+        },
+        "battle/attack_init_front/00": {
+            "frame": {
+                "x": 63,
+                "y": 0,
+                "w": 20,
+                "h": 13
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 20,
+                "h": 13
+            },
+            "sourceSize": {
+                "w": 20,
+                "h": 13
+            }
+        },
+        "battle/attack_back/00": {
+            "frame": {
+                "x": 84,
+                "y": 0,
+                "w": 20,
+                "h": 13
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 20,
+                "h": 13
+            },
+            "sourceSize": {
+                "w": 20,
+                "h": 13
+            }
+        },
+        "battle/attack_front/00": {
+            "frame": {
+                "x": 105,
+                "y": 0,
+                "w": 20,
+                "h": 13
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 20,
+                "h": 13
+            },
+            "sourceSize": {
+                "w": 20,
+                "h": 13
+            }
+        },
+        "battle/cast_init_back/00": {
+            "frame": {
+                "x": 126,
+                "y": 0,
+                "w": 20,
+                "h": 13
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 20,
+                "h": 13
+            },
+            "sourceSize": {
+                "w": 20,
+                "h": 13
+            }
+        },
+        "battle/cast_init_front/00": {
+            "frame": {
+                "x": 147,
+                "y": 0,
+                "w": 20,
+                "h": 13
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 20,
+                "h": 13
+            },
+            "sourceSize": {
+                "w": 20,
+                "h": 13
+            }
+        },
+        "battle/cast_back/00": {
+            "frame": {
+                "x": 168,
+                "y": 0,
+                "w": 20,
+                "h": 13
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 20,
+                "h": 13
+            },
+            "sourceSize": {
+                "w": 20,
+                "h": 13
+            }
+        },
+        "battle/cast_front/00": {
+            "frame": {
+                "x": 189,
+                "y": 0,
+                "w": 20,
+                "h": 13
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 20,
+                "h": 13
+            },
+            "sourceSize": {
+                "w": 20,
+                "h": 13
+            }
+        },
+        "battle/damage_back/00": {
+            "frame": {
+                "x": 210,
+                "y": 0,
+                "w": 20,
+                "h": 13
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 20,
+                "h": 13
+            },
+            "sourceSize": {
+                "w": 20,
+                "h": 13
+            }
+        },
+        "battle/damage_front/00": {
+            "frame": {
+                "x": 231,
+                "y": 0,
+                "w": 20,
+                "h": 13
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 20,
+                "h": 13
+            },
+            "sourceSize": {
+                "w": 20,
+                "h": 13
+            }
+        }
+    },
+    "meta": {
+        "app": "scripts/build_sunspire_assets.js",
+        "version": "1.0",
+        "image": "djinn_battle_granite_battle.png",
+        "format": "RGBA8888",
+        "size": {
+            "w": 252,
+            "h": 13
+        },
+        "scale": "1"
+    }
+}

@@ -1,0 +1,110 @@
+[
+    {
+        "key_name": "move_hand",
+        "actions": {
+            "move_hand": {
+                "frame_rate": 1,
+                "animations": ["down", "up", "left", "right"],
+                "frames_count": 1,
+                "loop": false,
+                "spritesheet": {"image": "assets/images/misc/move_hand.png", "json": "assets/images/misc/move_hand.json"}
+            }
+        }
+    },
+    {
+        "key_name": "pound_hand",
+        "actions": {
+            "pound_hand": {
+                "frame_rate": 1,
+                "animations": ["down", "up", "left", "right"],
+                "frames_count": 1,
+                "loop": false,
+                "spritesheet": {"image": "assets/images/misc/pound_hand.png", "json": "assets/images/misc/pound_hand.json"}
+            }
+        }
+    },
+    {
+        "key_name": "sand",
+        "actions": {
+            "sand": {
+                "frame_rate": 1,
+                "animations": ["trail"],
+                "frames_count": 1,
+                "loop": false,
+                "spritesheet": {"image": "assets/images/misc/sand.png", "json": "assets/images/misc/sand.json"}
+            }
+        }
+    },
+    {
+        "key_name": "dialog_crystal",
+        "actions": {
+            "dialog_crystal": {
+                "frame_rate": 10,
+                "animations": ["rotate"],
+                "frames_count": 7,
+                "loop": true,
+                "spritesheet": {"image": "assets/images/misc/dialog_crystal.png", "json": "assets/images/misc/dialog_crystal.json"}
+            }
+        }
+    },
+    {
+        "key_name": "battle_status_sprites",
+        "actions": {
+            "battle_status_sprites": {
+                "frame_rate": 1,
+                "animations": ["death_curse_0", "death_curse_1", "death_curse_2", "death_curse_3", "death_curse_4", "death_curse_5", "death_curse_6", "delusion", "haunt", "poison", "seal", "sleep", "stun", "venom"],
+                "frames_count": 1,
+                "loop": true,
+                "spritesheet": {"image": "assets/images/misc/battle_status_sprites.png", "json": "assets/images/misc/battle_status_sprites.json"}
+            }
+        }
+    },
+    {
+        "key_name": "psynergy_particle",
+        "actions": {
+            "psynergy_particle": {
+                "frame_rate": 8,
+                "animations": ["vanish", "hidden_item"],
+                "frames_count": [4, 1],
+                "loop": false,
+                "spritesheet": {"image": "assets/images/misc/psynergy_particle.png", "json": "assets/images/misc/psynergy_particle.json"}
+            }
+        }
+    },
+    {
+        "key_name": "dust",
+        "actions": {
+            "dust": {
+                "frame_rate": 8,
+                "animations": ["spread"],
+                "frames_count": 4,
+                "loop": false,
+                "spritesheet": {"image": "assets/images/misc/dust.png", "json": "assets/images/misc/dust.json"}
+            }
+        }
+    },
+    {
+        "key_name": "sweat_drops",
+        "actions": {
+            "sweat_drops": {
+                "frame_rate": 8,
+                "animations": ["splash"],
+                "frames_count": 3,
+                "loop": false,
+                "spritesheet": {"image": "assets/images/misc/sweat_drops.png", "json": "assets/images/misc/sweat_drops.json"}
+            }
+        }
+    },
+    {
+        "key_name": "footprints",
+        "actions": {
+            "footprints": {
+                "frame_rate": 1,
+                "animations": ["single", "double"],
+                "frames_count": 1,
+                "loop": false,
+                "spritesheet": {"image": "assets/images/misc/footprints.png", "json": "assets/images/misc/footprints.json"}
+            }
+        }
+    }
+]

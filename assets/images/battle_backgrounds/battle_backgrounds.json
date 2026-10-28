@@ -1,0 +1,215 @@
+{
+    "frames": {
+        "bg_field": {
+            "frame": {
+                "x": 0,
+                "y": 0,
+                "w": 256,
+                "h": 120
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 256,
+                "h": 120
+            },
+            "sourceSize": {
+                "w": 256,
+                "h": 120
+            }
+        },
+        "bg_mine": {
+            "frame": {
+                "x": 257,
+                "y": 0,
+                "w": 256,
+                "h": 120
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 256,
+                "h": 120
+            },
+            "sourceSize": {
+                "w": 256,
+                "h": 120
+            }
+        },
+        "bg_trail": {
+            "frame": {
+                "x": 514,
+                "y": 0,
+                "w": 256,
+                "h": 120
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 256,
+                "h": 120
+            },
+            "sourceSize": {
+                "w": 256,
+                "h": 120
+            }
+        },
+        "bg_tower": {
+            "frame": {
+                "x": 0,
+                "y": 121,
+                "w": 256,
+                "h": 120
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 256,
+                "h": 120
+            },
+            "sourceSize": {
+                "w": 256,
+                "h": 120
+            }
+        },
+        "bg_summon": {
+            "frame": {
+                "x": 257,
+                "y": 121,
+                "w": 256,
+                "h": 120
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 256,
+                "h": 120
+            },
+            "sourceSize": {
+                "w": 256,
+                "h": 120
+            }
+        },
+        "bg_summon_earth": {
+            "frame": {
+                "x": 514,
+                "y": 121,
+                "w": 256,
+                "h": 120
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 256,
+                "h": 120
+            },
+            "sourceSize": {
+                "w": 256,
+                "h": 120
+            }
+        },
+        "bg_summon_fire": {
+            "frame": {
+                "x": 0,
+                "y": 242,
+                "w": 256,
+                "h": 120
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 256,
+                "h": 120
+            },
+            "sourceSize": {
+                "w": 256,
+                "h": 120
+            }
+        },
+        "bg_summon_water": {
+            "frame": {
+                "x": 257,
+                "y": 242,
+                "w": 256,
+                "h": 120
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 256,
+                "h": 120
+            },
+            "sourceSize": {
+                "w": 256,
+                "h": 120
+            }
+        },
+        "bg_summon_wind": {
+            "frame": {
+                "x": 514,
+                "y": 242,
+                "w": 256,
+                "h": 120
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 256,
+                "h": 120
+            },
+            "sourceSize": {
+                "w": 256,
+                "h": 120
+            }
+        },
+        "bg_summon_sol": {
+            "frame": {
+                "x": 0,
+                "y": 363,
+                "w": 256,
+                "h": 120
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 256,
+                "h": 120
+            },
+            "sourceSize": {
+                "w": 256,
+                "h": 120
+            }
+        }
+    },
+    "meta": {
+        "app": "scripts/build_sunspire_assets.js",
+        "version": "1.0",
+        "image": "battle_backgrounds.png",
+        "format": "RGBA8888",
+        "size": {
+            "w": 771,
+            "h": 483
+        },
+        "scale": "1"
+    }
+}

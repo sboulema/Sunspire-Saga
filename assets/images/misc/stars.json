@@ -1,0 +1,95 @@
+{
+    "frames": {
+        "venus": {
+            "frame": {
+                "x": 0,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 7,
+                "h": 7
+            }
+        },
+        "mercury": {
+            "frame": {
+                "x": 8,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 7,
+                "h": 7
+            }
+        },
+        "mars": {
+            "frame": {
+                "x": 16,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 7,
+                "h": 7
+            }
+        },
+        "jupiter": {
+            "frame": {
+                "x": 24,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 7,
+                "h": 7
+            }
+        }
+    },
+    "meta": {
+        "app": "scripts/build_sunspire_assets.js",
+        "version": "1.0",
+        "image": "stars.png",
+        "format": "RGBA8888",
+        "size": {
+            "w": 32,
+            "h": 7
+        },
+        "scale": "1"
+    }
+}

@@ -1,0 +1,82 @@
+[
+    {
+        "name": "Thera Fields",
+        "key_name": "fields",
+        "bgm": {
+            "key": "town",
+            "path": "assets/sounds/bgm/town.wav"
+        },
+        "tileset_files": {
+            "image": "assets/images/tilesets/fields.png",
+            "json": "assets/maps/fields/fields.json"
+        },
+        "lazy_load": true,
+        "collision_embedded": true,
+        "background_key": "bg_field",
+        "expected_party_level": 2
+    },
+    {
+        "name": "Brindle",
+        "key_name": "brindle",
+        "bgm": {
+            "key": "town",
+            "path": "assets/sounds/bgm/town.wav"
+        },
+        "tileset_files": {
+            "image": "assets/images/tilesets/brindle.png",
+            "json": "assets/maps/brindle/brindle.json"
+        },
+        "lazy_load": true,
+        "collision_embedded": true,
+        "background_key": "bg_field",
+        "expected_party_level": 3
+    },
+    {
+        "name": "Brindle Mine",
+        "key_name": "mine",
+        "bgm": {
+            "key": "battle_boss",
+            "path": "assets/sounds/bgm/battle_boss.wav"
+        },
+        "tileset_files": {
+            "image": "assets/images/tilesets/mine.png",
+            "json": "assets/maps/mine/mine.json"
+        },
+        "lazy_load": true,
+        "collision_embedded": true,
+        "background_key": "bg_mine",
+        "expected_party_level": 6
+    },
+    {
+        "name": "Sunspire Trail",
+        "key_name": "trail",
+        "bgm": {
+            "key": "town",
+            "path": "assets/sounds/bgm/town.wav"
+        },
+        "tileset_files": {
+            "image": "assets/images/tilesets/trail.png",
+            "json": "assets/maps/trail/trail.json"
+        },
+        "lazy_load": true,
+        "collision_embedded": true,
+        "background_key": "bg_trail",
+        "expected_party_level": 9
+    },
+    {
+        "name": "The Sunspire",
+        "key_name": "shrine",
+        "bgm": {
+            "key": "battle_boss",
+            "path": "assets/sounds/bgm/battle_boss.wav"
+        },
+        "tileset_files": {
+            "image": "assets/images/tilesets/shrine.png",
+            "json": "assets/maps/shrine/shrine.json"
+        },
+        "lazy_load": true,
+        "collision_embedded": true,
+        "background_key": "bg_tower",
+        "expected_party_level": 12
+    }
+]

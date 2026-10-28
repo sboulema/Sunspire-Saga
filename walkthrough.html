@@ -1,255 +1,108 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Sunspire Saga Walkthrough</title>
-  <meta name="description" content="A classic plain-text FAQ and walkthrough for Sunspire Saga: every area, treasure chest, spirit and boss, with maps, shop lists and the full bestiary.">
-  <meta name="theme-color" content="#100d1d">
-  <link rel="icon" href="assets/favicon.ico" sizes="any">
-  <link rel="apple-touch-icon" href="assets/sunspire-mark-512.png">
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap">
-  <script>try{var t=localStorage.getItem('sunspire_theme'),h=localStorage.getItem('sunspire_handheld'),r=document.documentElement;if(t)r.dataset.theme=t;r.dataset.themeEff=t||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');if(h&&/^#[0-9a-f]{6}$/i.test(h))r.style.setProperty('--hh',h)}catch(e){}</script>
-  <link rel="stylesheet" href="assets/site.css">
-  <style>
-    .faq{max-width:880px; padding-top:40px;}
-    .faq .eyebrow{font-family:var(--display); font-size:14px; letter-spacing:.18em; text-transform:uppercase; color:var(--accent); margin:0 0 10px; font-weight:600;}
-    .faq h1{font-size:clamp(32px, 4.5vw, 44px);}
-    .faq .intro{font-size:17px; color:var(--ink-2); margin:0 0 28px; max-width:62ch;}
-    /* the guide itself sits in a white well with black text, like a text file on an old FAQ site; it stays white in dark mode on purpose */
-    .well{background:#fff; color:#000; border:1px solid var(--line); border-radius:14px; padding:26px 30px; overflow:auto; box-shadow:var(--shadow); color-scheme:light;}
-    .well pre{margin:0; font:13.5px/1.45 var(--mono); color:#000; white-space:pre; tab-size:4;}
-    .well b{font-weight:400; scroll-margin-top:84px;}
-    .well a{color:#0000ee; text-decoration:underline;}
-    .well a:visited{color:#551a8b;}
-    .well a:hover{background:#ffe9a0;}
-    @media (max-width:600px){ .well{padding:18px 16px; border-radius:10px;} .well pre{font-size:12px;} }
-  </style>
-</head>
-<body>
-<header class="nav"><div class="wrap">
-  <a class="brand" href="./"><img src="assets/sunspire-mark-512.png" alt=""><span>Sunspire Saga</span></a>
-  <nav class="nav-links" aria-label="Site">
-    <a href="./">Home</a>
-    <a href="play">Play online</a>
-    <a href="pack-guide">Pack guide</a>
-    <a href="changelog">Changelog</a>
-    <a href="walkthrough" aria-current="page">Walkthrough</a>
-  </nav>
-  <button class="icon-btn theme-toggle" type="button" aria-label="Toggle colour theme">
-    <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-    <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
-  </button>
-</div></header>
-
-<main class="wrap faq">
-  <p class="eyebrow">Walkthrough</p>
-  <h1>The complete FAQ, the old-school way</h1>
-  <p class="intro">Every area, chest, spirit and boss in plain text with ASCII maps, the way guides were written
-    when the game this one tips its hat to was new. The numbers come straight from the game's data and are
-    kept in step with every release.</p>
-  <div class="well">
-<pre>===============================================================================
-
-          ____    _   _   _   _   ____    ____    ___   ____    _____
-         / ___|  | | | | | \ | | / ___|  |  _ \  |_ _| |  _ \  | ____|
-         \___ \  | | | | |  \| | \___ \  | |_) |  | |  | |_) | |  _|
-          ___) | | |_| | | |\  |  ___) | |  __/   | |  |  _ &lt;  | |___
-         |____/   \___/  |_| \_| |____/  |_|     |___| |_| \_\ |_____|
-
-                       ____       _       ____      _
-                      / ___|     / \     / ___|    / \
-                      \___ \    / _ \   | |  _    / _ \
-                       ___) |  / ___ \  | |_| |  / ___ \
-                      |____/  /_/   \_\  \____| /_/   \_\
-
-                                   \   |   /
-                                 -   (   )   -
-                                   /   |   \
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>Sunspire Saga walkthrough</title>
+        <meta name="description" content="The complete walkthrough and FAQ for Sunspire Saga: every area, chest, spirit and boss, with maps and the full bestiary." />
+        <meta name="theme-color" content="#100d1d" />
+        <link rel="shortcut icon" type="image/x-icon" href="/static/favicon.ico" />
+        <script>try{var t=localStorage.getItem('sunspire_theme'),h=localStorage.getItem('sunspire_handheld'),r=document.documentElement;if(t)r.dataset.theme=t;r.dataset.themeEff=t||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');if(h&&/^#[0-9a-f]{6}$/i.test(h))r.style.setProperty('--hh',h)}catch(e){}</script>
+        <link rel="stylesheet" href="/static/site.css">
+        <style>
+            .guide{width:100%; max-width:960px; margin:0 auto; padding:40px 20px 0;}
+            .guide h1{font-family:var(--display); font-size:clamp(32px, 4.5vw, 44px); margin:0 0 .4em;}
+            .guide p{max-width:72ch; color:var(--ink-2);}
+            .well{background:#fffdf7; color:#1f1a33; border:1px solid var(--line); border-radius:12px; padding:18px 20px; overflow-x:auto; box-shadow:var(--shadow);}
+            .well pre{margin:0; font:13px/1.45 var(--mono); white-space:pre; tab-size:4;}
+            .well a{color:#8f5f06;}
+            .well b{color:#2a1a02;}
+        </style>
+    </head>
+    <body>
+        <header class="nav"><div class="wrap">
+            <a class="brand" href="/index.html"><img src="/static/icons/sunspire-mark-512.png" alt=""><span>Sunspire Saga</span></a>
+            <nav class="nav-links" aria-label="Site">
+                <a href="/index.html">Home</a>
+                <a href="/play.html">Play online</a>
+                <a href="/pack-guide.html">Pack guide</a>
+                <a href="/changelog.html">Changelog</a>
+                <a href="/walkthrough.html" aria-current="page">Walkthrough</a>
+            </nav>
+            <button class="icon-btn theme-toggle" type="button" aria-label="Toggle colour theme">
+                <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+                <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+            </button>
+        </div></header>
+        <main class="guide">
+            <h1>Walkthrough</h1>
+            <p>A classic plain-text FAQ for the whole game, generated from the game's own data. Jump to a section from the contents; the codes in brackets are stable anchors.</p>
+            <div class="well"><pre>                      SUNSPIRE SAGA - FAQ / WALKTHROUGH
+                 Game version: V48 (engine build 0.0.1)
+          Guide version: 2.0   Last updated: 2026-10-28
 
 ===============================================================================
-                    SUNSPIRE SAGA - FAQ / WALKTHROUGH
-                        For the browser (play.html)
-                           Game version: V48
-                         Guide version: 1.9
-                       Last updated: 27 October 2026
+  TABLE OF CONTENTS
 ===============================================================================
 
-This is a complete walkthrough for Sunspire Saga, the browser-based pixel-art
-RPG. It covers every area from the first step in Thera to the top of the
-Sunspire, every treasure chest, all eight spirits (the game's "djinn"), both
-bosses, the shops, the bestiary and the mechanics behind the numbers.
-
-Everything in this document comes straight out of the game's own data file
-(game.js), so the numbers are exact for the version listed above. If the game
-has moved on since then, check the changelog page and section [VER02].
-
-===============================================================================
-                            TABLE OF CONTENTS
-===============================================================================
-
-To jump to a section, click its code below, or use Find (Ctrl+F) and type
-the code in brackets, e.g. "[WLK07]".
-
-   1.  Introduction ........................................... [<a href="#INT01">INT01</a>]
-   2.  Version History ........................................ [<a href="#VER02">VER02</a>]
-   3.  Story .................................................. [<a href="#STO03">STO03</a>]
-   4.  Controls and the Menu .................................. [<a href="#CTL04">CTL04</a>]
-   5.  Game Basics ............................................ [<a href="#BAS05">BAS05</a>]
-         5.1  Party and levels
-         5.2  Battle commands
-         5.3  Arts (psynergy)
-         5.4  Spirits: set, unleash, standby
-         5.5  Summons
-         5.6  Random encounters, fleeing and defeat
-         5.7  Saving
-         5.8  Shops, inns, wells and the spring
-         5.9  The damage formulas
-   6.  Characters ............................................. [<a href="#CHR06">CHR06</a>]
-   7.  Walkthrough ............................................ [<a href="#WLK07">WLK07</a>]
-         7.1  Thera and the fields ............................ [<a href="#WLK7A">WLK7A</a>]
-         7.2  Flint and the boulder ........................... [<a href="#WLK7B">WLK7B</a>]
-         7.3  The paddock and Lyn's compass ................... [<a href="#WLK7C">WLK7C</a>]
-         7.4  Mira Farmstead (optional) ....................... [<a href="#WLK7D">WLK7D</a>]
-         7.5  Brindle ......................................... [<a href="#WLK7E">WLK7E</a>]
-         7.6  Lake Mira: Dew .................................. [<a href="#WLK7F">WLK7F</a>]
-         7.7  Brindle Mine .................................... [<a href="#WLK7G">WLK7G</a>]
-         7.8  BOSS: Maw Ogre .................................. [<a href="#BOS7H">BOS7H</a>]
-         7.9  Sunspire Trail .................................. [<a href="#WLK7I">WLK7I</a>]
-         7.10 The Sunspire .................................... [<a href="#WLK7J">WLK7J</a>]
-         7.11 FINAL BOSS: Shadow Wyrm ......................... [<a href="#BOS7K">BOS7K</a>]
-         7.12 The ending ...................................... [<a href="#END7L">END7L</a>]
-   8.  Spirit (Djinn) Guide ................................... [<a href="#SPR08">SPR08</a>]
-   9.  Summon List ............................................ [<a href="#SUM09">SUM09</a>]
-  10.  Treasure Chest List .................................... [<a href="#CHS10">CHS10</a>]
-  11.  Items and Equipment .................................... [<a href="#ITM11">ITM11</a>]
-  12.  Shop Lists ............................................. [<a href="#SHP12">SHP12</a>]
-  13.  Bestiary ............................................... [<a href="#BST13">BST13</a>]
-  14.  Frequently Asked Questions ............................. [<a href="#FAQ14">FAQ14</a>]
-  15.  Credits and Legal ...................................... [<a href="#LGL15">LGL15</a>]
+   <a href="#INT01">1. INTRODUCTION..............................................</a> [INT01]
+   <a href="#VER02">2. VERSION HISTORY...........................................</a> [VER02]
+   <a href="#STO03">3. STORY.....................................................</a> [STO03]
+   <a href="#CTL04">4. CONTROLS AND THE MENU.....................................</a> [CTL04]
+   <a href="#BAS05">5. GAME BASICS...............................................</a> [BAS05]
+   <a href="#CHR06">6. CHARACTERS................................................</a> [CHR06]
+   <a href="#WLK07">7. WALKTHROUGH...............................................</a> [WLK07]
+   <a href="#WLK7A">7.1. THERA FIELDS............................................</a> [WLK7A]
+   <a href="#WLK7B">7.2. BRINDLE.................................................</a> [WLK7B]
+   <a href="#WLK7C">7.3. BRINDLE MINE............................................</a> [WLK7C]
+   <a href="#BOS7D">7.4. BOSS: MAW OGRE..........................................</a> [BOS7D]
+   <a href="#WLK7E">7.5. SUNSPIRE TRAIL..........................................</a> [WLK7E]
+   <a href="#WLK7F">7.6. THE SUNSPIRE............................................</a> [WLK7F]
+   <a href="#BOS7G">7.7. BOSS: SHADOW WYRM.......................................</a> [BOS7G]
+   <a href="#END7H">7.8. THE ENDING..............................................</a> [END7H]
+   <a href="#SPR08">8. SPIRIT (DJINN) GUIDE......................................</a> [SPR08]
+   <a href="#SUM09">9. SUMMON LIST...............................................</a> [SUM09]
+   <a href="#CHS10">10. TREASURE CHEST LIST......................................</a> [CHS10]
+   <a href="#ITM11">11. ITEMS AND EQUIPMENT......................................</a> [ITM11]
+   <a href="#SHP12">12. SHOP LISTS...............................................</a> [SHP12]
+   <a href="#BST13">13. BESTIARY.................................................</a> [BST13]
+   <a href="#FAQ14">14. FREQUENTLY ASKED QUESTIONS...............................</a> [FAQ14]
+   <a href="#LGL15">15. CREDITS AND LEGAL........................................</a> [LGL15]
 
 ===============================================================================
-<b id="INT01">  1. INTRODUCTION                                                      [INT01]</b>
+<b id="INT01">  1. INTRODUCTION                                                       [INT01]</b>
 ===============================================================================
 
-Sunspire Saga is an original homage to the handheld JRPGs of the early 2000s:
-a party of four elemental adepts, eight collectible spirits that boost your
-stats when "set" and power great summons when "unleashed", turn-based battles
-with hidden enemy HP, towns, shops, an inn, treasure chests and a dark tower
-at the end of the road.
+Sunspire Saga is an original homage to the handheld JRPGs of the early 2000s: a
+party of four elemental adepts, eight collectible spirits that boost your stats
+when set and power great summons when unleashed, turn-based battles, towns,
+shops, inns, treasure chests and a dark tower at the end of the road.
 
-The whole game runs in the browser from one script with nothing to install.
-It saves in your browser's local storage, so play it from the same browser
-(and the same site address) if you want to continue a game. If you like, the
-play page can be installed as an app (see 5.7).
-
-The game is short - a focused adventure of a couple of hours - but it is not a
-pushover. From version 31 on, enemies bite, spirits and bosses shrug off plain
-sword swings, and the four late spirits act twice a turn. This guide tells you
-where everything is and how to get through the hard parts without grinding
-more than you need to.
+This is the engine build of the game (sunspire-saga 0.0.1, game data V48): the
+same story, maps, numbers and art as the single-script game, running on the
+goldensun_html5 engine. It plays in the browser, saves there, and the handheld
+shell around the screen works with touch.
 
 How to use this guide: section 7 is the walkthrough in the order the game
-expects you to play it, with a map, an item list and the enemies for every
-area. Sections 8 to 13 are reference lists if you only want to look something
-up. Map coordinates are written as (x,y): x counts tiles from the left edge,
-y counts tiles from the top, both starting at 0, and the rulers on the maps
-show them.
+expects, with a map, the chests and the enemies of every area. Sections 8 to 13
+are reference lists. Map coordinates are (x,y): x counts tiles from the left
+edge and y from the top, both from 0; the rulers on the maps show them.
+
+This file is generated from the game's own data by
+scripts/build_walkthrough.js, so every number and position in it is the one the
+game uses.
 
 ===============================================================================
-<b id="VER02">  2. VERSION HISTORY                                                   [VER02]</b>
+<b id="VER02">  2. VERSION HISTORY                                                    [VER02]</b>
 ===============================================================================
 
-Guide 1.9 - 27 October 2026
-   Updated for game version V48: L and R shoulder buttons (Q / E) step
-   through party members in the menu and targets in battle. Section 4.
-
-Guide 1.8 - 27 October 2026
-   Updated for game version V47: the game can be installed as an app, which
-   opens full screen straight into the saved game. Sections 3 and 5.7.
-
-Guide 1.7 - 27 October 2026
-   Updated for game version V46: the title screen's CONTINUE works with
-   left/right and is highlighted first, and NEW GAME asks before
-   replacing a save. Section 5.7.
-
-Guide 1.6 - 27 October 2026
-   Updated for game version V45: looted chests stay open on the map.
-   Section 10.
-
-Guide 1.5 - 27 October 2026
-   Updated for game version V44: no gameplay changes (sprite-pack summon
-   figures are shown at their own size). Numbers unchanged.
-
-Guide 1.4 - 27 October 2026
-   Updated for game version V43: the target view shows only the member
-   whose turn it is, summon rows show the spirits they need, and the game
-   runs at the same speed on every display. Section 5.2.
-
-Guide 1.3 - 23 October 2026
-   Updated for game version V42: tougher packs in the Thera paddock,
-   stronger mine monsters, cheaper gear from Dov in Brindle, icons in
-   the shops and on YES/NO choices, and the new panel-style ITEMS and
-   EQUIP screens. Sections 2, 4, 5.6, 7.3, 7.5, 7.7, 7.9, 11, 12 and
-   13.
-
-Guide 1.2 - 23 October 2026
-   Updated for game version V41: the new battle screen (status cards,
-   over-the-shoulder targeting, the arts window) and the focus rule for
-   area arts and SQUALL, which now hit the enemy you pick for full damage
-   and the rest for 70%. Sections 4, 5.2, 5.3, 5.9 and 8.
-
-Guide 1.1 - 23 October 2026
-   Updated for game version V40: Lyn is now the water adept and the
-   party's healer, Bram the fire adept. Every plan that names who casts
-   what is reworked to match.
-
-Guide 1.0 - 23 October 2026
-   First release. Written against game version V39. Covers all five areas,
-   eleven chests, eight spirits, two bosses, both shops and the full
-   bestiary.
-
-The game's own version history lives on its changelog page (changelog.html).
-The bits of it that matter for a walkthrough:
-
-   V46  CONTINUE is highlighted on the title screen when there is a save
-        and left/right reach it; NEW GAME asks before replacing a save.
-   V45  A looted chest stays open on the map (also after loading a save)
-        instead of closing again, so finished chests are easy to spot.
-   V44  Sprite-pack summon figures are drawn at their own size in the
-        cutscene. Nothing a walkthrough needs to know.
-   V43  Only the member whose turn it is zooms in when targeting; summon
-        rows show the spirits needed; every summon has its own cutscene
-        figure; the game runs at a fixed 60 steps a second on any display.
-   V42  The paddock behind the boulder sends packs of two or three at any
-        level; Ore Beetles and Ruin Golems hit harder and last longer;
-        Dov's Iron Axe, Chain Mail and Aegis Plate are cheaper. Shop
-        rows and YES/NO choices have icons. ITEMS and EQUIP are panel
-        screens with a portrait, an icon grid and a live preview of
-        the HP / PP or ATK / DEF a choice would give.
-   V41  New battle screen: status cards with filled/empty HP and PP bars,
-        a zoomed-in targeting view with a pink droplet over the target,
-        and a full arts window. Area arts and SQUALL now pick a focus:
-        that enemy takes full damage, every other enemy 70%.
-   V40  Lyn and Bram trade elements: Lyn is the water adept (CURE, ICE
-        HORN, PURE PLY), Bram the fire adept (FLARE, FIRE BOMB, INFERNO).
-   V37  Thera Fields grew an open meadow to the east, Mira Farmstead, with
-        an inn, two homes, the farmer Hob and a chest.
-   V33  Thera Fields monsters are gentler and come alone (or as an ooze
-        pair) until the party reaches level 3.
-   V31  Difficulty pass: much more enemy HP, spirits and bosses resist
-        plain attacks, late spirits strike twice, the Wyrm heals twice.
-   V27  Lyn no longer joins at the boulder; she wants her compass back.
-   V20  Spirits must be beaten in a duel before they join.
-   V15  Thera has a shop building; Brindle has an inn (12 coins).
-   V2   Party of four, eight spirits, summons, shops, chests, five zones,
-        the Maw Ogre and the Spire Key, saving.
+   Guide  Date        Game         Notes
+   -----  ----        ----         -----
+   2.0    2026-10-28  V48 engine   generated from the game data
+   1.x    2025-2026   V31-V48      hand-written, for the single-script game
 
 ===============================================================================
-<b id="STO03">  3. STORY                                                             [STO03]</b>
+<b id="STO03">  3. STORY                                                              [STO03]</b>
 ===============================================================================
 
 The Sunspire, the great tower north of the village of Thera, has gone dark.
@@ -261,641 +114,276 @@ took the top of the tower.
 Ari, a young earth adept from Thera, is sent out by the elder Sorin to gather
 the spirits and bring the dawn back. Along the way Ari is joined by Lyn, a
 water adept scouting ahead in Brindle; Bram, a fire adept and miner who knows
-every shaft of Brindle Mine; and Sera, a wind adept pinned down by harpies
-on the Sunspire Trail.
+every shaft of Brindle Mine; and Sera, a wind adept pinned down by harpies on
+the Sunspire Trail.
 
 ===============================================================================
-<b id="CTL04">  4. CONTROLS AND THE MENU                                             [CTL04]</b>
+<b id="CTL04">  4. CONTROLS AND THE MENU                                              [CTL04]</b>
 ===============================================================================
 
 Keyboard
 --------
-   Arrow keys / WASD   Move (overworld), move the cursor (menus)
-   Z or Space          A button: confirm, talk, open chests, read signs
-   X or Esc            B button: cancel, back, close the menu
-   Enter               START: open / close the pause menu; also confirms
-                       on the title screen and skips battle messages
-   Q / E               L / R shoulder buttons: previous / next party member
-                       on STATUS and EQUIP and when picking who gets an
-                       item; previous / next target in battle
-   M                   Toggle sound
-   F                   Toggle immersive (fullscreen) mode
+   Arrow keys   Move; move the cursor in menus
+   Z            A button: confirm, talk, open chests, read signs, open the menu
+   X            B button: cancel, back, close
+   A / S        L / R shoulder buttons: switch character or target
+   Enter        Start: the save prompt; also confirms on the title screen
+   Backspace    Select
+   M            Toggle sound
+   F            Immersive (full screen) mode
 
-Touch / mouse
--------------
-The handheld shell around the screen has a clickable D-pad, A, B and START
-buttons, and L and R shoulder buttons along its top edge.
+Touch
+-----
+The handheld shell around the screen has a D-pad, A, B, Select, Start and the L
+/ R shoulders; the sound button beside the shell is the only way to unmute on a
+phone. The shell colour and the light / dark theme are remembered by the
+browser.
 
 Interacting
 -----------
-Face a thing and press A: villagers, signs, doors, chests, the boulder and
-the spire gate all respond to A. Spirits are different - you walk onto them
-and the duel starts at once (see [BAS05], 5.4). Bosses start their fight the
-moment you try to step into them, or when you face them and press A.
+Face a thing and press A: villagers, signs, doors, chests, the boulder and the
+spire gate all respond. Spirits also respond to A: talk to one and the duel
+starts. Bosses start their fight the moment you talk to them. With nothing in
+front of you, A opens the main menu (items, psynergy, spirits, status).
 
-The pause menu (START / Enter)
-------------------------------
-   STATUS   One member at a time (left/right or L/R to switch): level,
-            XP to next level, HP, PP, ATK and DEF (total, with the base
-            in brackets), AGI, weapon, armour and the arts learned so far.
-   ITEMS    A grid of item icons, each with how many you carry; Lyn's
-            Compass sits at the end as a KEY item while you have it.
-            Pick an item with A, then who gets it with left/right (or
-            L/R) in the row of party sprites at the top left: their card
-            shows the HP or PP it would give (an Elixir only works on the
-            fallen, shown faded). A uses it, and you stay on that item
-            until you run out or press B.
-   EQUIP    Left/right (or L/R) picks a member from the row of party
-            sprites at the top left; A opens their gear, a grid of icons:
-            what they wear comes first, marked with a green E, then every
-            spare piece in the shared pool, weapons before armour, best
-            first.
-            Moving over a piece shows its name and, on the member's card,
-            the ATK or DEF it would give (green up, red down). A equips
-            it, swapping out whatever was in that slot; A on an E piece
-            takes it off. Gear is shared: anything taken off goes back
-            to the pool. B steps back.
-   SPIRITS  The eight spirits, named once found, "?????" until then.
-   SAVE     Writes the save to the browser. A toast confirms it.
-
-The main menu page also shows your coins, spirits found (x/8), the party
-level, every member's HP and PP bars, and a QUEST line that always tells you
-the next story step. If you are ever lost, open the menu and read it.
-
-Shops and choices
------------------
-A shop lists its goods one per row: an icon for the item or piece of gear,
-the name, what it does and the price. Up/down picks, A buys one, B leaves.
-A question that wants an answer (Lyn asking to join, for one) pops up a
-YES / NO box, YES with a green tick and NO with a red cross: up/down picks,
-A answers.
+Saving
+------
+Press Start (Enter) and confirm to save; the save lives in this browser. The
+inns also save. If the party falls, you wake up in the last town you visited
+with everyone alive.
 
 ===============================================================================
-<b id="BAS05">  5. GAME BASICS                                                       [BAS05]</b>
+<b id="BAS05">  5. GAME BASICS                                                        [BAS05]</b>
 ===============================================================================
 
-5.1 Party and levels
---------------------
-The whole party shares ONE level. Experience from a battle goes to the party,
-and when the bar fills everyone levels up at once, all HP and PP are refilled,
-and anyone whose art is due at that level learns it. New members join at the
-party's current level, so nobody is ever behind.
-
-XP needed to reach the next level is 18 + 12 x (current level):
-
-   Level   XP for next   Total XP from level 1
-     1         30              0
-     2         42             30
-     3         54             72
-     4         66            126
-     5         78            192
-     6         90            270
-     7        102            360
-     8        114            462
-     9        126            576
-    10        138            702
-    11        150            840
-
-Each level adds a fixed amount to every stat; see [CHR06] for the growth of
-each character.
-
-5.2 Battle commands
--------------------
-Commands are picked from a row of icons at the bottom-left, one member at a
-time in party order. Left/right (or up/down) moves between icons, A picks, B
-goes back to the previous member's command. The member choosing sits on a
-lit gold-framed card in the status bar at the top; each card shows HP and PP
-over a bar that is blue for what is left and red (HP) or purple (PP) for
-what is gone. Once everyone has a command the round plays out in AGI order
-(plus a little randomness). Enemy HP is hidden; an enemy's name shows only
-while you are targeting it.
-
-Targeting an enemy zooms the camera in over the party's shoulder: the
-enemies grow, the member whose turn it is stands large in the bottom-right
-corner while the others fade out of view, and a pink droplet bobs over the
-enemy under the cursor (left/right or L/R moves it, A confirms, B goes
-back). Area arts and SQUALL target too: the big droplet
-marks the FOCUS, which takes full damage, and small droplets mark every
-other enemy, which take 70% of it. Picking an ally (CURE, items) puts the
-droplet under that member's card instead.
-
-ARTS, SPIRIT, SUMMON and ITEM open a window on the right of the screen with
-a description strip above it: each row shows the icon, the name, the PP
-cost (the count you carry for items; for summons the number of spirits
-needed next to a badge per element, so SOL AVATAR shows 1 and four badges),
-an element badge and a range badge (one bar = one enemy, three bars = every
-enemy, a cross = one ally, two crosses = the whole party). Rows you cannot
-afford are greyed out; up/down scrolls long lists.
-
-   FIGHT    A plain weapon attack on one enemy. Damage is your ATK (base +
-            weapon + 1 per set spirit) + 0 to 4, minus the enemy's DEF.
-            Spirits in their duel form take only 30% of this, bosses 50%
-            (Ogre) or 45% (Wyrm). Against those, FIGHT is a last resort.
-   ARTS     Elemental attacks and healing. Costs PP. See 5.3.
-   SPIRIT   Unleash a set spirit. See 5.4.
-   SUMMON   Call a summon with the spirits on standby. See 5.5. Only shown
-            when a summon is possible.
-   ITEM     Use a Herb, Potion, Psy Drop or Elixir on an ally.
-   DEFEND   Halves the damage taken this round.
-   FLEE     60% chance to escape a random encounter. Impossible against
-            bosses and spirit duels.
-
-5.3 Arts (psynergy)
--------------------
-Each character has three arts, learned at fixed party levels. Damage arts do
-power + half your ATK + party level + 0 to 3, minus the enemy's DEF, and they
-ignore the "shrugs off steel" reduction entirely. This is why arts, not
-swords, kill spirits and bosses. "ALL enemies" arts ask for a focus: the
-enemy you pick takes the full amount, every other enemy 70% of its own roll
-(rounded down, never below 1). Against a lone boss or spirit that makes no
-difference.
-
-   Art          Who    Lv   PP   Power   Notes
-   ---------------------------------------------------------------------
-   QUAKE        Ari     1    4    18     earth, one enemy
-   SPIRE        Ari     4    7    36     earth, one enemy
-   GAIA BLADE   Ari     8   14    64     earth, one enemy
-   CURE         Lyn     1    4    -      heals 70 HP, one ally
-   ICE HORN     Lyn     4    6    34     water, one enemy
-   PURE PLY     Lyn     7   10    -      fully heals one ally
-   FLARE        Bram    1    4    20     fire, one enemy
-   FIRE BOMB    Bram    4    8    22     fire, ALL enemies (focus 100%,
-                                         rest 70%)
-   INFERNO      Bram    8   15    40     fire, ALL enemies (focus 100%,
-                                         rest 70%)
-   GUST         Sera    1    3    16     wind, one enemy
-   PLASMA       Sera    5    9    28     wind, ALL enemies (focus 100%,
-                                         rest 70%)
-   BOLT         Sera    8   12    58     wind, one enemy
-
-PP comes back slowly as you walk: every member regains 1 PP per 8 steps.
-Psy Drops restore 30 PP, inns, the Thera well and the spirit spring restore
-all of it, and so does a level-up.
-
-5.4 Spirits: set, unleash, standby
-----------------------------------
-There are eight spirits, two per element. Walking onto one on the map starts
-a DUEL: a battle against the spirit's battle form that you cannot flee. Win
-and it joins you; lose and the party collapses as usual (see 5.6) but the
-spirit stays where it was for a rematch. Spirits take only 30% damage from
-FIGHT, so use arts. The last four (Breeze, Ember, Mist, Squall) act twice
-every round.
-
-Every spirit you own starts each battle SET. A set spirit gives EVERY party
-member +1 ATK and +1 DEF, so eight set spirits are +8/+8 for the whole team.
-Set spirits are also what you unleash:
-
-   SPIRIT command -&gt; the spirit does its effect and goes to STANDBY.
-   Standby spirits no longer give their +1/+1 (your ATK and DEF drop by
-   one each for the rest of the fight), but they can power a SUMMON.
-   After a summon the spirits it used are SPENT for the rest of the battle.
-
-Everything resets at the end of each battle: all spirits are set again next
-time. There is no recovery timer and no need to manage them between fights.
-In short: unleash freely in boss fights, summon with what is on standby.
-
-Unleash damage is spirit power + 4 x party level + 0 to 3, minus HALF the
-enemy's DEF. See [SPR08] for the eight effects.
-
-5.5 Summons
------------
-A summon needs a number of STANDBY spirits of its element (or one of each of
-the four elements for the Sol Avatar). It hits every enemy for power + 5 x
-party level + 0 to 5, minus half their DEF, then the spirits used are spent.
-The summon plays a cutscene. Full list in [SUM09].
-
-Because the spirits must be on standby first, a summon always costs at least
-one earlier turn of unleashing. The classic rhythm against a boss is: round
-one, everyone unleashes; round two, someone summons while the others cast
-arts.
-
-5.6 Random encounters, fleeing and defeat
------------------------------------------
-Battles only happen on TALL GRASS (fields and trail) and ORE-flecked floor
-(mine and spire). Every step on such a tile, once at least 5 steps have
-passed since the last battle, has a 15% chance of a fight. Plain ground,
-paths and cliff tops are always safe, so you can cross most of a map without
-a single fight if you stick to them. Which groups appear is in [BST13].
-
-Thera Fields only sends lone monsters (or a pair of oozes) while the party
-is below level 3. The paddock behind the boulder (rows 2 to 7, inside the
-fence) is the exception: its grass sends packs of two or three at any
-level.
-
-If every member falls, the party wakes up in Thera at the starting spot with
-full HP and PP. You lose NOTHING: no coins, no items, no progress. Defeat is
-just a free trip home, so there is little reason to ever load a save.
-
-Members knocked out during a battle you still win get back up with 1 HP
-afterwards.
-
-5.7 Saving
+5.1 Levels
 ----------
-   - SAVE in the pause menu, any time outside battle.
-   - The game also saves by itself whenever you change maps, win a battle,
-     recruit a spirit or sleep at an inn.
-   - One save slot, kept in the browser (localStorage). Clearing site data
-     deletes it, and each site address keeps its own save.
-   - On the title screen CONTINUE is already highlighted when a save
-     exists; press A to load it. Left/right (or up/down) switches to NEW
-     GAME, which asks first ("NEW GAME REPLACES YOUR SAVE", NO highlighted)
-     because the new game's first auto-save overwrites the old one.
-   - Installed as an app ("Install as app" on the play page, or Add to Home
-     Screen on iOS), the game opens full screen in immersive mode and loads
-     the save at once, skipping the title screen. It uses the same save as
-     the site in that browser, and runs offline once installed.
+Each character levels on their own, with the experience from every battle they
+survive. A new member joins at the level the story expects by then: Lyn at 3,
+Bram at 5, Sera at 8. Experience needed for the next level is 18 + 12 x
+(current level):
 
-5.8 Shops, inns, wells and the spring
--------------------------------------
-   Thera shop     The third house on the lane (the door at (21,19)).
-                  Mara's goods: basics and early gear. [SHP12]
-   Brindle shop   There is no shop building. Talk to DOV on the west side
-                  of the plaza; he sells the good stuff. [SHP12]
-   Inns           Mira Farmstead (east of Thera) and Brindle. 12 coins
-                  restores everyone, revives the fallen and saves.
-   Thera well     The well at (15,22), south-west of the signpost. Walk
-                  onto it: full HP and PP for everyone, free, any time.
-   Spirit spring  In the Sunspire at (3,17). Same effect, free. This is
-                  your base camp for the final boss.
+   Level  XP for next  Total XP from level 1
+   -----  -----------  ---------------------
+   1      30           0
+   2      42           30
+   3      54           72
+   4      66           126
+   5      78           192
+   6      90           270
+   7      102          360
+   8      114          462
+   9      126          576
+   10     138          702
+   11     150          840
+   12     162          990
 
-5.9 The damage formulas
------------------------
-For the curious (rnd(a,b) is a random whole number from a to b):
+5.2 Battle
+----------
+Turns go by agility. A plain attack does (attack - the target's defence) / 2,
+so steel does little to anything with a hard hide: the bosses and the spirits
+shrug it off, and arts (psynergy) are the answer. An art does its listed power
+as damage whatever the defence; area arts hit every foe. Defend halves the
+damage taken that turn. Fleeing from a normal battle usually works; spirits and
+bosses block every path.
 
-   FIGHT      max(1, ATK + rnd(0,4) - enemy DEF), then x0.3 vs spirits,
-              x0.5 vs the Ogre, x0.45 vs the Wyrm
-   ART        max(1, power + ATK/2 + level + rnd(0,3) - enemy DEF)
-   AREA ART   as ART on the focused enemy; every other enemy takes
-              max(1, floor(0.7 x its own roll))
-   UNLEASH    max(1, power + 4*level + rnd(0,3) - enemy DEF/2); SQUALL
-              uses the same focus rule as area arts
-   SUMMON     max(1, power + 5*level + rnd(0,5) - enemy DEF/2), all foes
-              (no focus: every enemy takes the full amount)
-   ENEMY HIT  max(1, enemy ATK + rnd(0,4) - your DEF); halved if defending
-   ENEMY AOE  as above with enemy ATK x0.7 (Ogre SMASH) or x0.75 (Wyrm's
-              SHADOW FLAME), on everyone
+5.3 Spirits
+-----------
+A spirit joins you after you beat it in a duel. SET, a spirit adds to the stats
+of the character who holds it (hp +4, pp +2, attack +1, defence +1). In battle
+you can UNLEASH a set spirit for its own effect (see section 8); it then stands
+by, and standby spirits are what the great summons spend (section 9). After a
+summon the spirits set themselves again over the next turns.
 
-Your ATK = base + weapon + number of SET spirits.
-Your DEF = base + armour + number of SET spirits.
+5.4 Items and gear
+------------------
+Herbs, potions, psy drops and elixirs are used from the item menu or in battle.
+Weapons add attack and armour adds defence; equip them from the main menu.
+Every character can wear everything.
 
-===============================================================================
-<b id="CHR06">  6. CHARACTERS                                                        [CHR06]</b>
-===============================================================================
+5.5 Encounters
+--------------
+Random battles happen while you walk in the fields, the mine, the trail and the
+spire; towns are safe. Each area has its own set of enemy groups (section 13
+lists who lives where); the paddock behind the boulder in Thera Fields sends
+packs at any level.
 
-Stats at a given level: base + growth x (level - 1). The table shows HP / PP
-/ ATK / DEF / AGI before equipment and spirits.
+5.6 Field arts
+--------------
+Ari knows SHOVE from the start: press Q (the first psynergy shortcut) facing a
+loose boulder to push it one tile for 2 PP, or pick it from the psynergy menu.
+Walking into a loose boulder pushes it too. Boulders only move onto the tiles
+the ground allows.
 
-ARI - earth adept, the hero
-   Starts the game alone with a Wood Blade and 3 Herbs. Solid all round, the
-   best single-target damage in the party once GAIA BLADE arrives.
-   Growth per level: +7 HP, +3 PP, +3 ATK, +1 DEF, +1 AGI
-   Lv 1    34 / 12 / 10 /  5 /  8
-   Lv 3    48 / 18 / 16 /  7 / 10
-   Lv 5    62 / 24 / 22 /  9 / 12
-   Lv 7    76 / 30 / 28 / 11 / 14
-   Lv 10   97 / 39 / 37 / 14 / 17
-   Arts: QUAKE (1), SPIRE (4), GAIA BLADE (8)
-
-LYN - water adept
-   Joins in Brindle once you return her compass. Fragile but fast, and the
-   party's healer: CURE from the start, PURE PLY at level 7 and the biggest
-   PP pool in the party to pay for them. She has the least HP and DEF, and
-   when she falls nobody heals, so give her the best armour you have.
-   Growth per level: +5 HP, +4 PP, +2 ATK, +1 DEF, +2 AGI
-   Lv 1    24 / 16 /  8 /  4 / 11
-   Lv 3    34 / 24 / 12 /  6 / 15
-   Lv 5    44 / 32 / 16 /  8 / 19
-   Lv 7    54 / 40 / 20 / 10 / 23
-   Lv 10   69 / 52 / 26 / 13 / 29
-   Arts: CURE (1), ICE HORN (4), PURE PLY (7)
-
-BRAM - fire adept
-   Joins automatically when you enter Brindle Mine. The tank and the party's
-   area-of-effect attacker: highest HP, ATK and DEF, and FIRE BOMB and
-   INFERNO hit every enemy - with half his big ATK added to each - which
-   makes him the king of random encounters.
-   Growth per level: +8 HP, +3 PP, +3 ATK, +1 DEF, +1 AGI
-   Lv 1    36 / 14 / 12 /  7 /  6
-   Lv 3    52 / 20 / 18 /  9 /  8
-   Lv 5    68 / 26 / 24 / 11 / 10
-   Lv 7    84 / 32 / 30 / 13 / 12
-   Lv 10  108 / 41 / 39 / 16 / 15
-   Arts: FLARE (1), FIRE BOMB (4), INFERNO (8)
-
-SERA - wind adept
-   Joins automatically when you step onto the Sunspire Trail. The fastest
-   member by far, so she acts first almost every round: ideal for a stagger
-   unleash (BREEZE) or an emergency item. BOLT at level 8 is the second
-   strongest single-target art in the game.
-   Growth per level: +5 HP, +4 PP, +2 ATK, +1 DEF, +2 AGI
-   Lv 1    26 / 15 /  9 /  4 / 13
-   Lv 3    36 / 23 / 13 /  6 / 17
-   Lv 5    46 / 31 / 17 /  8 / 21
-   Lv 7    56 / 39 / 21 / 10 / 25
-   Lv 10   71 / 51 / 27 / 13 / 31
-   Arts: GUST (1), PLASMA (5), BOLT (8)
-
-Townsfolk worth knowing
-   SORIN   Thera's elder, by the lane. Tells you where the spirits went.
-   MARA    Thera's shopkeeper, picking mint outside her shop.
-   POLLY   A child in Thera who saw "a stone critter" behind the west house.
-   HOB     The farmer at Mira Farmstead. His sister runs the inn.
-   DOV     Brindle's shopkeeper. Talk to him to shop.
-   MINER   Wanders by the Brindle inn. Knows what sits on the Spire Key.
-   INA     The innkeeper's daughter in Brindle.
+5.7 Sprite packs
+----------------
+Every sheet the game draws can be replaced with your own art from the play page
+(Load sprite pack); the pack guide page lists every slot with its size and
+frames.
 
 ===============================================================================
-<b id="WLK07">  7. WALKTHROUGH                                                       [WLK07]</b>
+<b id="CHR06">  6. CHARACTERS                                                         [CHR06]</b>
 ===============================================================================
 
-Map legend (all maps)
-   .  ground / floor (safe)       g  tall grass  (random battles!)
-   p  path (safe)                 :  ore flecks  (random battles!)
-   t  tree                        w  water
-   r  cliff top    v  cliff face  F  fence
-   H  house        D  door        s  signpost
-   #  rock wall    +  well / spring (free full heal)
-   O  the boulder  =  the spire gate
-   ^  cave mouth   &gt;  map exit
-   1-3  treasure chest (numbered per map, see the list under the map)
-   *  spirit (named in the list under the map)
-   X  boss
-   @  villager
+ARI - Earth adept
+-----------------
+   Level 1    HP 34    PP 12    ATK 10   DEF 5    AGI 8
+   Per level  +7       +3       +3       +1       +1
+   Arts: Quake (level 1), Spire (level 4), Gaia Blade (level 8)
 
-Recommended levels are a guide for a party that has picked up every chest
-and spirit on the way, not a hard requirement.
+LYN - Water adept
+-----------------
+   Level 1    HP 24    PP 16    ATK 8    DEF 4    AGI 11
+   Per level  +5       +4       +2       +1       +2
+   Arts: Cure (level 1), Ice Horn (level 4), Pure Ply (level 7)
 
--------------------------------------------------------------------------------
-<b id="WLK7A">  7.1 THERA AND THE FIELDS                                             [WLK7A]</b>
--------------------------------------------------------------------------------
+BRAM - Fire adept
+-----------------
+   Level 1    HP 36    PP 14    ATK 12   DEF 7    AGI 6
+   Per level  +8       +3       +3       +1       +1
+   Arts: Flare (level 1), Fire Bomb (level 4), Inferno (level 8)
 
-Recommended level: 1 (you have no choice)
-New party member: none yet - Ari walks alone
+SERA - Wind adept
+-----------------
+   Level 1    HP 26    PP 15    ATK 9    DEF 4    AGI 13
+   Per level  +5       +4       +2       +1       +2
+   Arts: Gust (level 1), Plasma (level 5), Bolt (level 8)
+
+Arts
+----
+   Art          Element  PP  Power  Effect
+   ---          -------  --  -----  ------
+   Quake        Earth    4   18     one foe
+   Spire        Earth    7   36     one foe
+   Gaia Blade   Earth    14  64     one foe
+   Flare        Fire     4   20     one foe
+   Fire Bomb    Fire     8   22     all foes
+   Inferno      Fire     15  40     all foes
+   Cure         Water    4   -      heals 70 HP
+   Ice Horn     Water    6   34     one foe
+   Pure Ply     Water    10  -      heals fully
+   Gust         Wind     3   16     one foe
+   Plasma       Wind     9   28     all foes
+   Bolt         Wind     12  58     one foe
+
+===============================================================================
+<b id="WLK07">  7. WALKTHROUGH                                                        [WLK07]</b>
+===============================================================================
+
+Map legend: . ground : tall grass or rubble (encounters) T tree ~ water - |
+cliff H house D door F fence # wall S sign + well or spring O boulder = gate >
+exit ^ cave mouth @ villager * spirit X boss 1-9 chests (listed under each
+map).
+
+===============================================================================
+<b id="WLK7A">  7.1. THERA FIELDS                                                     [WLK7A]</b>
+===============================================================================
 
     0         1         2         3         4         5
     0123456789012345678901234567890123456789012345678901234567
- 0  ttttttttttttttttttpttttttttttttttttttttttttttttttttttttttt
- 1  FFFFFFFFFFFFFFFFFFpFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
- 2  tFg.g.t.t...gtg...pg.ttg....g...g.F.....g..g...t..g......t
- 3  tFt2...g..gg..gtg.p....g..g..t.g.gF.........gtg.....t....t
- 4  tF.....g.........gp.....g..g.gggg.F......g......g...g...gt
- 5  tFg.gg....t..g.gggpg.tg.gg..g.tt..F.t.....t......g..g..g.t
- 6  tF.g..t.t..g.g....pgg...gggg.....gF.t........t...........t
- 7  tF......gg.t.tg...p...g.g...g.....F..t.....t..tg.t..g....t
- 8  tFFFFFFFFFFFFFFFFFOFFFFFFFFFFFFFFFF..g.gt.ttt.t...g.t..ttt
- 9  tg..g....t...t....p.gtt..g...g.gt..............ggt....t..t
-10  t.wwwwwwg.....g...p.g.t.....g......t....gg............t.gt
-11  t.wwwwwwwg..g.....pggt.t...t...g1tgt.g.g...tg............t
-12  t.wwwwww*.........................t....t..........g...g..t
-13  tgwwwwwww.......g.p.....tg........g..t....t.....gg.......t
-14  t.wwwwww....g.....p.g..t..t.....gt..g....g.g.............t
-15  t..ggt..g..g.g..t.ptgg.t..gtg....t....gg.....g...t....g..t
-16  t.....tg......t...pg..t..t....gtg.g.g.t....t.....g.......t
-17  t.....HHHt..HHH.t.p.HHH...t..............t.g..........t..t
-18  t...t.HHH...HHH...p.HHH..............g....t............ttt
-19  t.....HDH...HDHt..p.HDH..........t...g.g...t......g....g.t
-20  t..*............@.p.s................tg.gtg.t.g......t...t
-21  tt.........@......p.....@.........ppppppppppp.tg....g..g.t
-22  t.t.....t......+..p..........t..........tg.gp...gg.t.....t
-23  t...g...g.t.......pg........g...g..gt.g..g..pggt......t..t
-24  tg.g......gg......pt.g.....gt...g...g..g...gp........tg.gt
-25  tgt.......................g.t....g.tt.......p.......g..g.t
-26  tg..gg.t.t....gg.g.........t......g.gg......p.........g..t
-27  t.g..g....g....g..................t...g.HHH.p.HHH.......gt
-28  t.....t..........t.......g..............HHH.p.HHH.......tt
-29  t.gg.g.gtg..g.tg.g....g..g...g.g........HDH.p.HDH.....t..t
-30  tgt...t....g.............g...g....g.........p........g...t
-31  t.g.g..g.t.g..........t.....t.gt.......................gtt
-32  t.......g.tg....g...g..........t...........HHH.......g...t
-33  t..t......g..t.g.......ggg..g.ggg...t......HHH......g..t.t
-34  t..g.ggt...g.....t....tg......tt...........HDH......tt..tt
-35  tt.....t....t..........t.g..g.tgtg......s.......@.......gt
-36  t...g.g........t.........ttg......................3....t.t
-37  t.gt........g......ttt....g.......gt...................g.t
-38  t..gt....g....g..t..t.....g....g...........g...g.g.gg..g.t
-39  tttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+ 0  TTTTTTTTTTTTTTTTTT.TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+ 1  FFFFFFFFFFFFFFFFFF.FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+ 2  TF:.:.T.T...:T:....:.TT:....:...:.F.....:..:...T..:......T
+ 3  TFT3...:..::..:T:......:..:..T.:.:F.........:T:.....T....T
+ 4  TF.....:.........:......:..:.::::.F......:......:...:...:T
+ 5  TF:.::....T..:.:::.:.T:.::..:.TT..F.T.....T......:..:..:.T
+ 6  TF.:..T.T..:.:.....::...::::.....:F.T........T...........T
+ 7  TF......::.T.T:.......:.:...:.....F..T.....T..T:.T..:....T
+ 8  TFFFFFFFFFFFFFFFFFOFFFFFFFFFFFFFFFF..:.:T.TTT.T...:.T..TTT
+ 9  T:..:....T...T......:TT..:...:.:T..............::T....T..T
+10  T.~~~~~~:.....:.....:.T.....:......T....::............T.:T
+11  T.~~~~~~~:..:......::T.T...T...:1T:T.:.:...T:............T
+12  T.~~~~~~*.........................T....T..........:...:..T
+13  T:~~~~~~~.......:.......T:........:..T....T.....::.......T
+14  T.~~~~~~....:.......:..T..T.....:T..:....:.:.............T
+15  T..::T..:..:.:..T..T::.T..:T:....T....::.....:...T....:..T
+16  T.....T:......T....:..T..T....:T:.:.:.T....T.....:.......T
+17  T.....HHHT..HHH.T...HHH...T..............T.:..........T..T
+18  T...T.HHH...HHH.....HHH..............:....T............TTT
+19  T.....HDH...HDHT....HDH..........T...:.:...T......:....:.T
+20  T..*............@...S................T:.:T:.T.:......T...T
+21  TT.........@............@.....................T:....:..:.T
+22  T.T.....T......+.............T..........T:.:....::.T.....T
+23  T...:...:.T........:........:...:..:T.:..:...::T......T..T
+24  T:.:......::.......T.:.....:T...:...:..:...:.........T:.:T
+25  T:T.......................:.T....:.TT...............:..:.T
+26  T:..::.T.T....::.:.........T......:.::................:..T
+27  T.:..:....:....:..................T...:.HHH...HHH.......:T
+28  T.....T..........T.......:..............HHH...HHH.......TT
+29  T.::.:.:T:..:.T:.:....:..:...:.:........HDH...HDH.....T..T
+30  T:T...T....:.............:...:....:..................:...T
+31  T.:.:..:.T.:..........T.....T.:T.......................:TT
+32  T.......:.T:....:...:..........T...........HHH.......:...T
+33  T..T......:..T.:.......:::..:.:::...T......HHH......:..T.T
+34  T..:.::T...:.....T....T:......TT...........HDH......TT..TT
+35  TT.....T....T..........T.:..:.T:T:......S.......@.......:T
+36  T...:.:........T.........TT:......................2....T.T
+37  T.:T........:......TTT....:.......:T...................:.T
+38  T..:T....:....:..T..T.....:....:...........:...:.:.::..:.T
+39  TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
 
-   Start      (18,22), on the trail just below Thera's signpost
-   Exit       (18,0) north, through the boulder gap, to Brindle
-   Chest 1    (32,11)  25 coins
-   Chest 2    (3,3)    LYN'S COMPASS (key item) - in the north paddock
-   Chest 3    (50,36)  POTION - Mira Farmstead, by the east hedge
-   Spirit *   (3,20)   FLINT (earth) - west of the houses
-   Spirit *   (8,12)   DEW (water) - on the east shore of Lake Mira
-   Well       (15,22)  free full heal
-   Villagers  Sorin (11,21), Mara (16,20), Polly (24,21), Hob (48,35)
-   Shop       Thera: third house, door at (21,19)
-   Inn        Mira Farmstead: door at (44,34)
-   Enemies    Mire Ooze, Dusk Bat, Fang Wolf, Pit Spider (tall grass only)
+Thera is the row of houses in the middle of the fields; you start by the well
+(18,22). Talk to SORIN (11,21): he points you west. The shop is the house at
+(20,17): its door at (21,19) opens Mara's counter. The well at (15,22) restores
+the party.
 
-The game opens with Sorin's briefing: the Sunspire is dark, eight spirits
-fled, FLINT hides west of the houses, Lyn went north to Brindle and is stuck
-behind a boulder. Ari stands on the trail below the village with 30 coins,
-a Wood Blade and three Herbs.
+FLINT waits at (3,20), left of the houses. Talk to it to duel it: it shrugs off
+steel, so cast QUAKE every turn (3 casts at level 1, so an herb or a level
+helps). With Flint set, the boulder at (18,8) on the trail north crumbles when
+you talk to it.
 
-First, some shopping. Walk north up the trail two tiles and turn left along
-the village lane. SORIN stands by the lane (11,21) and repeats the briefing
-with one extra clue: a second spirit "skims the lake". MARA wanders near
-(16,20) and tells you her door is open. POLLY, the child at (24,21), saw a
-stone critter behind the west house - that is Flint.
+Behind the boulder is the paddock: packs roam here at any level. LYN'S COMPASS
+is in chest 3 at (3,3). DEW, the water spirit, skims the lake at (8,12) west of
+the fence. The road north at (18,0) leads to Brindle.
 
-The SHOP is the third house, the one right of the trail: stand at (21,20)
-facing up at the door (21,19) and press A. With 30 coins the best buy is the
-TRAVEL VEST (18 coins, DEF+2): Ari's defence is the one stat that matters in
-the first fights. Keep the remaining 12 coins for a Herb later, or just hold
-on to them. (The Bronze Sword at 80 is the next upgrade; you will have the
-coins for it after a few fights, and there is a free one in the mine.)
+East along the lane is Mira Farmstead: two homes, the inn (door at (44,34), 12
+coins, saves the game), HOB by the hedge and a chest at (50,36).
 
-Read the SIGNPOST at (20,20) if you like: north is the fence gate and
-Brindle, west is Lake Mira, east is Mira Farmstead and its inn.
+   Chests:
+     1  (32,11)  25 coins
+     2  (50,36)  Potion
+     3  (3,3)  Lyn's Compass
 
-Now the well. It is the "+" at (15,22), just south-west of the signpost.
-Walking onto it fully heals Ari whenever anyone is hurt. Remember it: every
-Thera-area fight below can be followed by a free heal, which makes early
-levelling painless.
+   Spirits: Flint (3,20), Dew (8,12)
 
-LEVELLING UP A LITTLE
-Before Flint, get Ari to level 2 (30 XP) and ideally level 3 (72 XP). Walk
-the tall grass between the lane and the lake. Below level 3 the fields only
-send single monsters or an ooze pair, and Ari with the Travel Vest handles
-every one of them with FIGHT alone:
+Enemies (field): Mire Ooze, Fang Wolf, Dusk Bat, Pit Spider
+Enemies (paddock): Fang Wolf, Mire Ooze, Pit Spider, Dusk Bat
 
-   Mire Ooze   22 HP   8 XP   7 coins   may drop a Herb (20%)
-   Fang Wolf   24 HP  14 XP  12 coins   may drop a Herb (18%)
-   Dusk Bat    18 HP  10 XP   8 coins   drains a third of its damage back
-   Pit Spider  28 HP  13 XP  11 coins
-
-Use QUAKE (4 PP, ~20 damage) when something is still standing after a hit,
-heal at the well when low, and open the pause menu's SAVE now and then.
-Chest 1, the 25 coins at (32,11), sits in the grass band north of the
-lakeside clearing: from the lane go up the trail to row 12, east along the
-clearing to (32,12), face up, press A.
-
--------------------------------------------------------------------------------
-<b id="WLK7B">  7.2 FLINT AND THE BOULDER                                            [WLK7B]</b>
--------------------------------------------------------------------------------
-
-Recommended level: 2 to 3
-
-Go to the far west end of the lane. Flint sits at (3,20), the "*" left of the
-first house. Step onto it: the duel starts and you cannot run.
-
-   SPIRIT DUEL: FLINT (earth)
-   HP 70   ATK 14   DEF 5   AGI 10   Reward: 24 XP, 12 coins, FLINT
-   Takes 30% from FIGHT. Acts once per round.
-
-   Flint hits Ari for about 9 to 13 a round without the vest, a few less
-   with it. QUAKE does 20 to 23 per cast here, so three casts and one or
-   two swings finish it. At level 1 Ari only has 12 PP, which is exactly
-   three Quakes: cast all three, then FIGHT for the last few points, and
-   eat a Herb if HP falls under 15. At level 2 or 3 it is routine.
-
-Flint joins (1/8) and the game tells you its power can shatter boulders. Walk
-back to the well to heal, then go up the trail to the boulder at (18,8) and
-walk into it. FLINT cracks it and the way north opens. The QUEST line now
-says "FIND LYN'S COMPASS IN THE NORTH PADDOCK".
-
--------------------------------------------------------------------------------
-<b id="WLK7C">  7.3 THE PADDOCK AND LYN'S COMPASS                                    [WLK7C]</b>
--------------------------------------------------------------------------------
-
-North of the fence lies the paddock, rows 2 to 7 of the map. The trail runs
-straight up its middle to the exit at (18,0), but you want the far north-west
-corner first. Row 4 has been cleared of trees for you: from the trail step
-onto (17,4) and walk west along row 4 to (3,4). Chest 2 is the "2" at (3,3)
-directly above you: face up, press A, and you have LYN'S COMPASS (it appears
-under ITEMS as a KEY item).
-
-The paddock grass is rougher than the rest of the fields: the same four
-monsters, but always in packs, and at any party level:
-
-   wolf+ooze; wolf+wolf; spider+bat; wolf+spider; spider+spider;
-   ooze+ooze+bat
-
-At level 2 a pack costs Ari about 5 to 10 HP a round. Row 4 and the trail
-are nearly all plain ground, so you meet few of them on the way to the
-chest. Level 3 makes it easy.
-
-Back to the trail and north through (18,0) to Brindle. You can also come back
-for DEW now (7.6), but it is a harder duel than Flint and easier with two
-members, so this guide fetches Lyn first.
-
--------------------------------------------------------------------------------
-<b id="WLK7D">  7.4 MIRA FARMSTEAD (OPTIONAL)                                        [WLK7D]</b>
--------------------------------------------------------------------------------
-
-The road east from the lane (row 21, x 34 to 44) then south down x=44 leads
-to Mira Farmstead, an open meadow with two homes, an inn and HOB the farmer.
-Nothing here is required, but it is worth one trip:
-
-   - Chest 3 at (50,36), by the east hedge: a POTION (220 HP). Stand at
-     (50,37) facing up, or at (49,36) facing right.
-   - The INN (door at (44,34), stand at (44,35) facing up): 12 coins for a
-     full heal and a save. Since the Thera well is free, you will only
-     ever use it to revive a fallen member before the mine.
-   - Hob warns about the tall grass; the meadow's monsters are the same
-     Thera Fields set, and the meadow is a good place to grind to level 3
-     or 4 if the mine is giving you trouble later.
-
--------------------------------------------------------------------------------
-<b id="WLK7E">  7.5 BRINDLE                                                          [WLK7E]</b>
--------------------------------------------------------------------------------
-
-Recommended level: 3
-New party member: LYN (after returning her compass)
+===============================================================================
+<b id="WLK7B">  7.2. BRINDLE                                                          [WLK7B]</b>
+===============================================================================
 
     0         1         2
     012345678901234567890123456789
- 0  rrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
- 1  vvvvvvvvvvvvvvvvvvvvvvvv^vvvvv
- 2  t...t....tt......t.tt...p....t
- 3  t..............t........p...tt
- 4  t.....................t.p.t..t
- 5  t..t.HHH...HHH....HHH...p.tttt
- 6  t....HHH...HHH....HHHt..p....t
- 7  t....HDHt..HDH....HDH...p....t
- 8  t..............pppppppppp....t
- 9  t.......@......p.....HHH.....t
-10  t...........s@.p.....HHH.....t
-11  t..............p....@HDH.....t
-12  t..............p.............t
-13  t......t.......p........@..t.t
-14  t...t..........pt............t
-15  t...t..........p.............t
-16  t...t....t....tp...t.........t
-17  t..............pt............t
-18  t......t.......p.............t
-19  tttttttttttttttptttttttttttttt
+ 0  ------------------------------
+ 1  ||||||||||||||||||||||||^|||||
+ 2  T...T....TT......T.TT........T
+ 3  T..............T............TT
+ 4  T.....................T...T..T
+ 5  T..T.HHH...HHH....HHH.....TTTT
+ 6  T....HHH...HHH....HHHT.......T
+ 7  T....HDHT..HDH....HDH........T
+ 8  T............................T
+ 9  T.......@............HHH.....T
+10  T...........S@.......HHH.....T
+11  T...................@HDH.....T
+12  T............................T
+13  T......T................@..T.T
+14  T...T...........T............T
+15  T...T........................T
+16  T...T....T....T....T.........T
+17  T...............T............T
+18  T......T.....................T
+19  TTTTTTTTTTTTTTT.TTTTTTTTTTTTTT
 
-   Arrive     (15,17) from Thera
-   Exits      (15,19) south to Thera; (24,1) the mine mouth, north
-   Chests     none
-   Spirits    none
-   Villagers  Dov (8,9) - the shop; Lyn (13,10); Miner (20,11);
-              Ina (24,13)
-   Inn        door at (22,11), 12 coins
-   Enemies    none - Brindle is completely safe
+Brindle is the mining town north of the fields. DOV (8,9) sells iron gear and
+potions; the inn door is at (22,11). LYN wanders the plaza: with her compass
+found she asks to join - say yes. The MINER tells you about the ogre. The mine
+mouth is at the top of the north path, (24,1).
 
-A quiet mining town with no monsters at all. Four things to do:
-
-1. LYN wanders the plaza around (13,10), near the signpost. Talk to her with
-   the compass in your pack and she asks to join; answer YES. (Say no and she
-   waits in the plaza until you change your mind.) LYN joins at the party's
-   level with CURE (ICE HORN follows at level 4); she is your healer from
-   here on. She comes with no equipment: open EQUIP and hand her whatever
-   Ari is not using, and buy her at least a vest.
-
-2. DOV stands on the west side of the plaza at (8,9). Talking to him opens
-   Brindle's shop - there is no shop building. His stock is the mid-game
-   gear: Potions, Elixirs, the IRON AXE (180), CHAIN MAIL (160) and AEGIS
-   PLATE (380). You cannot afford much yet. Priorities, in order, as coins
-   come in: Leather Mail / vests for everyone, then Chain Mail for whoever
-   takes the most hits, then an Iron Axe for Ari. Do not buy a Bronze Sword:
-   there is one in the first chest of the mine.
-
-3. The MINER near the inn tells you a MAW OGRE nests in the east gallery of
-   the mine, "squatting on the old SPIRE KEY". That is the next boss.
-
-4. The INN (door at (22,11)) rests and saves for 12 coins. INA, the
-   innkeeper's daughter, is just colour.
-
-The mine mouth is the "^" at (24,1): follow the path from the plaza's
-north-east corner straight up.
-
--------------------------------------------------------------------------------
-<b id="WLK7F">  7.6 LAKE MIRA: DEW                                                   [WLK7F]</b>
--------------------------------------------------------------------------------
-
-Recommended level: 3 to 4, with Lyn
-
-With Lyn aboard, go back south to Thera Fields for the second spirit. DEW
-sits on the east shore of Lake Mira at (8,12), in the lakeside clearing (row
-12 is cleared ground, so walk west along it from the trail at (18,12)).
-
-   SPIRIT DUEL: DEW (water)
-   HP 120   ATK 20   DEF 6   AGI 12   Reward: 30 XP, 14 coins, DEW
-   Takes 30% from FIGHT. Acts once per round.
-
-   Dew is faster than Ari and hits for 10 to 15 against a vest. Open with
-   FLINT's unleash (about 40 damage at level 3), then QUAKE every round
-   (around 25). Lyn has only CURE until level 4: keep her on it and Dew,
-   which only ever hits one target, never gets anyone below 20 HP. Four
-   rounds at most. At level 4 she adds ICE HORN (about 40), which cuts
-   the duel to three.
-
-Dew joins (2/8). Its unleash heals one ally for 55% of max HP, which is a
-free emergency heal in every fight from here on. Heal at the well, save,
-and head back north through Brindle to the mine.
-
-You CAN do this duel with Ari alone at level 3 (QUAKE four times plus Flint
-is just enough), but the margin is thin.
-
--------------------------------------------------------------------------------
-<b id="WLK7G">  7.7 BRINDLE MINE                                                     [WLK7G]</b>
--------------------------------------------------------------------------------
-
-Recommended level: 4 to 5 on arrival, 6 for the Ogre
-New party member: BRAM (automatically, on entering)
+===============================================================================
+<b id="WLK7C">  7.3. BRINDLE MINE                                                     [WLK7C]</b>
+===============================================================================
 
     0         1         2
     0123456789012345678901234567
@@ -911,242 +399,89 @@ New party member: BRAM (automatically, on entering)
  9  #:...:.#..:...:..:::.#...###
 10  #........................X^#
 11  #........................###
-12  #...:::#:....2.:..:..#:.:..#
+12  #...:::#:....3.:..:..#:.:..#
 13  #...::.#..:..:#.:....#:...:#
 14  #.:::.:#......#......#.:.:.#
 15  #.::..:#....::#:..:.:#.....#
 16  #..:.:.#....:.#.....:#..::.#
 17  #..:...#:.::.:#..:..:#..:..#
-18  #:.*.:.::...:.#.:..:....3.:#
+18  #:.*.:.::...:.#.:..:....2.:#
 19  #:...:::..::..#...:::.:..::#
-20  #.&gt;:.......::.#...::..:..:.#
+20  #.>:.......::.#...::..:..:.#
 21  ############################
 
-   Arrive     (2,19) from Brindle; the exit back is the "&gt;" at (2,20)
-   Exit       (26,10) east, to the Sunspire Trail - blocked by the Ogre
-   Chest 1    (4,3)    BRONZE SWORD (ATK+7)
-   Chest 2    (13,12)  PSY DROP
-   Chest 3    (24,18)  60 coins
-   Spirit *   (3,18)   GRANITE (earth) - two tiles from the entrance
-   Spirit *   (12,3)   FORGE (fire) - top of the second shaft
-   Boss X     (25,10)  MAW OGRE, in front of the east exit
-   Enemies    Ore Beetle, Ruin Golem, Dusk Bat, Pit Spider (ore tiles)
+BRAM joins the moment you enter. The mine is a grid of galleries: GRANITE waits
+at (3,18) and FORGE at (12,3). Three chests sit in the galleries (see the
+list). The MAW OGRE squats on the SPIRE KEY in the east gallery at (25,10);
+beat it and the way east to the trail at (26,10) opens.
 
-The layout: four north-south shafts separated by rock walls at x=7, x=14
-and x=21, joined only by the wide main gallery along rows 10 and 11 (the
-wall at x=14 also opens at rows 9 and 12). The gallery floor is plain stone
-and completely safe; the shafts are flecked with ore and that is where the
-monsters are.
+   Chests:
+     1  (4,3)  Bronze Sword
+     2  (24,18)  60 coins
+     3  (13,12)  Psy Drop
 
-The moment you step in, BRAM blocks the tunnel, grins, and joins (3/4). He
-arrives with FLARE (FIRE BOMB from level 4), a lot of HP and nothing
-equipped, so sort out EQUIP right away. Armour first: he can take a hit,
-so the best piece stays on Lyn.
+   Spirits: Granite (3,18), Forge (12,3)
 
-The mine's monsters are a big step up from the fields:
+Enemies (mine): Ore Beetle, Ruin Golem, Dusk Bat, Pit Spider
 
-   Ore Beetle   80 HP   ATK 26   24 XP   17 coins   may drop a Travel Vest
-   Ruin Golem  108 HP   ATK 30   33 XP   24 coins   may drop a Psy Drop
-   plus packs of three Dusk Bats, pairs of Pit Spiders, and a golem with
-   two bats in tow.
+===============================================================================
+<b id="BOS7D">  7.4. BOSS: MAW OGRE                                                   [BOS7D]</b>
+===============================================================================
 
-Two beetles or a golem and a beetle in one fight will chew through 30 to
-40 HP in a round. Use arts on the big ones (Golem DEF 11 blunts FIGHT
-badly), let Bram's FIRE BOMB thin out the bat packs, keep Lyn on CURE duty,
-and use DEW's heal before anyone drops. If it goes wrong, defeat only costs
-you the walk back from Thera.
+   HP           650
+   Attack       42
+   Defence      high: steel does little
+   XP / coins   150 / 200
 
-Suggested route (fight on the ore as you go; you want the XP):
+The ogre takes half damage from steel and sweeps the whole party with SMASH
+about a third of its turns. Bring Lyn for CURE and let Ari and Bram cast every
+turn; keep everyone above 30 HP.
 
-1. GRANITE is right there, the "*" at (3,18), two tiles north-east of where
-   you stand. You can take it immediately or come back when you are a level
-   higher - it is tougher than Dew.
-
-   SPIRIT DUEL: GRANITE (earth)
-   HP 220   ATK 34   DEF 11   AGI 8   Reward: 40 XP, 24 coins, GRANITE
-   Takes 30% from FIGHT. Acts once per round. Slow: everyone outruns it.
-
-   Round one: Flint unleash (about 45) plus QUAKE and FLARE (about 25
-   each, less with its DEF 11). Dew's heal when someone passes half HP.
-   Lyn casts CURE or ICE HORN (level 4). Five rounds or so. Granite
-   hits for 20 to 30 against light armour: never let anyone sit below 30.
-
-2. Go up the west shaft (x 1 to 6) to chest 1 at (4,3): the BRONZE SWORD.
-   Equip it on Ari at once (ATK+7) and pass the Wood Blade to Bram.
-
-3. The wall at x=7 stops short of the top three rows, so from the chest you
-   can walk straight east along row 3 into the second shaft (x 8 to 13).
-   FORGE is the "*" at (12,3), at the end of that row.
-
-   SPIRIT DUEL: FORGE (fire)
-   HP 200   ATK 35   DEF 10   AGI 11   Reward: 40 XP, 24 coins, FORGE
-   Takes 30% from FIGHT. Acts once per round.
-
-   Same plan as Granite; a touch less HP. With Granite in hand you now
-   have two earth spirits on standby after unleashing both, which means
-   TITAN (110 power) is available in round two - it alone takes a third
-   of Forge's HP.
-
-4. Chest 2 at (13,12), the PSY DROP, hangs just below the gallery on the
-   second shaft's side: from (13,11) face down and press A.
-
-5. Cross to the east shaft (x 22 to 26) and go down to chest 3 at (24,18)
-   for 60 coins. You are now carrying 85 coins from chests alone plus the
-   duel and monster money: pop back to Brindle (the exit is at the far
-   south-west) for CHAIN MAIL and the inn if you need to.
-
-6. The MAW OGRE sits at (25,10), right in front of the east exit. Make sure
-   everyone is at full HP and PP (the inn, or walk the safe gallery until PP
-   ticks back), save, and step into it.
-
--------------------------------------------------------------------------------
-<b id="BOS7H">  7.8 BOSS: MAW OGRE                                                   [BOS7H]</b>
--------------------------------------------------------------------------------
-
-   MAW OGRE
-   HP 650   ATK 42   DEF 10   AGI 6
-   FIGHT does only 50% damage. Cannot flee.
-   Attacks: a single strike for ATK 42 + 0-4 minus your DEF, or (35% of
-   its turns) a SMASH on the whole party at 70% strength.
-   Reward: 150 XP, 200 coins, THE SPIRE KEY
-
-   Recommended: party level 6, four spirits (Flint, Dew, Granite, Forge),
-   Chain Mail on Lyn, Leather Mail on the others.
-
-With AGI 6 the Ogre is the slowest thing in the game: your whole party acts
-before it every round, which turns the fight into arithmetic.
-
-   Round 1   Ari: unleash FLINT.    Lyn: unleash GRANITE.
-             Bram: unleash FORGE.
-             Three unleashes land about 60 each at level 6 - the Ogre is
-             already down a quarter. Its first hit lands.
-   Round 2   Ari: SUMMON TITAN (two earth spirits on standby, ~135).
-             Lyn: CURE whoever was hit, or ICE HORN if nobody needs it.
-             Bram: SUMMON SALAMAND (one fire, ~80) or FLARE.
-             The Ogre is now around 300 HP.
-   Round 3+  Arts every turn: SPIRE from Ari (~45), ICE HORN (~40) from
-             Lyn, FLARE (~30) or FIRE BOMB from Bram. Lyn switches to CURE
-             the moment anyone is under 30 HP. Use DEW's heal (55% of max)
-             as the big emergency button; it is faster than a Potion.
-
-A single Ogre hit takes 23 to 30 HP off Lyn in Chain Mail and 22 to 32 off
-the others; SMASH does about 10 to 20 to everyone at once. Lyn at level 6
-has 49 HP, so two strikes in a row on her will drop her. If she falls,
-revive her with an Elixir at once: she is the only one who can CURE, and
-DEW's heal and Herbs will not keep up with the Ogre for long. Expect the
-fight to run five or six rounds.
-
-Victory gives the SPIRE KEY and a fat purse. The mine's east exit at (26,10)
-is open: walk through it to the Sunspire Trail. Before you do, consider a
-last trip to Brindle: the 200 coins from the Ogre buy an IRON AXE for Ari or
-a second CHAIN MAIL, and both make the trail much kinder.
-
--------------------------------------------------------------------------------
-<b id="WLK7I">  7.9 SUNSPIRE TRAIL                                                   [WLK7I]</b>
--------------------------------------------------------------------------------
-
-Recommended level: 7, rising to 8 by the gate
-New party member: SERA (automatically, on arriving)
+===============================================================================
+<b id="WLK7E">  7.5. SUNSPIRE TRAIL                                                   [WLK7E]</b>
+===============================================================================
 
     0         1         2         3
     01234567890123456789012345678901
- 0  rrrrrrrrrrrrrrrrprrrrrrrrrrrrrrr
- 1  vvvvvvvvvvvvvvvv=vvvvvvvvvvvvvvv
- 2  t...t...t.gg..gt.....t.........t
- 3  t............................*.t
- 4  tg..........1.................tt
- 5  tg...g.........ggg.....g.......t
- 6  trrrrrrrrrrrrrrrrrrrrrrrprrrrrrt
- 7  tvvvvvvvvvvvvvvvvvvvvvvvpvvvvvvt
- 8  tt.....gt...g..g.t..t......t..gt
- 9  t..............................t
-10  t&gt;.............................t
-11  t.tg..g..g...g.g....t.g..g.....t
-12  trrrrrrrprrrrrrrrrrrrrrrrrrrrrrt
-13  tvvvvvvvpvvvvvvvvvvvvvvvvvvvvvvt
-14  t.g...gg.g.t..g.g...........g..t
-15  t..............................t
-16  t........................2..*..t
-17  tg....gg...g.....gg.tt..t.....tt
-18  t...........g.......gg.........t
-19  tttttttttttttttttttttttttttttttt
+ 0  ----------------.---------------
+ 1  ||||||||||||||||=|||||||||||||||
+ 2  T...T...T.::..:T.....T.........T
+ 3  T............................*.T
+ 4  T:..........1.................TT
+ 5  T:...:.........:::.....:.......T
+ 6  T-----------------------.------T
+ 7  T|||||||||||||||||||||||.||||||T
+ 8  TT.....:T...:..:.T..T......T..:T
+ 9  T..............................T
+10  T>.............................T
+11  T.T:..:..:...:.:....T.:..:.....T
+12  T-------.----------------------T
+13  T|||||||.||||||||||||||||||||||T
+14  T.:...::.:.T..:.:...........:..T
+15  T..............................T
+16  T........................2..*..T
+17  T:....::...:.....::.TT..T.....TT
+18  T...........:.......::.........T
+19  TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
 
-   Arrive     (2,10) from the mine; the "&gt;" at (1,10) leads back
-   Exit       (16,0) north through the spire gate "=" at (16,1)
-   Chest 1    (12,4)    CHAIN MAIL (DEF+6)
-   Chest 2    (25,16)   POTION
-   Spirit *   (29,3)    BREEZE (wind) - north terrace, far east
-   Spirit *   (28,16)   EMBER (fire) - south terrace, far east
-   Enemies    Crag Harpy, Iron Boar, Fang Wolf, Dusk Bat (tall grass)
+SERA joins at the foot of the trail. Three terraces climb north; the gap in the
+lower terrace is at (8,12-13) and the gap in the upper one at (24,6-7). A
+rockfall has wedged a boulder in the gap of the lower terrace: walk into it, or
+cast SHOVE (Q) from a distance, to push it north out of the way. BREEZE is at
+(29,3) and EMBER at (28,16). The spire gate at (16,1) opens with the SPIRE KEY;
+the spire is through (16,0).
 
-SERA drops from a ledge and joins the moment you arrive: the party is
-complete (4/4). She has GUST and PLASMA (level 5) and the best AGI in the
-game. Give her the spare Bronze Sword or Wood Blade and some armour.
+   Chests:
+     1  (12,4)  Chain Mail
+     2  (25,16)  Potion
 
-The trail is three terraces stacked north to south, divided by two cliff
-bands. You arrive on the MIDDLE terrace (rows 8-11). A gap at x=8 in the
-lower band (rows 12-13) leads down to the SOUTH terrace (rows 14-18); a gap
-at x=24 in the upper band (rows 6-7) leads up to the NORTH terrace (rows
-2-5), where the gate is. Rows 9-10, 15-16 and 3-4 are cleared ground, so
-each terrace has a safe east-west lane; the grass either side has the
-monsters.
+   Spirits: Ember (28,16), Breeze (29,3)
 
-   Crag Harpy   100 HP   ATK 30   AGI 14   30 XP   20 coins   may drop Herb
-   Iron Boar    130 HP   ATK 34   DEF 12   36 XP   24 coins   may drop
-                Leather Mail
-   Harpy pairs, boar+wolf, harpy+boar, and harpy with two bats.
+Enemies (trail): Crag Harpy, Iron Boar, Fang Wolf, Dusk Bat
 
-FIRE BOMB and PLASMA are the answer to everything here: two area attacks a
-round clear a pair in two rounds. The boar's DEF 12 makes FIGHT nearly
-useless against it; hit it with SPIRE and ICE HORN.
-
-Route:
-
-1. SOUTH TERRACE first. Walk east along row 10 to x=8, down through the gap
-   at (8,12)-(8,13), then east along row 15. Chest 2 at (25,16) is a POTION:
-   from (25,15) face down. EMBER waits at (28,16).
-
-   SPIRIT DUEL: EMBER (fire)
-   HP 420   ATK 50   DEF 11   AGI 12   Reward: 60 XP, 30 coins, EMBER
-   Takes 30% from FIGHT. STRIKES TWICE every round (the second strike is
-   a little slower).
-
-   The first "double" spirit. Two hits of 30 to 40 a round means someone
-   loses 60 HP every turn, so Lyn cures every single round from the
-   start and Dew's heal is for the other three. Unleash everything else
-   in round one (Ari Flint, Bram Forge, Sera Granite), TITAN and SALAMAND
-   in round two, arts after that.
-   About five rounds. Have two Potions in the bag.
-
-2. Back up through the gap at x=8 to the middle terrace, east along row 9 or
-   10 to x=24, and up through the gap at (24,7)-(24,6) to the NORTH terrace.
-
-3. Chest 1 at (12,4): CHAIN MAIL. Walk west along row 3 or 4 to it. Equip it
-   on whoever is still in leather; you now own two if you bought one.
-
-4. BREEZE sits at the east end of row 3, at (29,3).
-
-   SPIRIT DUEL: BREEZE (wind)
-   HP 380   ATK 46   DEF 9   AGI 16   Reward: 55 XP, 30 coins, BREEZE
-   Takes 30% from FIGHT. Strikes twice every round, and it is fast.
-
-   Slightly less HP and DEF than Ember, so it dies a round sooner, but it
-   is quick: Sera and Lyn still outrun it, Ari and Bram do not. Same
-   recipe: unleash, summon, arts, Lyn on CURE. With EMBER on hand you can
-   now field PHOENIX (two fire on standby, 120 power) in round two instead
-   of Salamand.
-
-5. The SPIRE GATE "=" at (16,1). Walk into it with the Spire Key: the bolts
-   grind open and the exit at (16,0) leads into the Sunspire. Everything in
-   there is tougher, so this is the moment to walk back to Brindle for
-   AEGIS PLATE (380) if you can afford it, and a stock of Potions and two
-   Elixirs. The free heal inside the spire makes a second trip unnecessary.
-
--------------------------------------------------------------------------------
-<b id="WLK7J">  7.10 THE SUNSPIRE                                                    [WLK7J]</b>
--------------------------------------------------------------------------------
-
-Recommended level: 8 on arrival, 10 for the Wyrm
+===============================================================================
+<b id="WLK7F">  7.6. THE SUNSPIRE                                                     [WLK7F]</b>
+===============================================================================
 
     0         1         2
     01234567890123456789012345
@@ -1171,482 +506,226 @@ Recommended level: 8 on arrival, 10 for the Wyrm
 18  #...::....::.....:::.:..:#
 19  #.......................:#
 20  #.......................:#
-21  ############&gt;#############
+21  ############>#############
 
-   Arrive     (12,19) from the trail; the "&gt;" at (12,21) leads back out
-   Chest 1    (2,2)    STEEL RAPIER (ATK+16) - upper hall, west
-   Chest 2    (23,2)   ELIXIR - upper hall, east
-   Chest 3    (13,8)   SOL BLADE (ATK+24) - centre of the nave
-   Spirit *   (4,10)   MIST (water) - west aisle
-   Spirit *   (22,12)  SQUALL (wind) - east aisle
-   Spring +   (3,17)   SPIRIT SPRING: free full heal, any time
-   Boss X     (12,2)   SHADOW WYRM, upper hall - the final boss
-   Enemies    Pale Shade, Gargoyle, Dusk Bat (ore-flecked floor)
+The Sunspire. MIST is at (4,10), SQUALL at (22,12); the spirit spring at (3,17)
+restores the party, so use it before the end. The SOL BLADE is in chest 3 at
+(13,8). The SHADOW WYRM waits at the top, (12,2).
 
-The Sunspire is one big hall. The lower part (rows 6-20) is split by two
-inner walls at x=6 and x=19 into a west aisle, a wide central nave and an
-east aisle; the aisles connect to the nave through the open rows at the top
-(row 6) and bottom (rows 17-20). The upper hall (rows 1-4) is reached only
-through the gap at (12,5)-(13,5) at the top of the nave. The Wyrm sits right
-above that gap.
+   Chests:
+     1  (2,2)  Steel Rapier
+     2  (23,2)  Elixir
+     3  (13,8)  Sol Blade
 
-The monsters are the strongest in the game:
+   Spirits: Mist (4,10), Squall (22,12)
 
-   Pale Shade   120 HP   ATK 38   AGI 11   44 XP   28 coins   DRAINS HP
-   Gargoyle     160 HP   ATK 42   DEF 16   54 XP   34 coins   may drop
-                Potion
-   Pairs of shades, gargoyle+shade, shade with two bats, and - the nasty
-   one - two gargoyles.
-
-Gargoyle's DEF 16 makes FIGHT a joke and even takes the edge off arts; this
-is where Ari's GAIA BLADE (level 8, 64 power) and Sera's BOLT (level 8)
-earn their keep. INFERNO and PLASMA still clear the pairs fast. You are
-also now rich in spirits: unleashing Squall (hits everyone) and Breeze
-(staggers the target for a turn) in random fights is free, since they
-reset every battle.
-
-Route:
-
-1. The SPRING first. From the entrance walk west along row 19 to x=3 and up
-   the west aisle to the "+" at (3,17). Step on it: everyone is fully
-   restored. Come back here before every duel and before the Wyrm; there
-   is never a reason to leave the spire again except to shop.
-
-2. MIST is a few tiles up the west aisle at (4,10).
-
-   SPIRIT DUEL: MIST (water)
-   HP 520   ATK 56   DEF 11   AGI 13   Reward: 70 XP, 36 coins, MIST
-   Takes 30% from FIGHT. Strikes twice every round.
-
-   The toughest duel. Two hits of 56 ATK a round is 50 to 70 HP gone
-   every turn even in Chain Mail. The rhythm: round one everyone
-   unleashes (Flint, Granite, Forge, Ember; Sera unleashes BREEZE for the
-   stagger - a staggered Mist loses its next strike, one of the two).
-   Round two: TITAN plus PHOENIX from two members (around 150 each at
-   level 8), Lyn CURE, Sera PLASMA. Round three: GAIA BLADE, INFERNO,
-   ICE HORN. Dew's heal and Potions whenever anyone is under 35. If it
-   goes badly, retreat is impossible, but a wipe only sends you to Thera
-   with everything intact - walk back and try again a level higher.
-
-3. Chest 3, the SOL BLADE at (13,8), is in the middle of the nave: from the
-   spring go back down to row 19, east to x=13, and straight up the nave.
-   The chest is at (13,8); stand at (13,9) facing up. ATK+24 - give it to
-   Ari (GAIA BLADE scales with half his ATK).
-
-4. SQUALL is in the east aisle at (22,12): from the nave go down to row 19
-   or up to row 6, east through the aisle's opening, then along the aisle.
-
-   SPIRIT DUEL: SQUALL (wind)
-   HP 480   ATK 54   DEF 10   AGI 17   Reward: 70 XP, 36 coins, SQUALL
-   Takes 30% from FIGHT. Strikes twice every round, and it is the fastest
-   enemy in the game - only Sera and Lyn act before it.
-
-   A little weaker than Mist and the same plan works. With Mist on hand
-   you can swap one summon for NIXIE (one water on standby: 40 power plus
-   a 30% heal for the whole party). Beating Squall means ALL EIGHT
-   SPIRITS, and the game says so: the great summons are yours.
-
-5. The UPPER HALL: back to the nave, up through the gap at (12,5). The Wyrm
-   lurks at (12,2), two tiles above the gap, so step aside the moment you
-   come through: east along row 4 to (23,4) and up to Chest 2 at (23,2),
-   the ELIXIR (stand at (23,3) facing up). Then west along row 4 - mind the
-   Wyrm at (12,2), stay on row 4 - to Chest 1 at (2,2), the STEEL RAPIER
-   (ATK+16; Bram, whose fire arts add half his ATK). Grab everything, go
-   back down to the spring, top up, SAVE, and return.
-
--------------------------------------------------------------------------------
-<b id="BOS7K">  7.11 FINAL BOSS: SHADOW WYRM                                         [BOS7K]</b>
--------------------------------------------------------------------------------
-
-   SHADOW WYRM
-   HP 1200   ATK 56   DEF 13   AGI 9
-   FIGHT does only 45% damage. Cannot flee.
-   Attacks: a single strike at ATK 56 + 0-4 minus your DEF, or (40% of
-   its turns) SHADOW FLAME on the whole party at 75% strength.
-   Special: while below 55% HP it may spend a turn to HEAL 220 HP
-   (50% chance each turn it is eligible), up to TWICE per battle.
-   Effective HP: up to 1640.
-   Reward: the ending.
-
-   Recommended: party level 10, all eight spirits, Sol Blade on Ari,
-   Steel Rapier and Iron Axe on two others, Chain Mail or better on
-   everyone, three Potions and two Elixirs.
-
-The Wyrm is slow (AGI 9): at level 10 the whole party acts before it every
-round, Sera first. It is the only enemy that heals, and its heal is the
-whole fight: 1200 HP plus two 220-point heals is 1640 HP to burn through,
-and each heal is also a turn it does not attack. The trick is to bring so
-much damage in the first three rounds that it is dead before the second
-heal matters.
-
-   Round 1   Everyone UNLEASHES: Ari FLINT, Lyn GRANITE, Bram FORGE,
-             Sera BREEZE (stagger: the Wyrm loses its turn!).
-             Unleashes at level 10 do 60 to 95 each - about 280 damage,
-             and the Wyrm has not moved.
-   Round 2   Four spirits on standby, one of each element: Ari SUMMONS
-             SOL AVATAR (200 power, about 245 damage at level 10). Lyn
-             unleashes MIST (heals everyone 35%) or casts CURE as needed,
-             Bram unleashes EMBER (~90), Sera unleashes SQUALL (~55).
-             The Wyrm is down to about 550.
-   Round 3   Sol Avatar spent one spirit of each element, so the two-
-             spirit summons are off the table, but the singles are not:
-             Bram SUMMONS SALAMAND (Ember), Sera SUMMONS SYLPH (Squall -
-             it staggers again!), Lyn SUMMONS NIXIE (Mist: damage plus a
-             30% heal for everyone) or casts CURE, Ari casts GAIA BLADE
-             (~100). The Wyrm drops under 55% here and starts rolling
-             for heals.
-   Round 4+  Arts: GAIA BLADE, INFERNO, BOLT, ICE HORN. Lyn on PURE PLY
-             (full heal, 10 PP) the moment anyone is under 40. Potions
-             from Sera, who acts first, if two people are low.
-
-An alternative opening that many players prefer: unleash Flint and Granite
-in round one with Ari and Bram while Lyn and Sera cast, then TITAN in round
-two (two earth, 110 power), and build Sol Avatar in rounds two and three
-instead. Both work; the Sol Avatar-first line front-loads the most damage.
-
-Damage you take: a single strike is 30 to 40 through Chain Mail, 25 to 35
-through Aegis Plate (a few more once your spirits are off standby, since
-the set bonus goes with them); SHADOW FLAME is about 20 to 30 on everyone.
-At level
-10 Lyn has 69 HP and Sera 71, so two strikes in a row on either is a
-knock-out. Keep them above 45 - Lyn above all, since PURE PLY is hers - and
-use the Elixirs without hesitation; there is nothing to save them for.
-
-When it falls, the Wyrm dissolves into mist and warm light floods the
-tower.
-
--------------------------------------------------------------------------------
-<b id="END7L">  7.12 THE ENDING                                                      [END7L]</b>
--------------------------------------------------------------------------------
-
-The ending screen shows the sun rising over the spire with your party level,
-spirits found, battles won and coins. Press Enter or A after a moment to
-return to a fresh game. The victory is saved: CONTINUE on the title screen
-drops you in the Sunspire with the Wyrm gone and Sorin, back in Thera, has a
-new line for you. There is no post-game content beyond that; the chests you
-missed can still be opened.
+Enemies (shrine): Pale Shade, Gargoyle, Dusk Bat
 
 ===============================================================================
-<b id="SPR08">  8. SPIRIT (DJINN) GUIDE                                              [SPR08]</b>
+<b id="BOS7G">  7.7. BOSS: SHADOW WYRM                                                [BOS7G]</b>
 ===============================================================================
 
-All eight, in the order the game lists them. "Duel" is the battle form you
-have to beat. All duels block fleeing and take only 30% damage from FIGHT.
+   HP           1200
+   Attack       56
+   Defence      high: steel does little
+   XP / coins   0 / 0
 
-   #  Name     El.    Where              Duel HP/ATK/DEF/AGI   XP  Coins
-   ------------------------------------------------------------------------
-   1  FLINT    earth  Thera Fields       70 / 14 /  5 / 10     24   12
-                      (3,20) west of the houses
-   2  GRANITE  earth  Brindle Mine      220 / 34 / 11 /  8     40   24
-                      (3,18) by the entrance
-   3  FORGE    fire   Brindle Mine      200 / 35 / 10 / 11     40   24
-                      (12,3) top of the second shaft
-   4  EMBER    fire   Sunspire Trail    420 / 50 / 11 / 12 x2  60   30
-                      (28,16) south terrace, east end
-   5  DEW      water  Thera Fields      120 / 20 /  6 / 12     30   14
-                      (8,12) east shore of Lake Mira
-   6  MIST     water  The Sunspire      520 / 56 / 11 / 13 x2  70   36
-                      (4,10) west aisle
-   7  BREEZE   wind   Sunspire Trail    380 / 46 /  9 / 16 x2  55   30
-                      (29,3) north terrace, east end
-   8  SQUALL   wind   The Sunspire      480 / 54 / 10 / 17 x2  70   36
-                      (22,12) east aisle
-
-   "x2" = strikes twice per round.
-
-Unleash effects (power + 4 x level + 0-3, minus half the target's DEF):
-
-   FLINT     32 earth damage to one enemy. Also shatters the Thera boulder.
-   GRANITE   48 earth damage to one enemy.
-   FORGE     40 fire damage to one enemy.
-   EMBER     56 fire damage to one enemy. The strongest single unleash.
-   DEW       Heals one ally for 55% of their max HP.
-   MIST      Heals the whole party for 35% of each member's max HP.
-   BREEZE    24 wind damage and STAGGERS the target: it loses its next
-             action (one strike of a double-striker's two, or the Wyrm's
-             whole turn). Breeze is the best spirit in the game.
-   SQUALL    22 wind damage to EVERY enemy: full on the enemy you focus,
-             70% on the rest.
-
-Set bonus: +1 ATK and +1 DEF to every member per set spirit (max +8/+8).
-All spirits are set again at the start of every battle.
-
-Order of recruitment in this guide: Flint, Dew, Granite, Forge, Ember,
-Breeze, Mist, Squall. Only Flint is required to finish the game (for the
-boulder); the rest are optional but you will not beat the Wyrm without most
-of them.
+The wyrm shrugs off steel, breathes SHADOW FLAME on the whole party and knits
+its wounds twice when it is low. Rest at the spring first, set every spirit,
+open with the strongest summons, then arts every turn; Lyn and the potions keep
+the party standing.
 
 ===============================================================================
-<b id="SUM09">  9. SUMMON LIST                                                       [SUM09]</b>
+<b id="END7H">  7.8. THE ENDING                                                       [END7H]</b>
 ===============================================================================
 
-A summon needs the listed spirits ON STANDBY (unleashed earlier in the same
-battle). It hits every enemy for power + 5 x level + 0-5, minus half their
-DEF, then spends those spirits. The SUMMON icon only appears when at least
-one summon is possible.
-
-   Summon       Element  Needs                  Power  Extra
-   -----------------------------------------------------------------------
-   GNOME        earth    1 earth on standby       50
-   TITAN        earth    2 earth on standby      110
-   SALAMAND     fire     1 fire on standby        56
-   PHOENIX      fire     2 fire on standby       120
-   NIXIE        water    1 water on standby       40   heals party 30%
-   LEVIATH      water    2 water on standby      104
-   SYLPH        wind     1 wind on standby        46   staggers all foes
-   TEMPEST      wind     2 wind on standby       112
-   SOL AVATAR   all      1 of EACH element       200   needs all four
-                         on standby                    elements found
-
-Rules of thumb
-   - A two-spirit summon is always better than two one-spirit summons
-     (Titan 110 vs Gnome 50 twice), but it needs two of the same element,
-     so it costs two unleash turns.
-   - Sol Avatar uses one spirit of each element and leaves the other four
-     for a second wave: Titan/Phoenix/Leviath/Tempest are impossible after
-     it (only one of each element is left), but Gnome, Salamand, Nixie and
-     Sylph still are.
-   - Sylph's stagger on every enemy is the best "oh no" button in a
-     two-gargoyle fight.
+With the wyrm gone, warm light floods the Sunspire and the party returns to
+Thera. Sorin has a last word for you, and the game can be played on from the
+save.
 
 ===============================================================================
-<b id="CHS10">  10. TREASURE CHEST LIST                                              [CHS10]</b>
+<b id="SPR08">  8. SPIRIT (DJINN) GUIDE                                               [SPR08]</b>
 ===============================================================================
 
-Eleven chests. Face the chest and press A. A chest only ever opens once,
-and stays open afterwards, so you can see at a glance which ones are done.
-"Stand at" is a tile you can reach from which the chest is adjacent.
+   Spirit   Element  Where                    Unleash
+   ------   -------  -----                    -------
+   Flint    Earth    Thera Fields (3,20)      Strikes with stone. Its power can
+                                              shatter boulders.
+   Granite  Earth    Brindle Mine (3,18)      A heavy blow of living rock.
+   Forge    Fire     Brindle Mine (12,3)      A hammer of flame.
+   Ember    Fire     Sunspire Trail (28,16)   A searing strike.
+   Dew      Water    Thera Fields (8,12)      Restores 55% of one ally's HP.
+   Mist     Water    The Sunspire (4,10)      Restores 35% of everyone's HP.
+   Breeze   Wind     Sunspire Trail (29,3)    A cutting wind that staggers its
+                                              target.
+   Squall   Wind     The Sunspire (22,12)     A storm over every foe.
 
-   #   Area            Tile      Stand at / facing     Contents
-   -------------------------------------------------------------------------
-   1   Thera Fields    (32,11)   (32,12) facing up     25 coins
-   2   Thera Fields    (3,3)     (3,4) facing up       LYN'S COMPASS (key)
-   3   Thera Fields    (50,36)   (50,37) facing up     POTION
-   4   Brindle Mine    (4,3)     (4,2) or (5,3)        BRONZE SWORD
-   5   Brindle Mine    (13,12)   (13,11) facing down   PSY DROP
-   6   Brindle Mine    (24,18)   (24,17) or (23,18)    60 coins
-   7   Sunspire Trail  (12,4)    (12,3) facing down    CHAIN MAIL
-   8   Sunspire Trail  (25,16)   (25,15) facing down   POTION
-   9   The Sunspire    (2,2)     (2,3) facing up       STEEL RAPIER
-  10   The Sunspire    (23,2)    (23,3) facing up      ELIXIR
-  11   The Sunspire    (13,8)    (13,9) facing up      SOL BLADE
+Duel stats (the spirit as an enemy):
 
-   Total loose coin: 85. Brindle has no chests.
-
-===============================================================================
-<b id="ITM11">  11. ITEMS AND EQUIPMENT                                              [ITM11]</b>
-===============================================================================
-
-Consumables
-   Item       Price   Effect
-   -----------------------------------------------------------------------
-   HERB         12    Restores 60 HP to one member
-   POTION       70    Restores 220 HP to one member
-   PSY DROP     40    Restores 30 PP to one member
-   ELIXIR       90    Revives a fallen member at half their max HP
-
-   All four work from the ITEMS menu outside battle and from the ITEM
-   command inside it. Nothing else has a use limit; carry as many as you
-   like.
-
-Key item
-   LYN'S COMPASS   Chest 2 in the Thera paddock. Give it to Lyn in Brindle.
-
-Weapons (one slot, shared pool: anyone can wear anything)
-   Weapon         ATK   Price   Where
-   -----------------------------------------------------------------------
-   WOOD BLADE      +3     20    Ari starts with one; Thera shop
-   BRONZE SWORD    +7     80    Thera shop; chest in Brindle Mine
-   IRON AXE       +12    180    Brindle (Dov)
-   STEEL RAPIER   +16    480    chest in the Sunspire (not sold)
-   SOL BLADE      +24    999    chest in the Sunspire (not sold)
-
-Armour
-   Armour         DEF   Price   Where
-   -----------------------------------------------------------------------
-   TRAVEL VEST     +2     18    Thera shop; Ore Beetle drop (8%)
-   LEATHER MAIL    +4     70    Thera shop; Iron Boar drop (7%)
-   CHAIN MAIL      +6    160    Brindle (Dov); chest on the Trail
-   AEGIS PLATE     +9    380    Brindle (Dov)
-
-   There is no selling. Unequipped gear sits in the shared pool.
+   Spirit   HP   ATK  AGI  XP   Coins  Note
+   ------   --   ---  ---  --   -----  ----
+   Flint    70   14   10   24   12
+   Granite  220  34   8    40   24
+   Forge    200  35   11   40   24
+   Ember    420  50   12   60   30     acts twice a turn
+   Dew      120  20   12   30   14
+   Mist     520  56   13   70   36     acts twice a turn
+   Breeze   380  46   16   55   30     acts twice a turn
+   Squall   480  54   17   70   36     acts twice a turn
 
 ===============================================================================
-<b id="SHP12">  12. SHOP LISTS                                                       [SHP12]</b>
+<b id="SUM09">  9. SUMMON LIST                                                        [SUM09]</b>
 ===============================================================================
 
-THERA - MARA'S GOODS (the third house on the lane, door at (21,19))
-   HERB            12    HP+60
-   PSY DROP        40    PP+30
-   WOOD BLADE      20    ATK+3
-   BRONZE SWORD    80    ATK+7
-   TRAVEL VEST     18    DEF+2
-   LEATHER MAIL    70    DEF+4
+   Summon       Element  Standby needed       Power
+   ------       -------  --------------       -----
+   Gnome        Earth    1 earth              50
+   Titan        Earth    2 earth              110
+   Salamand     Fire     1 fire               56
+   Phoenix      Fire     2 fire               120
+   Nixie        Water    1 water              40
+   Leviath      Water    2 water              104
+   Sylph        Wind     1 wind               46
+   Tempest      Wind     2 wind               112
+   Sol Avatar   Sol      one of each element  200
 
-BRINDLE - DOV'S GOODS (talk to Dov at (8,9) on the plaza)
-   HERB            12    HP+60
-   POTION          70    HP+220
-   PSY DROP        40    PP+30
-   ELIXIR          90    revive
-   IRON AXE       180    ATK+12
-   CHAIN MAIL     160    DEF+6
-   AEGIS PLATE    380    DEF+9
-
-INNS - 12 coins: full HP and PP for everyone, revives the fallen, saves.
-   Mira Farmstead (door at (44,34), Thera Fields)
-   Brindle (door at (22,11))
-
-Money: you start with 30 coins. Chests give 85 more, the Ogre 200, the eight
-duels 206 between them, and random battles 7 to 34 each. Four sets of Chain
-Mail plus an Iron Axe and an Aegis Plate come to about 1,200 coins, so you
-will not have everything - prioritise armour for Bram and Lyn, then Ari's
-weapon.
+A summon hits every foe for its power plus a share of each foe's maximum HP for
+every spirit spent, and boosts the caster afterwards.
 
 ===============================================================================
-<b id="BST13">  13. BESTIARY                                                         [BST13]</b>
+<b id="CHS10">  10. TREASURE CHEST LIST                                               [CHS10]</b>
 ===============================================================================
 
-Every enemy in the game. "Phys" is the share of FIGHT damage that lands.
-
-   Name          HP    ATK  DEF  AGI   XP  Coins  Notes
-   -------------------------------------------------------------------------
-   Thera Fields (tall grass)
-   MIRE OOZE      22     9    2    5    8     7   drops HERB 20%
-   DUSK BAT       18    10    2   13   10     8   drains 1/3 of damage dealt
-   FANG WOLF      24    11    3   10   14    12   drops HERB 18%
-   PIT SPIDER     28    11    4    9   13    11
-   Groups: ooze; ooze; wolf; bat; spider; ooze+ooze; ooze+bat;
-           wolf+ooze; spider+bat (only singles and ooze pairs below Lv 3)
-   Paddock, behind the boulder (any level): wolf+ooze; wolf+wolf;
-           spider+bat; wolf+spider; spider+spider; ooze+ooze+bat
-
-   Brindle Mine (ore flecks)
-   ORE BEETLE     80    26   10    4   24    17   drops TRAVEL VEST 8%
-   RUIN GOLEM    108    30   11    3   33    24   drops PSY DROP 15%
-   Groups: beetle; golem; beetle+beetle; bat+bat+bat; golem+beetle;
-           spider+spider; golem+bat+bat
-
-   Sunspire Trail (tall grass)
-   CRAG HARPY    100    30    9   14   30    20   drops HERB 15%
-   IRON BOAR     130    34   12    7   36    24   drops LEATHER MAIL 7%
-   Groups: harpy; boar; harpy+harpy; boar+wolf; harpy+boar;
-           harpy+bat+bat
-
-   The Sunspire (ore flecks)
-   PALE SHADE    120    38   11   11   44    28   drains 1/3 of damage dealt
-   GARGOYLE      160    42   16    8   54    34   drops POTION 15%
-   Groups: shade; gargoyle; shade+shade; gargoyle+shade;
-           shade+bat+bat; gargoyle+gargoyle
-
-   Bosses
-   MAW OGRE      650    42   10    6  150   200   phys 50%; SMASH (all,
-                                                  70%) 35% of turns
-   SHADOW WYRM  1200    56   13    9    0     0   phys 45%; SHADOW FLAME
-                                                  (all, 75%) 40% of turns;
-                                                  heals 220 twice below 55%
-
-   Spirit duels (phys 30%, no fleeing)
-   FLINT          70    14    5   10   24    12
-   DEW           120    20    6   12   30    14
-   FORGE         200    35   10   11   40    24
-   GRANITE       220    34   11    8   40    24
-   BREEZE        380    46    9   16   55    30   strikes twice
-   EMBER         420    50   11   12   60    30   strikes twice
-   SQUALL        480    54   10   17   70    36   strikes twice
-   MIST          520    56   11   13   70    36   strikes twice
-
-Drains: a Dusk Bat or Pale Shade heals itself by a third of the damage it
-deals with a successful strike. Kill them first in mixed groups.
+   Thera Fields
+     1  (32,11)  25 coins
+     2  (50,36)  Potion
+     3  ( 3, 3)  Lyn's Compass
+   Brindle Mine
+     1  ( 4, 3)  Bronze Sword
+     2  (24,18)  60 coins
+     3  (13,12)  Psy Drop
+   Sunspire Trail
+     1  (12, 4)  Chain Mail
+     2  (25,16)  Potion
+   The Sunspire
+     1  ( 2, 2)  Steel Rapier
+     2  (23, 2)  Elixir
+     3  (13, 8)  Sol Blade
 
 ===============================================================================
-<b id="FAQ14">  14. FREQUENTLY ASKED QUESTIONS                                       [FAQ14]</b>
+<b id="ITM11">  11. ITEMS AND EQUIPMENT                                               [ITM11]</b>
 ===============================================================================
 
-Q: I can't get past the boulder north of Thera.
-A: You need FLINT, the earth spirit at (3,20) west of the houses. Beat it in
-   its duel, then walk into the boulder.
+   Item       Price  Effect
+   ----       -----  ------
+   Herb       12     Restores 60 HP.
+   Potion     70     Restores 220 HP.
+   Psy Drop   40     Restores 30 PP.
+   Elixir     90     Revives a fallen ally with half HP.
 
-Q: Lyn won't join. She keeps talking about a compass.
-A: It is in the chest at (3,3), the north-west corner of the paddock behind
-   the boulder. Bring it back and say YES.
+   Weapon         ATK  Price
+   ------         ---  -----
+   Wood Blade     3    20
+   Bronze Sword   7    80
+   Iron Axe       12   180
+   Steel Rapier   16   480
+   Sol Blade      24   999
 
-Q: Where is the shop in Brindle?
-A: There is no building. Talk to DOV, the man standing on the west side of
-   the plaza at (8,9).
-
-Q: My attacks do 2 damage to a spirit / the boss!
-A: That is intended. Spirits take 30% of FIGHT damage and bosses about
-   half. Use ARTS, SPIRIT unleashes and SUMMONS - they are not reduced.
-
-Q: The SUMMON icon never appears.
-A: Summons need spirits ON STANDBY, which means you have to UNLEASH them
-   with the SPIRIT command first in the same battle. Unleash one earth
-   spirit, and next round Gnome is available.
-
-Q: Why did my ATK go down mid-battle?
-A: Each SET spirit gives +1 ATK and +1 DEF. Unleashing moves it to standby
-   and the bonus goes with it until the battle ends.
-
-Q: I lost a spirit duel. Is the spirit gone?
-A: No. It stays on the map for a rematch, and you lose nothing on defeat.
-
-Q: How do I unlock the gate on the Sunspire Trail?
-A: Beat the MAW OGRE in Brindle Mine; he drops the SPIRE KEY. Then walk
-   into the gate.
-
-Q: I'm out of PP in the middle of the mine.
-A: PP comes back at 1 per 8 steps for everyone. Pace the safe gallery for a
-   while, use a Psy Drop, or go back to the Brindle inn (12 coins).
-
-Q: Is there a free heal anywhere?
-A: Yes, two: the well at (15,22) in Thera and the spirit spring at (3,17)
-   in the Sunspire. Walk onto them.
-
-Q: Is there anything missable?
-A: No. Every chest and spirit can be collected at any point, including
-   after the ending.
-
-Q: Can I sell gear?
-A: No. There is no selling. Spend carefully.
-
-Q: Where is my save?
-A: In the browser's local storage for the site you played on. Play from the
-   same browser and address to continue. Private browsing or clearing site
-   data wipes it.
-
-Q: What are sprite packs?
-A: A way to replace every sprite, tile and background with your own art.
-   It is purely cosmetic and does not change any number in this guide.
-   See the game's pack guide page.
+   Armour         DEF  Price
+   ------         ---  -----
+   Travel Vest    2    18
+   Leather Mail   4    70
+   Chain Mail     6    160
+   Aegis Plate    9    380
 
 ===============================================================================
-<b id="LGL15">  15. CREDITS AND LEGAL                                                [LGL15]</b>
+<b id="SHP12">  12. SHOP LISTS                                                        [SHP12]</b>
 ===============================================================================
 
-Sunspire Saga is original code and art released under the MIT licence. It is
-an independent homage to the handheld JRPGs of the early 2000s and is not
-affiliated with or endorsed by Nintendo or Camelot.
+   Mara's shop (Thera, keeper Mara)
+     Herb             12 coins
+     Psy Drop         40 coins
+     Wood Blade       20 coins
+     Bronze Sword     80 coins
+     Travel Vest      18 coins
+     Leather Mail     70 coins
 
-This walkthrough is part of the Sunspire Saga repository and is released
-under the same MIT licence as the game. You may copy, host and share it
-freely as long as this notice stays attached. All numbers were taken from
-the game's data for version V46; if you find a mistake, open an issue in
-the repository.
+   Dov's ironworks (Brindle, keeper Dov)
+     Herb             12 coins
+     Potion           70 coins
+     Psy Drop         40 coins
+     Elixir           90 coins
+     Iron Axe        180 coins
+     Chain Mail      160 coins
+     Aegis Plate     380 coins
 
-Thanks to everyone who ever wrote a plain-text FAQ with an ASCII logo at
-the top. This one is for you.
+Inns cost 12 coins at Mira Farmstead and in Brindle; both restore HP and PP and
+save the game.
 
 ===============================================================================
-                       May the Sunspire shine anew.
-===============================================================================</pre>
-  </div>
-</main>
+<b id="BST13">  13. BESTIARY                                                          [BST13]</b>
+===============================================================================
 
-<footer class="foot"><div class="wrap">
-  <span>Sunspire Saga &middot; original code and art, MIT licence</span>
-  <span>An independent homage; not affiliated with any console maker.</span>
-</div></footer>
+   Enemy        HP   ATK  DEF  AGI  XP   Coins Drop           Where
+   -----        --   ---  ---  ---  --   ----- ----           -----
+   Mire Ooze    22   9    2    5    8    7     Herb 20%       field, paddock
+   Dusk Bat     18   10   2    13   10   8     drains HP      field, paddock,
+                                                              mine, trail,
+                                                              shrine
+   Fang Wolf    24   11   3    10   14   12    Herb 18%       field, paddock,
+                                                              trail
+   Pit Spider   28   11   4    9    13   11                   field, paddock,
+                                                              mine
+   Ore Beetle   80   26   10   4    24   17    Travel Vest 8% mine
+   Ruin Golem   108  30   11   3    33   24    Psy Drop 15%   mine
+   Crag Harpy   100  30   9    14   30   20    Herb 15%       trail
+   Iron Boar    130  34   12   7    36   24    Leather Mail 7% trail
+   Pale Shade   120  38   11   11   44   28    drains HP      shrine
+   Gargoyle     160  42   16   8    54   34    Potion 15%     shrine
+   Maw Ogre     650  42   10   6    150  200                  boss
+   Shadow Wyrm  1200 56   13   9    0    0                    boss
 
-<script src="assets/site.js"></script>
-</body>
+===============================================================================
+<b id="FAQ14">  14. FREQUENTLY ASKED QUESTIONS                                        [FAQ14]</b>
+===============================================================================
+
+Q: Steel does nothing to the spirits and bosses. Is that a bug?
+---------------------------------------------------------------
+A: No. Their defence is far above your attack; cast arts and unleash spirits
+instead.
+
+Q: Where is Lyn's compass?
+--------------------------
+A: In the paddock north of the fence in Thera Fields, chest 3 at (3,3). You
+need Flint to break the boulder first.
+
+Q: The gate on the trail will not open.
+---------------------------------------
+A: The SPIRE KEY is what the Maw Ogre in Brindle Mine sits on.
+
+Q: Is this the same game as the single-script version?
+------------------------------------------------------
+A: Same story, maps, numbers and art. The engine build levels characters one by
+one and counts damage a little differently; this guide describes the engine
+build.
+
+===============================================================================
+<b id="LGL15">  15. CREDITS AND LEGAL                                                 [LGL15]</b>
+===============================================================================
+
+Sunspire Saga is original work: code, art, names, data and text, MIT licence.
+The engine is a fork of goldensun_html5 (MIT) on Phaser CE. It is an
+independent homage; it contains no assets from Nintendo or Camelot and is not
+affiliated with any console maker.
+
+This guide may be copied with the game.
+
+</pre></div>
+        </main>
+        <footer class="foot"><div class="wrap">
+            <span>Sunspire Saga &middot; original code and art, MIT licence</span>
+            <span>An independent homage; no assets from Nintendo or Camelot.</span>
+        </div></footer>
+        <script src="/static/site.js"></script>
+    </body>
 </html>

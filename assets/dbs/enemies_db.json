@@ -1,0 +1,2262 @@
+[
+    {
+        "key_name": "ooze",
+        "name": "Mire Ooze",
+        "level": 1,
+        "turns": 1,
+        "max_hp": 22,
+        "max_pp": 0,
+        "hp_recovery": 0,
+        "pp_recovery": 0,
+        "atk": 9,
+        "def": 2,
+        "agi": 5,
+        "luk": 3,
+        "battle_scale": 1,
+        "battle_shadow_key": "01",
+        "status_sprite_shift": 12,
+        "defeat_voice": "monster_defeat/monster_1",
+        "items": [],
+        "abilities": [
+            {
+                "key_name": "attack",
+                "use_weight": 1
+            }
+        ],
+        "vulnerabilities": [],
+        "coins_reward": 7,
+        "item_reward": "herb",
+        "item_reward_chance": 0.2,
+        "exp_reward": 8,
+        "base_level": {
+            "venus": 1,
+            "mercury": 1,
+            "mars": 1,
+            "jupiter": 1
+        },
+        "base_power": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "base_resist": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "battle_animations_variations": {
+            "attack": "attack"
+        },
+        "battle_spritesheet": {
+            "spritesheet": {
+                "image": "assets/images/spritesheets/battle/ooze_battle.png",
+                "json": "assets/images/spritesheets/battle/ooze_battle.json"
+            },
+            "animations": [
+                "idle_back",
+                "idle_front",
+                "attack_back",
+                "attack_front",
+                "damage_back",
+                "damage_front",
+                "attack_init_back",
+                "attack_init_front",
+                "cast_back",
+                "cast_front",
+                "cast_init_back",
+                "cast_init_front"
+            ],
+            "frames_count": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "frame_rate": [
+                1,
+                1,
+                6,
+                6,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "loop": [
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ]
+        }
+    },
+    {
+        "key_name": "bat",
+        "name": "Dusk Bat",
+        "level": 1,
+        "turns": 1,
+        "max_hp": 18,
+        "max_pp": 0,
+        "hp_recovery": 0,
+        "pp_recovery": 0,
+        "atk": 10,
+        "def": 2,
+        "agi": 13,
+        "luk": 3,
+        "battle_scale": 1,
+        "battle_shadow_key": "01",
+        "status_sprite_shift": 12,
+        "defeat_voice": "monster_defeat/monster_1",
+        "items": [],
+        "abilities": [
+            {
+                "key_name": "attack",
+                "use_weight": 1
+            }
+        ],
+        "vulnerabilities": [],
+        "coins_reward": 8,
+        "item_reward": "",
+        "item_reward_chance": 0,
+        "exp_reward": 10,
+        "base_level": {
+            "venus": 1,
+            "mercury": 1,
+            "mars": 1,
+            "jupiter": 1
+        },
+        "base_power": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "base_resist": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "battle_animations_variations": {
+            "attack": "attack"
+        },
+        "battle_spritesheet": {
+            "spritesheet": {
+                "image": "assets/images/spritesheets/battle/bat_battle.png",
+                "json": "assets/images/spritesheets/battle/bat_battle.json"
+            },
+            "animations": [
+                "idle_back",
+                "idle_front",
+                "attack_back",
+                "attack_front",
+                "damage_back",
+                "damage_front",
+                "attack_init_back",
+                "attack_init_front",
+                "cast_back",
+                "cast_front",
+                "cast_init_back",
+                "cast_init_front"
+            ],
+            "frames_count": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "frame_rate": [
+                1,
+                1,
+                6,
+                6,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "loop": [
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ]
+        }
+    },
+    {
+        "key_name": "wolf",
+        "name": "Fang Wolf",
+        "level": 1,
+        "turns": 1,
+        "max_hp": 24,
+        "max_pp": 0,
+        "hp_recovery": 0,
+        "pp_recovery": 0,
+        "atk": 11,
+        "def": 3,
+        "agi": 10,
+        "luk": 3,
+        "battle_scale": 1,
+        "battle_shadow_key": "01",
+        "status_sprite_shift": 12,
+        "defeat_voice": "monster_defeat/monster_1",
+        "items": [],
+        "abilities": [
+            {
+                "key_name": "attack",
+                "use_weight": 1
+            }
+        ],
+        "vulnerabilities": [],
+        "coins_reward": 12,
+        "item_reward": "herb",
+        "item_reward_chance": 0.18,
+        "exp_reward": 14,
+        "base_level": {
+            "venus": 1,
+            "mercury": 1,
+            "mars": 1,
+            "jupiter": 1
+        },
+        "base_power": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "base_resist": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "battle_animations_variations": {
+            "attack": "attack"
+        },
+        "battle_spritesheet": {
+            "spritesheet": {
+                "image": "assets/images/spritesheets/battle/wolf_battle.png",
+                "json": "assets/images/spritesheets/battle/wolf_battle.json"
+            },
+            "animations": [
+                "idle_back",
+                "idle_front",
+                "attack_back",
+                "attack_front",
+                "damage_back",
+                "damage_front",
+                "attack_init_back",
+                "attack_init_front",
+                "cast_back",
+                "cast_front",
+                "cast_init_back",
+                "cast_init_front"
+            ],
+            "frames_count": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "frame_rate": [
+                1,
+                1,
+                6,
+                6,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "loop": [
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ]
+        }
+    },
+    {
+        "key_name": "spider",
+        "name": "Pit Spider",
+        "level": 1,
+        "turns": 1,
+        "max_hp": 28,
+        "max_pp": 0,
+        "hp_recovery": 0,
+        "pp_recovery": 0,
+        "atk": 11,
+        "def": 4,
+        "agi": 9,
+        "luk": 3,
+        "battle_scale": 1,
+        "battle_shadow_key": "01",
+        "status_sprite_shift": 12,
+        "defeat_voice": "monster_defeat/monster_1",
+        "items": [],
+        "abilities": [
+            {
+                "key_name": "attack",
+                "use_weight": 1
+            }
+        ],
+        "vulnerabilities": [],
+        "coins_reward": 11,
+        "item_reward": "",
+        "item_reward_chance": 0,
+        "exp_reward": 13,
+        "base_level": {
+            "venus": 1,
+            "mercury": 1,
+            "mars": 1,
+            "jupiter": 1
+        },
+        "base_power": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "base_resist": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "battle_animations_variations": {
+            "attack": "attack"
+        },
+        "battle_spritesheet": {
+            "spritesheet": {
+                "image": "assets/images/spritesheets/battle/spider_battle.png",
+                "json": "assets/images/spritesheets/battle/spider_battle.json"
+            },
+            "animations": [
+                "idle_back",
+                "idle_front",
+                "attack_back",
+                "attack_front",
+                "damage_back",
+                "damage_front",
+                "attack_init_back",
+                "attack_init_front",
+                "cast_back",
+                "cast_front",
+                "cast_init_back",
+                "cast_init_front"
+            ],
+            "frames_count": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "frame_rate": [
+                1,
+                1,
+                6,
+                6,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "loop": [
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ]
+        }
+    },
+    {
+        "key_name": "beetle",
+        "name": "Ore Beetle",
+        "level": 1,
+        "turns": 1,
+        "max_hp": 80,
+        "max_pp": 0,
+        "hp_recovery": 0,
+        "pp_recovery": 0,
+        "atk": 26,
+        "def": 10,
+        "agi": 4,
+        "luk": 3,
+        "battle_scale": 1,
+        "battle_shadow_key": "01",
+        "status_sprite_shift": 12,
+        "defeat_voice": "monster_defeat/monster_1",
+        "items": [],
+        "abilities": [
+            {
+                "key_name": "attack",
+                "use_weight": 1
+            }
+        ],
+        "vulnerabilities": [],
+        "coins_reward": 17,
+        "item_reward": "vest",
+        "item_reward_chance": 0.08,
+        "exp_reward": 24,
+        "base_level": {
+            "venus": 1,
+            "mercury": 1,
+            "mars": 1,
+            "jupiter": 1
+        },
+        "base_power": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "base_resist": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "battle_animations_variations": {
+            "attack": "attack"
+        },
+        "battle_spritesheet": {
+            "spritesheet": {
+                "image": "assets/images/spritesheets/battle/beetle_battle.png",
+                "json": "assets/images/spritesheets/battle/beetle_battle.json"
+            },
+            "animations": [
+                "idle_back",
+                "idle_front",
+                "attack_back",
+                "attack_front",
+                "damage_back",
+                "damage_front",
+                "attack_init_back",
+                "attack_init_front",
+                "cast_back",
+                "cast_front",
+                "cast_init_back",
+                "cast_init_front"
+            ],
+            "frames_count": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "frame_rate": [
+                1,
+                1,
+                6,
+                6,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "loop": [
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ]
+        }
+    },
+    {
+        "key_name": "golem",
+        "name": "Ruin Golem",
+        "level": 1,
+        "turns": 1,
+        "max_hp": 108,
+        "max_pp": 0,
+        "hp_recovery": 0,
+        "pp_recovery": 0,
+        "atk": 30,
+        "def": 11,
+        "agi": 3,
+        "luk": 3,
+        "battle_scale": 1,
+        "battle_shadow_key": "01",
+        "status_sprite_shift": 12,
+        "defeat_voice": "monster_defeat/monster_1",
+        "items": [],
+        "abilities": [
+            {
+                "key_name": "attack",
+                "use_weight": 1
+            }
+        ],
+        "vulnerabilities": [],
+        "coins_reward": 24,
+        "item_reward": "pdrop",
+        "item_reward_chance": 0.15,
+        "exp_reward": 33,
+        "base_level": {
+            "venus": 1,
+            "mercury": 1,
+            "mars": 1,
+            "jupiter": 1
+        },
+        "base_power": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "base_resist": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "battle_animations_variations": {
+            "attack": "attack"
+        },
+        "battle_spritesheet": {
+            "spritesheet": {
+                "image": "assets/images/spritesheets/battle/golem_battle.png",
+                "json": "assets/images/spritesheets/battle/golem_battle.json"
+            },
+            "animations": [
+                "idle_back",
+                "idle_front",
+                "attack_back",
+                "attack_front",
+                "damage_back",
+                "damage_front",
+                "attack_init_back",
+                "attack_init_front",
+                "cast_back",
+                "cast_front",
+                "cast_init_back",
+                "cast_init_front"
+            ],
+            "frames_count": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "frame_rate": [
+                1,
+                1,
+                6,
+                6,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "loop": [
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ]
+        }
+    },
+    {
+        "key_name": "harpy",
+        "name": "Crag Harpy",
+        "level": 1,
+        "turns": 1,
+        "max_hp": 100,
+        "max_pp": 0,
+        "hp_recovery": 0,
+        "pp_recovery": 0,
+        "atk": 30,
+        "def": 9,
+        "agi": 14,
+        "luk": 3,
+        "battle_scale": 1,
+        "battle_shadow_key": "01",
+        "status_sprite_shift": 12,
+        "defeat_voice": "monster_defeat/monster_1",
+        "items": [],
+        "abilities": [
+            {
+                "key_name": "attack",
+                "use_weight": 1
+            }
+        ],
+        "vulnerabilities": [],
+        "coins_reward": 20,
+        "item_reward": "herb",
+        "item_reward_chance": 0.15,
+        "exp_reward": 30,
+        "base_level": {
+            "venus": 1,
+            "mercury": 1,
+            "mars": 1,
+            "jupiter": 1
+        },
+        "base_power": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "base_resist": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "battle_animations_variations": {
+            "attack": "attack"
+        },
+        "battle_spritesheet": {
+            "spritesheet": {
+                "image": "assets/images/spritesheets/battle/harpy_battle.png",
+                "json": "assets/images/spritesheets/battle/harpy_battle.json"
+            },
+            "animations": [
+                "idle_back",
+                "idle_front",
+                "attack_back",
+                "attack_front",
+                "damage_back",
+                "damage_front",
+                "attack_init_back",
+                "attack_init_front",
+                "cast_back",
+                "cast_front",
+                "cast_init_back",
+                "cast_init_front"
+            ],
+            "frames_count": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "frame_rate": [
+                1,
+                1,
+                6,
+                6,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "loop": [
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ]
+        }
+    },
+    {
+        "key_name": "boar",
+        "name": "Iron Boar",
+        "level": 1,
+        "turns": 1,
+        "max_hp": 130,
+        "max_pp": 0,
+        "hp_recovery": 0,
+        "pp_recovery": 0,
+        "atk": 34,
+        "def": 12,
+        "agi": 7,
+        "luk": 3,
+        "battle_scale": 1,
+        "battle_shadow_key": "01",
+        "status_sprite_shift": 12,
+        "defeat_voice": "monster_defeat/monster_1",
+        "items": [],
+        "abilities": [
+            {
+                "key_name": "attack",
+                "use_weight": 1
+            }
+        ],
+        "vulnerabilities": [],
+        "coins_reward": 24,
+        "item_reward": "leather",
+        "item_reward_chance": 0.07,
+        "exp_reward": 36,
+        "base_level": {
+            "venus": 1,
+            "mercury": 1,
+            "mars": 1,
+            "jupiter": 1
+        },
+        "base_power": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "base_resist": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "battle_animations_variations": {
+            "attack": "attack"
+        },
+        "battle_spritesheet": {
+            "spritesheet": {
+                "image": "assets/images/spritesheets/battle/boar_battle.png",
+                "json": "assets/images/spritesheets/battle/boar_battle.json"
+            },
+            "animations": [
+                "idle_back",
+                "idle_front",
+                "attack_back",
+                "attack_front",
+                "damage_back",
+                "damage_front",
+                "attack_init_back",
+                "attack_init_front",
+                "cast_back",
+                "cast_front",
+                "cast_init_back",
+                "cast_init_front"
+            ],
+            "frames_count": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "frame_rate": [
+                1,
+                1,
+                6,
+                6,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "loop": [
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ]
+        }
+    },
+    {
+        "key_name": "shade",
+        "name": "Pale Shade",
+        "level": 1,
+        "turns": 1,
+        "max_hp": 120,
+        "max_pp": 0,
+        "hp_recovery": 0,
+        "pp_recovery": 0,
+        "atk": 38,
+        "def": 11,
+        "agi": 11,
+        "luk": 3,
+        "battle_scale": 1,
+        "battle_shadow_key": "01",
+        "status_sprite_shift": 12,
+        "defeat_voice": "monster_defeat/monster_1",
+        "items": [],
+        "abilities": [
+            {
+                "key_name": "attack",
+                "use_weight": 1
+            }
+        ],
+        "vulnerabilities": [],
+        "coins_reward": 28,
+        "item_reward": "",
+        "item_reward_chance": 0,
+        "exp_reward": 44,
+        "base_level": {
+            "venus": 1,
+            "mercury": 1,
+            "mars": 1,
+            "jupiter": 1
+        },
+        "base_power": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "base_resist": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "battle_animations_variations": {
+            "attack": "attack"
+        },
+        "battle_spritesheet": {
+            "spritesheet": {
+                "image": "assets/images/spritesheets/battle/shade_battle.png",
+                "json": "assets/images/spritesheets/battle/shade_battle.json"
+            },
+            "animations": [
+                "idle_back",
+                "idle_front",
+                "attack_back",
+                "attack_front",
+                "damage_back",
+                "damage_front",
+                "attack_init_back",
+                "attack_init_front",
+                "cast_back",
+                "cast_front",
+                "cast_init_back",
+                "cast_init_front"
+            ],
+            "frames_count": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "frame_rate": [
+                1,
+                1,
+                6,
+                6,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "loop": [
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ]
+        }
+    },
+    {
+        "key_name": "gargoyle",
+        "name": "Gargoyle",
+        "level": 1,
+        "turns": 1,
+        "max_hp": 160,
+        "max_pp": 0,
+        "hp_recovery": 0,
+        "pp_recovery": 0,
+        "atk": 42,
+        "def": 16,
+        "agi": 8,
+        "luk": 3,
+        "battle_scale": 1,
+        "battle_shadow_key": "01",
+        "status_sprite_shift": 12,
+        "defeat_voice": "monster_defeat/monster_1",
+        "items": [],
+        "abilities": [
+            {
+                "key_name": "attack",
+                "use_weight": 1
+            }
+        ],
+        "vulnerabilities": [],
+        "coins_reward": 34,
+        "item_reward": "potion",
+        "item_reward_chance": 0.15,
+        "exp_reward": 54,
+        "base_level": {
+            "venus": 1,
+            "mercury": 1,
+            "mars": 1,
+            "jupiter": 1
+        },
+        "base_power": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "base_resist": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "battle_animations_variations": {
+            "attack": "attack"
+        },
+        "battle_spritesheet": {
+            "spritesheet": {
+                "image": "assets/images/spritesheets/battle/gargoyle_battle.png",
+                "json": "assets/images/spritesheets/battle/gargoyle_battle.json"
+            },
+            "animations": [
+                "idle_back",
+                "idle_front",
+                "attack_back",
+                "attack_front",
+                "damage_back",
+                "damage_front",
+                "attack_init_back",
+                "attack_init_front",
+                "cast_back",
+                "cast_front",
+                "cast_init_back",
+                "cast_init_front"
+            ],
+            "frames_count": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "frame_rate": [
+                1,
+                1,
+                6,
+                6,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "loop": [
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ]
+        }
+    },
+    {
+        "key_name": "ogre",
+        "name": "Maw Ogre",
+        "level": 10,
+        "turns": 1,
+        "max_hp": 650,
+        "max_pp": 0,
+        "hp_recovery": 0,
+        "pp_recovery": 0,
+        "atk": 42,
+        "def": 30,
+        "agi": 6,
+        "luk": 3,
+        "battle_scale": 1,
+        "battle_shadow_key": "01",
+        "status_sprite_shift": 12,
+        "defeat_voice": "monster_defeat/monster_1",
+        "items": [],
+        "abilities": [
+            {
+                "key_name": "attack",
+                "use_weight": 1
+            }
+        ],
+        "vulnerabilities": [],
+        "coins_reward": 200,
+        "item_reward": "",
+        "item_reward_chance": 0,
+        "exp_reward": 150,
+        "base_level": {
+            "venus": 1,
+            "mercury": 1,
+            "mars": 1,
+            "jupiter": 1
+        },
+        "base_power": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "base_resist": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "battle_animations_variations": {
+            "attack": "attack"
+        },
+        "battle_spritesheet": {
+            "spritesheet": {
+                "image": "assets/images/spritesheets/battle/ogre_battle.png",
+                "json": "assets/images/spritesheets/battle/ogre_battle.json"
+            },
+            "animations": [
+                "idle_back",
+                "idle_front",
+                "attack_back",
+                "attack_front",
+                "damage_back",
+                "damage_front",
+                "attack_init_back",
+                "attack_init_front",
+                "cast_back",
+                "cast_front",
+                "cast_init_back",
+                "cast_init_front"
+            ],
+            "frames_count": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "frame_rate": [
+                1,
+                1,
+                6,
+                6,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "loop": [
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ]
+        }
+    },
+    {
+        "key_name": "wyrm",
+        "name": "Shadow Wyrm",
+        "level": 10,
+        "turns": 1,
+        "max_hp": 1200,
+        "max_pp": 0,
+        "hp_recovery": 0,
+        "pp_recovery": 0,
+        "atk": 56,
+        "def": 40,
+        "agi": 9,
+        "luk": 3,
+        "battle_scale": 1,
+        "battle_shadow_key": "01",
+        "status_sprite_shift": 12,
+        "defeat_voice": "monster_defeat/monster_1",
+        "items": [],
+        "abilities": [
+            {
+                "key_name": "attack",
+                "use_weight": 1
+            }
+        ],
+        "vulnerabilities": [],
+        "coins_reward": 0,
+        "item_reward": "",
+        "item_reward_chance": 0,
+        "exp_reward": 0,
+        "base_level": {
+            "venus": 1,
+            "mercury": 1,
+            "mars": 1,
+            "jupiter": 1
+        },
+        "base_power": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "base_resist": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "battle_animations_variations": {
+            "attack": "attack"
+        },
+        "battle_spritesheet": {
+            "spritesheet": {
+                "image": "assets/images/spritesheets/battle/wyrm_battle.png",
+                "json": "assets/images/spritesheets/battle/wyrm_battle.json"
+            },
+            "animations": [
+                "idle_back",
+                "idle_front",
+                "attack_back",
+                "attack_front",
+                "damage_back",
+                "damage_front",
+                "attack_init_back",
+                "attack_init_front",
+                "cast_back",
+                "cast_front",
+                "cast_init_back",
+                "cast_init_front"
+            ],
+            "frames_count": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "frame_rate": [
+                1,
+                1,
+                6,
+                6,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "loop": [
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ]
+        }
+    },
+    {
+        "key_name": "duel_flint",
+        "name": "Flint",
+        "level": 5,
+        "turns": 1,
+        "max_hp": 70,
+        "max_pp": 0,
+        "hp_recovery": 0,
+        "pp_recovery": 0,
+        "atk": 14,
+        "def": 23,
+        "agi": 10,
+        "luk": 3,
+        "battle_scale": 1,
+        "battle_shadow_key": "01",
+        "status_sprite_shift": 12,
+        "defeat_voice": "monster_defeat/monster_1",
+        "items": [],
+        "abilities": [
+            {
+                "key_name": "attack",
+                "use_weight": 1
+            }
+        ],
+        "vulnerabilities": [],
+        "coins_reward": 12,
+        "item_reward": "",
+        "item_reward_chance": 0,
+        "exp_reward": 24,
+        "base_level": {
+            "venus": 1,
+            "mercury": 1,
+            "mars": 1,
+            "jupiter": 1
+        },
+        "base_power": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "base_resist": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "battle_animations_variations": {
+            "attack": "attack"
+        },
+        "battle_spritesheet": {
+            "spritesheet": {
+                "image": "assets/images/spritesheets/battle/djinn_battle_flint_battle.png",
+                "json": "assets/images/spritesheets/battle/djinn_battle_flint_battle.json"
+            },
+            "animations": [
+                "idle_back",
+                "idle_front",
+                "attack_back",
+                "attack_front",
+                "damage_back",
+                "damage_front",
+                "attack_init_back",
+                "attack_init_front",
+                "cast_back",
+                "cast_front",
+                "cast_init_back",
+                "cast_init_front"
+            ],
+            "frames_count": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "frame_rate": [
+                1,
+                1,
+                6,
+                6,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "loop": [
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ]
+        }
+    },
+    {
+        "key_name": "duel_granite",
+        "name": "Granite",
+        "level": 5,
+        "turns": 1,
+        "max_hp": 220,
+        "max_pp": 0,
+        "hp_recovery": 0,
+        "pp_recovery": 0,
+        "atk": 34,
+        "def": 29,
+        "agi": 8,
+        "luk": 3,
+        "battle_scale": 1,
+        "battle_shadow_key": "01",
+        "status_sprite_shift": 12,
+        "defeat_voice": "monster_defeat/monster_1",
+        "items": [],
+        "abilities": [
+            {
+                "key_name": "attack",
+                "use_weight": 1
+            }
+        ],
+        "vulnerabilities": [],
+        "coins_reward": 24,
+        "item_reward": "",
+        "item_reward_chance": 0,
+        "exp_reward": 40,
+        "base_level": {
+            "venus": 1,
+            "mercury": 1,
+            "mars": 1,
+            "jupiter": 1
+        },
+        "base_power": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "base_resist": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "battle_animations_variations": {
+            "attack": "attack"
+        },
+        "battle_spritesheet": {
+            "spritesheet": {
+                "image": "assets/images/spritesheets/battle/djinn_battle_granite_battle.png",
+                "json": "assets/images/spritesheets/battle/djinn_battle_granite_battle.json"
+            },
+            "animations": [
+                "idle_back",
+                "idle_front",
+                "attack_back",
+                "attack_front",
+                "damage_back",
+                "damage_front",
+                "attack_init_back",
+                "attack_init_front",
+                "cast_back",
+                "cast_front",
+                "cast_init_back",
+                "cast_init_front"
+            ],
+            "frames_count": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "frame_rate": [
+                1,
+                1,
+                6,
+                6,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "loop": [
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ]
+        }
+    },
+    {
+        "key_name": "duel_forge",
+        "name": "Forge",
+        "level": 5,
+        "turns": 1,
+        "max_hp": 200,
+        "max_pp": 0,
+        "hp_recovery": 0,
+        "pp_recovery": 0,
+        "atk": 35,
+        "def": 28,
+        "agi": 11,
+        "luk": 3,
+        "battle_scale": 1,
+        "battle_shadow_key": "01",
+        "status_sprite_shift": 12,
+        "defeat_voice": "monster_defeat/monster_1",
+        "items": [],
+        "abilities": [
+            {
+                "key_name": "attack",
+                "use_weight": 1
+            }
+        ],
+        "vulnerabilities": [],
+        "coins_reward": 24,
+        "item_reward": "",
+        "item_reward_chance": 0,
+        "exp_reward": 40,
+        "base_level": {
+            "venus": 1,
+            "mercury": 1,
+            "mars": 1,
+            "jupiter": 1
+        },
+        "base_power": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "base_resist": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "battle_animations_variations": {
+            "attack": "attack"
+        },
+        "battle_spritesheet": {
+            "spritesheet": {
+                "image": "assets/images/spritesheets/battle/djinn_battle_forge_battle.png",
+                "json": "assets/images/spritesheets/battle/djinn_battle_forge_battle.json"
+            },
+            "animations": [
+                "idle_back",
+                "idle_front",
+                "attack_back",
+                "attack_front",
+                "damage_back",
+                "damage_front",
+                "attack_init_back",
+                "attack_init_front",
+                "cast_back",
+                "cast_front",
+                "cast_init_back",
+                "cast_init_front"
+            ],
+            "frames_count": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "frame_rate": [
+                1,
+                1,
+                6,
+                6,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "loop": [
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ]
+        }
+    },
+    {
+        "key_name": "duel_ember",
+        "name": "Ember",
+        "level": 5,
+        "turns": 2,
+        "max_hp": 420,
+        "max_pp": 0,
+        "hp_recovery": 0,
+        "pp_recovery": 0,
+        "atk": 50,
+        "def": 29,
+        "agi": 12,
+        "luk": 3,
+        "battle_scale": 1,
+        "battle_shadow_key": "01",
+        "status_sprite_shift": 12,
+        "defeat_voice": "monster_defeat/monster_1",
+        "items": [],
+        "abilities": [
+            {
+                "key_name": "attack",
+                "use_weight": 1
+            }
+        ],
+        "vulnerabilities": [],
+        "coins_reward": 30,
+        "item_reward": "",
+        "item_reward_chance": 0,
+        "exp_reward": 60,
+        "base_level": {
+            "venus": 1,
+            "mercury": 1,
+            "mars": 1,
+            "jupiter": 1
+        },
+        "base_power": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "base_resist": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "battle_animations_variations": {
+            "attack": "attack"
+        },
+        "battle_spritesheet": {
+            "spritesheet": {
+                "image": "assets/images/spritesheets/battle/djinn_battle_ember_battle.png",
+                "json": "assets/images/spritesheets/battle/djinn_battle_ember_battle.json"
+            },
+            "animations": [
+                "idle_back",
+                "idle_front",
+                "attack_back",
+                "attack_front",
+                "damage_back",
+                "damage_front",
+                "attack_init_back",
+                "attack_init_front",
+                "cast_back",
+                "cast_front",
+                "cast_init_back",
+                "cast_init_front"
+            ],
+            "frames_count": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "frame_rate": [
+                1,
+                1,
+                6,
+                6,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "loop": [
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ]
+        }
+    },
+    {
+        "key_name": "duel_dew",
+        "name": "Dew",
+        "level": 5,
+        "turns": 1,
+        "max_hp": 120,
+        "max_pp": 0,
+        "hp_recovery": 0,
+        "pp_recovery": 0,
+        "atk": 20,
+        "def": 24,
+        "agi": 12,
+        "luk": 3,
+        "battle_scale": 1,
+        "battle_shadow_key": "01",
+        "status_sprite_shift": 12,
+        "defeat_voice": "monster_defeat/monster_1",
+        "items": [],
+        "abilities": [
+            {
+                "key_name": "attack",
+                "use_weight": 1
+            }
+        ],
+        "vulnerabilities": [],
+        "coins_reward": 14,
+        "item_reward": "",
+        "item_reward_chance": 0,
+        "exp_reward": 30,
+        "base_level": {
+            "venus": 1,
+            "mercury": 1,
+            "mars": 1,
+            "jupiter": 1
+        },
+        "base_power": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "base_resist": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "battle_animations_variations": {
+            "attack": "attack"
+        },
+        "battle_spritesheet": {
+            "spritesheet": {
+                "image": "assets/images/spritesheets/battle/djinn_battle_dew_battle.png",
+                "json": "assets/images/spritesheets/battle/djinn_battle_dew_battle.json"
+            },
+            "animations": [
+                "idle_back",
+                "idle_front",
+                "attack_back",
+                "attack_front",
+                "damage_back",
+                "damage_front",
+                "attack_init_back",
+                "attack_init_front",
+                "cast_back",
+                "cast_front",
+                "cast_init_back",
+                "cast_init_front"
+            ],
+            "frames_count": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "frame_rate": [
+                1,
+                1,
+                6,
+                6,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "loop": [
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ]
+        }
+    },
+    {
+        "key_name": "duel_mist",
+        "name": "Mist",
+        "level": 5,
+        "turns": 2,
+        "max_hp": 520,
+        "max_pp": 0,
+        "hp_recovery": 0,
+        "pp_recovery": 0,
+        "atk": 56,
+        "def": 29,
+        "agi": 13,
+        "luk": 3,
+        "battle_scale": 1,
+        "battle_shadow_key": "01",
+        "status_sprite_shift": 12,
+        "defeat_voice": "monster_defeat/monster_1",
+        "items": [],
+        "abilities": [
+            {
+                "key_name": "attack",
+                "use_weight": 1
+            }
+        ],
+        "vulnerabilities": [],
+        "coins_reward": 36,
+        "item_reward": "",
+        "item_reward_chance": 0,
+        "exp_reward": 70,
+        "base_level": {
+            "venus": 1,
+            "mercury": 1,
+            "mars": 1,
+            "jupiter": 1
+        },
+        "base_power": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "base_resist": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "battle_animations_variations": {
+            "attack": "attack"
+        },
+        "battle_spritesheet": {
+            "spritesheet": {
+                "image": "assets/images/spritesheets/battle/djinn_battle_mist_battle.png",
+                "json": "assets/images/spritesheets/battle/djinn_battle_mist_battle.json"
+            },
+            "animations": [
+                "idle_back",
+                "idle_front",
+                "attack_back",
+                "attack_front",
+                "damage_back",
+                "damage_front",
+                "attack_init_back",
+                "attack_init_front",
+                "cast_back",
+                "cast_front",
+                "cast_init_back",
+                "cast_init_front"
+            ],
+            "frames_count": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "frame_rate": [
+                1,
+                1,
+                6,
+                6,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "loop": [
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ]
+        }
+    },
+    {
+        "key_name": "duel_breeze",
+        "name": "Breeze",
+        "level": 5,
+        "turns": 2,
+        "max_hp": 380,
+        "max_pp": 0,
+        "hp_recovery": 0,
+        "pp_recovery": 0,
+        "atk": 46,
+        "def": 27,
+        "agi": 16,
+        "luk": 3,
+        "battle_scale": 1,
+        "battle_shadow_key": "01",
+        "status_sprite_shift": 12,
+        "defeat_voice": "monster_defeat/monster_1",
+        "items": [],
+        "abilities": [
+            {
+                "key_name": "attack",
+                "use_weight": 1
+            }
+        ],
+        "vulnerabilities": [],
+        "coins_reward": 30,
+        "item_reward": "",
+        "item_reward_chance": 0,
+        "exp_reward": 55,
+        "base_level": {
+            "venus": 1,
+            "mercury": 1,
+            "mars": 1,
+            "jupiter": 1
+        },
+        "base_power": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "base_resist": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "battle_animations_variations": {
+            "attack": "attack"
+        },
+        "battle_spritesheet": {
+            "spritesheet": {
+                "image": "assets/images/spritesheets/battle/djinn_battle_breeze_battle.png",
+                "json": "assets/images/spritesheets/battle/djinn_battle_breeze_battle.json"
+            },
+            "animations": [
+                "idle_back",
+                "idle_front",
+                "attack_back",
+                "attack_front",
+                "damage_back",
+                "damage_front",
+                "attack_init_back",
+                "attack_init_front",
+                "cast_back",
+                "cast_front",
+                "cast_init_back",
+                "cast_init_front"
+            ],
+            "frames_count": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "frame_rate": [
+                1,
+                1,
+                6,
+                6,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "loop": [
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ]
+        }
+    },
+    {
+        "key_name": "duel_squall",
+        "name": "Squall",
+        "level": 5,
+        "turns": 2,
+        "max_hp": 480,
+        "max_pp": 0,
+        "hp_recovery": 0,
+        "pp_recovery": 0,
+        "atk": 54,
+        "def": 28,
+        "agi": 17,
+        "luk": 3,
+        "battle_scale": 1,
+        "battle_shadow_key": "01",
+        "status_sprite_shift": 12,
+        "defeat_voice": "monster_defeat/monster_1",
+        "items": [],
+        "abilities": [
+            {
+                "key_name": "attack",
+                "use_weight": 1
+            }
+        ],
+        "vulnerabilities": [],
+        "coins_reward": 36,
+        "item_reward": "",
+        "item_reward_chance": 0,
+        "exp_reward": 70,
+        "base_level": {
+            "venus": 1,
+            "mercury": 1,
+            "mars": 1,
+            "jupiter": 1
+        },
+        "base_power": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "base_resist": {
+            "venus": 100,
+            "mercury": 100,
+            "mars": 100,
+            "jupiter": 100
+        },
+        "battle_animations_variations": {
+            "attack": "attack"
+        },
+        "battle_spritesheet": {
+            "spritesheet": {
+                "image": "assets/images/spritesheets/battle/djinn_battle_squall_battle.png",
+                "json": "assets/images/spritesheets/battle/djinn_battle_squall_battle.json"
+            },
+            "animations": [
+                "idle_back",
+                "idle_front",
+                "attack_back",
+                "attack_front",
+                "damage_back",
+                "damage_front",
+                "attack_init_back",
+                "attack_init_front",
+                "cast_back",
+                "cast_front",
+                "cast_init_back",
+                "cast_init_front"
+            ],
+            "frames_count": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "frame_rate": [
+                1,
+                1,
+                6,
+                6,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ],
+            "loop": [
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+            ]
+        }
+    }
+]

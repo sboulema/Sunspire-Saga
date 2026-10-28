@@ -1,0 +1,58 @@
+{
+    "key_name": "flare",
+    "cast_type": "psynergy_cast",
+    "wait_for_cast_animation": true,
+    "particles_sequence": [
+        {
+            "data": {
+                "energy": {
+                    "red": 255,
+                    "green": 130,
+                    "blue": 50,
+                    "lifespan": 450,
+                    "alpha": 0.85,
+                    "target": {
+                        "x": "targets",
+                        "y": "targets",
+                        "shift_x": 0,
+                        "shift_y": -30,
+                        "zone_key": "hit_zone"
+                    }
+                }
+            },
+            "zones": {
+                "hit_zone": {
+                    "type": "circle",
+                    "radius": 6
+                },
+                "spawn_zone": {
+                    "type": "circle",
+                    "radius": 12
+                }
+            },
+            "emitters": [
+                {
+                    "x": "targets",
+                    "y": "targets",
+                    "position": "over",
+                    "render_type": "pixel",
+                    "show_trails": true,
+                    "trails_clear_factor": 0.2,
+                    "pixel_size": 5,
+                    "pixel_reducing_factor": 0.04,
+                    "pixel_is_rect": false,
+                    "particles_display_blend_mode": "screen",
+                    "render_white_core": true,
+                    "core_custom_color": "rgba(255,240,160,0.9)",
+                    "total": 16,
+                    "repeat": 2,
+                    "frequency": 40,
+                    "random_in_zone": true,
+                    "emitter_data_key": "energy",
+                    "zone_key": "spawn_zone"
+                }
+            ],
+            "emission_finish": 900
+        }
+    ]
+}

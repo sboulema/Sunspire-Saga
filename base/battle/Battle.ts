@@ -1,0 +1,1845 @@
+import {
+    permanent_status,
+    temporary_status,
+    on_catch_status_msg,
+    fighter_types,
+    Player,
+    main_stats,
+    ailment_recovery_base_chances,
+} from "../Player";
+import {BattleStage} from "./BattleStage";
+import {BattleLog} from "./BattleLog";
+import {MainBattleMenu, PlayerAbilities, PlayerAbility} from "../main_menus/MainBattleMenu";
+import {Enemy} from "../Enemy";
+import {ability_types, Ability, ability_categories} from "../Ability";
+import {ChoosingTargetWindow} from "../windows/battle/ChoosingTargetWindow";
+import {EnemyAI} from "./EnemyAI";
+import {BattleFormulas, EVASION_CHANCE, DELUSION_MISS_CHANCE} from "./BattleFormulas";
+import {effect_types, Effect, effect_usages, effect_names} from "../Effect";
+import {ordered_elements, element_names, promised_wait} from "../utils";
+import {djinn_status, Djinn} from "../Djinn";
+import {ItemSlot, MainChar} from "../MainChar";
+import {BattleAnimationManager} from "./BattleAnimationManager";
+import {GoldenSun} from "../GoldenSun";
+import * as _ from "lodash";
+import {Target} from "../battle/BattleStage";
+import {Item, use_types} from "../Item";
+import {battle_actions, PlayerSprite} from "./PlayerSprite";
+import {BattleBase, PlayerInfo} from "./BattleBase";
+
+/* ACTIONS:
+- Attack
+- Psynergy
+- Djinni Use
+- Djinni Recovery
+- Item
+- Enemy Action
+- Defend
+- Total Defense (yes, this is defined differently from Defend for some reason)
+- Counterattack
+- Daedalus
+- Retreat
+*/
+
+enum battle_phases {
+    NONE, // (not in a battle)
+    START, // Start (camera pan, shows enemies, move to menu)
+    MENU, // (includes submenus, this phase doesn't end until the player has entered their final command)
+    ROUND_START, // Start (turn order is determined, enemies may commit to certain actions)
+    COMBAT, // (all actions are queued and take place here, you could further break up combat actions into subactions, which should be governed by a separate sub-state variable)
+    ROUND_END, // End (djinn recovery, status/buff/debuff timers decrement)
+    FLEE,
+    END, // End (the last enemy has fallen, exp/gold/drops are awarded)
+}
+
+export class Battle extends BattleBase {
+    public battle_menu: MainBattleMenu;
+
+    public target_window: ChoosingTargetWindow;
+
+    public battle_phase: number;
+    public on_going_effects: Effect[];
+    public allies_defeated: boolean;
+    public enemies_defeated: boolean;
+    public can_escape: boolean;
+    public party_fled: boolean;
+    public flee_attemps: {
+        allies: number;
+        enemies: number;
+    };
+
+    public allies_abilities: PlayerAbilities;
+    public enemies_abilities: PlayerAbilities;
+    public turns_actions: PlayerAbility[];
+    public round_end_effects: {
+        action: PlayerAbility;
+        ability: Ability;
+        effect: any;
+    }[];
+
+    public before_fade_finish_callback: (victory: boolean, all_party_fled: boolean) => Promise<void>;
+    public finish_callback: (victory: boolean, all_party_fled?: boolean) => void;
+    public bgm: string;
+    public reset_previous_bgm: boolean;
+    public previous_bgm: string;
+
+    constructor(
+        game: Phaser.Game,
+        data: GoldenSun,
+        background_key: string,
+        enemy_party_key: string,
+        bgm: string,
+        reset_previous_bgm: boolean,
+        before_fade_finish_callback?: Battle["before_fade_finish_callback"],
+        finish_callback?: Battle["finish_callback"]
+    ) {
+        super(game, data, background_key, enemy_party_key);
+        this.before_fade_finish_callback = before_fade_finish_callback;
+        this.finish_callback = finish_callback;
+        this.bgm = bgm ?? null;
+        this.reset_previous_bgm = reset_previous_bgm ?? true;
+        this.previous_bgm = null;
+
+        const enemies_party_data = this.data.dbs.enemies_parties_db[enemy_party_key];
+        this.can_escape = enemies_party_data.can_escape;
+
+        this.battle_phase = battle_phases.NONE;
+        this.on_going_effects = [];
+        this.round_end_effects = [];
+        this.allies_defeated = false;
+        this.enemies_defeated = false;
+        this.party_fled = false;
+        this.flee_attemps = {
+            allies: 0,
+            enemies: 0,
+        };
+    }
+
+    start_battle() {
+        this.check_phases();
+    }
+
+    on_abilities_choose(abilities: PlayerAbilities) {
+        this.allies_abilities = abilities;
+
+        this.battle_menu.close_menu();
+        this.battle_stage.reset_positions();
+
+        this.battle_stage.choosing_actions = false;
+        this.battle_phase = battle_phases.ROUND_START;
+
+        this.check_phases();
+    }
+
+    choose_targets(ability_key: string, action: string, callback: Function, caster: Player, item_obj?: ItemSlot) {
+        const this_ability = this.data.info.abilities_list[ability_key];
+
+        let quantities: number[];
+        if (action === "psynergy") {
+            quantities = [this_ability.pp_cost];
+        }
+        if (action !== "defend") {
+            this.target_window.open(action, this_ability.name, this_ability.element, ability_key, quantities, item_obj);
+        }
+
+        const status_to_be_healed: (permanent_status | temporary_status)[] = [];
+        this_ability.effects.forEach(effect => {
+            if (effect.type === effect_types.TEMPORARY_STATUS || effect.type === effect_types.PERMANENT_STATUS) {
+                if (!effect.add_status) {
+                    status_to_be_healed.push(effect.status_key_name);
+                }
+            }
+        });
+
+        this.battle_stage.cursor_manager.choose_targets(
+            this_ability.range,
+            this_ability.battle_target,
+            caster,
+            (targets: Target[]) => {
+                if (this.target_window.window_open) {
+                    this.target_window.close();
+                }
+                callback(targets);
+            },
+            this_ability.affects_downed,
+            status_to_be_healed
+        );
+    }
+
+    check_parties() {
+        this.allies_defeated = this.allies_info.every(player => player.instance.is_downed());
+        this.enemies_defeated = this.enemies_info.every(
+            player => player.instance.is_downed() || (player.instance as Enemy).fled
+        );
+
+        if (this.allies_defeated || this.enemies_defeated) {
+            this.battle_phase = battle_phases.END;
+        }
+    }
+
+    check_phases() {
+        this.check_parties();
+        switch (this.battle_phase) {
+            case battle_phases.NONE:
+                this.battle_phase_none();
+                break;
+            case battle_phases.START:
+            case battle_phases.MENU:
+                this.battle_phase_menu();
+                break;
+            case battle_phases.ROUND_START:
+                this.battle_phase_round_start();
+                break;
+            case battle_phases.COMBAT:
+                this.battle_phase_combat();
+                break;
+            case battle_phases.ROUND_END:
+                this.battle_phase_round_end();
+                break;
+            case battle_phases.FLEE:
+                this.battle_phase_flee();
+                break;
+            case battle_phases.END:
+                this.battle_phase_end();
+                break;
+        }
+    }
+
+    initialize_battle_objs() {
+        this.battle_stage = new BattleStage(
+            this.game,
+            this.data,
+            this.background_key,
+            this.allies_info,
+            this.enemies_info
+        );
+        this.battle_log = new BattleLog(this.game);
+        this.battle_menu = new MainBattleMenu(this.game, this.data, this);
+
+        this.target_window = new ChoosingTargetWindow(this.game, this.data);
+        this.animation_manager = new BattleAnimationManager(this.game, this.data);
+    }
+
+    can_flee(ally_attempt: boolean) {
+        const front_pt_lvl =
+            _.mean(
+                this.data.info.party_data.members.slice(0, Battle.MAX_CHARS_IN_BATTLE).flatMap(char => {
+                    return char.is_downed() ? [] : [char.level];
+                })
+            ) | 0;
+        const enemies_lvl =
+            _.mean(
+                this.enemies_info.flatMap(info => {
+                    return info.instance.is_downed() ? [] : [info.instance.level];
+                })
+            ) | 0;
+        const diff = ally_attempt ? front_pt_lvl - enemies_lvl : enemies_lvl - front_pt_lvl;
+        const rate = 500 * (1 + diff + 4 * (ally_attempt ? this.flee_attemps.allies : this.flee_attemps.enemies));
+        if (_.random(9999) < rate) {
+            return true;
+        } else {
+            if (ally_attempt) {
+                ++this.flee_attemps.allies;
+            } else {
+                ++this.flee_attemps.enemies;
+            }
+            return false;
+        }
+    }
+
+    async flee(ally_attempt: boolean, enemy_battle_key?: string) {
+        const flee_succeed = this.can_flee(ally_attempt);
+        if (ally_attempt) {
+            this.battle_menu.close_menu();
+            this.battle_stage.reset_positions();
+            this.battle_stage.update_stage();
+            this.battle_stage.choosing_actions = false;
+            await this.battle_log.add(`${this.data.info.party_data.members[0].name} and friends run!`);
+        } else {
+            const enemy_name = this.this_enemies_list[enemy_battle_key].name;
+            await this.battle_log.add(`${enemy_name} runs!`);
+        }
+        await this.wait_for_key();
+        if (flee_succeed) {
+            this.battle_stage.pause_players_update = true;
+            const animation_recipe = this.data.info.misc_battle_animations_recipes["flee"];
+            const flee_animation = BattleAnimationManager.get_animation_instance(
+                this.game,
+                this.data,
+                animation_recipe,
+                false
+            );
+            const caster_sprite = this.allies_map_sprite[this.data.info.party_data.members[0].key_name];
+            let target_sprites: PlayerSprite[];
+            if (ally_attempt) {
+                this.battle_phase = battle_phases.FLEE;
+                target_sprites = this.data.info.party_data.members
+                    .filter(member => {
+                        return !member.is_downed();
+                    })
+                    .map(member => this.allies_map_sprite[member.key_name]);
+            } else {
+                this.this_enemies_list[enemy_battle_key].fled = true;
+                target_sprites = [this.enemies_map_sprite[enemy_battle_key]];
+            }
+            await this.animation_manager.play_animation(
+                flee_animation,
+                caster_sprite,
+                target_sprites,
+                [],
+                [],
+                this.battle_stage.group_allies,
+                this.battle_stage.group_allies,
+                this.battle_stage
+            );
+            this.battle_stage.pause_players_update = false;
+            if (!ally_attempt) {
+                this.enemies_map_sprite[enemy_battle_key].visible = false;
+            }
+        } else {
+            await this.battle_log.add("But there's no escape!");
+            await this.wait_for_key();
+            if (ally_attempt) {
+                this.allies_abilities = {};
+                this.battle_phase = battle_phases.ROUND_START;
+            }
+        }
+        this.check_phases();
+    }
+
+    async setup_battle_sound() {
+        this.data.audio.stop_bgm();
+        if (!this.bgm) {
+            return;
+        }
+        this.previous_bgm = this.data.audio.current_bgm.key;
+        this.data.audio.set_bgm(this.bgm, false);
+        this.data.audio.play_battle_bgm();
+    }
+
+    async battle_phase_none() {
+        this.data.hero.stop_char(true);
+        this.game.physics.p2.pause();
+
+        await this.setup_battle_sound();
+
+        await this.battle_fadein();
+
+        this.initialize_battle_objs();
+        this.previous_map_state = this.data.map.pause();
+
+        this.battle_phase = battle_phases.START;
+        this.data.in_battle = true;
+        this.data.battle_instance = this;
+
+        this.advance_log_control_key = this.data.control_manager.add_simple_controls(
+            () => {
+                if (this.advance_log_resolve) {
+                    this.advance_log_resolve();
+                    this.advance_log_resolve = null;
+                }
+            },
+            {persist: true}
+        );
+
+        this.battle_log.add(this.enemies_party_name + " appeared!");
+        this.battle_stage.initialize_stage(() => {
+            this.allies_map_sprite = _.mapValues(
+                _.keyBy(this.allies_info, "instance.key_name"),
+                (info: PlayerInfo) => info.sprite
+            );
+            this.enemies_map_sprite = _.mapValues(
+                _.keyBy(this.enemies_info, "battle_key"),
+                (info: PlayerInfo) => info.sprite
+            );
+
+            this.data.control_manager.add_simple_controls(() => {
+                this.battle_log.clear();
+                this.battle_phase = battle_phases.MENU;
+                this.check_phases();
+            });
+        });
+    }
+
+    battle_phase_menu() {
+        this.battle_stage.set_choosing_action_position();
+        this.battle_menu.open_menu();
+    }
+
+    /*
+    At round start, is calculated the players and enemies speeds.
+    If a certain player speed is the same of a enemy, player goes first.
+    If another tie, the most left char has priority.
+    At a specific enemy turn start, I roll an action for that turn.
+    The only thing needed to check about enemies actions at round start is:
+        - Roll their actions for each turn and see if an ability with priority move is rolled.
+        - If yes, this ability is fixed for that corresponding turn.
+    For the other turns, an action is re-roll in the turn start to be used on it.
+    */
+    async battle_phase_round_start() {
+        const enemy_members = this.enemies_info.map(info => {
+            return {
+                instance: info.instance as Enemy,
+                battle_key: info.battle_key,
+            };
+        });
+        this.enemies_abilities = Object.fromEntries(
+            enemy_members.map((enemy, index) => {
+                let abilities = new Array(enemy.instance.turns);
+                for (let i = 0; i < enemy.instance.turns; ++i) {
+                    abilities[i] = EnemyAI.roll_action(
+                        this.data,
+                        {
+                            instance: enemy.instance as Enemy,
+                            battle_key: enemy.battle_key,
+                        },
+                        enemy_members,
+                        this.data.info.party_data.members.map(member => ({
+                            instance: member,
+                            battle_key: member.key_name,
+                        }))
+                    );
+                }
+                return [this.enemies_info[index].battle_key, abilities];
+            })
+        );
+
+        for (let char_key in this.allies_abilities) {
+            const this_char = this.data.info.main_char_list[char_key];
+            for (let i = 0; i < this.allies_abilities[char_key].length; ++i) {
+                const this_ability = this.data.info.abilities_list[this.allies_abilities[char_key][i].key_name];
+                const priority_move = this_ability !== undefined ? this_ability.priority_move : false;
+
+                this.allies_abilities[char_key][i].speed = BattleFormulas.player_turn_speed(
+                    this_char.agi,
+                    priority_move,
+                    i > 0
+                );
+                this.allies_abilities[char_key][i].caster = this_char;
+                this.allies_abilities[char_key][i].caster_battle_key = char_key;
+            }
+        }
+
+        for (let battle_key in this.enemies_abilities) {
+            const this_enemy = this.this_enemies_list[battle_key];
+            for (let i = 0; i < this.enemies_abilities[battle_key].length; ++i) {
+                const this_ability = this.data.info.abilities_list[this.enemies_abilities[battle_key][i].key_name];
+                const priority_move = this_ability !== undefined ? this_ability.priority_move : false;
+
+                this.enemies_abilities[battle_key][i].speed = BattleFormulas.enemy_turn_speed(
+                    this_enemy.agi,
+                    i + 1,
+                    this_enemy.turns,
+                    priority_move
+                );
+                this.enemies_abilities[battle_key][i].caster = this_enemy;
+                this.enemies_abilities[battle_key][i].caster_battle_key = battle_key;
+            }
+        }
+
+        //sort actions by players speed
+        this.turns_actions = _.sortBy(
+            Object.values(this.allies_abilities).flat().concat(Object.values(this.enemies_abilities).flat()),
+            action => {
+                return action.speed; //still need to add left most and player preference criterias
+            }
+        );
+
+        for (let i = 0; i < this.turns_actions.length; ++i) {
+            const action = this.turns_actions[i];
+            const ability = this.data.info.abilities_list[action.key_name];
+
+            await this.set_action_animation_settings(action, ability);
+        }
+
+        await promised_wait(this.game, 500);
+        this.battle_phase = battle_phases.COMBAT;
+        this.check_phases();
+    }
+
+    async set_action_animation_settings(action: PlayerAbility, ability: Ability) {
+        if (action.caster.is_paralyzed(true)) {
+            return;
+        }
+        //check whether the player of this action has a variation for this battle animation
+        let battle_animation_key = this.data.info.abilities_list[action.key_name].battle_animation_key;
+        if (ability.has_animation_variation && action.key_name in action.caster.battle_animations_variations) {
+            battle_animation_key = action.caster.battle_animations_variations[action.key_name];
+        }
+        action.battle_animation_key = battle_animation_key;
+
+        const mirrored_animation = ability.can_be_mirrored && action.caster.fighter_type === fighter_types.ENEMY;
+
+        //loads battle animation assets for this ability
+        const battle_animation = await this.animation_manager.load_animation(
+            battle_animation_key,
+            action.caster_battle_key,
+            mirrored_animation
+        );
+        action.cast_animation_type = battle_animation?.cast_type;
+    }
+
+    async check_downed(target: Enemy | MainChar) {
+        if (target.current_hp === 0) {
+            await this.down_a_char(target);
+            await this.battle_log.add(on_catch_status_msg[permanent_status.DOWNED](target));
+            await this.wait_for_key();
+        }
+    }
+
+    async down_a_char(target: Enemy | MainChar) {
+        this.on_going_effects = this.on_going_effects.filter(effect => {
+            if (effect.char === target) {
+                target.remove_effect(effect);
+                target.update_all();
+                return false;
+            }
+            return true;
+        });
+        target.add_permanent_status(permanent_status.DOWNED);
+        const player_sprite = _.find(this.battle_stage.sprites, {player_instance: target});
+        player_sprite.set_action(battle_actions.DOWNED);
+        if (target.fighter_type === fighter_types.ENEMY) {
+            if ((target as Enemy).defeat_voice) {
+                this.data.audio.play_se((target as Enemy).defeat_voice);
+            }
+            await player_sprite.unmount_by_dissolving();
+        }
+    }
+
+    /*
+    Standard attack:
+    1. Unleash check (followed by another check for unleash type if weapon has multiple unleashes)
+    2. Miss check
+    3. Crit check 1  (using brn % 32)
+    4. Crit check 2 (using total crit chance from equipment, ((equipment_chance/2)*rand(0,65535) >> 16)
+    5. Status effect check
+    6. Added 0-3 damage
+    If any of checks 1-4 succeed, it skips to 5
+    */
+    async battle_phase_combat() {
+        if (!this.turns_actions.length) {
+            this.battle_phase = battle_phases.ROUND_END;
+            this.check_phases();
+            return;
+        }
+
+        const action = this.turns_actions.pop();
+
+        //check if enemy fled
+        if (action.caster.fighter_type === fighter_types.ENEMY && (action.caster as Enemy).fled) {
+            this.check_phases();
+            return;
+        }
+
+        //check whether this char is downed
+        if (action.caster.is_downed()) {
+            this.check_phases();
+            return;
+        }
+
+        //check whether this char is paralyzed
+        if (await this.check_if_char_is_paralyzed(action)) {
+            await this.wait_for_key();
+
+            //check for poison damage
+            await this.check_poison_damage(action);
+
+            this.check_phases();
+            return;
+        }
+
+        //check whether the char will skip this turn due to cursed item
+        if (await this.check_if_curse_will_take_effect(action)) {
+            await this.wait_for_key();
+
+            //check for poison damage
+            await this.check_poison_damage(action);
+
+            this.check_phases();
+            return;
+        }
+
+        //gets the ability of this phase
+        let ability = await this.get_phase_ability(action);
+        if (!ability) {
+            await this.wait_for_key();
+
+            //check for poison damage
+            await this.check_poison_damage(action);
+
+            this.check_phases();
+            return;
+        }
+
+        if (ability.key_name === "flee" && action.caster.fighter_type === fighter_types.ENEMY) {
+            await this.flee(false, action.caster_battle_key);
+
+            //check for poison damage
+            await this.check_poison_damage(action);
+
+            return;
+        }
+
+        //check whether all targets are downed and change ability to "defend" in the case it's true
+        if (!ability.affects_downed) {
+            if (this.check_if_all_targets_are_downed(action)) {
+                ability = this.data.info.abilities_list["defend"];
+            }
+        }
+
+        //gets item's name in the case this ability is related to an item
+        let item_name = action.item_slot ? this.data.info.items_list[action.item_slot.key_name].name : "";
+
+        //change the current ability to unleash ability from weapon
+        const unleash_info = await this.check_if_ability_will_unleash(action, ability, item_name);
+        ability = unleash_info.ability;
+        item_name = unleash_info.item_name;
+
+        //check whether this ability exists
+        if (ability === undefined) {
+            await this.battle_log.add(`${action.key_name} ability key not registered.`);
+            await this.wait_for_key();
+
+            //check for poison damage
+            await this.check_poison_damage(action);
+
+            this.check_phases();
+            return;
+        }
+
+        //logs ability to be casted
+        const djinn_name = action.djinn_key_name ? this.data.info.djinni_list[action.djinn_key_name].name : undefined;
+        await this.battle_log.add(
+            this.battle_log.add_ability(action.caster, ability, item_name, djinn_name, action.item_slot !== undefined)
+        );
+
+        //check if is possible to cast ability due to seal
+        if (
+            action.caster.has_temporary_status(temporary_status.SEAL) &&
+            ability.ability_category === ability_categories.PSYNERGY
+        ) {
+            await this.battle_log.add(`But the Psynergy was blocked!`);
+            await this.wait_for_key();
+
+            //check for poison damage
+            await this.check_poison_damage(action);
+
+            this.check_phases();
+            return;
+        }
+
+        //check if char has enough pp to cast ability
+        if (ability.pp_cost > action.caster.current_pp) {
+            await this.battle_log.add(`... But doesn't have enough PP!`);
+            await this.wait_for_key();
+
+            //check for poison damage
+            await this.check_poison_damage(action);
+
+            this.check_phases();
+            return;
+        } else {
+            action.caster.current_pp -= ability.pp_cost;
+        }
+
+        //deals with abilities related to djinn and summons
+        if (await this.manage_djinn_or_summon_ability(action, ability)) {
+            await this.wait_for_key();
+
+            //check for poison damage
+            await this.check_poison_damage(action);
+
+            this.check_phases();
+            return;
+        }
+
+        //check if item is broken
+        if (action.item_slot) {
+            if (action.item_slot.broken) {
+                await this.battle_log.add(`But ${item_name} is broken...`);
+                await this.wait_for_key();
+
+                //check for poison damage
+                await this.check_poison_damage(action);
+
+                this.check_phases();
+                return;
+            }
+        }
+
+        //updates chars status window
+        this.battle_menu.chars_status_window.update_chars_info();
+        if (ability.type === ability_types.UTILITY) {
+            await this.wait_for_key();
+        }
+
+        //checks if target will dodge attack and plays dodge animation
+        this.check_for_attack_dodge(action, ability);
+
+        //apply ability damage
+        let damage_results: ReturnType<Battle["apply_damage"]> = [];
+        if (![ability_types.UTILITY, ability_types.EFFECT_ONLY].includes(ability.type)) {
+            damage_results = this.apply_damage(action, ability);
+        }
+
+        //check whether a party is defeated due to damages
+        this.check_parties();
+
+        //apply ability effects
+        let effects_results: ReturnType<Battle["apply_effects"]> = null;
+        let end_turn_effect = false;
+        let ability_had_no_effect = false;
+        if (this.battle_phase !== battle_phases.END) {
+            for (let i = 0; i < ability.effects.length; ++i) {
+                const effect = ability.effects[i];
+                if (effect.usage === effect_usages.ON_USE) {
+                    effects_results = await this.apply_effects(action, ability, effect);
+                    end_turn_effect = effects_results.end_turn_effect;
+                    ability_had_no_effect = effects_results.had_no_effect;
+                } else if (effect.usage === effect_usages.BATTLE_ROUND_END) {
+                    this.round_end_effects.push({
+                        action: action,
+                        ability: ability,
+                        effect: effect,
+                    });
+                }
+            }
+        }
+
+        //executes the animation of the current ability
+        await this.play_battle_animation(action, ability, ability_had_no_effect);
+
+        //apply damage effects on stage
+        for (let damage_result of damage_results) {
+            if (damage_result.update_chars_info) {
+                this.battle_menu.chars_status_window.update_chars_info();
+            }
+            if (damage_result.check_downed) {
+                await this.check_downed(damage_result.check_downed);
+            }
+            if (damage_result.msg) {
+                await this.battle_log.add(damage_result.msg);
+                await this.wait_for_key();
+            }
+        }
+
+        if (this.battle_phase === battle_phases.END) {
+            this.check_phases();
+            return;
+        }
+
+        //apply effects on stage
+        if (effects_results) {
+            for (let msg_info of effects_results.log_messages) {
+                if (msg_info.action_changes) {
+                    for (let action_change of msg_info.action_changes) {
+                        action_change.player_sprite.set_action(action_change.action);
+                    }
+                }
+                if (msg_info.update_chars_info) {
+                    this.battle_menu.chars_status_window.update_chars_info();
+                }
+                if (msg_info.check_downed) {
+                    await this.check_downed(msg_info.check_downed);
+                }
+                if (msg_info.msg) {
+                    await this.battle_log.add(msg_info.msg);
+                    await this.wait_for_key();
+                }
+            }
+        }
+
+        //check whether a party is defeated due to effects
+        this.check_parties();
+        if (this.battle_phase === battle_phases.END) {
+            this.check_phases();
+            return;
+        }
+
+        //resets stage and chars position to default
+        this.battle_stage.pause_players_update = false;
+        this.battle_stage.set_update_factor(1);
+        this.battle_stage.set_bg_default_position();
+        await Promise.all([this.battle_stage.reset_chars_position(), this.battle_stage.set_stage_default_position()]);
+
+        //summon's power buff after cast
+        await this.apply_summon_power_buff(action, ability);
+
+        //some checks related to items
+        await this.apply_item_ability_side_effects(action);
+
+        //check for poison damage
+        await this.check_poison_damage(action);
+
+        //check for death curse end
+        await this.check_death_curse(action);
+
+        if (end_turn_effect) {
+            this.battle_phase = battle_phases.ROUND_END;
+        }
+
+        this.check_phases();
+    }
+
+    check_for_attack_dodge(action: PlayerAbility, ability: Ability) {
+        for (let i = 0; i < action.targets.length; ++i) {
+            const target_info = action.targets[i];
+            if (target_info.magnitude === null) {
+                continue;
+            }
+
+            const target_instance = target_info.target.instance;
+            if (target_instance.is_downed()) {
+                continue;
+            }
+            if (target_instance.fighter_type === fighter_types.ENEMY && (target_instance as Enemy).fled) {
+                continue;
+            }
+
+            if (ability.can_be_evaded) {
+                //check whether the target is going to evade the caster attack
+                if (
+                    Math.random() < EVASION_CHANCE ||
+                    (action.caster.temporary_status.has(temporary_status.DELUSION) &&
+                        Math.random() < DELUSION_MISS_CHANCE)
+                ) {
+                    target_info.dodged = true;
+                    const target_sprites =
+                        action.caster.fighter_type === fighter_types.ALLY
+                            ? this.enemies_map_sprite
+                            : this.allies_map_sprite;
+                    const target_sprite = target_sprites[target_info.target.battle_key];
+
+                    const animation_recipe = this.data.info.misc_battle_animations_recipes["dodge"];
+                    const dodge_animation = BattleAnimationManager.get_animation_instance(
+                        this.game,
+                        this.data,
+                        animation_recipe,
+                        false
+                    );
+                    const caster_sprite = target_sprite;
+                    //should not wait for this anim
+                    this.animation_manager.play_animation(
+                        dodge_animation,
+                        caster_sprite,
+                        [],
+                        [],
+                        [],
+                        this.battle_stage.group_allies,
+                        this.battle_stage.group_allies,
+                        this.battle_stage,
+                        undefined
+                    );
+                }
+            }
+        }
+    }
+
+    apply_damage(
+        action: PlayerAbility,
+        ability: Ability
+    ): {
+        msg?: string;
+        check_downed?: Enemy | MainChar;
+        update_chars_info?: boolean;
+    }[] {
+        let increased_crit: number;
+        let return_obj: ReturnType<Battle["apply_damage"]> = [];
+
+        if (ability.has_critical) {
+            //check for effects that increases critical chance
+            increased_crit = action.caster.effects
+                .filter(effect => effect.type === effect_types.CRITICALS)
+                .reduce((acc, effect) => {
+                    return Effect.apply_operator(acc, effect.quantity, effect.operator);
+                }, 0);
+        }
+
+        for (let i = 0; i < action.targets.length; ++i) {
+            const target_info = action.targets[i];
+            if (target_info.magnitude === null) {
+                continue;
+            }
+
+            const target_instance = target_info.target.instance;
+            if (target_instance.is_downed()) {
+                continue;
+            }
+            if (target_instance.fighter_type === fighter_types.ENEMY && (target_instance as Enemy).fled) {
+                continue;
+            }
+            if (ability.can_be_evaded) {
+                //check whether the target is going to evade the caster attack
+                if (target_info.dodged) {
+                    target_info.dodged = false; //reset
+                    return_obj.push({msg: `${target_instance.name} nimbly dodges the blow!`});
+                    return return_obj;
+                }
+            }
+
+            let djinn_used;
+            if (ability.type === ability_types.SUMMON) {
+                djinn_used = _.sum(_.values(this.data.info.summons_list[ability.key_name].requirements));
+            }
+            let damage = BattleFormulas.get_damage(
+                ability,
+                action.caster,
+                target_instance,
+                target_info.magnitude,
+                djinn_used,
+                increased_crit
+            );
+
+            if (damage >= 0) {
+                target_instance.effects.forEach(effect => {
+                    if (effect.type === effect_types.DAMAGE_MODIFIER) {
+                        damage = effect.apply_effect(damage).after;
+                    }
+                });
+            }
+
+            const current_property = ability.affects_pp ? main_stats.CURRENT_PP : main_stats.CURRENT_HP;
+            const max_property = ability.affects_pp ? main_stats.MAX_PP : main_stats.MAX_HP;
+            target_instance[current_property] = _.clamp(
+                target_instance[current_property] - damage,
+                0,
+                target_instance[max_property]
+            );
+
+            return_obj.push({
+                msg: this.battle_log.add_damage(damage, target_instance, ability.affects_pp),
+                check_downed: target_instance,
+                update_chars_info: true,
+            });
+
+            if (
+                !ability.affects_pp &&
+                damage > 0 &&
+                target_instance.current_hp > 0 &&
+                target_instance.has_temporary_status(temporary_status.SLEEP)
+            ) {
+                //random wake-up in case of damage
+                if (Math.random() < 0.25) {
+                    const effects_to_remove: Effect[] = [];
+                    for (let i = 0; target_instance.effects; ++i) {
+                        const effect = target_instance.effects[i];
+                        if (effect.add_status && effect.status_key_name === temporary_status.SLEEP) {
+                            target_instance.remove_effect(effect);
+                            target_instance.update_all();
+                            effects_to_remove.push(effect);
+                            const msg = this.battle_log.add_recover_effect(effect);
+                            return_obj.push({msg: msg});
+                        }
+                    }
+                    if (effects_to_remove.length) {
+                        this.on_going_effects = this.on_going_effects.filter(
+                            effect => !effects_to_remove.includes(effect)
+                        );
+                    }
+                }
+            }
+
+            for (let j = 0; j < ability.effects.length; ++j) {
+                const effect_obj = ability.effects[j];
+                if (effect_obj.type === effect_types.DAMAGE_INPUT) {
+                    //apply effects of this ability that depends on the issued damage value
+                    const player = effect_obj.on_caster ? action.caster : target_instance;
+                    const damage_input_effect = player.add_effect(effect_obj, ability).effect;
+                    const effect_result = damage_input_effect.apply_effect(damage);
+
+                    if (
+                        [effect_types.CURRENT_HP, effect_types.CURRENT_PP].includes(damage_input_effect.sub_effect.type)
+                    ) {
+                        const effect_damage = effect_result.before - effect_result.after;
+
+                        if (effect_damage !== 0) {
+                            if (damage_input_effect.custom_msg) {
+                                const parsed_msg = Effect.parse_effect_custom_msg(
+                                    damage_input_effect.custom_msg,
+                                    target_instance.name,
+                                    action.caster.name
+                                );
+                                return_obj.push({msg: parsed_msg});
+                            } else {
+                                return_obj.push({
+                                    msg: this.battle_log.add_damage(
+                                        effect_damage,
+                                        player,
+                                        damage_input_effect.sub_effect.type === effect_types.CURRENT_PP
+                                    ),
+                                });
+                            }
+                        }
+                        return_obj.push({check_downed: player, update_chars_info: true});
+                    }
+                    player.remove_effect(damage_input_effect);
+                }
+            }
+        }
+
+        return return_obj;
+    }
+
+    async check_if_char_is_paralyzed(action: PlayerAbility) {
+        if (action.caster.is_paralyzed()) {
+            if (action.caster.temporary_status.has(temporary_status.SLEEP)) {
+                await this.battle_log.add(`${action.caster.name} is asleep!`);
+            } else if (action.caster.temporary_status.has(temporary_status.STUN)) {
+                await this.battle_log.add(`${action.caster.name} is paralyzed and cannot move!`);
+            } else if (action.caster.paralyzed_by_effect) {
+                await this.battle_log.add(`${action.caster.name} is paralyzed and cannot move!`);
+                action.caster.paralyzed_by_effect = false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    async check_if_curse_will_take_effect(action: PlayerAbility) {
+        //Curse check: 1/4 chance of not being able to move
+        if (action.caster.has_permanent_status(permanent_status.EQUIP_CURSE) && Math.random() < 0.25) {
+            await this.battle_log.add(`${action.caster.name} is bound and cannot move!`);
+            return true;
+        }
+        return false;
+    }
+
+    check_if_all_targets_are_downed(action: PlayerAbility) {
+        for (let i = 0; i < action.targets.length; ++i) {
+            const target = action.targets[i];
+            if (target.magnitude && target.target?.instance.is_downed()) {
+                target.magnitude = null;
+            }
+            if (
+                target.target?.instance?.fighter_type === fighter_types.ENEMY &&
+                (target.target?.instance as Enemy)?.fled
+            ) {
+                target.magnitude = null;
+            }
+        }
+        if (action.targets.every(target => target.magnitude === null)) {
+            action.key_name = "defend";
+            action.djinn_key_name = "";
+            action.item_slot = undefined;
+            action.battle_animation_key = "no_animation";
+            return true;
+        }
+        return false;
+    }
+
+    async get_phase_ability(action: PlayerAbility) {
+        let ability = this.data.info.abilities_list[action.key_name];
+
+        //rerolls enemy ability
+        if (
+            action.caster.fighter_type === fighter_types.ENEMY &&
+            !this.data.info.abilities_list[action.key_name].priority_move
+        ) {
+            Object.assign(
+                action,
+                EnemyAI.roll_action(
+                    this.data,
+                    {
+                        instance: action.caster as Enemy,
+                        battle_key: action.caster_battle_key,
+                    },
+                    this.enemies_info.map(info => {
+                        return {
+                            instance: info.instance as Enemy,
+                            battle_key: info.battle_key,
+                        };
+                    }),
+                    this.data.info.party_data.members.map(member => ({
+                        instance: member,
+                        battle_key: member.key_name,
+                    }))
+                )
+            );
+            ability = this.data.info.abilities_list[action.key_name];
+            await this.set_action_animation_settings(action, ability);
+        }
+
+        return ability;
+    }
+
+    async check_if_ability_will_unleash(action: PlayerAbility, ability: Ability, item_name: string) {
+        if (
+            action.caster.fighter_type === fighter_types.ALLY &&
+            ability !== undefined &&
+            ability.can_switch_to_unleash
+        ) {
+            const caster = action.caster as MainChar;
+            if (
+                caster.equip_slots.weapon &&
+                this.data.info.items_list[caster.equip_slots.weapon.key_name].unleash_ability
+            ) {
+                const weapon = this.data.info.items_list[caster.equip_slots.weapon.key_name];
+
+                if (Math.random() < weapon.unleash_rate) {
+                    item_name = weapon.name;
+                    action.key_name = weapon.unleash_ability;
+                    ability = this.data.info.abilities_list[weapon.unleash_ability];
+
+                    await this.set_action_animation_settings(action, ability);
+                }
+            }
+        }
+        return {
+            ability: ability,
+            item_name: item_name,
+        };
+    }
+
+    async manage_djinn_or_summon_ability(action: PlayerAbility, ability: Ability) {
+        if (ability.ability_category === ability_categories.DJINN) {
+            //change djinn status
+            if (ability.effects.some(effect => effect.type === effect_types.SET_DJINN)) {
+                this.data.info.djinni_list[action.djinn_key_name].set_status(djinn_status.SET);
+            } else {
+                this.data.info.djinni_list[action.key_name].set_status(djinn_status.STANDBY);
+            }
+        } else if (ability.ability_category === ability_categories.SUMMON) {
+            //deal with summon ability type
+            const requirements = this.data.info.summons_list[ability.key_name].requirements;
+            const standby_djinni = Djinn.get_standby_djinni(
+                this.data.info.djinni_list,
+                MainChar.get_active_players(this.data.info.party_data, Battle.MAX_CHARS_IN_BATTLE)
+            );
+
+            const has_available_djinni = _.every(requirements, (requirement, element) => {
+                return standby_djinni[element] >= requirement;
+            });
+
+            //check if is possible to cast a summon
+            if (!has_available_djinni) {
+                await this.battle_log.add(`${action.caster.name} summons ${ability.name} but`);
+                await this.battle_log.add(`doesn't have enough standby Djinn!`);
+                return true;
+            } else {
+                //set djinni used in this summon to recovery mode
+                Djinn.set_to_recovery(
+                    this.data.info.djinni_list,
+                    MainChar.get_active_players(this.data.info.party_data, Battle.MAX_CHARS_IN_BATTLE),
+                    requirements
+                );
+            }
+        }
+        return false;
+    }
+
+    async apply_summon_power_buff(action: PlayerAbility, ability: Ability) {
+        if (ability.ability_category === ability_categories.SUMMON) {
+            const requirements = this.data.info.summons_list[ability.key_name].requirements;
+            for (let i = 0; i < ordered_elements.length; ++i) {
+                const element = ordered_elements[i];
+                const power = BattleFormulas.summon_power(requirements[element]);
+                if (power > 0) {
+                    action.caster.add_effect(
+                        {
+                            type: "power",
+                            quantity: power,
+                            operator: "plus",
+                            element: element,
+                        },
+                        ability,
+                        true
+                    );
+
+                    await this.battle_log.add(
+                        `${action.caster.name}'s ${element_names[element]} Power rises by ${power}!`
+                    );
+                    await this.wait_for_key();
+                }
+            }
+        }
+    }
+
+    async apply_item_ability_side_effects(action: PlayerAbility) {
+        if (action.item_slot) {
+            const item: Item = this.data.info.items_list[action.item_slot.key_name];
+            if (item.use_type === use_types.SINGLE_USE) {
+                //consume item on usage
+                if (action.caster.fighter_type === fighter_types.ALLY) {
+                    (action.caster as MainChar).remove_item(action.item_slot, 1);
+                } else {
+                    --action.item_slot.quantity;
+                }
+            } else if (item.use_type === use_types.BREAKS_WHEN_USE) {
+                //check if item is going to break
+                if (Math.random() < Item.BREAKS_CHANCE) {
+                    action.item_slot.broken = true;
+                    await this.battle_log.add(`${item.name} broke...`);
+                    await this.wait_for_key();
+                }
+            }
+        }
+    }
+
+    async check_poison_damage(action: PlayerAbility) {
+        const poison_status = action.caster.is_poisoned();
+        if (poison_status) {
+            let damage = BattleFormulas.battle_poison_damage(action.caster, poison_status);
+            if (damage > action.caster.current_hp) {
+                damage = action.caster.current_hp;
+            }
+
+            action.caster.current_hp = _.clamp(action.caster.current_hp - damage, 0, action.caster.max_hp);
+            const poison_name = poison_status === permanent_status.POISON ? "poison" : "venom";
+
+            let player_sprite: PlayerSprite;
+            if (action.caster.fighter_type === fighter_types.ALLY) {
+                player_sprite = this.allies_info.find(ally => ally.instance.key_name === action.caster.key_name).sprite;
+            } else {
+                player_sprite = this.enemies_info.find(enemy => enemy.battle_key === action.caster_battle_key).sprite;
+            }
+            const previous_action = player_sprite.action;
+            player_sprite.set_action(battle_actions.DAMAGE);
+            await this.battle_log.add(`The ${poison_name} does ${damage.toString()} damage to ${action.caster.name}!`);
+            this.battle_menu.chars_status_window.update_chars_info();
+
+            await this.wait_for_key();
+            player_sprite.set_action(previous_action);
+            await this.check_downed(action.caster);
+        }
+    }
+
+    async check_death_curse(action: PlayerAbility) {
+        if (action.caster.has_temporary_status(temporary_status.DEATH_CURSE)) {
+            const this_effect = _.find(action.caster.effects, {
+                status_key_name: temporary_status.DEATH_CURSE,
+            });
+
+            if (action.caster.get_effect_turns_count(this_effect) === 1) {
+                action.caster.current_hp = 0;
+                await this.down_a_char(action.caster);
+                await this.battle_log.add(`The Grim Reaper calls out to ${action.caster.name}`);
+                await this.wait_for_key();
+            }
+        }
+    }
+
+    /*
+7 is the cap, which is how long buffs will last.
+Debuffs and ailments can last anywhere from 2-7.
+Exceptions include seal induced via Luff/Rime, which is always 2 (the stored value is 16, decreasing by 8 at the end of every round), Regenerate (always 5), and Reflux/counterattack, which is hardcoded to reset to 0 at the end of the round regardless of its actual duration.
+Sleep can also end prematurely, at a rate of 1/4 when a sleeping unit is targeted so long as rhe remaining duration is less than 7 (i.e. kicks in the round after inflicting it). 
+Then there are the obvious ones that work differently: Curse is 7 regardless, unless cured, while Poison and Haunt are permanent until cured.
+*/
+
+    /*
+If a sleep is cast over a target that is already sleeping,
+it will recalculate the chance, and if it lands it will "top up" (read: replace) the effect's duration.
+So if a character is sleeping, the remaining duration is 6 rounds, and you cast Sleep on them again and it lands, it'll get bumped up to 7 rounds.
+When Sleep normally gets inflicted with a max duration of 7 anyway.
+
+Buffs and debuffs can stack values, but durations get overwritten every time and do not stack.
+
+Poison/Venom can't land again, although Venom can replace Poison (but not the other way around).
+And Candle Curse (countdown to death) can be "advanced".
+So, if a character will die after 5 turns and you land another Curse on them, it will drop the remaining count to 4.
+*/
+
+    apply_effects(
+        action: PlayerAbility,
+        ability: Ability,
+        effect_obj: any
+    ): {
+        end_turn_effect: boolean;
+        had_no_effect: boolean;
+        log_messages: {
+            msg?: string;
+            action_changes?: {
+                player_sprite: PlayerSprite;
+                action: battle_actions;
+            }[];
+            check_downed?: Enemy | MainChar;
+            update_chars_info?: boolean;
+        }[];
+    } {
+        let effect_result: ReturnType<Player["add_effect"]>;
+        let return_obj: ReturnType<Battle["apply_effects"]> = {
+            end_turn_effect: false,
+            had_no_effect: false,
+            log_messages: [],
+        };
+
+        if (effect_obj.type === effect_types.END_THE_ROUND) {
+            return_obj.log_messages.push({msg: "Everybody is resting!"});
+            return_obj.end_turn_effect = true;
+            return return_obj;
+        } else if (effect_obj.type === effect_types.FLEE) {
+            return return_obj;
+        }
+
+        for (let j = 0; j < action.targets.length; ++j) {
+            const target_info = action.targets[j];
+            if (target_info.magnitude === null) {
+                continue;
+            }
+
+            const target_instance = target_info.target.instance;
+            if (!ability.affects_downed && target_instance.is_downed()) {
+                continue;
+            }
+            if (target_instance.fighter_type === fighter_types.ENEMY && (target_instance as Enemy).fled) {
+                continue;
+            }
+
+            switch (effect_obj.type) {
+                case effect_types.PERMANENT_STATUS:
+                case effect_types.TEMPORARY_STATUS:
+                    if (effect_obj.add_status) {
+                        const added_effect = Effect.add_status_to_player(
+                            effect_obj,
+                            action.caster,
+                            target_instance,
+                            ability,
+                            target_info.magnitude
+                        );
+                        const log_msg = {msg: "", action_changes: undefined};
+                        return_obj.log_messages.push(log_msg);
+                        if (added_effect) {
+                            if (added_effect.type === effect_types.TEMPORARY_STATUS) {
+                                this.on_going_effects.push(added_effect);
+                            }
+                            if (
+                                [permanent_status.DOWNED, temporary_status.STUN].includes(added_effect.status_key_name)
+                            ) {
+                                const player_sprite = _.find(this.battle_stage.sprites, {
+                                    player_instance: added_effect.char,
+                                });
+                                log_msg.action_changes = [
+                                    {
+                                        player_sprite: player_sprite,
+                                        action: battle_actions.DOWNED,
+                                    },
+                                ];
+                            }
+                            log_msg.msg = on_catch_status_msg[effect_obj.status_key_name](target_instance);
+                        } else {
+                            log_msg.msg = `But it has no effect on ${target_instance.name}!`;
+                            return_obj.had_no_effect = true;
+                        }
+                    } else {
+                        const removed_items = Effect.remove_status_from_player(effect_obj, target_instance);
+                        for (let i = 0; i < removed_items.removed_effects.length; ++i) {
+                            const log_msg = {msg: "", action_changes: undefined};
+                            return_obj.log_messages.push(log_msg);
+                            const removed_effect = removed_items.removed_effects[i];
+                            if (
+                                [permanent_status.DOWNED, temporary_status.STUN].includes(
+                                    removed_effect.status_key_name
+                                )
+                            ) {
+                                const player_sprite = _.find(this.battle_stage.sprites, {
+                                    player_instance: removed_effect.char,
+                                });
+                                log_msg.action_changes = [
+                                    {
+                                        player_sprite: player_sprite,
+                                        action: battle_actions.IDLE,
+                                    },
+                                ];
+                            }
+                            if (removed_effect.type === effect_types.TEMPORARY_STATUS) {
+                                this.on_going_effects = this.on_going_effects.filter(effect => {
+                                    return effect !== effect;
+                                });
+                            }
+                            log_msg.msg = this.battle_log.add_recover_effect(removed_effect);
+                        }
+                        //this for is for the statuses that don't have an associated effect
+                        for (let i = 0; i < removed_items.status_removed.length; ++i) {
+                            const removed_status = removed_items.status_removed[i];
+                            const log_msg = {msg: "", action_changes: undefined};
+                            return_obj.log_messages.push(log_msg);
+                            if ([permanent_status.DOWNED, temporary_status.STUN].includes(removed_status)) {
+                                const player_sprite = _.find(this.battle_stage.sprites, {
+                                    player_instance: target_instance,
+                                });
+                                log_msg.action_changes = [
+                                    {
+                                        player_sprite: player_sprite,
+                                        action: battle_actions.IDLE,
+                                    },
+                                ];
+                            }
+                            log_msg.msg = this.battle_log.add_recover_effect(effect_obj, target_instance);
+                        }
+                    }
+                    break;
+
+                case effect_types.CURRENT_HP:
+                    const log_msg = {msg: "", check_downed: undefined, update_chars_info: false};
+                    effect_result = target_instance.add_effect(effect_obj, ability, true);
+                    if (effect_result.effect.show_msg) {
+                        const damage = effect_result.changes.before - effect_result.changes.after;
+                        log_msg.msg = this.battle_log.add_damage(damage, target_instance);
+                        log_msg.update_chars_info = true;
+                    }
+
+                    log_msg.check_downed = target_instance;
+
+                    if (effect_result.effect.turns_quantity !== -1) {
+                        this.on_going_effects.push(effect_result.effect);
+                    } else {
+                        target_instance.remove_effect(effect_result.effect);
+                    }
+
+                    break;
+
+                case effect_types.CURRENT_PP:
+                    effect_result = target_instance.add_effect(effect_obj, ability, true);
+                    if (effect_result.effect.show_msg) {
+                        const damage = effect_result.changes.before - effect_result.changes.after;
+                        return_obj.log_messages.push({
+                            msg: this.battle_log.add_damage(damage, target_instance, true),
+                            update_chars_info: true,
+                        });
+                    }
+
+                    if (effect_result.effect.turns_quantity !== -1) {
+                        this.on_going_effects.push(effect_result.effect);
+                    } else {
+                        target_instance.remove_effect(effect_result.effect);
+                    }
+
+                    break;
+
+                case effect_types.MAX_HP:
+                case effect_types.MAX_PP:
+                case effect_types.ATTACK:
+                case effect_types.DEFENSE:
+                case effect_types.AGILITY:
+                case effect_types.LUCK:
+                case effect_types.POWER:
+                case effect_types.RESIST:
+                    effect_result = target_instance.add_effect(effect_obj, ability, false);
+                    target_instance.update_all();
+                    const buff_changes = effect_result.effect.change;
+                    if (effect_obj.remove_buff) {
+                        this.on_going_effects = this.on_going_effects.filter(
+                            effect => !effect_result.changes.removed_effects.includes(effect)
+                        );
+                        if (effect_result.effect.show_msg) {
+                            return_obj.log_messages.push({msg: `${target_instance.name}'s strength return to normal!`});
+                        }
+                        break;
+                    } else {
+                        this.on_going_effects.push(effect_result.effect);
+                        if (buff_changes.after !== buff_changes.before) {
+                            target_instance.set_effect_turns_count(
+                                effect_result.effect,
+                                effect_result.effect.turns_quantity,
+                                false
+                            );
+                            target_instance.update_all_buff_turn_count(
+                                effect_result.effect.type,
+                                effect_result.effect.turn_count
+                            );
+                        }
+
+                        if (effect_result.effect.show_msg) {
+                            const diff = buff_changes.after - buff_changes.before;
+                            const text = diff >= 0 ? "rises" : "drops";
+                            let element_info = "";
+
+                            if ([effect_types.POWER, effect_types.RESIST].includes(effect_obj.type)) {
+                                element_info = element_names[effect_result.effect.element] + " ";
+                            }
+
+                            return_obj.log_messages.push({
+                                msg: `${target_instance.name}'s ${element_info}${
+                                    effect_names[effect_obj.type]
+                                } ${text} by ${Math.abs(diff)}!`,
+                                update_chars_info: true,
+                            });
+                        }
+                        break;
+                    }
+
+                case effect_types.PARALYZE:
+                    target_instance.add_effect(effect_obj, ability, true);
+                    if (target_instance.paralyzed_by_effect) {
+                        return_obj.log_messages.push({msg: `${target_instance.name} has become unable to move!`});
+                    } else {
+                        return_obj.log_messages.push({msg: `But it has no effect on ${target_instance.name}!`});
+                        return_obj.had_no_effect = true;
+                    }
+                    break;
+
+                case effect_types.TURNS:
+                    return_obj.log_messages.push({msg: `${target_instance.name} readies for action!`});
+
+                    this.on_going_effects.push(target_instance.add_effect(effect_obj, ability, true).effect);
+                    target_instance.set_effect_turns_count(effect_obj, effect_obj.turns_quantity, false);
+                    break;
+
+                case effect_types.DAMAGE_MODIFIER:
+                    if (effect_obj.custom_msg) {
+                        const parsed_msg = Effect.parse_effect_custom_msg(
+                            effect_obj.custom_msg,
+                            target_instance.name,
+                            action.caster.name
+                        );
+                        return_obj.log_messages.push({msg: parsed_msg});
+                    }
+
+                    this.on_going_effects.push(target_instance.add_effect(effect_obj, ability, true).effect);
+                    break;
+
+                case effect_types.COUNTER_STRIKE:
+                    this.data.logger.log_message('"counter_strike" effect is not available yet.');
+                    break;
+
+                default:
+                    this.on_going_effects.push(target_instance.add_effect(effect_obj, ability, true).effect);
+            }
+        }
+        return return_obj;
+    }
+
+    async battle_phase_round_end() {
+        for (let i = 0; i < this.round_end_effects.length; ++i) {
+            const effect_info = this.round_end_effects[i];
+            await this.apply_effects(effect_info.action, effect_info.ability, effect_info.effect);
+        }
+        this.round_end_effects = [];
+
+        const effects_to_remove = [];
+        const effect_groups = {};
+
+        for (let i = 0; i < this.on_going_effects.length; ++i) {
+            const effect = this.on_going_effects[i];
+            if (
+                effect.char.is_downed() ||
+                (effect.char.fighter_type === fighter_types.ENEMY && (effect.char as Enemy).fled)
+            ) {
+                //clear this effect if the owner char is downed or fled (in case of enemies)
+                effect.char.remove_effect(effect);
+                effect.char.update_all();
+                effects_to_remove.push(i);
+                continue;
+            }
+            let avoid_msg = false;
+            if (effect.turn_count !== -1) {
+                //deal with effects that depends on turn counting
+                if (effect.char.get_effect_turns_count(effect) !== null) {
+                    if (
+                        !(effect.char.key_name in effect_groups) ||
+                        !(effect.char.get_effect_turns_key(effect) in effect_groups[effect.char.key_name])
+                    ) {
+                        effect.char.set_effect_turns_count(effect);
+                    }
+
+                    effect.turn_count = effect.char.get_effect_turns_count(effect);
+                    if (!effect_groups[effect.char.key_name]) {
+                        effect_groups[effect.char.key_name] = {
+                            [effect.char.get_effect_turns_key(effect)]: effect,
+                        };
+                    } else {
+                        effect_groups[effect.char.key_name][effect.char.get_effect_turns_key(effect)] = effect;
+                    }
+                    avoid_msg = true;
+                } else {
+                    --effect.turn_count;
+                }
+
+                let early_ailment_recover = false;
+                if (
+                    effect.type === effect_types.TEMPORARY_STATUS &&
+                    [
+                        temporary_status.DELUSION,
+                        temporary_status.SEAL,
+                        temporary_status.SLEEP,
+                        temporary_status.STUN,
+                    ].includes(effect.status_key_name as temporary_status)
+                ) {
+                    early_ailment_recover = BattleFormulas.ailment_recovery(
+                        effect.char,
+                        effect.turn_count,
+                        ailment_recovery_base_chances[effect.status_key_name]
+                    );
+                    //TODO: also do it for debuffs
+                }
+
+                if (effect.turn_count === 0 || early_ailment_recover) {
+                    effect.char.remove_effect(effect);
+                    effect.char.update_all();
+                    if (
+                        effect.type === effect_types.TEMPORARY_STATUS &&
+                        effect.status_key_name === temporary_status.STUN
+                    ) {
+                        let player_sprite: PlayerSprite;
+                        if (effect.char.fighter_type === fighter_types.ALLY) {
+                            player_sprite = this.allies_info.find(
+                                info => effect.char.key_name === info.instance.key_name
+                            ).sprite;
+                        } else {
+                            player_sprite = this.enemies_info.find(
+                                info => effect.char.key_name === info.instance.key_name
+                            ).sprite;
+                        }
+                        player_sprite.set_action(battle_actions.IDLE);
+                    }
+                    effects_to_remove.push(i);
+                    if (!avoid_msg) {
+                        this.battle_log.add_recover_effect(effect);
+                        await this.wait_for_key();
+                    }
+                }
+            }
+        }
+        for (let char_key_name in effect_groups) {
+            for (let effect_turn_key in effect_groups[char_key_name]) {
+                const effect = effect_groups[char_key_name][effect_turn_key];
+                if (effect.turn_count === 0) {
+                    this.battle_log.add_recover_effect(effect);
+                    await this.wait_for_key();
+                }
+            }
+        }
+
+        this.on_going_effects = this.on_going_effects.filter((effect, index) => {
+            return !effects_to_remove.includes(index);
+        });
+
+        for (let i = 0; i < Battle.MAX_CHARS_IN_BATTLE; ++i) {
+            //deal with djinn that are with recovery status
+            const player = this.data.info.party_data.members[i];
+            if (player === undefined) continue;
+            if (player.is_downed()) continue;
+
+            const player_djinni = player.djinni;
+            for (let j = 0; j < player_djinni.length; ++j) {
+                const djinn_key = player_djinni[j];
+                const djinn = this.data.info.djinni_list[djinn_key];
+                if (djinn.status === djinn_status.RECOVERY) {
+                    if (djinn.recovery_turn === 0) {
+                        djinn.set_status(djinn_status.SET);
+                        await this.battle_log.add(`${djinn.name} is set to ${player.name}!`);
+                        await this.wait_for_key();
+                    } else {
+                        --djinn.recovery_turn;
+                    }
+                }
+            }
+        }
+
+        //Check if allies can recover HP or PP at the turn's end and show it in the log
+        await this.apply_battle_recovery(this.allies_info, true);
+        await this.apply_battle_recovery(this.allies_info, false);
+        //Check if enemies can recover HP or PP at the turn's end and show it in the log
+        await this.apply_battle_recovery(this.enemies_info, true);
+        await this.apply_battle_recovery(this.enemies_info, false);
+
+        this.battle_log.clear();
+        this.battle_phase = battle_phases.MENU;
+        this.check_phases();
+    }
+
+    async apply_battle_recovery(party: PlayerInfo[], is_hp_recovery: boolean) {
+        let recovery = "";
+        for (let i = 0; i < party.length; i++) {
+            const player = party[i];
+            const recovery_stat = is_hp_recovery ? player.instance.hp_recovery : player.instance.pp_recovery;
+            let current_stat = is_hp_recovery ? player.instance.current_hp : player.instance.current_pp;
+            const max_stat = is_hp_recovery ? player.instance.max_hp : player.instance.max_pp;
+            const print_stat = is_hp_recovery ? "HP" : "PP";
+            if (recovery_stat !== 0) {
+                current_stat = _.clamp(current_stat + recovery_stat, 0, max_stat);
+                if (recovery_stat > 0) {
+                    recovery = "recovers";
+                } else {
+                    recovery = "loses";
+                }
+                this.battle_log.add(`${player.instance.name} ${recovery} ${Math.abs(recovery_stat)} ${print_stat}!`);
+                await this.wait_for_key();
+            }
+        }
+    }
+
+    async battle_phase_flee() {
+        for (let i = 0; i < this.on_going_effects.length; ++i) {
+            //remove all effects acquired in battle
+            const effect = this.on_going_effects[i];
+            if (effect.type !== effect_types.PERMANENT_STATUS) {
+                effect.char.remove_effect(effect);
+                effect.char.update_all();
+            }
+        }
+        this.party_fled = true;
+        this.unset_battle();
+    }
+
+    // Everyone gets equal experience with no division, but:
+    // - Characters who do not participate get half;
+    // - Downed characters get none.
+    async battle_phase_end() {
+        this.battle_stage.pause_players_update = false;
+        this.battle_stage.set_update_factor(1);
+        this.battle_stage.set_bg_default_position();
+        await Promise.all([this.battle_stage.reset_chars_position(), this.battle_stage.set_stage_default_position()]);
+
+        for (let i = 0; i < this.on_going_effects.length; ++i) {
+            //remove all effects acquired in battle
+            const effect = this.on_going_effects[i];
+            if (effect.type !== effect_types.PERMANENT_STATUS) {
+                effect.char.remove_effect(effect);
+                effect.char.update_all();
+            }
+        }
+
+        if (this.allies_defeated) {
+            this.data.audio.stop_bgm();
+            this.data.audio.set_bgm("fallen_heroes", true);
+            this.battle_log.add(this.allies_info[0].instance.name + "' party has been defeated!");
+        } else {
+            this.data.audio.stop_bgm();
+            this.data.audio.set_bgm("victory", true);
+            this.battle_log.add(this.enemies_party_name + " has been defeated!");
+            await this.wait_for_key();
+
+            //calculates total exp gained
+            const total_exp = this.enemies_info
+                .flatMap(info => {
+                    const enemy = info.instance as Enemy;
+                    return enemy.fled ? [] : [enemy.exp_reward];
+                })
+                .reduce((a, b) => a + b, 0);
+            this.battle_log.add(`You got ${total_exp.toString()} experience points.`);
+            await this.wait_for_key();
+
+            for (let i = 0; i < this.allies_info.length; ++i) {
+                const info = this.allies_info[i];
+                const char = info.instance as MainChar;
+                if (!char.is_downed()) {
+                    //downed chars don't receive exp
+                    //chars that not entered in battle, receive only hald exp
+                    const change = char.add_exp(info.entered_in_battle ? total_exp : total_exp >> 1);
+
+                    //check whether this char evolved
+                    if (change.before.level !== change.after.level) {
+                        this.data.audio.pause_bgm();
+                        this.data.audio.play_se("misc/level_up", () => {
+                            this.data.audio.resume_bgm();
+                        });
+                        this.battle_log.add(`${char.name} is now a level ${char.level} ${char.class.name}!`);
+                        await this.wait_for_key();
+
+                        const gained_abilities = _.difference(change.after.abilities, change.before.abilities);
+                        for (let j = 0; j < gained_abilities.length; ++j) {
+                            const ability = this.data.info.abilities_list[gained_abilities[j]];
+                            this.battle_log.add(`Mastered the ${char.class.name}'s ${ability.name}!`);
+                            await this.wait_for_key();
+                        }
+
+                        for (let j = 0; j < change.before.stats.length; ++j) {
+                            const stat = Object.keys(change.before.stats[j])[0];
+                            const diff = change.after.stats[j][stat] - change.before.stats[j][stat];
+                            if (diff !== 0) {
+                                let stat_text;
+                                switch (stat) {
+                                    case main_stats.MAX_HP:
+                                        stat_text = "Maximum HP";
+                                        break;
+                                    case main_stats.MAX_PP:
+                                        stat_text = "Maximum PP";
+                                        break;
+                                    case main_stats.ATTACK:
+                                        stat_text = "Attack";
+                                        break;
+                                    case main_stats.DEFENSE:
+                                        stat_text = "Defense";
+                                        break;
+                                    case main_stats.AGILITY:
+                                        stat_text = "Agility";
+                                        break;
+                                    case main_stats.LUCK:
+                                        stat_text = "Luck";
+                                        break;
+                                }
+                                this.battle_log.add(`${stat_text} rises by ${diff.toString()}!`);
+                                await this.wait_for_key();
+                            }
+                        }
+                    }
+                }
+            }
+
+            const total_coins = this.enemies_info
+                .map(info => {
+                    //calculate total coins received
+                    return (info.instance as Enemy).coins_reward;
+                })
+                .reduce((a, b) => a + b, 0);
+            this.data.info.party_data.coins += total_coins;
+            this.battle_log.add(`You got ${total_coins.toString()} coins.`);
+            await this.wait_for_key();
+
+            for (let i = 0; i < this.enemies_info.length; ++i) {
+                //receiving items as reward
+                const enemy = this.enemies_info[i].instance as Enemy;
+                if (enemy.item_reward && Math.random() < enemy.item_reward_chance) {
+                    const item = this.data.info.items_list[enemy.item_reward];
+                    if (item !== undefined) {
+                        if (MainChar.add_item_to_party(this.data.info.party_data, item, 1)) {
+                            this.battle_log.add(`You got a ${item.name}.`);
+                            await this.wait_for_key();
+                        }
+                    } else {
+                        //debug purposes only
+                        this.battle_log.add(`${enemy.item_reward} not registered...`);
+                        await this.wait_for_key();
+                    }
+                }
+            }
+        }
+        this.unset_battle();
+    }
+
+    unset_battle() {
+        this.battle_finishing = true;
+        this.data.map.resume(this.previous_map_state);
+        this.battle_stage.unset_stage(
+            () => {
+                this.data.control_manager.reset();
+                this.data.control_manager.detach_bindings(this.advance_log_control_key);
+
+                this.battle_log.destroy();
+                this.battle_menu.destroy_menu();
+                this.target_window.destroy();
+                this.animation_manager.destroy();
+
+                if (this.allies_defeated) {
+                    const hero = this.data.info.main_char_list[this.data.hero.key_name];
+                    hero.current_hp = 1;
+                    hero.remove_permanent_status(permanent_status.DOWNED);
+                }
+
+                if (this.before_fade_finish_callback) {
+                    const all_fled = this.enemies_defeated
+                        ? this.enemies_info.every(player => (player.instance as Enemy).fled)
+                        : this.party_fled;
+                    return this.before_fade_finish_callback(!this.allies_defeated, all_fled);
+                }
+                return null;
+            },
+            () => {
+                this.data.in_battle = false;
+                this.data.battle_instance = undefined;
+                this.game.physics.p2.resume();
+                if (this.reset_previous_bgm && !this.allies_defeated) {
+                    this.data.audio.set_bgm(this.previous_bgm, true);
+                }
+                if (this.finish_callback) {
+                    const all_fled = this.enemies_defeated
+                        ? this.enemies_info.every(player => (player.instance as Enemy).fled)
+                        : this.party_fled;
+                    this.finish_callback(!this.allies_defeated, all_fled);
+                }
+            }
+        );
+    }
+}

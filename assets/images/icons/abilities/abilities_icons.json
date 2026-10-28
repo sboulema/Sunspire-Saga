@@ -1,0 +1,775 @@
+{
+    "frames": {
+        "quake": {
+            "frame": {
+                "x": 76,
+                "y": 0,
+                "w": 6,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 6,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 6,
+                "h": 7
+            }
+        },
+        "spire": {
+            "frame": {
+                "x": 83,
+                "y": 0,
+                "w": 6,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 6,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 6,
+                "h": 7
+            }
+        },
+        "gaia_blade": {
+            "frame": {
+                "x": 90,
+                "y": 0,
+                "w": 6,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 6,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 6,
+                "h": 7
+            }
+        },
+        "flare": {
+            "frame": {
+                "x": 97,
+                "y": 0,
+                "w": 6,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 6,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 6,
+                "h": 7
+            }
+        },
+        "fire_bomb": {
+            "frame": {
+                "x": 104,
+                "y": 0,
+                "w": 6,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 6,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 6,
+                "h": 7
+            }
+        },
+        "inferno": {
+            "frame": {
+                "x": 111,
+                "y": 0,
+                "w": 6,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 6,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 6,
+                "h": 7
+            }
+        },
+        "cure": {
+            "frame": {
+                "x": 118,
+                "y": 0,
+                "w": 6,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 6,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 6,
+                "h": 7
+            }
+        },
+        "ice_horn": {
+            "frame": {
+                "x": 125,
+                "y": 0,
+                "w": 6,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 6,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 6,
+                "h": 7
+            }
+        },
+        "pure_ply": {
+            "frame": {
+                "x": 132,
+                "y": 0,
+                "w": 6,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 6,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 6,
+                "h": 7
+            }
+        },
+        "gust": {
+            "frame": {
+                "x": 139,
+                "y": 0,
+                "w": 6,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 6,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 6,
+                "h": 7
+            }
+        },
+        "plasma": {
+            "frame": {
+                "x": 146,
+                "y": 0,
+                "w": 6,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 6,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 6,
+                "h": 7
+            }
+        },
+        "bolt": {
+            "frame": {
+                "x": 153,
+                "y": 0,
+                "w": 6,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 6,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 6,
+                "h": 7
+            }
+        },
+        "flint": {
+            "frame": {
+                "x": 199,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "sourceSize": {
+                "w": 6,
+                "h": 6
+            }
+        },
+        "granite": {
+            "frame": {
+                "x": 206,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "sourceSize": {
+                "w": 6,
+                "h": 6
+            }
+        },
+        "forge": {
+            "frame": {
+                "x": 213,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "sourceSize": {
+                "w": 6,
+                "h": 6
+            }
+        },
+        "ember": {
+            "frame": {
+                "x": 220,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "sourceSize": {
+                "w": 6,
+                "h": 6
+            }
+        },
+        "dew": {
+            "frame": {
+                "x": 227,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "sourceSize": {
+                "w": 6,
+                "h": 6
+            }
+        },
+        "mist": {
+            "frame": {
+                "x": 234,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "sourceSize": {
+                "w": 6,
+                "h": 6
+            }
+        },
+        "breeze": {
+            "frame": {
+                "x": 241,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "sourceSize": {
+                "w": 6,
+                "h": 6
+            }
+        },
+        "squall": {
+            "frame": {
+                "x": 248,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "sourceSize": {
+                "w": 6,
+                "h": 6
+            }
+        },
+        "gnome": {
+            "frame": {
+                "x": 255,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "sourceSize": {
+                "w": 6,
+                "h": 6
+            }
+        },
+        "titan": {
+            "frame": {
+                "x": 262,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "sourceSize": {
+                "w": 6,
+                "h": 6
+            }
+        },
+        "salamand": {
+            "frame": {
+                "x": 269,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "sourceSize": {
+                "w": 6,
+                "h": 6
+            }
+        },
+        "phoenix": {
+            "frame": {
+                "x": 276,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "sourceSize": {
+                "w": 6,
+                "h": 6
+            }
+        },
+        "nixie": {
+            "frame": {
+                "x": 283,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "sourceSize": {
+                "w": 6,
+                "h": 6
+            }
+        },
+        "leviath": {
+            "frame": {
+                "x": 290,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "sourceSize": {
+                "w": 6,
+                "h": 6
+            }
+        },
+        "sylph": {
+            "frame": {
+                "x": 297,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "sourceSize": {
+                "w": 6,
+                "h": 6
+            }
+        },
+        "tempest": {
+            "frame": {
+                "x": 304,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "sourceSize": {
+                "w": 6,
+                "h": 6
+            }
+        },
+        "sol_avatar": {
+            "frame": {
+                "x": 311,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 6,
+                "h": 6
+            },
+            "sourceSize": {
+                "w": 6,
+                "h": 6
+            }
+        },
+        "attack": {
+            "frame": {
+                "x": 0,
+                "y": 0,
+                "w": 18,
+                "h": 18
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 18,
+                "h": 18
+            },
+            "sourceSize": {
+                "w": 18,
+                "h": 18
+            }
+        },
+        "defend": {
+            "frame": {
+                "x": 19,
+                "y": 0,
+                "w": 18,
+                "h": 18
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 18,
+                "h": 18
+            },
+            "sourceSize": {
+                "w": 18,
+                "h": 18
+            }
+        },
+        "flee": {
+            "frame": {
+                "x": 38,
+                "y": 0,
+                "w": 18,
+                "h": 18
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 18,
+                "h": 18
+            },
+            "sourceSize": {
+                "w": 18,
+                "h": 18
+            }
+        },
+        "set_djinn": {
+            "frame": {
+                "x": 57,
+                "y": 0,
+                "w": 18,
+                "h": 18
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 18,
+                "h": 18
+            },
+            "sourceSize": {
+                "w": 18,
+                "h": 18
+            }
+        },
+        "move": {
+            "frame": {
+                "x": 160,
+                "y": 0,
+                "w": 6,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 6,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 6,
+                "h": 7
+            }
+        },
+        "herb": {
+            "frame": {
+                "x": 167,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 7,
+                "h": 7
+            }
+        },
+        "potion": {
+            "frame": {
+                "x": 175,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 7,
+                "h": 7
+            }
+        },
+        "pdrop": {
+            "frame": {
+                "x": 183,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 7,
+                "h": 7
+            }
+        },
+        "elixir": {
+            "frame": {
+                "x": 191,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 7,
+                "h": 7
+            },
+            "sourceSize": {
+                "w": 7,
+                "h": 7
+            }
+        }
+    },
+    "meta": {
+        "app": "scripts/build_sunspire_assets.js",
+        "version": "1.0",
+        "image": "abilities_icons.png",
+        "format": "RGBA8888",
+        "size": {
+            "w": 318,
+            "h": 18
+        },
+        "scale": "1"
+    }
+}

@@ -1,0 +1,215 @@
+{
+    "frames": {
+        "angry": {
+            "frame": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "annoyed": {
+            "frame": {
+                "x": 15,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "doubt": {
+            "frame": {
+                "x": 30,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "ellipsis": {
+            "frame": {
+                "x": 45,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "exclamation": {
+            "frame": {
+                "x": 60,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "happy": {
+            "frame": {
+                "x": 75,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "idea": {
+            "frame": {
+                "x": 90,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "love": {
+            "frame": {
+                "x": 105,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "nervous": {
+            "frame": {
+                "x": 120,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        },
+        "unhappy": {
+            "frame": {
+                "x": 135,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 14,
+                "h": 9
+            },
+            "sourceSize": {
+                "w": 14,
+                "h": 9
+            }
+        }
+    },
+    "meta": {
+        "app": "scripts/build_sunspire_assets.js",
+        "version": "1.0",
+        "image": "emoticons.png",
+        "format": "RGBA8888",
+        "size": {
+            "w": 150,
+            "h": 9
+        },
+        "scale": "1"
+    }
+}

@@ -1,0 +1,68 @@
+{
+    "key_name": "gust",
+    "cast_type": "psynergy_cast",
+    "wait_for_cast_animation": true,
+    "particles_sequence": [
+        {
+            "data": {
+                "energy": {
+                    "red": 205,
+                    "green": 160,
+                    "blue": 255,
+                    "lifespan": 450,
+                    "alpha": 0.85,
+                    "target": {
+                        "x": "targets",
+                        "y": "targets",
+                        "shift_x": 40,
+                        "shift_y": 0,
+                        "zone_key": "hit_zone"
+                    }
+                }
+            },
+            "zones": {
+                "hit_zone": {
+                    "type": "circle",
+                    "radius": 6
+                },
+                "spawn_zone": {
+                    "type": "line",
+                    "points": [
+                        {
+                            "x": -10,
+                            "y": 0
+                        },
+                        {
+                            "x": 10,
+                            "y": 0
+                        }
+                    ]
+                }
+            },
+            "emitters": [
+                {
+                    "x": "targets",
+                    "y": "targets",
+                    "shift_x": -60,
+                    "position": "over",
+                    "render_type": "pixel",
+                    "show_trails": true,
+                    "trails_clear_factor": 0.2,
+                    "pixel_size": 4,
+                    "pixel_reducing_factor": 0.04,
+                    "pixel_is_rect": false,
+                    "particles_display_blend_mode": "screen",
+                    "render_white_core": true,
+                    "core_custom_color": "rgba(255,255,220,0.9)",
+                    "total": 20,
+                    "repeat": 3,
+                    "frequency": 40,
+                    "random_in_zone": true,
+                    "emitter_data_key": "energy",
+                    "zone_key": "spawn_zone"
+                }
+            ],
+            "emission_finish": 900
+        }
+    ]
+}

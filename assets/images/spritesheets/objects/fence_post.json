@@ -1,0 +1,55 @@
+{
+    "frames": {
+        "idle/right/00": {
+            "frame": {
+                "x": 0,
+                "y": 0,
+                "w": 8,
+                "h": 15
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 8,
+                "h": 15
+            },
+            "sourceSize": {
+                "w": 8,
+                "h": 15
+            }
+        },
+        "idle/left/00": {
+            "frame": {
+                "x": 9,
+                "y": 0,
+                "w": 8,
+                "h": 15
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 8,
+                "h": 15
+            },
+            "sourceSize": {
+                "w": 8,
+                "h": 15
+            }
+        }
+    },
+    "meta": {
+        "app": "scripts/build_sunspire_assets.js",
+        "version": "1.0",
+        "image": "fence_post.png",
+        "format": "RGBA8888",
+        "size": {
+            "w": 18,
+            "h": 15
+        },
+        "scale": "1"
+    }
+}

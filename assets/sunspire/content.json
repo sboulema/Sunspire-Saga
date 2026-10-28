@@ -1,0 +1,214 @@
+{
+    "_comment": "Sunspire Saga's game data and story, ported from the legacy game.js (V48). scripts/build_sunspire_content.js turns this into the engine databases and the Tiled maps; scripts/build_walkthrough.js turns it into walkthrough.html. Numbers are the legacy ones unless a key says otherwise.",
+    "version": "V48",
+    "elements": {"earth": "venus", "water": "mercury", "fire": "mars", "wind": "jupiter"},
+
+    "rules": {
+        "xp_next": "18 + 12 * level",
+        "max_level": 30,
+        "pp_regen": "1 PP per party member every 8 steps",
+        "encounter": {"steps_before": 5, "chance": 0.15, "tiles": "tall grass and rubble"},
+        "flee_chance": 0.6,
+        "defend": "halves damage",
+        "set_bonus": "+1 attack and +1 defence per set spirit",
+        "attack": "atk + weapon + set bonus + rnd(0,4) - enemy def; bosses and spirits take 50% / 30% of it",
+        "art": "power + atk/2 + level + rnd(0,3) - enemy def; area arts do 70% to all but the target",
+        "spirit": "power + level*4 + rnd(0,3) - enemy def/2",
+        "summon": "power + level*5 + rnd(0,5) - enemy def/2, to every foe",
+        "enemy_attack": "atk + rnd(0,4) - (def + armour + set bonus)"
+    },
+
+    "chars": {
+        "ari":  {"name": "Ari",  "el": "earth", "base": {"hp": 34, "pp": 12, "atk": 10, "def": 5, "agi": 8},  "grow": {"hp": 7, "pp": 3, "atk": 3, "def": 1, "agi": 1}, "arts": [["quake", 1], ["spire", 4], ["gaia_blade", 8]], "voice": "hero_1"},
+        "lyn":  {"name": "Lyn",  "el": "water", "base": {"hp": 24, "pp": 16, "atk": 8,  "def": 4, "agi": 11}, "grow": {"hp": 5, "pp": 4, "atk": 2, "def": 1, "agi": 2}, "arts": [["cure", 1], ["ice_horn", 4], ["pure_ply", 7]], "voice": "adult_female_1"},
+        "bram": {"name": "Bram", "el": "fire",  "base": {"hp": 36, "pp": 14, "atk": 12, "def": 7, "agi": 6},  "grow": {"hp": 8, "pp": 3, "atk": 3, "def": 1, "agi": 1}, "arts": [["flare", 1], ["fire_bomb", 4], ["inferno", 8]], "voice": "adult_male_1"},
+        "sera": {"name": "Sera", "el": "wind",  "base": {"hp": 26, "pp": 15, "atk": 9,  "def": 4, "agi": 13}, "grow": {"hp": 5, "pp": 4, "atk": 2, "def": 1, "agi": 2}, "arts": [["gust", 1], ["plasma", 5], ["bolt", 8]], "voice": "adult_female_1"}
+    },
+    "party_order": ["ari", "lyn", "bram", "sera"],
+
+    "field_arts": {
+        "move": {"name": "Shove", "cost": 2, "el": "earth", "desc": "Push a loose boulder from where you stand.", "char": "ari"}
+    },
+    "arts": {
+        "quake":      {"name": "Quake",      "cost": 4,  "pow": 18, "el": "earth", "desc": "Shake the ground under one foe."},
+        "spire":      {"name": "Spire",      "cost": 7,  "pow": 36, "el": "earth", "desc": "Drop a stone spire on one foe."},
+        "gaia_blade": {"name": "Gaia Blade", "cost": 14, "pow": 64, "el": "earth", "desc": "Cleave one foe with a blade of earth."},
+        "flare":      {"name": "Flare",      "cost": 4,  "pow": 20, "el": "fire",  "desc": "Scorch one foe."},
+        "fire_bomb":  {"name": "Fire Bomb",  "cost": 8,  "pow": 22, "el": "fire",  "aoe": true, "desc": "A burst of fire over every foe."},
+        "inferno":    {"name": "Inferno",    "cost": 15, "pow": 40, "el": "fire",  "aoe": true, "desc": "Flames sweep every foe."},
+        "cure":       {"name": "Cure",       "cost": 4,  "heal": 70, "el": "water", "desc": "Restore 70 HP to one ally."},
+        "ice_horn":   {"name": "Ice Horn",   "cost": 6,  "pow": 34, "el": "water", "desc": "Gore one foe with ice."},
+        "pure_ply":   {"name": "Pure Ply",   "cost": 10, "heal": 999, "el": "water", "desc": "Fully restore one ally."},
+        "gust":       {"name": "Gust",       "cost": 3,  "pow": 16, "el": "wind",  "desc": "Cut one foe with wind."},
+        "plasma":     {"name": "Plasma",     "cost": 9,  "pow": 28, "el": "wind",  "aoe": true, "desc": "Lightning over every foe."},
+        "bolt":       {"name": "Bolt",       "cost": 12, "pow": 58, "el": "wind",  "desc": "A single great bolt."}
+    },
+
+    "gear": {
+        "wood":    {"kind": "wpn", "name": "Wood Blade",   "atk": 3,  "price": 20,  "desc": "A practice blade of hard oak."},
+        "bronze":  {"kind": "wpn", "name": "Bronze Sword", "atk": 7,  "price": 80,  "desc": "A soldier's bronze sword."},
+        "iron":    {"kind": "wpn", "name": "Iron Axe",     "atk": 12, "price": 180, "desc": "Brindle iron, Brindle temper."},
+        "steel":   {"kind": "wpn", "name": "Steel Rapier", "atk": 16, "price": 480, "desc": "Light, quick and very sharp."},
+        "sol":     {"kind": "wpn", "name": "Sol Blade",    "atk": 24, "price": 999, "desc": "A blade that drinks the dawn."},
+        "vest":    {"kind": "arm", "name": "Travel Vest",  "def": 2,  "price": 18,  "desc": "A padded vest for the road."},
+        "leather": {"kind": "arm", "name": "Leather Mail", "def": 4,  "price": 70,  "desc": "Boiled leather, well stitched."},
+        "chain":   {"kind": "arm", "name": "Chain Mail",   "def": 6,  "price": 160, "desc": "Linked rings over a quilted coat."},
+        "aegis":   {"kind": "arm", "name": "Aegis Plate",  "def": 9,  "price": 380, "desc": "Plate of the old spire guard."}
+    },
+    "items": {
+        "herb":   {"name": "Herb",     "price": 12, "heal": 60,  "desc": "Restores 60 HP."},
+        "potion": {"name": "Potion",   "price": 70, "heal": 220, "desc": "Restores 220 HP."},
+        "pdrop":  {"name": "Psy Drop", "price": 40, "pp": 30,    "desc": "Restores 30 PP."},
+        "elixir": {"name": "Elixir",   "price": 90, "revive": true, "desc": "Revives a fallen ally with half HP."}
+    },
+    "shops": {
+        "thera":   {"keeper": "mara", "name": "Mara's shop",  "stock": [["item", "herb"], ["item", "pdrop"], ["gear", "wood"], ["gear", "bronze"], ["gear", "vest"], ["gear", "leather"]]},
+        "brindle": {"keeper": "dov",  "name": "Dov's ironworks", "stock": [["item", "herb"], ["item", "potion"], ["item", "pdrop"], ["item", "elixir"], ["gear", "iron"], ["gear", "chain"], ["gear", "aegis"]]}
+    },
+    "inns": {
+        "thera_far_inn": {"map": "fields", "cost": 12, "name": "Mira Farmstead inn"},
+        "brindle_inn":   {"map": "brindle", "cost": 12, "name": "Brindle inn"}
+    },
+
+    "chests": {
+        "fields":  [{"x": 32, "y": 11, "gold": 25}, {"x": 50, "y": 36, "item": "potion"}, {"x": 3, "y": 3, "flag": "compass", "name": "Lyn's Compass"}],
+        "mine":    [{"x": 4, "y": 3, "gear": "bronze"}, {"x": 24, "y": 18, "gold": 60}, {"x": 13, "y": 12, "item": "pdrop"}],
+        "trail":   [{"x": 12, "y": 4, "gear": "chain"}, {"x": 25, "y": 16, "item": "potion"}],
+        "shrine":  [{"x": 2, "y": 2, "gear": "steel"}, {"x": 23, "y": 2, "item": "elixir"}, {"x": 13, "y": 8, "gear": "sol"}]
+    },
+
+    "spirit_order": ["flint", "granite", "forge", "ember", "dew", "mist", "breeze", "squall"],
+    "spirits": {
+        "flint":   {"el": "earth", "name": "Flint",   "pow": 32, "map": "fields", "x": 3,  "y": 20, "desc": "Strikes with stone. Its power can shatter boulders."},
+        "granite": {"el": "earth", "name": "Granite", "pow": 48, "map": "mine",   "x": 3,  "y": 18, "desc": "A heavy blow of living rock."},
+        "forge":   {"el": "fire",  "name": "Forge",   "pow": 40, "map": "mine",   "x": 12, "y": 3,  "desc": "A hammer of flame."},
+        "ember":   {"el": "fire",  "name": "Ember",   "pow": 56, "map": "trail",  "x": 28, "y": 16, "desc": "A searing strike."},
+        "dew":     {"el": "water", "name": "Dew",     "heal": 0.55, "map": "fields", "x": 8, "y": 12, "desc": "Restores 55% of one ally's HP."},
+        "mist":    {"el": "water", "name": "Mist",    "healAll": 0.35, "map": "shrine", "x": 4, "y": 10, "desc": "Restores 35% of everyone's HP."},
+        "breeze":  {"el": "wind",  "name": "Breeze",  "pow": 24, "stun": true, "map": "trail", "x": 29, "y": 3, "desc": "A cutting wind that staggers its target."},
+        "squall":  {"el": "wind",  "name": "Squall",  "pow": 22, "aoe": true, "map": "shrine", "x": 22, "y": 12, "desc": "A storm over every foe."}
+    },
+    "spirit_duels": {
+        "flint":   {"hp": 70,  "atk": 14, "def": 5,  "agi": 10, "xp": 24, "gold": 12},
+        "dew":     {"hp": 120, "atk": 20, "def": 6,  "agi": 12, "xp": 30, "gold": 14},
+        "granite": {"hp": 220, "atk": 34, "def": 11, "agi": 8,  "xp": 40, "gold": 24},
+        "forge":   {"hp": 200, "atk": 35, "def": 10, "agi": 11, "xp": 40, "gold": 24},
+        "breeze":  {"hp": 380, "atk": 46, "def": 9,  "agi": 16, "xp": 55, "gold": 30, "double": true},
+        "ember":   {"hp": 420, "atk": 50, "def": 11, "agi": 12, "xp": 60, "gold": 30, "double": true},
+        "mist":    {"hp": 520, "atk": 56, "def": 11, "agi": 13, "xp": 70, "gold": 36, "double": true},
+        "squall":  {"hp": 480, "atk": 54, "def": 10, "agi": 17, "xp": 70, "gold": 36, "double": true}
+    },
+    "summons": [
+        {"key": "gnome",      "name": "Gnome",      "el": "earth", "need": 1, "pow": 50},
+        {"key": "titan",      "name": "Titan",      "el": "earth", "need": 2, "pow": 110},
+        {"key": "salamand",   "name": "Salamand",   "el": "fire",  "need": 1, "pow": 56},
+        {"key": "phoenix",    "name": "Phoenix",    "el": "fire",  "need": 2, "pow": 120},
+        {"key": "nixie",      "name": "Nixie",      "el": "water", "need": 1, "pow": 40, "healAll": 0.3},
+        {"key": "leviath",    "name": "Leviath",    "el": "water", "need": 2, "pow": 104},
+        {"key": "sylph",      "name": "Sylph",      "el": "wind",  "need": 1, "pow": 46, "stun": true},
+        {"key": "tempest",    "name": "Tempest",    "el": "wind",  "need": 2, "pow": 112},
+        {"key": "sol_avatar", "name": "Sol Avatar", "el": "sol",   "need": "all", "pow": 200}
+    ],
+
+    "enemies": {
+        "ooze":     {"name": "Mire Ooze",   "hp": 22,  "atk": 9,  "def": 2,  "agi": 5,  "xp": 8,  "gold": 7,  "drop": ["item", "herb", 0.2]},
+        "bat":      {"name": "Dusk Bat",    "hp": 18,  "atk": 10, "def": 2,  "agi": 13, "xp": 10, "gold": 8,  "drain": true},
+        "wolf":     {"name": "Fang Wolf",   "hp": 24,  "atk": 11, "def": 3,  "agi": 10, "xp": 14, "gold": 12, "drop": ["item", "herb", 0.18]},
+        "spider":   {"name": "Pit Spider",  "hp": 28,  "atk": 11, "def": 4,  "agi": 9,  "xp": 13, "gold": 11},
+        "beetle":   {"name": "Ore Beetle",  "hp": 80,  "atk": 26, "def": 10, "agi": 4,  "xp": 24, "gold": 17, "drop": ["gear", "vest", 0.08]},
+        "golem":    {"name": "Ruin Golem",  "hp": 108, "atk": 30, "def": 11, "agi": 3,  "xp": 33, "gold": 24, "drop": ["item", "pdrop", 0.15]},
+        "harpy":    {"name": "Crag Harpy",  "hp": 100, "atk": 30, "def": 9,  "agi": 14, "xp": 30, "gold": 20, "drop": ["item", "herb", 0.15]},
+        "boar":     {"name": "Iron Boar",   "hp": 130, "atk": 34, "def": 12, "agi": 7,  "xp": 36, "gold": 24, "drop": ["gear", "leather", 0.07]},
+        "shade":    {"name": "Pale Shade",  "hp": 120, "atk": 38, "def": 11, "agi": 11, "xp": 44, "gold": 28, "drain": true},
+        "gargoyle": {"name": "Gargoyle",    "hp": 160, "atk": 42, "def": 16, "agi": 8,  "xp": 54, "gold": 34, "drop": ["item", "potion", 0.15]},
+        "ogre":     {"name": "Maw Ogre",    "hp": 650, "atk": 42, "def": 10, "agi": 6,  "xp": 150, "gold": 200, "boss": true, "phys": 0.5, "smash": {"chance": 0.35, "mult": 0.7, "label": "sweeps a great SMASH"}},
+        "wyrm":     {"name": "Shadow Wyrm", "hp": 1200, "atk": 56, "def": 13, "agi": 9, "xp": 0,  "gold": 0,  "boss": true, "phys": 0.45, "smash": {"chance": 0.4, "mult": 0.75, "label": "breathes SHADOW FLAME"}, "heals": {"times": 2, "below": 0.55, "chance": 0.5, "amount": 220}}
+    },
+    "encounters": {
+        "field":   {"maps": ["fields"], "groups": [["ooze"], ["ooze"], ["wolf"], ["bat"], ["spider"], ["ooze", "ooze"], ["ooze", "bat"], ["wolf", "ooze"], ["spider", "bat"]], "note": "only lone monsters and the ooze pair until party level 3"},
+        "paddock": {"maps": ["fields"], "area": {"x0": 0, "y0": 0, "x1": 33, "y1": 7}, "groups": [["wolf", "ooze"], ["wolf", "wolf"], ["spider", "bat"], ["wolf", "spider"], ["spider", "spider"], ["ooze", "ooze", "bat"]]},
+        "mine":    {"maps": ["mine"],   "groups": [["beetle"], ["golem"], ["beetle", "beetle"], ["bat", "bat", "bat"], ["golem", "beetle"], ["spider", "spider"], ["golem", "bat", "bat"]]},
+        "trail":   {"maps": ["trail"],  "groups": [["harpy"], ["boar"], ["harpy", "harpy"], ["boar", "wolf"], ["harpy", "boar"], ["harpy", "bat", "bat"]]},
+        "shrine":  {"maps": ["shrine"], "groups": [["shade"], ["gargoyle"], ["shade", "shade"], ["gargoyle", "shade"], ["shade", "bat", "bat"], ["gargoyle", "gargoyle"]]}
+    },
+
+    "maps": {
+        "fields":  {"name": "Thera Fields", "kind": "field", "bgm": "town", "background": "bg_field", "start": {"x": 18, "y": 22},
+                    "exits": [{"x": 18, "y": 0, "to": "brindle", "tx": 15, "ty": 17, "dir": "up"}],
+                    "houses": [{"x": 6, "y": 17, "id": "thera_1", "use": "home"}, {"x": 12, "y": 17, "id": "thera_2", "use": "home"}, {"x": 20, "y": 17, "id": "thera_shop", "use": "shop", "shop": "thera"},
+                               {"x": 40, "y": 27, "id": "thera_far_1", "use": "home"}, {"x": 46, "y": 27, "id": "thera_far_2", "use": "home"}, {"x": 43, "y": 32, "id": "thera_far_inn", "use": "inn", "inn": "thera_far_inn"}],
+                    "signs": [{"x": 20, "y": 20, "lines": ["NORTH: FENCE GATE AND BRINDLE.", "WEST: LAKE MIRA. BEWARE TALL GRASS.", "EAST ROAD: MIRA FARMSTEAD AND INN."]},
+                              {"x": 40, "y": 35, "lines": ["MIRA FARMSTEAD.", "BEDS AT THE INN - TWELVE COINS. WEST: THERA."]}],
+                    "wells": [{"x": 15, "y": 22, "text": "Cool well water. The party is fully restored!"}],
+                    "boulder": {"x": 18, "y": 8, "flag": "boulder", "needs": "flint",
+                                "locked": ["A massive boulder seals the only gap in the fence. It will not budge.", "Perhaps an EARTH spirit could shatter it..."],
+                                "open": ["FLINT rumbles with joy - the boulder cracks and crumbles to dust!", "The way north lies open."]}},
+        "brindle": {"name": "Brindle", "kind": "town", "bgm": "town", "background": "bg_field", "start": {"x": 15, "y": 17},
+                    "exits": [{"x": 15, "y": 19, "to": "fields", "tx": 18, "ty": 2, "dir": "down"}, {"x": 24, "y": 1, "to": "mine", "tx": 2, "ty": 19, "dir": "up"}],
+                    "houses": [{"x": 5, "y": 5, "id": "brindle_1", "use": "home"}, {"x": 11, "y": 5, "id": "brindle_2", "use": "home"}, {"x": 18, "y": 5, "id": "brindle_3", "use": "home"}, {"x": 21, "y": 9, "id": "brindle_inn", "use": "inn", "inn": "brindle_inn"}],
+                    "signs": [{"x": 12, "y": 10, "lines": ["BRINDLE MINING TOWN.", "MINE MOUTH UP THE NORTH PATH. KEEP OUT... PLEASE?"]}]},
+        "mine":    {"name": "Brindle Mine", "kind": "mine", "bgm": "battle_boss", "background": "bg_mine", "start": {"x": 2, "y": 19},
+                    "exits": [{"x": 2, "y": 20, "to": "brindle", "tx": 24, "ty": 3, "dir": "down"}, {"x": 26, "y": 10, "to": "trail", "tx": 2, "ty": 10, "dir": "right"}],
+                    "boss": {"id": "ogre", "x": 25, "y": 10, "flag": "ogre", "bgm": "battle_boss",
+                             "intro": ["The tunnel shakes. A mountain of muscle rises from a nest of splintered carts.", "MAW OGRE: 'GRRAAH! MY tunnel! MY shiny key!'"],
+                             "victory": ["OBTAINED THE SPIRE KEY!"], "gives_flag": "spire_key"},
+                    "join": {"char": "bram", "flag": "bram", "lines": ["A broad miner blocks the tunnel... then grins.", "BRAM: 'You're the kids hunting spirits? These tunnels eat travelers.'", "'I know every shaft. I'm coming - my pick and my fire both.'", "BRAM joined the party!"]}},
+        "trail":   {"name": "Sunspire Trail", "kind": "trail", "bgm": "town", "background": "bg_trail", "start": {"x": 2, "y": 10},
+                    "exits": [{"x": 1, "y": 10, "to": "mine", "tx": 24, "ty": 10, "dir": "left"}, {"x": 16, "y": 0, "to": "shrine", "tx": 12, "ty": 19, "dir": "up"}],
+                    "puzzle": {"object": "loose_boulder", "x": 8, "y": 13, "allowed": {"x0": 8, "y0": 10, "x1": 8, "y1": 13},
+                               "text": "A rockfall has wedged a boulder in the gap of the lower terrace: walk into it, or cast SHOVE (Q) from a distance, to push it north out of the way."},
+                    "gate": {"x": 16, "y": 1, "flag": "gate_open", "needs_flag": "spire_key",
+                             "locked": ["A sealed gate bars the spire steps.", "A heavy keyhole glints. Something in the mine may fit it."],
+                             "open": ["The SPIRE KEY turns. Ancient bolts grind open!", "The Sunspire awaits."]},
+                    "join": {"char": "sera", "flag": "sera", "lines": ["A scout drops from a ledge, bow drawn... then lowers it.", "SERA: 'Climbers! Finally. The harpies have me pinned down for days.'", "'Heading for the spire gate? Then we share a road.'", "SERA joined the party!"]}},
+        "shrine":  {"name": "The Sunspire", "kind": "shrine", "bgm": "battle_boss", "background": "bg_tower", "start": {"x": 12, "y": 19},
+                    "exits": [{"x": 12, "y": 21, "to": "trail", "tx": 16, "ty": 2, "dir": "down"}],
+                    "wells": [{"x": 3, "y": 17, "text": "The spirit spring glows. The party is fully restored!"}],
+                    "boss": {"id": "wyrm", "x": 12, "y": 2, "flag": "boss_down", "bgm": "battle_boss",
+                             "intro": ["SHADOW WYRM: 'Ssso... children of the dawn come to reclaim the light.'", "'Four little flames. I will sssnuff you one by one.'"],
+                             "victory": ["The Wyrm lets out a final shriek...", "The Wyrm dissolves into mist!", "Warm light floods the Sunspire!"], "ending": true}}
+    },
+    "map_order": ["fields", "brindle", "mine", "trail", "shrine"],
+
+    "npcs": {
+        "elder": {"name": "Sorin", "sprite": "elder", "map": "fields", "x": 11, "y": 21, "wander": false, "voice": "elder_1",
+                  "dialog": [
+                      {"unless": "boss_down", "unless_spirits": 8, "lines": ["SORIN: 'The spirits scattered when the SHADOW WYRM darkened the spire.'", "'FLINT hides west of the houses. Another skims the lake.'", "'The rest fled north - to Brindle's mine, the high trail, the spire itself.'", "'MARA keeps the shop by the lane. The inn up in Brindle rests weary bones.'"]},
+                      {"unless": "boss_down", "lines": ["SORIN: 'All eight walk with you! Unleash them in battle and call the great summons.'", "'Now climb, Ari. Bring back the dawn.'"]},
+                      {"lines": ["SORIN: 'The dawn is yours. Thera will sing of this day.'"]}]},
+        "mara":  {"name": "Mara", "sprite": "mara", "map": "fields", "x": 16, "y": 20, "wander": true, "voice": "adult_female_1",
+                  "dialog": [{"lines": ["MARA: 'Just picking mint for the shop counter. Smell that? Lovely.'", "'Door's open if you need blades or herbs - let yourself in!'"]}]},
+        "polly": {"name": "Polly", "sprite": "polly", "map": "fields", "x": 24, "y": 21, "wander": true, "voice": "child_1",
+                  "dialog": [{"unless_spirit": "flint", "lines": ["POLLY: 'I saw a little stone critter wink at me behind the west house!'", "'Grown-ups never believe me. YOU believe me, right?'"]},
+                             {"lines": ["POLLY: 'You FOUND the stone critter! I knew it was real!'", "'When I grow up I'm going to collect ALL the spirits.'"]}]},
+        "hob":   {"name": "Hob", "sprite": "hob", "map": "fields", "x": 48, "y": 35, "wander": true, "voice": "adult_male_1",
+                  "dialog": [{"lines": ["HOB: 'Fields run clear to the east woods these days. Mind the tall grass - things bite.'", "'The inn is my sister's. Tell her Hob sent you. She will still charge you twelve.'"]}]},
+        "dov":   {"name": "Dov", "sprite": "dov", "map": "brindle", "x": 8, "y": 9, "wander": false, "voice": "adult_male_1", "shop": "brindle",
+                  "dialog": [{"lines": ["DOV: 'Iron from our own seams. Best gear north of Thera.'"]}]},
+        "miner": {"name": "Miner", "sprite": "miner", "map": "brindle", "x": 20, "y": 11, "wander": true, "voice": "adult_male_1",
+                  "dialog": [{"unless": "ogre", "lines": ["MINER: 'A MAW OGRE nests in the east gallery, squatting on the old SPIRE KEY.'", "'It flattened three carts. Mind your skulls.'"]},
+                             {"lines": ["MINER: 'You flattened the ogre?! Drinks on me. Well. One drink.'"]}]},
+        "ina":   {"name": "Ina", "sprite": "ina", "map": "brindle", "x": 24, "y": 13, "wander": true, "voice": "child_1",
+                  "dialog": [{"lines": ["INA: 'Papa runs the inn. Twelve coins and you sleep like a golem!'", "'He snores louder than the mine carts, though. You did not hear that from me.'"]}]},
+        "lyn":   {"name": "Lyn", "sprite": "lyn", "map": "brindle", "x": 13, "y": 10, "wander": true, "voice": "adult_female_1", "joins": "lyn",
+                  "dialog": [{"unless": "compass", "lines": ["LYN: 'Ari! Took you long enough to crack that boulder.'", "'I'd come along, but I lost my COMPASS scouting the paddock north of the fence.'", "'I am not walking into a dark spire without it. Find it and we talk.'"]},
+                             {"join": true, "lines": ["LYN: 'My compass! You found it in the paddock? You are more useful than you look.'", "LYN: 'Fine - someone has to patch you up. Try to keep up.'", "LYN joined the party!"]}]}
+    },
+
+    "story": {
+        "intro": ["SORIN: 'Ari... the Sunspire has gone dark. Monsters prowl every road.'", "'Eight elemental spirits fled the spire. SET, they strengthen you. Unleashed, they fuel the great SUMMONS.'", "'FLINT hides west of the houses. Start there. And take coin for MARA's shop.'", "'LYN went scouting north and is holed up in Brindle. Crack that boulder and go ask her along.'"],
+        "start": {"map": "fields", "x": 18, "y": 22, "gold": 30, "items": {"herb": 3}, "gear": {"ari": {"wpn": "wood"}}},
+        "spirit_challenge": ["The {EL} spirit {NAME} bristles and darts into a fighting stance!", "It will only follow the strong - prove yourselves!", "Steel barely touches a spirit. Strike with your ARTS!"],
+        "spirit_double": "It is quick - it will strike twice each turn!",
+        "spirit_won": ["Humbled, the {EL} spirit {NAME} joins you! ({N}/8)"],
+        "spirit_won_flint": "Its power can shatter boulders.",
+        "spirit_won_other": "Each SET spirit strengthens the whole party. Unleash spirits in battle, then SUMMON with the ones on standby!",
+        "spirit_won_all": "All eight spirits gathered! The great summons are yours.",
+        "door_bolted": ["The door is bolted. Folk hide while the Sunspire is dark."],
+        "shop_thera_greeting": ["MARA: 'Blades, mail and herbs - dawn prices, dear.'"],
+        "inn_no_coins": ["INNKEEPER: 'A warm bed is 12 coins. Come back when your purse agrees.'"],
+        "inn_stay": ["INNKEEPER: 'Twelve coins for warm beds and a hot meal. Sleep well.'", "The party sleeps deep and dreamless.", "HP and PP restored. Game saved."],
+        "defeat": ["You awaken in Thera, aching but alive.", "Sorin's poultice smells terrible. It works."],
+        "ending": ["THE SUNSPIRE SHINES ANEW", "THANKS FOR PLAYING"]
+    }
+}

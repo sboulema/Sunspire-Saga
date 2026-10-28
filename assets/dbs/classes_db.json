@@ -1,0 +1,154 @@
+{
+    "class_table": {
+        "venus": {
+            "venus": 1,
+            "mercury": 1,
+            "mars": 1,
+            "jupiter": 1
+        },
+        "mercury": {
+            "venus": 2,
+            "mercury": 2,
+            "mars": 2,
+            "jupiter": 2
+        },
+        "mars": {
+            "venus": 3,
+            "mercury": 3,
+            "mars": 3,
+            "jupiter": 3
+        },
+        "jupiter": {
+            "venus": 4,
+            "mercury": 4,
+            "mars": 4,
+            "jupiter": 4
+        }
+    },
+    "classes": [
+        {
+            "key_name": "earth_adept",
+            "name": "Earth Adept",
+            "required_level": {
+                "venus": 0,
+                "mercury": 0,
+                "mars": 0,
+                "jupiter": 0
+            },
+            "hp_boost": 1,
+            "pp_boost": 1,
+            "atk_boost": 1,
+            "def_boost": 1,
+            "agi_boost": 1,
+            "luk_boost": 1,
+            "ability_level_pairs": [
+                {
+                    "ability": "quake",
+                    "level": 1
+                },
+                {
+                    "ability": "spire",
+                    "level": 4
+                },
+                {
+                    "ability": "gaia_blade",
+                    "level": 8
+                }
+            ],
+            "class_type": 1
+        },
+        {
+            "key_name": "water_adept",
+            "name": "Water Adept",
+            "required_level": {
+                "venus": 0,
+                "mercury": 0,
+                "mars": 0,
+                "jupiter": 0
+            },
+            "hp_boost": 1,
+            "pp_boost": 1,
+            "atk_boost": 1,
+            "def_boost": 1,
+            "agi_boost": 1,
+            "luk_boost": 1,
+            "ability_level_pairs": [
+                {
+                    "ability": "cure",
+                    "level": 1
+                },
+                {
+                    "ability": "ice_horn",
+                    "level": 4
+                },
+                {
+                    "ability": "pure_ply",
+                    "level": 7
+                }
+            ],
+            "class_type": 2
+        },
+        {
+            "key_name": "fire_adept",
+            "name": "Fire Adept",
+            "required_level": {
+                "venus": 0,
+                "mercury": 0,
+                "mars": 0,
+                "jupiter": 0
+            },
+            "hp_boost": 1,
+            "pp_boost": 1,
+            "atk_boost": 1,
+            "def_boost": 1,
+            "agi_boost": 1,
+            "luk_boost": 1,
+            "ability_level_pairs": [
+                {
+                    "ability": "flare",
+                    "level": 1
+                },
+                {
+                    "ability": "fire_bomb",
+                    "level": 4
+                },
+                {
+                    "ability": "inferno",
+                    "level": 8
+                }
+            ],
+            "class_type": 3
+        },
+        {
+            "key_name": "wind_adept",
+            "name": "Wind Adept",
+            "required_level": {
+                "venus": 0,
+                "mercury": 0,
+                "mars": 0,
+                "jupiter": 0
+            },
+            "hp_boost": 1,
+            "pp_boost": 1,
+            "atk_boost": 1,
+            "def_boost": 1,
+            "agi_boost": 1,
+            "luk_boost": 1,
+            "ability_level_pairs": [
+                {
+                    "ability": "gust",
+                    "level": 1
+                },
+                {
+                    "ability": "plasma",
+                    "level": 5
+                },
+                {
+                    "ability": "bolt",
+                    "level": 8
+                }
+            ],
+            "class_type": 4
+        }
+    ]
+}
