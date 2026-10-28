@@ -64,7 +64,8 @@ export class SpritePacks {
     static async open(): Promise<SpritePacks> {
         const packs = new SpritePacks();
         try {
-            const list: PackSlot[] = await (await fetch(SpritePacks.SLOTS_URL)).json();
+            // revalidated on every load: a cached list from before a deploy would refuse its new slots
+            const list: PackSlot[] = await (await fetch(SpritePacks.SLOTS_URL, {cache: "no-cache"})).json();
             list.forEach(slot => (packs.slots[slot.slot] = slot));
         } catch {
             console.warn("Sprite packs: the slot list could not be read; packs are off.");
