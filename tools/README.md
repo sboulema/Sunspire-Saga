@@ -79,6 +79,12 @@ tile); the tilesets, the houses, the map objects (sign, well, gate, marker, spri
 summon backdrops and the shadow stay built-in. `REPORT.txt` in the output folder lists what was
 replaced.
 
+Upstream has no bat, so the bat takes its frames from `pack-upstream-extra/bat.png` when that file
+is there (another folder with `--extra`), and from the `momonga` otherwise: a strip of three
+square wing beats side by side (32x32 each), standing on the bottom row with no ground shadow (the
+engine draws its own). Idle and casting hold the spread wings, attacks swing the raised wing, the
+damage pose drops them. The folder is git-ignored like the pack, for the same reason.
+
 ## Box art, concept sheets and screenshots
 
 `assets/art/` (box front, back and spine, the four concept sheets, the hero portraits) and

@@ -1,7 +1,7 @@
 // Builds a sprite pack for the engine build out of the sprites of the upstream engine repository
 // (the `upstream` git remote, goldensun_html5), re-cut into Sunspire's own sheet layout.
 //
-//   node tools/make-upstream-pack.js [--ref upstream/master] [--out pack-upstream] [--fit] [--smooth]
+//   node tools/make-upstream-pack.js [--ref upstream/master] [--out pack-upstream] [--extra pack-upstream-extra] [--fit] [--smooth]
 //
 // then zip the folder:  node tools/make-pack-zip.js pack-upstream sunspire-upstream-pack.zip
 //
@@ -12,6 +12,7 @@
 // built-in art, so every sheet stays complete. With --fit the built-in sheets and layout are kept
 // instead and each upstream frame is shrunk into its Sunspire cell (upstream frames are 32x32 or
 // 64x64 where Sunspire's are 16x22 or smaller), nearest-neighbour or averaged with --smooth.
+// Sprites upstream lacks come from strips in the --extra folder when present (`bat.png`).
 //
 // The upstream sprites are not free to redistribute: this pack is for your own browser. Keep the
 // output folder and the zip out of the repository (both are git-ignored).
@@ -30,6 +31,7 @@ const REF = opt("--ref", "upstream/master");
 const OUT = path.resolve(opt("--out", "pack-upstream"));
 const SMOOTH = args.includes("--smooth");
 const FIT = args.includes("--fit");
+const EXTRA = path.resolve(opt("--extra", "pack-upstream-extra"));
 
 // ---------------------------------------------------------------- git + images
 
@@ -206,6 +208,25 @@ function battle(file) {
     };
 }
 
+/**
+ * A battle sheet from a strip in the --extra folder (`<file>.png`, square frames side by side), for
+ * sprites upstream lacks; `poses` picks the strip frame per battle pose. Falls back to `orElse`
+ * when the strip is absent.
+ */
+function strip(file, poses, orElse) {
+    const src = path.join(EXTRA, file + ".png");
+    if (!fs.existsSync(src)) return orElse;
+    const img = png.decode(fs.readFileSync(src));
+    const n = Math.max(1, Math.round(img.width / img.height)),
+        w = Math.floor(img.width / n);
+    return name => {
+        const m = name.match(/^battle\/(.*)_(back|front)\/\d+$/);
+        if (!m) return null;
+        const i = Math.min(n - 1, poses[m[1]] || 0);
+        return {img: cut(img, {x: i * w, y: 0, w, h: img.height}), anchor: "bottom"};
+    };
+}
+
 /** Frame-name mapping between two atlases, with aliases from Sunspire names to upstream ones. */
 function atlasMap(file, aliases = {}, anchor = "center") {
     return (name, count) => {
@@ -272,6 +293,8 @@ for (const [id, src] of Object.entries(HEROES)) {
 }
 for (const [id, src] of Object.entries(NPCS)) RULES[`${id}_field`] = fieldChar(NPC + src);
 for (const [id, src] of Object.entries(ENEMIES)) RULES[`${id}_battle`] = battle(`${BT}${src}_battle`);
+// enemies upstream has no sprite for, from strips in the --extra folder (the bat: three wing beats)
+RULES.bat_battle = strip("bat", {idle: 1, attack_init: 0, attack: 2, cast_init: 1, cast: 2, damage: 0, downed: 0}, RULES.bat_battle);
 for (const [id, el] of Object.entries(ELEMENT)) {
     RULES[id] = atlasMap(`spritesheets/djinn/${el}_djinn`);
     RULES[`djinn_battle_${id}_battle`] = battle(`${BT}${DJINN_BATTLE[el]}_djinn_battle`);
