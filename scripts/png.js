@@ -6,16 +6,19 @@ function crc32(buf){ let c = -1; for (let i = 0; i < buf.length; i++) c = CRC[(c
 
 function decode(buf){
   if (buf.readUInt32BE(0) !== 0x89504e47) throw new Error('not a png');
-  let pos = 8, w, h, bitDepth, colorType, idat = [];
+  let pos = 8, w, h, bitDepth, colorType, idat = [], plte = null, trns = null;
   while (pos < buf.length){
     const len = buf.readUInt32BE(pos), type = buf.toString('ascii', pos + 4, pos + 8), data = buf.subarray(pos + 8, pos + 8 + len);
     if (type === 'IHDR'){ w = data.readUInt32BE(0); h = data.readUInt32BE(4); bitDepth = data[8]; colorType = data[9]; if (data[12]) throw new Error('interlaced png'); }
+    else if (type === 'PLTE') plte = data;
+    else if (type === 'tRNS') trns = data;
     else if (type === 'IDAT') idat.push(data);
     else if (type === 'IEND') break;
     pos += 12 + len;
   }
   if (bitDepth !== 8) throw new Error('bit depth ' + bitDepth);
-  const ch = { 0: 1, 2: 3, 4: 2, 6: 4 }[colorType];
+  const ch = { 0: 1, 2: 3, 3: 1, 4: 2, 6: 4 }[colorType];
+  if (colorType === 3 && !plte) throw new Error('palette png without PLTE');
   const raw = zlib.inflateSync(Buffer.concat(idat)), stride = w * ch, out = Buffer.alloc(w * h * ch);
   let prev = Buffer.alloc(stride);
   for (let y = 0; y < h; y++){
@@ -33,6 +36,7 @@ function decode(buf){
   const rgba = Buffer.alloc(w * h * 4);
   for (let i = 0, j = 0; i < w * h; i++, j += 4){
     if (ch === 4){ out.copy(rgba, j, i * 4, i * 4 + 4); }
+    else if (colorType === 3){ const p = out[i] * 3; rgba[j] = plte[p]; rgba[j+1] = plte[p+1]; rgba[j+2] = plte[p+2]; rgba[j+3] = trns && out[i] < trns.length ? trns[out[i]] : 255; }
     else if (ch === 3){ rgba[j] = out[i*3]; rgba[j+1] = out[i*3+1]; rgba[j+2] = out[i*3+2]; rgba[j+3] = 255; }
     else if (ch === 2){ rgba[j] = rgba[j+1] = rgba[j+2] = out[i*2]; rgba[j+3] = out[i*2+1]; }
     else { rgba[j] = rgba[j+1] = rgba[j+2] = out[i]; rgba[j+3] = 255; }

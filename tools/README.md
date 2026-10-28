@@ -49,6 +49,30 @@ node tools/make-pack-zip.js my-pack/ my-pack.zip
 
 Zips at the root are git-ignored; share them as release assets or from a separate repository.
 
+## make-upstream-pack.js
+
+Builds a sprite pack out of the upstream engine repository's own sprites (the `upstream` git
+remote), re-cut into Sunspire's sheet layout, for your own browser only: those sprites are not
+free to redistribute, so the output folder and the zip are git-ignored and must stay out of the
+repository and out of any pack you share.
+
+```bash
+node tools/make-upstream-pack.js
+```
+
+```bash
+node tools/make-pack-zip.js pack-upstream sunspire-upstream-pack.zip
+```
+
+The sprites are read straight out of git. Every sheet starts as a copy of the built-in one and
+each frame with an upstream counterpart is replaced by that frame shrunk to the Sunspire cell
+(upstream frames are 32x32 or 64x64 against Sunspire's 16x22 and smaller), nearest-neighbour by
+default or averaged with `--smooth`; frames without a counterpart keep the built-in art. The
+mapping table at the top of the script says which upstream sheet stands in for which Sunspire
+character, enemy, spirit and icon; upstream has fewer of each, so several share a source. The
+tilesets, the map objects (sign, well, gate, marker, spring, crate), the summon backdrops and
+the shadow stay built-in. `REPORT.txt` in the output folder lists what was replaced.
+
 ## Box art, concept sheets and screenshots
 
 `assets/art/` (box front, back and spine, the four concept sheets, the hero portraits) and

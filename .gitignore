@@ -26,3 +26,4 @@ site/
 
 # Pack zips built by tools/make-pack-zip.js
 /*.zip
+/pack-*/
