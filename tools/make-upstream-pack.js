@@ -12,8 +12,8 @@
 // built-in art, so every sheet stays complete. With --fit the built-in sheets and layout are kept
 // instead and each upstream frame is shrunk into its Sunspire cell (upstream frames are 32x32 or
 // 64x64 where Sunspire's are 16x22 or smaller), nearest-neighbour or averaged with --smooth.
-// Sprites upstream lacks are cut out of an enemies sheet in the --extra folder when present
-// (`enemies.png`, for the bat).
+// Sprites upstream lacks are cut out of the ripped enemies sheets in the --extra folder when
+// present (the bat and the ooze).
 //
 // The upstream sprites are not free to redistribute: this pack is for your own browser. Keep the
 // output folder and the zip out of the repository (both are git-ignored).
@@ -209,23 +209,38 @@ function battle(file) {
     };
 }
 
-/**
- * A battle sheet cut out of a sheet in the --extra folder (`<file>.png`) for sprites upstream lacks.
- * The sheet has no alpha channel: its most common colour is the background. `poses` gives each
- * battle pose a [front, back] pair of loose rects [x, y, w, h]; the sprite inside is trimmed and
- * stood centred with its lowest pixel on row `foot` of a `size` x `size` frame, so every pose
- * hovers at the same height. Falls back to `orElse` when the sheet is absent.
- */
-function sheetCut(file, poses, size, foot, orElse) {
-    const src = path.join(EXTRA, file + ".png");
-    if (!fs.existsSync(src)) return orElse;
-    const img = png.decode(fs.readFileSync(src));
-    const counts = new Map();
-    for (let i = 0; i < img.data.length; i += 4) {
-        const c = img.data.readUInt32BE(i);
-        counts.set(c, (counts.get(c) || 0) + 1);
+const extraCache = new Map();
+/** A sheet in the --extra folder by part of its file name, with its background colour; null when absent. */
+function extraSheet(key) {
+    if (!extraCache.has(key)) {
+        const file = fs.existsSync(EXTRA) && fs.readdirSync(EXTRA).find(f => f.includes(key) && f.endsWith(".png"));
+        let s = null;
+        if (file) {
+            const img = png.decode(fs.readFileSync(path.join(EXTRA, file)));
+            const counts = new Map();
+            for (let i = 0; i < img.data.length; i += 4) {
+                const c = img.data.readUInt32BE(i);
+                counts.set(c, (counts.get(c) || 0) + 1);
+            }
+            s = {img, bg: [...counts].reduce((a, b) => (b[1] > a[1] ? b : a))[0]};
+        }
+        extraCache.set(key, s);
     }
-    const bg = [...counts].reduce((a, b) => (b[1] > a[1] ? b : a))[0];
+    return extraCache.get(key);
+}
+
+/**
+ * A battle sheet cut out of a sheet in the --extra folder (found by `key`, part of its file name)
+ * for sprites upstream lacks. The sheet has no alpha channel: its most common colour is the
+ * background. `poses` gives each battle pose a [front, back] pair of loose rects [x, y, w, h]; the
+ * sprite inside is trimmed and stood centred with its lowest pixel on row `foot` of a `size` x
+ * `size` frame, so every pose stands (or hovers) at the same height. Falls back to `orElse` when
+ * the sheet is absent.
+ */
+function sheetCut(key, poses, size, foot, orElse) {
+    const s = extraSheet(key);
+    if (!s) return orElse;
+    const {img, bg} = s;
     const cache = new Map();
     const frame = ([x, y, w, h]) => {
         const key = [x, y, w, h].join();
@@ -318,12 +333,12 @@ for (const [id, src] of Object.entries(HEROES)) {
 }
 for (const [id, src] of Object.entries(NPCS)) RULES[`${id}_field`] = fieldChar(NPC + src);
 for (const [id, src] of Object.entries(ENEMIES)) RULES[`${id}_battle`] = battle(`${BT}${src}_battle`);
-// enemies upstream has no sprite for, cut out of the enemies sheet in the --extra folder
+// enemies upstream has no sprite for, cut out of the ripped enemies sheets in the --extra folder
 // the Bat block: front idle beats, back idle beats, then wrapped / dive / swipe, front and back
 const BAT_IDLE = [[1, 651, 28, 23], [29, 651, 34, 23], [63, 651, 30, 23], [93, 651, 30, 23], [123, 651, 31, 23], [154, 651, 29, 23]],
     BAT_ACT = [[1, 674, 20, 26], [21, 674, 23, 26], [44, 674, 20, 26], [64, 674, 23, 26], [87, 674, 25, 26], [112, 674, 24, 26]];
 RULES.bat_battle = sheetCut(
-    "enemies",
+    "Vale to Goma Cave",
     {
         idle: [BAT_IDLE[1], BAT_IDLE[4]],
         attack_init: [BAT_ACT[4], BAT_ACT[5]],
@@ -336,6 +351,25 @@ RULES.bat_battle = sheetCut(
     32,
     24,
     RULES.bat_battle
+);
+// the blue Ooze block: front and back idle sways, then front coil / rolling ball front and back,
+// then the splash when hit, front and back; it stands on the ground
+const OOZE_IDLE = [[317, 228, 21, 34], [338, 228, 22, 34], [360, 228, 22, 34], [382, 228, 22, 34], [404, 228, 22, 34], [426, 228, 22, 34]],
+    OOZE_ACT = [[316, 263, 21, 29], [337, 263, 22, 29], [359, 263, 22, 29], [316, 293, 30, 27], [346, 293, 29, 27]];
+RULES.ooze_battle = sheetCut(
+    "Kojima Forest to Mercury Lighthouse",
+    {
+        idle: [OOZE_IDLE[1], OOZE_IDLE[4]],
+        attack_init: [OOZE_ACT[0], OOZE_IDLE[5]],
+        attack: [OOZE_ACT[1], OOZE_ACT[2]],
+        cast_init: [OOZE_ACT[0], OOZE_IDLE[5]],
+        cast: [OOZE_IDLE[0], OOZE_IDLE[3]],
+        damage: [OOZE_ACT[3], OOZE_ACT[4]],
+        downed: [OOZE_ACT[3], OOZE_ACT[4]],
+    },
+    32,
+    31,
+    RULES.ooze_battle
 );
 for (const [id, el] of Object.entries(ELEMENT)) {
     RULES[id] = atlasMap(`spritesheets/djinn/${el}_djinn`);

@@ -79,14 +79,22 @@ tile); the tilesets, the houses, the map objects (sign, well, gate, marker, spri
 summon backdrops and the shadow stay built-in. `REPORT.txt` in the output folder lists what was
 replaced.
 
-Upstream has no bat, so the bat is cut out of `pack-upstream-extra/enemies.png` when that file is
-there (another folder with `--extra`), and takes the `momonga` otherwise. That is the 297x1113
-ripped enemies sheet with no alpha channel whose ninth block is the Bat (Vermin, Wild Mushroom,
-Slime, Zombie, Skeleton above it), saved under that name; the rects in the script are its
-pixel positions, and its most common colour is keyed out as the background. The bat idles with
-spread wings, winds up with a cocked wing and dives to attack, raises a wing and swipes to cast,
-and wraps its wings when hit, front and back, every pose in a 32x32 frame at the same hover
-height. The folder is git-ignored like the pack, for the same reason.
+Upstream has no bat or ooze, so those two are cut out of ripped enemy sheets in
+`pack-upstream-extra/` (another folder with `--extra`) when the sheets are there, and take the
+`momonga` and `mini_goblin` otherwise. Save the "Enemies & Bosses (No Alpha Channel)" sheets
+there under their downloaded names; the tool finds each by part of its name:
+
+| Sunspire enemy | Sheet name contains | Block |
+| --- | --- | --- |
+| bat (Dusk Bat) | `Vale to Goma Cave` (297x1113) | Bat |
+| ooze (Mire Ooze) | `Kojima Forest to Mercury Lighthouse` (649x872) | Ooze, the blue one |
+
+The rects in the script are pixel positions on those sheets, and each sheet's most common colour
+is keyed out as the background. Every pose sits in a 32x32 frame at one height, front and back:
+the bat hovers, idling with spread wings, winding up with a cocked wing and diving to attack,
+raising a wing and swiping to cast, wrapping its wings when hit; the ooze stands, idling upright,
+coiling and rolling into a ball to attack, splashing when hit. The folder is git-ignored like the
+pack, for the same reason.
 
 ## Box art, concept sheets and screenshots
 
