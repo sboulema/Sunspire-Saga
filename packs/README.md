@@ -20,7 +20,8 @@ loaded, the list marks every slot the pack covers. The list is generated from th
   see the layout.
 - Partial packs are fine; everything you leave out keeps the built-in art. Files that match no slot
   or have the wrong size are reported and skipped.
-- A loaded pack takes effect on the next reload of the play page.
+- A loaded pack takes effect at once: the play page reloads itself and confirms how many sheets
+  the pack replaced. *Built-in art* clears the pack the same way.
 
 ## Art you may use
 

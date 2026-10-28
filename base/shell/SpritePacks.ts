@@ -26,6 +26,13 @@ export type PackReport = {
     cleared?: boolean;
 };
 
+/** What the reload after an import or a clear should confirm. */
+type PackNotice = {
+    loaded: number;
+    cleared?: boolean;
+};
+
+const NOTICE_KEY = "sunspire_pack_notice";
 const DB_NAME = "sunspire_engine_packs";
 const STORE = "sheets";
 const MIME: {[ext: string]: string} = {png: "image/png", gif: "image/gif", webp: "image/webp"};
@@ -170,7 +177,11 @@ export class SpritePacks {
         return {loaded: [], issues: [], cleared: true};
     }
 
-    /** Wires the pack file input, status line and clear button of the page, when present. */
+    /**
+     * Wires the pack file input, status line and clear button of the page, when present. A pack
+     * only takes effect when the page loads, so a successful import (or a clear) reloads the page
+     * and the confirmation is shown after the reload.
+     */
     bind_page() {
         const input = document.getElementById("packIn") as HTMLInputElement;
         const status = document.getElementById("packStatus");
@@ -178,19 +189,28 @@ export class SpritePacks {
         if (!input || !status) {
             return;
         }
-        const show = (report: PackReport) => {
-            const lines: string[] = [];
-            if (report.cleared) {
-                lines.push(`<span class="ok">Pack cleared; the built-in art is back after a reload.</span>`);
+        const sheets = (n: number) => `${n} sheet${n === 1 ? "" : "s"}`;
+        const reload = (notice: PackNotice) => {
+            try {
+                sessionStorage.setItem(NOTICE_KEY, JSON.stringify(notice));
+            } catch {
+                // the confirmation is just lost
             }
+            location.reload();
+        };
+        const show = (report: PackReport) => {
+            if (!report.issues.length && (report.cleared || report.loaded.length)) {
+                reload({loaded: report.loaded.length, cleared: report.cleared});
+                return;
+            }
+            const lines: string[] = report.issues.map(
+                issue => `<span class="warn">${SpritePacks.escape(issue)}</span>`
+            );
             if (report.loaded.length) {
                 lines.push(
-                    `<span class="ok">Loaded ${report.loaded.length} sheet${report.loaded.length > 1 ? "s" : ""}:</span> ${report.loaded
-                        .map(SpritePacks.escape)
-                        .join(", ")}. Reload the page to see them.`
+                    `<span class="ok">${sheets(report.loaded.length)} loaded.</span> Reload the page to see them.`
                 );
             }
-            report.issues.forEach(issue => lines.push(`<span class="warn">${SpritePacks.escape(issue)}</span>`));
             status.innerHTML = lines.join("<br>");
         };
         input.addEventListener("change", async () => {
@@ -199,8 +219,25 @@ export class SpritePacks {
             input.value = "";
         });
         clear?.addEventListener("click", async () => show(await this.clear()));
-        if (this.covered.length) {
-            status.innerHTML = `<span class="ok">Pack active: ${this.covered.length} sheet${this.covered.length > 1 ? "s" : ""} replaced.</span>`;
+
+        const notice = SpritePacks.take_notice();
+        if (notice?.cleared) {
+            status.innerHTML = `<span class="ok">Pack cleared: the built-in art is back.</span>`;
+        } else if (notice?.loaded) {
+            status.innerHTML = `<span class="ok">Sprite pack loaded: ${sheets(notice.loaded)} replaced.</span>`;
+        } else if (this.covered.length) {
+            status.innerHTML = `<span class="ok">Pack active: ${sheets(this.covered.length)} replaced.</span>`;
+        }
+    }
+
+    /** The confirmation left by the import or clear that reloaded the page, if any. */
+    private static take_notice(): PackNotice | null {
+        try {
+            const raw = sessionStorage.getItem(NOTICE_KEY);
+            sessionStorage.removeItem(NOTICE_KEY);
+            return raw ? JSON.parse(raw) : null;
+        } catch {
+            return null;
         }
     }
 
