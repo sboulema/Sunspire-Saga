@@ -274,8 +274,8 @@
     {
         "slot": "keyboard_buttons",
         "file": "assets/images/keyboard/keyboard_buttons.png",
-        "width": 124,
-        "height": 12,
+        "width": 132,
+        "height": 8,
         "frames": [
             "a_button",
             "b_button",

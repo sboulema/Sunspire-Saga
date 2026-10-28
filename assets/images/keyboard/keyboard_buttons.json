@@ -2,162 +2,162 @@
     "frames": {
         "a_button": {
             "frame": {
-                "x": 0,
+                "x": 76,
                 "y": 0,
-                "w": 12,
-                "h": 12
+                "w": 7,
+                "h": 7
             },
             "rotated": false,
             "trimmed": false,
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 12,
-                "h": 12
+                "w": 7,
+                "h": 7
             },
             "sourceSize": {
-                "w": 12,
-                "h": 12
+                "w": 7,
+                "h": 7
             }
         },
         "b_button": {
             "frame": {
-                "x": 13,
+                "x": 84,
                 "y": 0,
-                "w": 12,
-                "h": 12
+                "w": 7,
+                "h": 7
             },
             "rotated": false,
             "trimmed": false,
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 12,
-                "h": 12
+                "w": 7,
+                "h": 7
             },
             "sourceSize": {
-                "w": 12,
-                "h": 12
+                "w": 7,
+                "h": 7
             }
         },
         "l_button": {
             "frame": {
-                "x": 26,
+                "x": 92,
                 "y": 0,
-                "w": 12,
-                "h": 12
+                "w": 13,
+                "h": 7
             },
             "rotated": false,
             "trimmed": false,
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 12,
-                "h": 12
+                "w": 13,
+                "h": 7
             },
             "sourceSize": {
-                "w": 12,
-                "h": 12
+                "w": 13,
+                "h": 7
             }
         },
         "r_button": {
             "frame": {
-                "x": 39,
+                "x": 106,
                 "y": 0,
-                "w": 12,
-                "h": 12
+                "w": 13,
+                "h": 7
             },
             "rotated": false,
             "trimmed": false,
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 12,
-                "h": 12
+                "w": 13,
+                "h": 7
             },
             "sourceSize": {
-                "w": 12,
-                "h": 12
+                "w": 13,
+                "h": 7
             }
         },
         "select_button": {
             "frame": {
-                "x": 52,
+                "x": 120,
                 "y": 0,
-                "w": 32,
-                "h": 12
+                "w": 11,
+                "h": 7
             },
             "rotated": false,
             "trimmed": false,
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 32,
-                "h": 12
+                "w": 11,
+                "h": 7
             },
             "sourceSize": {
-                "w": 32,
-                "h": 12
+                "w": 11,
+                "h": 7
             }
         },
         "shift": {
             "frame": {
-                "x": 85,
+                "x": 0,
                 "y": 0,
-                "w": 12,
-                "h": 12
+                "w": 21,
+                "h": 8
             },
             "rotated": false,
             "trimmed": false,
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 12,
-                "h": 12
+                "w": 21,
+                "h": 8
             },
             "sourceSize": {
-                "w": 12,
-                "h": 12
+                "w": 21,
+                "h": 8
             }
         },
         "spacebar": {
             "frame": {
-                "x": 98,
+                "x": 22,
                 "y": 0,
-                "w": 12,
-                "h": 12
+                "w": 36,
+                "h": 8
             },
             "rotated": false,
             "trimmed": false,
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 12,
-                "h": 12
+                "w": 36,
+                "h": 8
             },
             "sourceSize": {
-                "w": 12,
-                "h": 12
+                "w": 36,
+                "h": 8
             }
         },
         "tab": {
             "frame": {
-                "x": 111,
+                "x": 59,
                 "y": 0,
-                "w": 12,
-                "h": 12
+                "w": 16,
+                "h": 8
             },
             "rotated": false,
             "trimmed": false,
             "spriteSourceSize": {
                 "x": 0,
                 "y": 0,
-                "w": 12,
-                "h": 12
+                "w": 16,
+                "h": 8
             },
             "sourceSize": {
-                "w": 12,
-                "h": 12
+                "w": 16,
+                "h": 8
             }
         }
     },
@@ -167,8 +167,8 @@
         "image": "keyboard_buttons.png",
         "format": "RGBA8888",
         "size": {
-            "w": 124,
-            "h": 12
+            "w": 132,
+            "h": 8
         },
         "scale": "1"
     }

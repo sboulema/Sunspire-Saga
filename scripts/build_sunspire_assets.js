@@ -282,7 +282,31 @@ function buttonSheets() {
     const names = ["artifacts", "attack", "battle", "bronze_password", "buy", "coins", "continue", "copy_file", "cure_poison", "defend", "djinni", "erase_file", "fight", "flee", "gold_password", "item", "link_cable", "lucky_medals", "new_quest", "no", "options", "options2", "password", "psynergy", "remove_curse", "repair", "repel_evil", "revive", "run", "save_game", "save_game2", "sell", "send", "silver_password", "sleep", "sleep2", "sleep_mode_off", "sleep_mode_off2", "sleep_mode_on", "sleep_mode_on2", "speech_off", "speech_off2", "speech_on", "speech_on2", "status", "summon", "switch", "text_speed_fast", "text_speed_fast2", "text_speed_medium", "text_speed_medium2", "text_speed_slow", "text_speed_slow2", "transfer_file", "yes"];
     const labels = { new_quest: "NEW GAME", continue: "CONTINUE" };
     writeAtlas(path.join(IMG, "buttons"), "buttons", names.map(n => F(n, icon[n] ? spr(icon[n]) : placeholder(labels[n] ? 56 : 18, 18, labels[n] || n.replace(/_/g, "").slice(0, 2)))));
-    writeAtlas(path.join(IMG, "keyboard"), "keyboard_buttons", ["a_button", "b_button", "l_button", "r_button", "select_button", "shift", "spacebar", "tab"].map(n => F(n, placeholder(n.length > 8 ? 32 : 12, 12, n.replace("_button", "").slice(0, 5)))));
+    // the menus place these at the upstream sizes (A/B 7x7, L/R 13x7, Select 11x7, keys 8 high) and
+    // put text right after them, so bigger icons cover the text
+    const keys = { a_button: [7, 7, "A"], b_button: [7, 7, "B"], l_button: [13, 7, "L"], r_button: [13, 7, "R"], select_button: [11, 7, "SE"], shift: [21, 8, "SHIFT"], spacebar: [36, 8, "SPACE"], tab: [16, 8, "TAB"] };
+    writeAtlas(path.join(IMG, "keyboard"), "keyboard_buttons", Object.entries(keys).map(([n, [w, h, label]]) => F(n, keyButton(w, h, label))));
+}
+
+// a light rounded button with a 3x5 label, like the GBA's button prompts; round ones (A, B) lose
+// three pixels per corner, the others one
+const TINY = {
+    A: "010101111101101", B: "110101110101110", C: "011100100100011", E: "111100110100111", F: "111100110100100",
+    H: "101101111101101", I: "111010010010111", L: "100100100100111", P: "110101110100100", R: "110101110101101",
+    S: "011100010001110", T: "111010010010010",
+};
+function keyButton(w, h, label) {
+    const img = png.create(w, h), clear = [0, 0, 0, 0];
+    png.fill(img, 0, 0, w, h, [236, 232, 220]);
+    const corners = w === h ? [[0, 0], [1, 0], [0, 1]] : [[0, 0]];
+    for (const [cx, cy] of corners) for (const [x, y] of [[cx, cy], [w - 1 - cx, cy], [cx, h - 1 - cy], [w - 1 - cx, h - 1 - cy]]) png.fill(img, x, y, 1, 1, clear);
+    let x = Math.floor((w - (label.length * 4 - 1)) / 2);
+    const y = Math.floor((h - 5) / 2);
+    for (const ch of label) {
+        for (let i = 0; i < 15; i++) if (TINY[ch][i] === "1") png.fill(img, x + (i % 3), y + Math.floor(i / 3), 1, 1, COL.ink);
+        x += 4;
+    }
+    return img;
 }
 
 function battleAndPortraits() {
@@ -382,9 +406,12 @@ function font() {
     const add = (id, k) => chars.push(k in rect ? `    <char id="${id}" x="${rect[k].x}" y="${rect[k].y}" width="5" height="5" xoffset="0" yoffset="1" xadvance="6" page="0" chnl="15"/>` : `    <char id="${id}" x="0" y="0" width="0" height="0" xoffset="0" yoffset="0" xadvance="${id === 32 ? 4 : 6}" page="0" chnl="15"/>`);
     for (let id = 32; id < 127; id++) add(id, String.fromCharCode(id).toUpperCase());
     add(8217, "'"); add(8220, "'"); add(8221, "'");
-    const fnt = `<?xml version="1.0"?>\n<font>\n  <info face="sunspire" size="8" bold="0" italic="0" charset="" unicode="1" stretchH="100" smooth="0" aa="1" padding="0,0,0,0" spacing="1,1" outline="0"/>\n  <common lineHeight="8" base="6" scaleW="${img.width}" scaleH="${img.height}" pages="1" packed="0" alphaChnl="0" redChnl="4" greenChnl="4" blueChnl="4"/>\n  <pages>\n    <page id="0" file="sunspire.png"/>\n  </pages>\n  <chars count="${chars.length}">\n${chars.join("\n")}\n  </chars>\n</font>\n`;
+    const fnt = size => `<?xml version="1.0"?>\n<font>\n  <info face="sunspire" size="${size}" bold="0" italic="0" charset="" unicode="1" stretchH="100" smooth="0" aa="1" padding="0,0,0,0" spacing="1,1" outline="0"/>\n  <common lineHeight="8" base="6" scaleW="${img.width}" scaleH="${img.height}" pages="1" packed="0" alphaChnl="0" redChnl="4" greenChnl="4" blueChnl="4"/>\n  <pages>\n    <page id="0" file="sunspire.png"/>\n  </pages>\n  <chars count="${chars.length}">\n${chars.join("\n")}\n  </chars>\n</font>\n`;
     writePng(path.join(ROOT, "assets/font/sunspire.png"), img);
-    fs.writeFileSync(path.join(ROOT, "assets/font/sunspire.fnt"), fnt);
+    fs.writeFileSync(path.join(ROOT, "assets/font/sunspire.fnt"), fnt(8));
+    // the item quantities and shop prices are bitmap texts made without a size, which Phaser draws
+    // at 32: declaring the same glyphs as size 32 keeps them 1:1 (upstream's item and shop fonts did the same)
+    fs.writeFileSync(path.join(ROOT, "assets/font/sunspire-small.fnt"), fnt(32));
 }
 
 // ---------------- audio ----------------
