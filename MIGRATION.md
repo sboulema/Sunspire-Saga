@@ -362,6 +362,61 @@ docs and tools.
   site in its cache. Not verified: an actual install and offline launch on iOS and Android
   (needs HTTPS and a phone).
 
-### Phase 8
+### Phase 8 - the Phaser decision (2026-10-28)
 
-Unchanged from the plan: the Phaser upgrade decision.
+**Decision: stay on Phaser CE 2.19.0 (the patched copy in `static/phaser.js`). Do not port
+to Phaser 3 or 4.** Revisit only if a concrete need appears that Phaser 2 cannot meet (so far
+none has: the engine's own features cover everything in the plan), and then as a new engine
+rather than a port.
+
+The surface area, measured over `base/` (235 TypeScript files, 65,480 lines):
+
+| Subsystem | What the engine uses | Phaser 3 / 4 |
+|---|---|---|
+| Display and rendering | `Phaser.Sprite` 207 uses, `Group` 107, `Graphics` 49, `BitmapText` 29, `TileSprite`, `BitmapData`, `game.add.*` 390 calls, `anchor` 97, `blendMode` 36, `tint` 42, `mask` 40; 30 direct `PIXI.*` uses (display-object internals) | PIXI is gone; Game Objects, origins, masks and blend modes are all different APIs |
+| Filters | 123 `Phaser.Filter` uses, 13 filter classes in `assets/filters/*.js` (GLSL), applied per sprite and per layer | Phaser 3 FX pipelines, Phaser 4 a new unified filter system; every shader is rewritten |
+| Physics | `game.physics.p2` throughout: 182 `.body.*` uses in 25 files, 42 direct `p2.*` calls, collision groups per map layer, polygon bodies from Tiled | p2 is not in Phaser 3 or 4 (Arcade / Matter); collision layers, bevels and polygon handling are rebuilt |
+| Time, tweens, signals | `game.time.events` 56, `game.time.create` 45, `Phaser.Timer` 58, `Phaser.Easing` 186, `onComplete` 150, `Phaser.Signal` 14 | Clock, Tween Manager and EventEmitter have different shapes |
+| Camera, input, sound, loader | `game.camera` 132, `game.load` 105, `game.input` 15, `game.sound` 14, audio sprites with the engine's patched offsets | all different APIs (Scenes, Loader plugin, Sound Manager) |
+| Tilemaps | `Phaser.Tilemap` / `TilemapLayer` with the engine's patches: animated Tiled tiles, object layers as `{objectsData, properties}`, the Tiled 1.1 object-form properties | Phaser 3 tilemaps read modern Tiled; the engine's whole map format changes |
+| The Phaser patches | ~30 upstream changes inside `static/phaser.js` (see Phase 3): the mode7 sprite projection in `WebGLSpriteBatch.render`, sub-pixel camera and display-object rounding, Tiled tile animation, tween and animation semantics, audio sprite offsets, p2 polygon bodies, `window.GoldenSun` hooks in Cache and TilemapParser | none of this exists; each is new code on a new renderer |
+
+In short, there is no subsystem of the engine that is not built directly on Phaser 2, PIXI 2
+and p2, and the features we moved here for (mode7 overworld, height layers, battle animations,
+the filter effects) are the ones that sit deepest in those APIs. A port to Phaser 3 or 4 is a
+rewrite of the engine: its author would be choosing an engine, not upgrading one. Phaser 4
+(4.0.0 released 10 April 2026, 4.1 and 4.2 since) is a new renderer and filter model even
+relative to Phaser 3, so the gap only grew.
+
+What staying costs, and what we do about it:
+
+- Phaser CE is community-maintained with slow releases (2.20.2 in 2024, 2.21.0 on npm now);
+  there are no security surfaces in it that matter for a static game, and the browser fixes we
+  needed (Phase 3) were made in our copy. The copy is pinned by being in the repo.
+- The patches live inside a 3.5 MB file. The recorded route to a cleaner setup is
+  `phaser-ce` from npm plus `patch-package` with a diff of our changes (Phase 3 notes); it is
+  housekeeping, not a prerequisite for anything, and it is not done.
+- The Phase 3 review's performance items (GPU readbacks in battle trails and the particle
+  plugin, CPU tilemap redraws) are the real Firefox / Safari risk and are independent of the
+  Phaser version; they stay on the list.
+- The adapter-layer idea from the plan is dropped: an adapter over this many APIs would be as
+  large as the engine.
+
+### Definition of done, checked against the plan
+
+- Runs in current Chrome, Firefox and Safari: **Chrome yes; Firefox and Safari fixed by code
+  review only, never run** (needs a push and a session on each).
+- No Nintendo / Camelot assets, names or data: **yes** (`ASSETS.md`; the `GoldenSun` class and
+  the `djinn` / `psynergy` identifiers in code and data keys are the engine's vocabulary, not
+  content).
+- Sprite packs and the handheld shell work as before: **shell yes; packs are sheet-level, so
+  the legacy per-sprite packs need the frame-stitching follow-up.**
+- Tiled maps with height differences, puzzles, overworld, battle animations, menus, Psynergy
+  and spirit usage all work in the Sunspire content: **menus, spirits (duels, set / unleash,
+  summons), the Shove field art and the push puzzle yes; Tiled maps yes but Sunspire's are
+  flat, so height layers are unused; no overworld (the five maps connect directly); battle
+  animations are the engine's image-free recipes only.**
+- Installs as a PWA, opens in immersive play and resumes: **yes in Chromium; iOS / Android
+  untested.**
+- CI builds and publishes the site: **builds and uploads the artifact; publishing to Pages is a
+  manual run until this branch replaces `main`.**
