@@ -1,322 +1,447 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <base target="_blank" href="/" />
-        <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-        <title>Sunspire Saga</title>
-        <meta name="description" content="Sunspire Saga: an original GBA-style pixel-art JRPG in the browser. Open source, MIT licensed." />
-        <meta name="keywords" content="sunspire saga, jrpg, pixel art, browser game, phaser" />
-        <meta name="robots" content="" />
-        <meta name="theme-color" content="#100d1d" />
-        <link rel="manifest" type="application/manifest+json" href="/static/manifest.webmanifest" />
-        <link rel="author" type="text/plain" href="/static/humans.txt" />
-        <link rel="shortcut icon" type="image/x-icon" href="/static/favicon.ico" />
-        <link rel="apple-touch-icon" href="/static/icons/sunspire-mark-512.png" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap">
-        <!-- the saved theme and shell colour, applied before first paint -->
-        <script>try{var t=localStorage.getItem('sunspire_theme'),h=localStorage.getItem('sunspire_handheld'),r=document.documentElement;if(t)r.dataset.theme=t;r.dataset.themeEff=t||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');if(h&&/^#[0-9a-f]{6}$/i.test(h))r.style.setProperty('--hh',h)}catch(e){}</script>
-        <link rel="stylesheet" href="/static/styles.css">
-        <link rel="stylesheet" href="/static/site.css">
-        <script type="text/javascript" src="/static/phaser.js"></script>
-        <script type="module" src="/dist/bundle.js"></script>
-        <script src="/static/codemirror.js"></script>
-        <link rel="stylesheet" href="/static/codemirror.css">
-        <script src="/static/mode-javascript.js"></script>
-        <script src="/static/home.js"></script>
-    </head>
-    <body>
-        <script>
-        // opened as the installed app, or with ?app=1: straight into the immersive shell
-        (function(){
-          var app = /[?&]app=1(&|$)/.test(location.search) || navigator.standalone === true
-            || matchMedia('(display-mode: standalone), (display-mode: fullscreen)').matches;
-          if (app) document.body.classList.add('immersive', 'app');
-        })();
-        </script>
-        <div id="webgl-warning" class="warning-banner">This browser has no WebGL, which the game needs. Turn it on (or leave Lockdown Mode) and reload.</div>
-        <div id="fps-warning" class="warning-banner">Low frame rate: the game may not run as expected.</div>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Sunspire Saga</title>
+  <meta name="description" content="An original GBA-style pixel-art RPG for the browser: gather eight elemental spirits, master arts and summons, and bring the dawn back to the Sunspire.">
+  <meta name="theme-color" content="#100d1d">
+  <link rel="icon" href="static/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="static/icons/sunspire-mark-512.png">
+  <link rel="manifest" href="static/manifest.webmanifest">
+  <!-- Social cards need an absolute address: replace YOUR-GITHUB-USER with your Pages host. -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Sunspire Saga">
+  <meta property="og:description" content="An original GBA-style pixel-art RPG for the browser: gather eight elemental spirits, master arts and summons, and bring the dawn back to the Sunspire.">
+  <meta property="og:image" content="https://sboulema.github.io/Sunspire-Saga/static/icons/sunspire-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Sunspire Saga">
+  <meta name="twitter:image" content="https://sboulema.github.io/Sunspire-Saga/static/icons/sunspire-card.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap">
+  <script>try{var t=localStorage.getItem('sunspire_theme'),h=localStorage.getItem('sunspire_handheld'),r=document.documentElement;if(t)r.dataset.theme=t;r.dataset.themeEff=t||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');if(h&&/^#[0-9a-f]{6}$/i.test(h))r.style.setProperty('--hh',h)}catch(e){}</script>
+  <link rel="stylesheet" href="static/site.css">
+  <style>
+    :root{
+      --hero-bg:linear-gradient(180deg,#bcd3f2 0%,#e9dcc4 62%,var(--bg) 100%);
+      --hero-ink:#1b1736; --hero-ink-2:#4a4470; --stars:transparent;
+    }
+    @media (prefers-color-scheme: dark){
+      :root:not([data-theme="light"]){
+        --hero-bg:linear-gradient(180deg,#070a22 0%,#17205a 48%,#2a2154 78%,var(--bg) 100%);
+        --hero-ink:#f3ead2; --hero-ink-2:#b9b0d8; --stars:rgba(255,246,220,.75);
+      }
+    }
+    :root[data-theme="dark"]{
+      --hero-bg:linear-gradient(180deg,#070a22 0%,#17205a 48%,#2a2154 78%,var(--bg) 100%);
+      --hero-ink:#f3ead2; --hero-ink-2:#b9b0d8; --stars:rgba(255,246,220,.75);
+    }
+    section{padding:88px 0 0;}
+    .eyebrow{font-family:var(--display); font-size:14px; letter-spacing:.18em; text-transform:uppercase; color:var(--accent); margin:0 0 12px; font-weight:600;}
+    .sec-head{max-width:680px; margin-bottom:36px;}
+    .sec-head h2{font-size:clamp(30px, 4vw, 42px);}
+    .sec-head p{color:var(--ink-2); margin:0; font-size:17px;}
 
-        <header class="nav"><div class="wrap">
-            <a class="brand" href="/" target="_self"><span>Sunspire Saga</span></a>
-            <button class="icon-btn theme-toggle" type="button" aria-label="Toggle colour theme">
-                <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-                <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
-            </button>
-        </div></header>
+    /* ---------- hero ---------- */
+    .hero{position:relative; padding:64px 0 40px; background:var(--hero-bg); color:var(--hero-ink); overflow:hidden;}
+    .hero::before{content:""; position:absolute; inset:0 0 40% 0; pointer-events:none; opacity:.9;
+      background-image:radial-gradient(1.5px 1.5px at 12% 18%, var(--stars) 50%, transparent 51%), radial-gradient(1.5px 1.5px at 34% 9%, var(--stars) 50%, transparent 51%),
+        radial-gradient(2px 2px at 58% 22%, var(--stars) 50%, transparent 51%), radial-gradient(1.5px 1.5px at 81% 12%, var(--stars) 50%, transparent 51%),
+        radial-gradient(1.5px 1.5px at 92% 34%, var(--stars) 50%, transparent 51%), radial-gradient(2px 2px at 6% 44%, var(--stars) 50%, transparent 51%),
+        radial-gradient(1.5px 1.5px at 47% 40%, var(--stars) 50%, transparent 51%), radial-gradient(1.5px 1.5px at 70% 46%, var(--stars) 50%, transparent 51%);}
+    .hero .wrap{position:relative; display:grid; grid-template-columns:1.05fr .95fr; gap:40px; align-items:center;}
+    .hero h1{font-size:clamp(40px, 6vw, 68px); margin:0 0 18px; letter-spacing:-.01em;}
+    .hero h1 em{font-style:normal; color:var(--accent); text-shadow:0 0 30px rgba(242,193,78,.35);}
+    .hero .lead{font-size:clamp(17px, 1.6vw, 19px); color:var(--hero-ink-2); max-width:52ch; margin:0 0 28px;}
+    .hero .eyebrow{color:var(--accent);}
+    .cta-row{display:flex; gap:12px; flex-wrap:wrap;}
+    .hero .btn:not(.btn-gold){background:color-mix(in oklab, var(--surface) 70%, transparent);}
+    .facts{display:flex; gap:8px 18px; flex-wrap:wrap; margin:22px 0 0; padding:0; list-style:none; font-size:14px; color:var(--hero-ink-2);}
+    .facts li::before{content:""; display:inline-block; width:7px; height:7px; margin-right:8px; background:var(--gold); vertical-align:2px;}
 
-        <main class="play">
-            <div class="play-bar">
-                <div data-hh-picker="Shell"></div>
-                <div class="actions">
-                    <button class="icon-btn" id="soundBtn" type="button" aria-pressed="false" aria-label="Sound" title="Sound (M)">
-                        <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5zM15.5 8.5a5 5 0 0 1 0 7M19 5a9 9 0 0 1 0 14"/></svg>
-                        <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5zM23 9l-6 6M17 9l6 6"/></svg>
-                    </button>
-                    <button class="btn btn-sm" id="immBtn" type="button" title="Immersive mode (F)" aria-label="Immersive mode">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
-                        <span>Immersive</span>
-                    </button>
-                </div>
+    /* the 3D box: front, spines, back and top of one cuboid */
+    .box3d{--w:min(360px, 74vw); --h:calc(var(--w) * 1020 / 900); --d:calc(var(--w) * 120 / 900);
+      perspective:1800px; display:grid; place-items:center; padding:20px 0 30px;}
+    .box3d button{all:unset; cursor:pointer; display:block; border-radius:6px;}
+    .box3d button:focus-visible{outline:2px solid var(--gold); outline-offset:12px;}
+    .box{position:relative; width:var(--w); height:var(--h); transform-style:preserve-3d;
+      transform:rotateX(-6deg) rotateY(var(--ry, 26deg)); transition:transform .9s cubic-bezier(.2,.7,.2,1);}
+    .box.flipped{--ry:206deg;}
+    .box .face{position:absolute; backface-visibility:hidden; -webkit-backface-visibility:hidden; background-size:100% 100%;}
+    .box .front{inset:0; background-image:url(assets/art/box-front.png); transform:translateZ(calc(var(--d) / 2)); border-radius:3px;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);}
+    .box .back{inset:0; background-image:url(assets/art/box-back.png); transform:rotateY(180deg) translateZ(calc(var(--d) / 2)); border-radius:3px;}
+    .box .side{top:0; height:var(--h); width:var(--d); left:calc(50% - var(--d) / 2); background-image:url(assets/art/box-spine.png);}
+    .box .left{transform:rotateY(-90deg) translateZ(calc(var(--w) / 2)); filter:brightness(.82);}
+    .box .right{transform:rotateY(90deg) translateZ(calc(var(--w) / 2)); filter:brightness(.82);}
+    .box .top{left:0; width:var(--w); height:var(--d); top:calc(50% - var(--d) / 2); background:linear-gradient(90deg,#1d1740,#2b2250);
+      transform:rotateX(90deg) translateZ(calc(var(--h) / 2));}
+    .box-shadow{width:calc(var(--w) * 1.1); height:26px; margin-top:-6px; background:radial-gradient(closest-side, rgba(0,0,0,.35), transparent); filter:blur(4px);}
+    .box-hint{font-size:13px; color:var(--hero-ink-2); margin-top:4px;}
+    @media (prefers-reduced-motion: reduce){ .box{transition:none;} }
+    @media (max-width:860px){
+      .hero .wrap{grid-template-columns:1fr; text-align:left;}
+      .box3d{order:-1; --w:min(280px, 66vw);}
+    }
+
+    /* ---------- story ---------- */
+    .story{display:grid; grid-template-columns:1.1fr .9fr; gap:48px; align-items:start;}
+    .story-text p{font-size:17px; color:var(--ink-2); margin:0 0 16px;}
+    .story-text p:first-child{font-size:19px; color:var(--ink);}
+    .stats{display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; margin-top:24px;}
+    .stat{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:12px 14px;}
+    .stat b{display:block; font-family:var(--display); font-size:28px; line-height:1.1; color:var(--accent);}
+    .stat span{font-size:13px; color:var(--ink-2);}
+    .party{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+    .hero-card{display:grid; grid-template-columns:64px 1fr; gap:14px; align-items:center; background:var(--surface); border:1px solid var(--line);
+      border-radius:14px; padding:14px; position:relative; overflow:hidden;}
+    .hero-card::before{content:""; position:absolute; left:-30px; top:-30px; width:130px; height:130px; border-radius:50%;
+      background:radial-gradient(closest-side, color-mix(in oklab, var(--el) 40%, transparent), transparent);}
+    .hero-card img{position:relative; width:64px; height:88px; object-fit:contain;}
+    .hero-card h3{font-size:20px; margin:0 0 2px; display:flex; align-items:baseline; gap:8px;}
+    .hero-card h3 small{font-family:var(--body); font-size:11px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--el);}
+    :root[data-theme-eff="light"] .hero-card h3 small{color:color-mix(in oklab, var(--el), black 30%);}
+    .hero-card p{margin:0; font-size:13.5px; line-height:1.5; color:var(--ink-2);}
+    @media (max-width:900px){ .story{grid-template-columns:1fr;} }
+    @media (max-width:520px){ .party{grid-template-columns:1fr;} .stats{grid-template-columns:repeat(2, 1fr);} }
+
+    /* ---------- screenshots: a handheld viewer and a strip of thumbnails ---------- */
+    .viewer{display:grid; grid-template-columns:minmax(0, 560px) 1fr; gap:36px; align-items:start;}
+    .viewer-shell{display:flex; flex-direction:column; gap:14px;}
+    .viewer .shell .controls button{cursor:pointer;}
+    .shot-cap{min-height:3.2em; margin:0; font-size:15px; color:var(--ink-2);}
+    .shot-cap b{color:var(--ink); font-weight:600;}
+    .thumbs{display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:12px;}
+    .thumb{all:unset; cursor:pointer; display:block; border-radius:10px; overflow:hidden; border:2px solid transparent; background:#000;
+      box-shadow:0 0 0 1px var(--line); transition:transform .15s ease;}
+    .thumb img{display:block; width:100%; height:auto; aspect-ratio:3/2; image-rendering:pixelated; image-rendering:crisp-edges; opacity:.8; transition:opacity .15s;}
+    .thumb:hover img, .thumb[aria-current="true"] img{opacity:1;}
+    .thumb[aria-current="true"]{border-color:var(--gold);}
+    .thumb:hover{transform:translateY(-2px);}
+    .thumb:focus-visible{outline:2px solid var(--gold); outline-offset:2px;}
+    .viewer .hh-picker{justify-content:flex-start;}
+    @media (max-width:900px){ .viewer{grid-template-columns:1fr;} .thumbs{grid-template-columns:repeat(auto-fill, minmax(110px, 1fr));} }
+
+    /* ---------- concept art and box art ---------- */
+    .gallery{display:grid; grid-template-columns:repeat(2, 1fr); gap:20px;}
+    .card{all:unset; cursor:zoom-in; display:block; background:var(--surface); border:1px solid var(--line); border-radius:16px; overflow:hidden;
+      transition:transform .18s ease, box-shadow .18s ease;}
+    .card:hover{transform:translateY(-3px); box-shadow:var(--shadow);}
+    .card:focus-visible{outline:2px solid var(--gold); outline-offset:3px;}
+    .card img{display:block; width:100%; height:auto;}
+    .card .cap{padding:14px 18px 16px;}
+    .card .cap b{display:block; font-family:var(--display); font-size:19px; font-weight:600; color:var(--ink);}
+    .card .cap span{font-size:14px; color:var(--ink-2);}
+    .boxart{display:grid; grid-template-columns:1fr auto 1fr; gap:20px; align-items:start;}
+    .boxart .card.spine{width:clamp(48px, 7vw, 86px); background:transparent; border:none;}
+    .boxart .card.spine img{border-radius:6px; border:1px solid var(--line);}
+    .boxart .card.spine .cap{padding:10px 0 0; text-align:center;}
+    .boxart .card.spine .cap span{font-size:12px;}
+    .dl-row{display:flex; gap:10px; flex-wrap:wrap; margin-top:20px;}
+    @media (max-width:760px){ .gallery{grid-template-columns:1fr;} .boxart{grid-template-columns:1fr; } .boxart .card.spine{display:none;} }
+
+    .closing{margin-top:96px; border-radius:24px; padding:48px 32px; text-align:center; background:var(--hero-bg); color:var(--hero-ink);
+      border:1px solid var(--line); position:relative; overflow:hidden;}
+    .closing h2{font-size:clamp(28px, 4vw, 40px);}
+    .closing p{color:var(--hero-ink-2); margin:0 auto 24px; max-width:52ch;}
+    .closing .cta-row{justify-content:center;}
+
+    dialog.lightbox{padding:0; border:none; background:transparent; max-width:min(1400px, 96vw); max-height:94vh; overflow:visible;}
+    dialog.lightbox::backdrop{background:rgba(6,5,14,.86);}
+    .lightbox img{display:block; max-width:min(1400px, 96vw); max-height:84vh; width:auto; height:auto; border-radius:10px; margin:0 auto; box-shadow:0 30px 80px rgba(0,0,0,.6);}
+    .lightbox .lb-bar{display:flex; justify-content:space-between; align-items:center; gap:16px; padding:12px 2px 0; color:#e9e0c8; font-size:14px;}
+    .lightbox .lb-bar .btn{background:rgba(255,255,255,.08); color:#e9e0c8; border-color:rgba(255,255,255,.2);}
+  </style>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+  <a class="brand" href="index.html"><img src="static/icons/sunspire-mark-512.png" alt=""><span>Sunspire Saga</span></a>
+  <nav class="nav-links" aria-label="Site">
+    <a href="index.html" aria-current="page">Home</a>
+    <a href="play.html">Play online</a>
+    <a href="pack-guide.html">Pack guide</a>
+    <a href="changelog.html">Changelog</a>
+    <a href="walkthrough.html">Walkthrough</a>
+  </nav>
+  <button class="icon-btn theme-toggle" type="button" aria-label="Toggle colour theme">
+    <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+  </button>
+</div></header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <p class="eyebrow">A pixel-art RPG for your browser</p>
+        <h1>Bring the dawn back to the <em>Sunspire</em>.</h1>
+        <p class="lead">An original handheld-style adventure: gather four elemental adepts, duel and recruit eight spirits,
+          and call down great summons against the Shadow Wyrm. Free, no install, and it saves as you go.</p>
+        <div class="cta-row">
+          <a class="btn btn-gold" href="play.html">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg>
+            Play online
+          </a>
+        </div>
+        <ul class="facts">
+          <li>Runs in any modern browser</li>
+          <li>Keyboard or touch</li>
+        </ul>
+      </div>
+      <div class="box3d">
+        <button type="button" id="boxBtn" aria-label="Turn the box around">
+          <div class="box" id="box">
+            <div class="face front"></div>
+            <div class="face back"></div>
+            <div class="face side left"></div>
+            <div class="face side right"></div>
+            <div class="face top"></div>
+          </div>
+        </button>
+        <div class="box-shadow"></div>
+        <div class="box-hint">Click the box to turn it around</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="story">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">The story</p>
+        <h2>The Sunspire has gone dark</h2>
+      </div>
+      <div class="story">
+        <div class="story-text">
+          <p>When the Shadow Wyrm coiled around the great tower, the eight elemental spirits that kept its light burning
+            fled across the land, and monsters began to prowl every road.</p>
+          <p>In the quiet village of Thera, Elder Sorin turns to Ari, a young earth adept. Find the spirits. Gather allies.
+            Climb the spire, and bring back the dawn.</p>
+          <p>The road runs north through Thera Fields to the mining town of Brindle, down into a mine where something enormous
+            sits on the Spire Key, and up a harpy-haunted trail to the tower itself. Spirits fight before they join you;
+            set them for strength, unleash them in battle, or spend them together on a summon.</p>
+          <div class="stats">
+            <div class="stat"><b>4</b><span>adepts in your party</span></div>
+            <div class="stat"><b>8</b><span>spirits to recruit</span></div>
+            <div class="stat"><b>9</b><span>summons to call</span></div>
+            <div class="stat"><b>12</b><span>monsters and bosses</span></div>
+          </div>
+        </div>
+        <div class="party">
+          <article class="hero-card" style="--el:#cf8c2a">
+            <img class="pixel" src="assets/art/hero-ari.png" alt="Ari's sprite">
+            <div><h3>Ari <small>Earth</small></h3><p>A young adept from Thera, sent out by the elder. Steady, stubborn, first to swing.</p></div>
+          </article>
+          <article class="hero-card" style="--el:#4fa8e8">
+            <img class="pixel" src="assets/art/hero-lyn.png" alt="Lyn's sprite">
+            <div><h3>Lyn <small>Water</small></h3><p>A sharp-tongued scout holed up in Brindle, the party's healer, and not walking anywhere without her compass.</p></div>
+          </article>
+          <article class="hero-card" style="--el:#e2543a">
+            <img class="pixel" src="assets/art/hero-bram.png" alt="Bram's sprite">
+            <div><h3>Bram <small>Fire</small></h3><p>A broad miner who knows every shaft, and throws fire about as hard as he swings a pick.</p></div>
+          </article>
+          <article class="hero-card" style="--el:#9b6ee0">
+            <img class="pixel" src="assets/art/hero-sera.png" alt="Sera's sprite">
+            <div><h3>Sera <small>Wind</small></h3><p>A scout pinned down by harpies on the high trail. Fast, precise, and done waiting.</p></div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="screenshots">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">In-game screenshots</p>
+        <h2>Straight from the screen</h2>
+        <p>Every shot below is the game's own 240&times;160 frame. Pick one, use the d-pad, or change the shell colour; your
+          choice carries over to the play page.</p>
+      </div>
+      <div class="viewer">
+        <div class="viewer-shell">
+          <div class="shell" aria-label="Screenshot viewer">
+            <div class="shoulders">
+              <button class="shoulder l" type="button" data-step="-1" aria-label="Previous screenshot">L</button>
+              <button class="shoulder r" type="button" data-step="1" aria-label="Next screenshot">R</button>
             </div>
-
-            <div class="stage" id="stage">
-                <div class="shell" id="shell">
-                    <div class="shoulders">
-                        <button class="shoulder l" data-k="l" aria-label="L">L</button>
-                        <button class="shoulder r" data-k="r" aria-label="R">R</button>
-                    </div>
-                    <div class="screen">
-                        <span class="led"></span><span class="tag">SPIRIT&nbsp;VISION</span>
-                        <div id="game" aria-label="Sunspire Saga game screen"></div>
-                    </div>
-                    <div class="controls">
-                        <div class="dpad">
-                            <button class="d up" data-k="up" aria-label="Up">&#9650;</button>
-                            <button class="d lf" data-k="left" aria-label="Left">&#9664;</button>
-                            <span class="hub"></span>
-                            <button class="d rt" data-k="right" aria-label="Right">&#9654;</button>
-                            <button class="d dn" data-k="down" aria-label="Down">&#9660;</button>
-                        </div>
-                        <div class="mid">
-                            <span class="hh-mark">SUNSPIRE</span>
-                            <div class="pills">
-                                <button class="pill" data-k="select">SELECT</button>
-                                <button class="pill" data-k="start">START</button>
-                            </div>
-                        </div>
-                        <div class="ab">
-                            <button class="round b" data-k="b">B</button>
-                            <button class="round a" data-k="a">A</button>
-                        </div>
-                    </div>
-                </div>
-                <button class="btn btn-sm imm-exit" id="immExit" type="button">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>
-                    Exit
-                </button>
-                <div class="imm-hint" id="immHint">Press F or the Exit button to leave immersive mode</div>
+            <div class="screen">
+              <span class="led"></span><span class="tag">SPIRIT&nbsp;VISION</span>
+              <img class="shot" id="shot" src="assets/screens/title.png" alt="">
             </div>
-
-            <p class="legend">
-                Move <kbd>arrows</kbd> &middot; A <kbd>Z</kbd> &middot; B <kbd>X</kbd> &middot; L / R <kbd>A</kbd> / <kbd>S</kbd> &middot;
-                Start <kbd>Enter</kbd> &middot; Select <kbd>Backspace</kbd> &middot; sound <kbd>M</kbd> &middot; immersive <kbd>F</kbd><br>
-                Engine build: the whole game, saved in this browser as you play.
-            </p>
-
-            <p class="install" id="install" hidden>
-                <button class="btn btn-sm" id="installBtn" type="button">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
-                    Install as app
-                </button>
-                <span>Opens straight into your saved game, full screen, and works offline.</span>
-            </p>
-
-            <section class="pack-load" aria-label="Sprite pack">
-                <div class="row">
-                    <label class="btn" for="packIn">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg>
-                        Load sprite pack
-                    </label>
-                    <input type="file" id="packIn" class="sr-only" accept="image/png,image/gif,image/webp,.zip,application/zip,application/x-zip-compressed" multiple>
-                    <button class="btn" id="packClear" type="button">Built-in art</button>
-                    <a class="btn" href="/pack-guide.html" target="_self">Pack guide</a>
-                    <a class="btn" href="/walkthrough.html" target="_self">Walkthrough</a>
-                </div>
-                <div id="packStatus" aria-live="polite"></div>
-            </section>
-
-            <div id="debug" hidden>
-        <div id="animation_tester">
-            <input type="text" id="animation_tester_enemy_party" placeholder="enemy party key name" /> <br>
-            <button onclick="GoldenSun.debug.start_battle_animation_tester()">Start animation tester</button> <br><br>
-            <input type="text" id="animation_tester_ability_keyname" placeholder="ability key name"/> <br>
-            <button onclick="GoldenSun.debug.fire_battle_animation()">Fire animation</button> <br>
-            <div>
-                <input type="checkbox" id="animation_tester_all_enemies" name="animation_tester_all_enemies" />
-                <label for="animation_tester_all_enemies">Hit all enemies</label>
-            </div> <br><br>
-            <textarea id="battle_anim_recipe"></textarea>
-        </div>
-        <div id="key_debug">
-            <div class="up"><img src="./assets/images/debug/keyboard_arrow.png"/></div>
-            <div class="down"><img src="./assets/images/debug/keyboard_arrow.png"/></div>
-            <div class="left"><img src="./assets/images/debug/keyboard_arrow.png"/></div>
-            <div class="right"><img src="./assets/images/debug/keyboard_arrow.png"/></div>
-            <table>
-                <tr>
-                    <th>Direction:</th>
-                    <td class="direction"></td>
-                </tr>
-                <tr>
-                    <th>Action:</th>
-                    <td class="action"></td>
-                </tr>
-                <tr>
-                    <th>x:</th>
-                    <td class="x"></td>
-                </tr>
-                <tr>
-                    <th>y:</th>
-                    <td class="y"></td>
-                </tr>
-                <tr>
-                    <th>speed_x:</th>
-                    <td class="speed_x"></td>
-                </tr>
-                <tr>
-                    <th>speed_y:</th>
-                    <td class="speed_y"></td>
-                </tr>
-                <tr>
-                    <th>Force direction:</th>
-                    <td class="force_direction"></td>
-                </tr>
-                <tr>
-                    <th>Stop by colliding:</th>
-                    <td class="stop_by_colliding"></td>
-                </tr>
-                <tr>
-                    <th>Sliding on ice:</th>
-                    <td class="sliding_on_ice"></td>
-                </tr>
-                <tr>
-                    <th>Collision layer:</th>
-                    <td class="collision_layer"></td>
-                </tr>
-            </table>
-        </div>
-        <div id="stats_debug">
-            <label for="stats_debug_select">Choose a char:</label>
-            <select id="stats_debug_select"></select>
-            <table>
-                <tr>
-                    <th>Name:</th>
-                    <td class="name"></td>
-                </tr>
-                <tr>
-                    <th>Class:</th>
-                    <td class="class"></td>
-                </tr>
-                <tr>
-                    <th>Level:</th>
-                    <td class="level"></td>
-                </tr>
-                <tr>
-                    <th>Exp:</th>
-                    <td class="exp"></td>
-                </tr>
-                <tr>
-                    <th>HP:</th>
-                    <td><span class="current_hp"></span>/<span class="max_hp"></span></td>
-                </tr>
-                <tr>
-                    <th>PP:</th>
-                    <td><span class="current_pp"></span>/<span class="max_pp"></span></td>
-                </tr>
-                <tr>
-                    <th>Attack:</th>
-                    <td class="atk"></td>
-                </tr>
-                <tr>
-                    <th>Defense:</th>
-                    <td class="def"></td>
-                </tr>
-                <tr>
-                    <th>Agility:</th>
-                    <td class="agi"></td>
-                </tr>
-                <tr>
-                    <th>Luck:</th>
-                    <td class="luk"></td>
-                </tr>
-                <tr>
-                    <th>Venus Level:</th>
-                    <td class="venus_level"></td>
-                </tr>
-                <tr>
-                    <th>Mercury Level:</th>
-                    <td class="mercury_level"></td>
-                </tr>
-                <tr>
-                    <th>Mars Level:</th>
-                    <td class="mars_level"></td>
-                </tr>
-                <tr>
-                    <th>Jupiter Level:</th>
-                    <td class="jupiter_level"></td>
-                </tr>
-                <tr>
-                    <th>Venus Power:</th>
-                    <td class="venus_power"></td>
-                </tr>
-                <tr>
-                    <th>Mercury Power:</th>
-                    <td class="mercury_power"></td>
-                </tr>
-                <tr>
-                    <th>Mars Power:</th>
-                    <td class="mars_power"></td>
-                </tr>
-                <tr>
-                    <th>Jupiter Power:</th>
-                    <td class="jupiter_power"></td>
-                </tr>
-                <tr>
-                    <th>Venus Resist:</th>
-                    <td class="venus_resist"></td>
-                </tr>
-                <tr>
-                    <th>Mercury Resist:</th>
-                    <td class="mercury_resist"></td>
-                </tr>
-                <tr>
-                    <th>Mars Resist:</th>
-                    <td class="mars_resist"></td>
-                </tr>
-                <tr>
-                    <th>Jupiter Resist:</th>
-                    <td class="jupiter_resist"></td>
-                </tr>
-                <tr>
-                    <th>Turns:</th>
-                    <td class="turns"></td>
-                </tr>
-                <tr>
-                    <th>Temp. statuses:</th>
-                    <td class="temp_statuses"></td>
-                </tr>
-                <tr>
-                    <th>Perm. statuses:</th>
-                    <td class="perm_statuses"></td>
-                </tr>
-                <tr>
-                    <th>Buff/Turn count</th>
-                    <td class="buff"></td>
-                </tr>
-                <tr>
-                    <th>Effects count</th>
-                    <td class="effect_count"></td>
-                </tr>
-            </table>
-        </div>
-        <div><pre id="object_inspector"></pre></div>
-        <div id="sliders_debug">
-            <button onclick="GoldenSun.debug.add_slider()">Add slider</button>
-            <div id="sliders"></div>
-        </div>
+            <div class="controls">
+              <div class="dpad">
+                <button class="d up" type="button" data-step="-1" aria-label="Previous screenshot">&#9650;</button>
+                <button class="d lf" type="button" data-step="-1" aria-label="Previous screenshot">&#9664;</button>
+                <span class="hub"></span>
+                <button class="d rt" type="button" data-step="1" aria-label="Next screenshot">&#9654;</button>
+                <button class="d dn" type="button" data-step="1" aria-label="Next screenshot">&#9660;</button>
+              </div>
+              <div class="mid"><span class="hh-mark">SUNSPIRE</span><a class="pill" href="play.html" style="text-decoration:none; color:var(--hh-btn-ink); border:1px solid rgba(0,0,0,.5); box-shadow:0 3px 0 rgba(0,0,0,.45);">START</a></div>
+              <div class="ab">
+                <button class="round b" type="button" data-step="-1" aria-label="Previous screenshot">B</button>
+                <button class="round a" type="button" data-step="1" aria-label="Next screenshot">A</button>
+              </div>
             </div>
-        </main>
+          </div>
+          <div data-hh-picker="Shell colour"></div>
+          <p class="shot-cap" id="shotCap" aria-live="polite"></p>
+        </div>
+        <div class="thumbs" id="thumbs"></div>
+      </div>
+    </div>
+  </section>
 
-        <footer class="foot"><div class="wrap">
-            <span>Sunspire Saga &middot; original code and art, MIT licence &middot; engine: <a href="https://github.com/jjppof/goldensun_html5">goldensun_html5</a></span>
-            <span>An independent homage; no assets from Nintendo or Camelot. <a href="#" id="debugLink" target="_self" aria-expanded="false">Debug panels</a></span>
-        </div></footer>
-        <script src="/static/site.js"></script>
-    </body>
+  <section id="concept">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Concept art</p>
+        <h2>From the sketchbook</h2>
+        <p>Character sheets, monsters, spirits and places, laid out from the game's hand-pixeled sprites. Click a sheet to see it full size.</p>
+      </div>
+      <div class="gallery">
+        <button class="card" type="button" data-full="assets/art/concept-adepts.png" data-cap="The Adepts: turnarounds, battle poses and palettes">
+          <img src="assets/art/concept-adepts.png" alt="Concept sheet of the four adepts with turnarounds, battle poses and colour palettes" loading="lazy" width="1600" height="1000">
+          <div class="cap"><b>The Adepts</b><span>Turnarounds, battle poses and palettes for Ari, Lyn, Bram and Sera.</span></div>
+        </button>
+        <button class="card" type="button" data-full="assets/art/concept-bestiary.png" data-cap="Bestiary: twelve monsters and two bosses">
+          <img src="assets/art/concept-bestiary.png" alt="Concept sheet of the twelve monsters" loading="lazy" width="1600" height="1000">
+          <div class="cap"><b>Bestiary</b><span>Twelve monsters across four regions, from the Mire Ooze to the Shadow Wyrm.</span></div>
+        </button>
+        <button class="card" type="button" data-full="assets/art/concept-spirits.png" data-cap="Spirits and Summons">
+          <img src="assets/art/concept-spirits.png" alt="Concept sheet of the eight spirits and five summon figures" loading="lazy" width="1600" height="1000">
+          <div class="cap"><b>Spirits &amp; Summons</b><span>The eight spirits, their duel forms, and the great summons they call.</span></div>
+        </button>
+        <button class="card" type="button" data-full="assets/art/concept-places.png" data-cap="Places: battle backdrops and overworld props">
+          <img src="assets/art/concept-places.png" alt="Concept sheet of battle backgrounds and overworld props" loading="lazy" width="1600" height="1000">
+          <div class="cap"><b>Places</b><span>Battle backdrops for each region and the props that dress the overworld.</span></div>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section id="box-art">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Box art</p>
+        <h2>A cartridge box that never shipped</h2>
+        <p>The front, spine and back of an imaginary retail box, drawn with the game's own sprites. Free to use when you share the game.</p>
+      </div>
+      <div class="boxart">
+        <button class="card" type="button" data-full="assets/art/box-front.png" data-cap="Box art: front">
+          <img src="assets/art/box-front.png" alt="Box art front: the four adepts face the Sunspire, with the Phoenix and the Shadow Wyrm in the sky" loading="lazy" width="900" height="1020">
+          <div class="cap"><b>Front</b><span>The party faces the Sunspire as the Wyrm coils in the dusk.</span></div>
+        </button>
+        <button class="card spine" type="button" data-full="assets/art/box-spine.png" data-cap="Box art: spine">
+          <img src="assets/art/box-spine.png" alt="Box art spine" loading="lazy" width="120" height="1020">
+          <div class="cap"><span>Spine</span></div>
+        </button>
+        <button class="card" type="button" data-full="assets/art/box-back.png" data-cap="Box art: back">
+          <img src="assets/art/box-back.png" alt="Box art back: story blurb, three screenshots and feature list" loading="lazy" width="900" height="1020">
+          <div class="cap"><b>Back</b><span>Story blurb, screenshots and the feature list.</span></div>
+        </button>
+      </div>
+      <div class="dl-row">
+        <a class="btn btn-sm" href="assets/art/box-front.png" download>Download front</a>
+        <a class="btn btn-sm" href="assets/art/box-back.png" download>Download back</a>
+        <a class="btn btn-sm" href="assets/art/box-spine.png" download>Download spine</a>
+      </div>
+
+      <div class="closing">
+        <h2>Ready to climb?</h2>
+        <p>The whole adventure runs in this tab. Pick a shell colour, go immersive, and bring back the dawn.</p>
+        <div class="cta-row">
+          <a class="btn btn-gold" href="play.html">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg>
+            Play online
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<dialog class="lightbox" id="lightbox">
+  <img id="lbImg" alt="">
+  <div class="lb-bar"><span id="lbCap"></span><span style="display:flex;gap:8px"><a class="btn btn-sm" id="lbOpen" href="#" target="_blank" rel="noopener">Open full size</a><button class="btn btn-sm" id="lbClose" type="button">Close</button></span></div>
+</dialog>
+
+<footer class="foot"><div class="wrap">
+  <span>Sunspire Saga &middot; original code and art, MIT licence</span>
+  <span>An independent homage to the handheld RPGs of the early 2000s; not affiliated with any console maker.</span>
+</div></footer>
+
+<script src="static/site.js"></script>
+<script>
+(function(){
+  // ---------- 3D box: click to turn, a gentle tilt toward the pointer ----------
+  const box = document.getElementById('box'), btn = document.getElementById('boxBtn');
+  btn.addEventListener('click', () => box.classList.toggle('flipped'));
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches && matchMedia('(pointer: fine)').matches){
+    const area = document.querySelector('.hero');
+    area.addEventListener('pointermove', e => {
+      const r = area.getBoundingClientRect(), nx = (e.clientX - r.left) / r.width - .5, ny = (e.clientY - r.top) / r.height - .5;
+      const base = box.classList.contains('flipped') ? 206 : 26;
+      box.style.transform = 'rotateX(' + (-6 - ny * 8).toFixed(2) + 'deg) rotateY(' + (base + nx * 16).toFixed(2) + 'deg)';
+    });
+    area.addEventListener('pointerleave', () => { box.style.transform = ''; });
+    btn.addEventListener('click', () => { box.style.transform = ''; });
+  }
+
+  // ---------- screenshot viewer ----------
+  const SHOTS = [
+    ['title', 'Title screen', 'the Sunspire on its crag, under drifting clouds.'],
+    ['thera-intro', 'Thera', 'Elder Sorin sends Ari out to find the eight spirits.'],
+    ['brindle', 'Brindle', 'a mining town with an inn, a shop and plenty of gossip.'],
+    ['battle-field', 'Field battle', 'an icon toolbar, a party of four and hidden enemy HP.'],
+    ['battle-spirit', 'Spirit duel', 'spirits fight you first; win and Squall joins the party.'],
+    ['battle-ogre', 'Maw Ogre', 'the brute sitting on the Spire Key deep in Brindle Mine.'],
+    ['summon-phoenix', 'Summon', 'two fire spirits on standby call down the Phoenix.'],
+    ['summon-sol', 'Sol Avatar', 'one spirit of every element for the greatest summon.'],
+    ['battle-wyrm', 'Shadow Wyrm', 'the final battle, at the top of the Sunspire.'],
+    ['menu-status', 'Party menu', 'status, items, equipment, spirits and your current quest.']
+  ];
+  const shot = document.getElementById('shot'), cap = document.getElementById('shotCap'), thumbs = document.getElementById('thumbs');
+  let idx = 0, auto = null;
+  SHOTS.forEach((s, i) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'thumb'; b.setAttribute('aria-label', s[1]);
+    b.innerHTML = '<img src="assets/screens/' + s[0] + '.png" alt="" loading="lazy" width="720" height="480">';
+    b.addEventListener('click', () => { stopAuto(); show(i); });
+    thumbs.appendChild(b);
+  });
+  function show(i){
+    idx = (i + SHOTS.length) % SHOTS.length;
+    const s = SHOTS[idx];
+    shot.src = 'assets/screens/' + s[0] + '.png';
+    shot.alt = s[1] + ': ' + s[2];
+    cap.innerHTML = '<b>' + s[1] + '</b> &mdash; ' + s[2];
+    thumbs.querySelectorAll('.thumb').forEach((t, j) => t.setAttribute('aria-current', String(j === idx)));
+  }
+  function stopAuto(){ if (auto){ clearInterval(auto); auto = null; } }
+  document.querySelectorAll('.viewer [data-step]').forEach(b => b.addEventListener('click', () => { stopAuto(); show(idx + Number(b.dataset.step)); }));
+  show(0);
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches){
+    const io = new IntersectionObserver(es => {
+      for (const e of es){ if (e.isIntersecting && !auto && auto !== false) auto = setInterval(() => show(idx + 1), 3800); }
+    }, { threshold: .4 });
+    io.observe(document.querySelector('.viewer'));
+    const origStop = stopAuto;
+    stopAuto = function(){ origStop(); auto = false; io.disconnect(); };
+  }
+  for (const s of SHOTS){ const im = new Image(); im.src = 'assets/screens/' + s[0] + '.png'; }
+
+  // ---------- lightbox for concept and box art ----------
+  const lb = document.getElementById('lightbox'), lbImg = document.getElementById('lbImg');
+  const lbCap = document.getElementById('lbCap'), lbOpen = document.getElementById('lbOpen');
+  document.querySelectorAll('[data-full]').forEach(c => c.addEventListener('click', () => {
+    lbImg.src = c.dataset.full; lbImg.alt = c.dataset.cap; lbCap.textContent = c.dataset.cap; lbOpen.href = c.dataset.full;
+    lb.showModal();
+  }));
+  document.getElementById('lbClose').addEventListener('click', () => lb.close());
+  lb.addEventListener('click', e => { if (e.target === lb) lb.close(); });
+})();
+</script>
+</body>
 </html>

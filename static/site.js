@@ -32,6 +32,32 @@
   mq.addEventListener('change', syncTheme);
   syncTheme();
 
+  // ---------------- mobile menu ----------------
+  // the button is made here so the links stay in the bar when the script doesn't run
+  for (const nav of document.querySelectorAll('header.nav')){
+    const links = nav.querySelector('.nav-links');
+    if (!links) continue;
+    links.id = links.id || 'site-links';
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'icon-btn menu-toggle';
+    b.setAttribute('aria-controls', links.id);
+    b.setAttribute('aria-expanded', 'false');
+    b.setAttribute('aria-label', 'Menu');
+    b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path class="bars" d="M4 7h16M4 12h16M4 17h16"/><path class="cross" d="M6 6l12 12M18 6L6 18"/></svg>';
+    nav.querySelector('.wrap').appendChild(b);
+    nav.classList.add('has-menu');
+    const setOpen = open => {
+      nav.classList.toggle('open', open);
+      b.setAttribute('aria-expanded', String(open));
+    };
+    b.addEventListener('click', () => setOpen(!nav.classList.contains('open')));
+    links.addEventListener('click', e => { if (e.target.closest('a')) setOpen(false); });
+    document.addEventListener('click', e => { if (!nav.contains(e.target)) setOpen(false); });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && nav.classList.contains('open')){ setOpen(false); b.focus(); }
+    });
+  }
+
   // ---------------- handheld colour ----------------
   // named after the game's elements and places; Twilight is the original shell
   const PRESETS = [

@@ -10,7 +10,7 @@ const OUT = path.join(ROOT, "site");
 
 fs.rmSync(OUT, {recursive: true, force: true});
 fs.mkdirSync(OUT, {recursive: true});
-for (const entry of ["index.html", "pack-guide.html", "walkthrough.html", "dist/bundle.js", "assets", "static", "LICENSE.txt"]) {
+for (const entry of ["index.html", "play.html", "pack-guide.html", "changelog.html", "walkthrough.html", "dist/bundle.js", "assets", "static", "LICENSE.txt"]) {
     const src = path.join(ROOT, entry);
     if (!fs.existsSync(src)) throw new Error(`missing ${entry}; run npm run build_prod first`);
     fs.cpSync(src, path.join(OUT, entry), {recursive: true});
@@ -69,7 +69,7 @@ async function fromNetwork(req) {
         // the app's start URL carries ?app=1; the cached page is the same without it
         const hit = await c.match(req, {ignoreSearch: true});
         if (hit) return hit;
-        if (req.mode === "navigate") { const page = await c.match("/"); if (page) return page; }
+        if (req.mode === "navigate") { const page = await c.match("/play.html"); if (page) return page; }
         throw err;
     }
 }

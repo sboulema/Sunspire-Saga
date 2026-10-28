@@ -1,0 +1,15 @@
+.git
+.github
+.claude
+.husky
+.vscode
+node_modules
+dist
+site
+code_docs
+help
+tools
+packs
+*.md
+Dockerfile
+.dockerignore

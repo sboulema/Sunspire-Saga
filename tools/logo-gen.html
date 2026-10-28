@@ -1,0 +1,155 @@
+<!doctype html><meta charset="utf-8"><title>logo gen</title>
+<body style="background:#222;margin:0">
+<canvas id="logo" width="512" height="512"></canvas>
+<canvas id="card" width="1200" height="630"></canvas>
+<script>
+const GOLD = '#f2c14e', LIGHT = '#fff6c4', DEEP = '#b9771c', DARK = '#3a1e08', AMBER = '#e8a83a';
+function ring(ctx, cx, cy, r){
+  ctx.save();
+  ctx.lineWidth = r * .2; ctx.strokeStyle = DARK; ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.stroke();
+  const g = ctx.createLinearGradient(cx, cy - r, cx, cy + r);
+  g.addColorStop(0, LIGHT); g.addColorStop(.45, GOLD); g.addColorStop(.75, DEEP); g.addColorStop(1, GOLD);
+  ctx.lineWidth = r * .12; ctx.strokeStyle = g; ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.stroke();
+  ctx.lineWidth = Math.max(2, r * .02); ctx.strokeStyle = LIGHT; ctx.beginPath(); ctx.arc(cx, cy, r - r*.045, Math.PI*1.05, Math.PI*1.75); ctx.stroke();
+  ctx.strokeStyle = DEEP; ctx.beginPath(); ctx.arc(cx, cy, r * .82, 0, Math.PI*2); ctx.stroke();
+  for (let i = 0; i < 16; i++){
+    const a = i * Math.PI / 8 - Math.PI / 2, long = i % 2 === 0;
+    const r0 = r * 1.12, r1 = long ? r * 1.42 : r * 1.28, w = long ? .07 : .05;
+    ctx.fillStyle = DARK;
+    ctx.beginPath();
+    ctx.moveTo(cx + Math.cos(a - w*1.4) * r0, cy + Math.sin(a - w*1.4) * r0);
+    ctx.lineTo(cx + Math.cos(a) * (r1 + r*.03), cy + Math.sin(a) * (r1 + r*.03));
+    ctx.lineTo(cx + Math.cos(a + w*1.4) * r0, cy + Math.sin(a + w*1.4) * r0);
+    ctx.closePath(); ctx.fill();
+    ctx.fillStyle = long ? GOLD : AMBER;
+    ctx.beginPath();
+    ctx.moveTo(cx + Math.cos(a - w) * r0, cy + Math.sin(a - w) * r0);
+    ctx.lineTo(cx + Math.cos(a) * r1, cy + Math.sin(a) * r1);
+    ctx.lineTo(cx + Math.cos(a + w) * r0, cy + Math.sin(a + w) * r0);
+    ctx.closePath(); ctx.fill();
+  }
+  ctx.restore();
+}
+function spire(ctx, x, by, h){
+  const w = h * .11;
+  ctx.fillStyle = '#4b5a8a';
+  ctx.beginPath(); ctx.moveTo(x - w*3.2, by); ctx.lineTo(x - w*1.6, by - h*.09); ctx.lineTo(x + w*1.8, by - h*.1); ctx.lineTo(x + w*3.4, by); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = '#9aa6c9'; ctx.fillRect(x - w, by - h*.86, w*2, h*.78);
+  ctx.fillStyle = '#c9d2e8'; ctx.fillRect(x - w, by - h*.86, w*.55, h*.78);
+  ctx.fillStyle = '#6a7598'; ctx.fillRect(x + w*.55, by - h*.86, w*.45, h*.78);
+  ctx.fillStyle = GOLD;
+  ctx.fillRect(x - w*1.25, by - h*.88, w*2.5, h*.025);
+  ctx.fillRect(x - w*1.25, by - h*.52, w*2.5, h*.025);
+  ctx.fillStyle = '#2a2f55';
+  for (let i = 0; i < 4; i++) ctx.fillRect(x - w*.15, by - h*.78 + i*h*.15, w*.4, h*.06);
+  ctx.fillStyle = '#c9d2e8'; ctx.fillRect(x - w*.6, by - h*1.0, w*1.2, h*.14);
+  const gl = ctx.createRadialGradient(x, by - h*1.05, 0, x, by - h*1.05, h*.14);
+  gl.addColorStop(0, 'rgba(255,246,196,.9)'); gl.addColorStop(1, 'rgba(255,217,78,0)');
+  ctx.fillStyle = gl; ctx.beginPath(); ctx.arc(x, by - h*1.05, h*.14, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#ffd94e'; ctx.fillRect(x - w*.3, by - h*1.1, w*.6, h*.1); ctx.fillRect(x - w*.6, by - h*1.06, w*1.2, h*.025);
+}
+function goldText(ctx, s, cx, y, px, italic){
+  ctx.save();
+  ctx.font = (italic ? 'italic ' : '') + 'bold ' + px + 'px "Times New Roman", Georgia, serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+  ctx.lineJoin = 'round';
+  ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.fillText(s, cx + px*.06, y + px*.06);
+  ctx.lineWidth = px * .11; ctx.strokeStyle = DARK; ctx.strokeText(s, cx, y);
+  ctx.lineWidth = px * .05; ctx.strokeStyle = '#7a4a12'; ctx.strokeText(s, cx, y + px*.02);
+  const g = ctx.createLinearGradient(0, y - px*.72, 0, y + px*.2);
+  g.addColorStop(0, LIGHT); g.addColorStop(.35, GOLD); g.addColorStop(.62, DEEP); g.addColorStop(.72, AMBER); g.addColorStop(1, '#ffe27a');
+  ctx.fillStyle = g; ctx.fillText(s, cx, y);
+  ctx.restore();
+}
+function cloud(ctx, cx, cy, r){
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.arc(cx + r, cy + r*.3, r*.8, 0, Math.PI*2);
+  ctx.arc(cx - r, cy + r*.4, r*.7, 0, Math.PI*2); ctx.fill();
+  ctx.fillRect(cx - r*1.6, cy + r*.2, r*3.2, r*.6);
+}
+function roundRect(ctx, x, y, w, h, r){
+  ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+}
+function drawLogo(){
+  const c = document.getElementById('logo'), ctx = c.getContext('2d');
+  ctx.clearRect(0, 0, 512, 512);
+  ctx.save(); roundRect(ctx, 0, 0, 512, 512, 100); ctx.clip();
+  const sky = ctx.createLinearGradient(0, 0, 0, 512);
+  sky.addColorStop(0, '#1b3a86'); sky.addColorStop(.6, '#2d6fc4'); sky.addColorStop(1, '#0f1630');
+  ctx.fillStyle = sky; ctx.fillRect(0, 0, 512, 512);
+  ctx.fillStyle = 'rgba(255,255,255,.18)'; cloud(ctx, 110, 380, 30); cloud(ctx, 420, 330, 24);
+  ctx.fillStyle = '#17203a'; ctx.fillRect(0, 404, 512, 108);
+  ctx.fillStyle = '#243358'; ctx.fillRect(0, 404, 512, 6);
+  ring(ctx, 256, 208, 128);
+  spire(ctx, 256, 406, 250);
+  goldText(ctx, 'Sunspire', 256, 486, 92, true);
+  ctx.restore();
+  return c;
+}
+function drawCard(){
+  const c = document.getElementById('card'), ctx = c.getContext('2d');
+  const W = 1200, H = 630;
+  const sky = ctx.createLinearGradient(0, 0, 0, 520);
+  sky.addColorStop(0, '#1b3a86'); sky.addColorStop(.55, '#5fa8e4'); sky.addColorStop(1, '#f3dfae');
+  ctx.fillStyle = sky; ctx.fillRect(0, 0, W, 520);
+  ctx.fillStyle = 'rgba(255,255,255,.85)';
+  [[120,150,34],[330,110,26],[560,170,40],[820,120,30],[1040,190,36],[950,330,28],[200,330,30]].forEach(([x,y,r]) => cloud(ctx, x, y, r));
+  ctx.fillStyle = '#6d7bb0';
+  let seed = 7;
+  for (let x = 0; x < W; x += 24){ seed = (seed * 1103515245 + 12345) & 0x7fffffff; const hh = 40 + seed % 80; ctx.fillRect(x, 520 - hh, 24, hh); }
+  spire(ctx, 600, 522, 400);
+  ctx.fillStyle = '#17203a'; ctx.fillRect(0, 520, W, 110);
+  ctx.fillStyle = '#243358'; ctx.fillRect(0, 520, W, 8);
+  ring(ctx, 250, 230, 170);
+  goldText(ctx, 'Sunspire', 640, 300, 230, true);
+  ctx.fillStyle = '#2a1608'; ctx.fillRect(690, 350, 400, 78);
+  ctx.fillStyle = GOLD; ctx.fillRect(690, 350, 400, 5); ctx.fillRect(690, 423, 400, 5); ctx.fillRect(690, 350, 5, 78); ctx.fillRect(1085, 350, 5, 78);
+  ctx.font = 'bold 52px Arial, Helvetica, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#ffe9a0'; ctx.fillText('S  A  G  A', 890, 391);
+  ctx.font = '600 34px Arial, Helvetica, sans-serif'; ctx.textBaseline = 'alphabetic';
+  ctx.lineWidth = 8; ctx.lineJoin = 'round'; ctx.strokeStyle = '#0c0a16';
+  ctx.strokeText('An original GBA-style pixel-art RPG for the browser', 600, 585);
+  ctx.fillStyle = '#e9e0c8'; ctx.fillText('An original GBA-style pixel-art RPG for the browser', 600, 585);
+  return c;
+}
+function drawMark(){ // favicon mark: ring and spire only, filling the square
+  const c = document.createElement('canvas'); c.width = c.height = 512; const ctx = c.getContext('2d');
+  ctx.save(); roundRect(ctx, 0, 0, 512, 512, 100); ctx.clip();
+  const sky = ctx.createLinearGradient(0, 0, 0, 512);
+  sky.addColorStop(0, '#1b3a86'); sky.addColorStop(.7, '#2d6fc4'); sky.addColorStop(1, '#17203a');
+  ctx.fillStyle = sky; ctx.fillRect(0, 0, 512, 512);
+  ctx.fillStyle = '#17203a'; ctx.fillRect(0, 452, 512, 60);
+  ring(ctx, 256, 240, 150);
+  spire(ctx, 256, 454, 300);
+  ctx.restore();
+  return c;
+}
+function drawMaskable(){ // PWA maskable icon: full-bleed sky, ring and spire inside the 80% safe circle
+  const c = document.createElement('canvas'); c.width = c.height = 512; const ctx = c.getContext('2d');
+  const sky = ctx.createLinearGradient(0, 0, 0, 512);
+  sky.addColorStop(0, '#1b3a86'); sky.addColorStop(.7, '#2d6fc4'); sky.addColorStop(1, '#17203a');
+  ctx.fillStyle = sky; ctx.fillRect(0, 0, 512, 512);
+  ctx.fillStyle = '#17203a'; ctx.fillRect(0, 440, 512, 72);
+  ring(ctx, 256, 248, 112);
+  spire(ctx, 256, 442, 230);
+  return c;
+}
+async function post(name, canvas){ await fetch('/' + name, { method: 'POST', body: canvas.toDataURL('image/png') }); }
+function scaled(src, s){
+  const c = document.createElement('canvas'); c.width = s; c.height = s;
+  const x = c.getContext('2d'); x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high';
+  if (s < 128){ const mid = document.createElement('canvas'); mid.width = mid.height = 128; const mx = mid.getContext('2d'); mx.imageSmoothingQuality = 'high'; mx.drawImage(src, 0, 0, 128, 128); x.drawImage(mid, 0, 0, s, s); }
+  else x.drawImage(src, 0, 0, s, s);
+  return c;
+}
+window.generate = async function(){
+  const logo = drawLogo(), card = drawCard(), mark = drawMark();
+  await post('sunspire-logo-512.png', logo);
+  await post('sunspire-card.png', card);
+  await post('sunspire-mark-512.png', mark);
+  await post('sunspire-maskable-512.png', drawMaskable());
+  for (const s of [16, 32, 48, 180, 256]) await post('favicon-' + s + '.png', scaled(mark, s));
+  return 'done';
+};
+</script>

@@ -31,6 +31,20 @@ as an app and plays offline. The migration plan is complete; the engine stays on
   the same buttons for touch; the shell colour and the light / dark theme are remembered in the
   browser. `?debug=1` shows the engine's debug panels.
 
+## The site
+
+| Page | What it is |
+|---|---|
+| `index.html` | landing page: the story, in-game screenshots, concept art and box art |
+| `play.html` | the game in its handheld shell, with the immersive toggle, the sprite pack loader and the install button |
+| `pack-guide.html` | the sprite pack guide with the generated slot list |
+| `changelog.html` | what changed in each version |
+| `walkthrough.html` | the plain-text walkthrough, generated from the game data |
+
+Every page has the light / dark toggle and the handheld colour choice, remembered in the browser.
+The nginx config in `docker/` serves clean URLs (`/play`), and `npm run preview` does the same
+locally; the pages link to each other with `.html` so they also work from a plain static host.
+
 ## Saving and installing
 
 The game autosaves to the browser on every map change, after battles and at the inns, and Start
@@ -58,6 +72,9 @@ then `npm run preview` tries it locally on port 9100.
 | `base/shell/SaveSlot.ts` | the versioned browser save slot |
 | `static/manifest.webmanifest`, `static/icons/` | the web app manifest and icons |
 | `.github/workflows/build.yml` | CI: format check, build, site artifact; deploys to GitHub Pages only when run by hand with the deploy option |
+| `.github/workflows/publish.yml`, `Dockerfile`, `docker/nginx.conf` | on `main` and `vNN` tags: the site as a Docker image (GHCR, optionally Docker Hub) and a zip, with a GitHub Release on tags |
+| `tools/` | the logo / icon generator, the favicon builder and the pack zipper |
+| `assets/art/`, `assets/screens/` | the box art, concept sheets, hero portraits and screenshots on the landing page |
 | `assets/filters/`, `assets/plugins/` | WebGL filters and the particle plugin the engine ships with |
 | `static/` | Phaser, the site shell and the debug editor |
 | `MIGRATION.md` | the migration plan, decisions and phase log |

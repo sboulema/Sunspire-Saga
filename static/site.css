@@ -1,4 +1,4 @@
-/* Sunspire Saga page: the handheld shell around the game canvas and the page chrome.
+/* Sunspire Saga site: shared look for every page (the play page adds play.css).
    Light / dark come from the system unless the visitor picks one (html[data-theme]); the handheld
    colour is one variable, --hh, set by site.js, and every shell shade is mixed from it. */
 :root{
@@ -6,7 +6,9 @@
   --ink:#1f1a33; --ink-2:#5b5376; --ink-3:#857c9c;
   --accent:#8f5f06; --gold:#f2c14e; --gold-ink:#2a1a02; --ember:#b4481d;
   --code-bg:rgba(60,40,10,.08); --ok:#2f7a3c; --warn:#9a6200; --err:#b23a3a;
+  --cov-bg:#d6efd8; --cov-ink:#1d5a28;
   --shadow:0 18px 40px rgba(60,40,10,.16);
+  --hero-sky:linear-gradient(180deg,#1b3a86 0%,#3f7fcf 46%,#f3dfae 100%);
   --hh:#2b2250; --hh-ink:#cfc6ec;
   --display:"Pixelify Sans", ui-monospace, "Cascadia Mono", Menlo, Consolas, monospace;
   --body:system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -19,6 +21,7 @@
     --ink:#ece4cf; --ink-2:#a69ec4; --ink-3:#7c7499;
     --accent:#f2c14e; --ember:#e8834f;
     --code-bg:rgba(0,0,0,.32); --ok:#7cd88a; --warn:#e8c84b; --err:#ef8a8a;
+    --cov-bg:#1f4d2a; --cov-ink:#a8f5b0;
     --shadow:0 24px 60px rgba(0,0,0,.5);
     color-scheme:dark;
   }
@@ -28,31 +31,61 @@
   --ink:#ece4cf; --ink-2:#a69ec4; --ink-3:#7c7499;
   --accent:#f2c14e; --ember:#e8834f;
   --code-bg:rgba(0,0,0,.32); --ok:#7cd88a; --warn:#e8c84b; --err:#ef8a8a;
+  --cov-bg:#1f4d2a; --cov-ink:#a8f5b0;
   --shadow:0 24px 60px rgba(0,0,0,.5);
   color-scheme:dark;
 }
 
 *{box-sizing:border-box;}
+html{scroll-behavior:smooth; scroll-padding-top:72px;}
 body{margin:0; background:var(--bg); color:var(--ink); font:16px/1.6 var(--body); -webkit-font-smoothing:antialiased;}
+img{max-width:100%;}
 a{color:var(--accent); text-underline-offset:3px;}
-code, kbd{font-family:var(--mono);}
+code{font-family:var(--mono); font-size:.88em; background:var(--code-bg); padding:0 .3em; border-radius:4px; color:var(--ink);}
+h1,h2,h3{font-family:var(--display); font-weight:600; line-height:1.15; margin:0 0 .5em; text-wrap:balance;}
+p{text-wrap:pretty;}
+.wrap{width:100%; max-width:1120px; margin:0 auto; padding:0 20px;}
+.pixel{image-rendering:pixelated; image-rendering:crisp-edges;}
 .sr-only{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap;}
 :focus-visible{outline:2px solid var(--gold); outline-offset:2px;}
 
 /* ---------- nav ---------- */
 .nav{position:sticky; top:0; z-index:40; background:color-mix(in oklab, var(--bg) 82%, transparent);
   backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-bottom:1px solid var(--line);}
-.nav .wrap{display:flex; align-items:center; gap:18px; height:60px; width:100%; max-width:1120px; margin:0 auto; padding:0 20px;}
-.brand{display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--ink); font-family:var(--display); font-weight:600; font-size:18px; white-space:nowrap; margin-right:auto;}
+.nav .wrap{display:flex; align-items:center; gap:18px; height:60px;}
+.brand{display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--ink); font-family:var(--display); font-weight:600; font-size:18px; white-space:nowrap;}
 .brand img{width:32px; height:32px; border-radius:8px;}
+.nav-links{display:flex; gap:4px; margin-left:auto; align-items:center;}
+.nav-links a{color:var(--ink-2); text-decoration:none; font-size:14px; font-weight:500; padding:6px 12px; border-radius:8px; white-space:nowrap;}
+.nav-links a:hover{color:var(--ink); background:var(--surface-2);}
+.nav-links a[aria-current="page"]{color:var(--ink); background:var(--surface-2); box-shadow:inset 0 0 0 1px var(--line);}
 .icon-btn{display:inline-grid; place-items:center; width:38px; height:38px; border-radius:10px; border:1px solid var(--line);
   background:var(--surface); color:var(--ink); cursor:pointer; padding:0; flex:none;}
 .icon-btn:hover{background:var(--surface-2);}
 .icon-btn svg{width:18px; height:18px;}
-.icon-btn[aria-pressed="false"] .on, .icon-btn[aria-pressed="true"] .off{display:none;}
 .theme-toggle .moon{display:none;}
 :root[data-theme-eff="dark"] .theme-toggle .sun{display:none;}
 :root[data-theme-eff="dark"] .theme-toggle .moon{display:block;}
+.menu-toggle{display:none;}
+.menu-toggle .cross{display:none;}
+.nav.open .menu-toggle .bars{display:none;}
+.nav.open .menu-toggle .cross{display:block;}
+@media (max-width:640px){
+  .nav .wrap{gap:8px; padding:0 12px;}
+  .nav-links{gap:0;}
+  .nav-links a{padding:6px 8px; font-size:13px;}
+  .nav:not(.has-menu) .brand span{display:none;}
+}
+/* with site.js loaded, narrow screens fold the links into a drop-down under the bar */
+@media (max-width:820px){
+  .nav.has-menu .menu-toggle{display:inline-grid;}
+  .nav.has-menu .theme-toggle{margin-left:auto;}
+  .nav.has-menu .nav-links{display:none; position:absolute; top:100%; left:0; right:0; margin:0;
+    flex-direction:column; align-items:stretch; gap:2px; padding:8px 12px 12px;
+    background:var(--bg); border-bottom:1px solid var(--line); box-shadow:var(--shadow);}
+  .nav.has-menu.open .nav-links{display:flex;}
+  .nav.has-menu .nav-links a{padding:12px 14px; font-size:16px;}
+}
 
 /* ---------- buttons ---------- */
 .btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; font:600 15px/1 var(--body); text-decoration:none;
@@ -61,29 +94,13 @@ code, kbd{font-family:var(--mono);}
 .btn:hover{background:var(--surface-2);}
 .btn:active{transform:translateY(1px);}
 .btn svg{width:18px; height:18px; flex:none;}
+.btn-gold{background:linear-gradient(180deg,#ffd977,#f2c14e 55%,#d9a032); color:var(--gold-ink); border-color:#b3862f;
+  box-shadow:0 3px 0 #93681c, 0 10px 24px rgba(242,193,78,.25);}
+.btn-gold:hover{background:linear-gradient(180deg,#ffe08a,#f6c95c 55%,#dda83c);}
+.btn-gold:active{box-shadow:0 1px 0 #93681c;}
 .btn-sm{padding:8px 14px; font-size:13px; border-radius:10px;}
 
-/* ---------- play page ---------- */
-.play{display:flex; flex-direction:column; align-items:center; gap:16px; padding:28px 16px 0;}
-.play-bar{width:100%; max-width:620px; display:flex; justify-content:space-between; align-items:center; gap:12px 16px; flex-wrap:wrap;}
-.play-bar .actions{display:flex; gap:8px; align-items:center;}
-@media (max-width:520px){
-  .play-bar{flex-wrap:nowrap; gap:8px;}
-  .play-bar .hh-picker{flex-wrap:nowrap; gap:6px;}
-  .play-bar .hh-picker .lbl, .play-bar .hh-name{display:none;}
-  .play-bar .hh-sw, .play-bar .hh-custom{width:24px; height:24px; flex:none;}
-  #immBtn{padding:8px; flex:none;}
-  #immBtn span{display:none;}
-}
-.stage{width:100%; max-width:620px; display:flex; justify-content:center;}
-.legend{font-size:13px; color:var(--ink-2); text-align:center; line-height:1.9; max-width:62ch; margin:0;}
-.legend kbd{font-size:12px; color:var(--ink); background:var(--surface); border:1px solid var(--line);
-  border-bottom-width:2px; border-radius:5px; padding:0 5px;}
-.warning-banner{position:fixed; left:50%; transform:translateX(-50%); z-index:120; max-width:94vw; border-radius:12px;}
-#webgl-warning{top:max(12px, env(safe-area-inset-top));}
-#fps-warning{bottom:max(12px, env(safe-area-inset-bottom)); width:auto;}
-
-/* ---------- handheld shell ---------- */
+/* ---------- handheld shell (play page, landing page viewer) ---------- */
 .shell{
   --hh-hi:color-mix(in oklab, var(--hh), white 14%);
   --hh-lo:color-mix(in oklab, var(--hh), black 34%);
@@ -93,7 +110,7 @@ code, kbd{font-family:var(--mono);}
   width:100%; background:linear-gradient(170deg, var(--hh-hi) 0%, var(--hh) 40%, var(--hh-lo) 100%);
   border:1px solid var(--hh-edge); border-radius:26px; padding:16px 16px 12px;
   box-shadow:0 24px 60px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.14), inset 0 -2px 0 rgba(0,0,0,.18);
-  user-select:none; -webkit-user-select:none; -webkit-touch-callout:none; transition:background .35s ease, border-color .35s ease;
+  user-select:none; -webkit-user-select:none; transition:background .35s ease, border-color .35s ease;
   font-family:var(--mono); color:#e9e0c8;
 }
 /* the L and R shoulder buttons sit on the top edge, above the screen */
@@ -106,9 +123,7 @@ code, kbd{font-family:var(--mono);}
 .screen{position:relative; background:#141021; border-radius:12px; padding:12px; box-shadow:inset 0 3px 12px rgba(0,0,0,.7);}
 .screen .led{position:absolute; left:14px; top:9px; width:6px; height:6px; border-radius:50%; background:#7CE07C; box-shadow:0 0 6px #7CE07C; z-index:1;}
 .screen .tag{position:absolute; right:14px; top:4px; font-size:8px; line-height:1; letter-spacing:.3em; color:#5c527f; z-index:1;}
-/* the engine sizes the canvas itself to an integer multiple of 240x160; it is never stretched */
-.screen #game{display:block; min-width:240px; min-height:160px; background:#000; border-radius:4px; overflow:hidden;}
-.screen #game canvas{display:block; image-rendering:pixelated; image-rendering:crisp-edges;}
+.screen .shot{display:block; width:100%; aspect-ratio:3/2; border-radius:4px; image-rendering:pixelated; image-rendering:crisp-edges; background:#000; object-fit:cover;}
 .screen::after{content:""; position:absolute; inset:12px; border-radius:4px; pointer-events:none;
   background:linear-gradient(115deg, rgba(255,255,255,.05) 0%, transparent 22%);}
 .controls{display:flex; align-items:center; justify-content:space-between; margin-top:14px; padding:0 6px;}
@@ -149,51 +164,20 @@ code, kbd{font-family:var(--mono);}
 .hh-custom input{position:absolute; inset:-6px; width:40px; height:40px; opacity:0; cursor:pointer;}
 .hh-name{font-size:13px; color:var(--ink-3); min-width:6ch;}
 
-/* ---------- immersive: the handheld alone, as large as the viewport allows ---------- */
-.imm-exit, .imm-hint{display:none;}
-body.immersive{overflow:hidden;}
-body.immersive .nav, body.immersive .play-bar, body.immersive .legend, body.immersive .foot, body.immersive #debug{display:none;}
-body.immersive .play{padding:0;}
-body.immersive .stage{position:fixed; inset:0; z-index:100; max-width:none; display:flex; align-items:center; justify-content:center;
-  padding:max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
-  background:radial-gradient(1200px 760px at 50% 42%, color-mix(in oklab, var(--hh) 30%, #0b0914), #05040a 72%);}
-/* landscape: the wide handheld, shoulders at the top corners, d-pad left and buttons right of the screen */
-@media (orientation: landscape){
-  body.immersive .shell{display:grid; grid-template-columns:auto auto auto; grid-template-areas:"l screen r" "dpad screen ab" "dpad start ab";
-    align-items:center; justify-items:center; column-gap:clamp(18px, 3vw, 44px); row-gap:10px; width:auto;
-    padding:18px clamp(18px, 3vw, 40px) 12px; border-radius:44px;}
-  body.immersive .controls, body.immersive .shoulders{display:contents;}
-  body.immersive .shoulder.l{grid-area:l; justify-self:start; align-self:start;}
-  body.immersive .shoulder.r{grid-area:r; justify-self:end; align-self:start;}
-  body.immersive .dpad{grid-area:dpad;}
-  body.immersive .ab{grid-area:ab;}
-  body.immersive .mid{grid-area:start; flex-direction:row; gap:18px;}
-  body.immersive .screen{grid-area:screen;}
-}
-body.immersive .imm-exit{display:inline-flex; position:fixed; top:max(12px, env(safe-area-inset-top)); right:max(12px, env(safe-area-inset-right)); z-index:101;
-  background:rgba(20,16,33,.6); color:#e9e0c8; border-color:rgba(255,255,255,.18); opacity:.55; transition:opacity .2s;}
-body.immersive .imm-exit:hover, body.immersive .imm-exit:focus-visible{opacity:1;}
-body.immersive .imm-hint.shown{display:block; position:fixed; left:50%; bottom:max(16px, env(safe-area-inset-bottom)); transform:translateX(-50%); z-index:101;
-  background:rgba(20,16,33,.75); color:#e9e0c8; font-size:13px; padding:6px 14px; border-radius:20px; pointer-events:none;
-  animation:hint-fade 3.2s ease forwards;}
-@keyframes hint-fade{0%,70%{opacity:1} 100%{opacity:0}}
+/* ---------- dialogs (changelog, lightbox) ---------- */
+dialog.panel{background:var(--surface); color:var(--ink); border:1px solid var(--line); border-radius:16px; max-width:640px; width:94%; padding:0; box-shadow:var(--shadow);}
+dialog.panel::backdrop{background:rgba(8,6,20,.7);}
+.pg-head{display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px 18px; border-bottom:1px solid var(--line);}
+.pg-head b{font-family:var(--display); color:var(--accent); letter-spacing:.06em; font-size:16px;}
+.pg-body{padding:12px 18px 18px; overflow:auto; max-height:70vh; font-size:13px; line-height:1.7; color:var(--ink-2);}
+.pg-body table{width:100%; border-collapse:collapse;}
+.pg-body td{border-bottom:1px solid var(--line); padding:6px 10px 6px 0; vertical-align:top;}
+.pg-body .ver{color:var(--accent); white-space:nowrap; font-family:var(--mono); font-weight:700;}
 
-/* ---------- install as app ---------- */
-.install{display:flex; flex-direction:column; align-items:center; gap:8px; margin:0; font-size:13px; color:var(--ink-2); text-align:center;}
-.install[hidden], body.immersive .install{display:none;}
-
-/* ---------- sprite packs ---------- */
-.pack-load{display:flex; flex-direction:column; align-items:center; gap:10px; width:100%; max-width:620px; padding-top:4px;}
-.pack-load .row{display:flex; flex-wrap:wrap; justify-content:center; gap:8px;}
-.pack-load .btn{cursor:pointer;}
-#packStatus{font-size:13px; line-height:1.7; text-align:center; color:var(--ink-2);}
-#packStatus:empty{display:none;}
-#packStatus .ok{color:var(--ok);} #packStatus .warn{color:var(--warn);} #packStatus .err{color:var(--err);}
-body.immersive .pack-load{display:none;}
-
-/* ---------- debug panels and footer ---------- */
-#debug{width:100%; max-width:960px; padding:0 16px; font-family:var(--mono); font-size:13px;}
-#debug[hidden]{display:none;}
-.foot{border-top:1px solid var(--line); margin-top:60px; padding:28px 0 40px; color:var(--ink-3); font-size:13px;}
-.foot .wrap{display:flex; flex-wrap:wrap; gap:10px 24px; justify-content:space-between; width:100%; max-width:1120px; margin:0 auto; padding:0 20px;}
+/* ---------- footer ---------- */
+.foot{border-top:1px solid var(--line); margin-top:80px; padding:28px 0 40px; color:var(--ink-3); font-size:13px;}
+.foot .wrap{display:flex; flex-wrap:wrap; gap:10px 24px; justify-content:space-between;}
 .foot a{color:var(--ink-2);}
+
+/* the handheld shell is user-select-free, also on touch */
+.shell{-webkit-touch-callout:none;}

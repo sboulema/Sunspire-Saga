@@ -3,7 +3,7 @@
 	"short_name": "Sunspire",
 	"description": "An original GBA-style pixel-art RPG: gather eight elemental spirits and bring the dawn back to the Sunspire.",
 	"id": "sunspire-saga",
-	"start_url": "/?app=1",
+	"start_url": "/play.html?app=1",
 	"scope": "/",
 	"display": "fullscreen",
 	"display_override": ["fullscreen", "standalone"],

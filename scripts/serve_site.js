@@ -12,7 +12,9 @@ const TYPES = {".html": "text/html; charset=utf-8", ".js": "text/javascript", ".
 http.createServer((req, res) => {
     let url = decodeURIComponent(req.url.split("?")[0]);
     if (url.endsWith("/")) url += "index.html";
-    const file = path.normalize(path.join(ROOT, url));
+    let file = path.normalize(path.join(ROOT, url));
+    // clean URLs like the nginx config: /play serves play.html
+    if (!path.extname(file) && fs.existsSync(file + ".html")) file += ".html";
     if (!file.startsWith(ROOT) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) {
         res.statusCode = 404;
         return res.end("not found");

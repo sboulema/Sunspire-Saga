@@ -402,6 +402,20 @@ What staying costs, and what we do about it:
 - The adapter-layer idea from the plan is dropped: an adapter over this many APIs would be as
   large as the engine.
 
+### The rest of the site (2026-10-28)
+
+The pages around the game came over after the phases: `index.html` is the legacy landing page
+again (story, the handheld screenshot viewer, concept art, the 3D box), the game moved to
+`play.html` (so the legacy `/play` URL and the manifest's start URL still hold),
+`changelog.html` has an entry for the engine build, and every page shares the five-link nav
+with the mobile menu. `static/site.css` is the legacy stylesheet plus the shell additions;
+`static/play.css` holds the play page's own rules. `assets/art/` and `assets/screens/` are the
+legacy box art, concept sheets and screenshots (drawn from the single-script game; redraw when
+the engine's art moves on). The Dockerfile builds the site with Node and serves it with the
+legacy nginx config (clean URLs, cache headers updated for `static/` and the data files);
+`publish.yml` builds the site before the Docker image and the zip; `tools/` keeps the logo,
+favicon and pack-zip helpers.
+
 ### Definition of done, checked against the plan
 
 - Runs in current Chrome, Firefox and Safari: **Chrome yes; Firefox and Safari fixed by code
