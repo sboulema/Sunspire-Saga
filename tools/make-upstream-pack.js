@@ -484,11 +484,11 @@ Object.assign(RULES, {
         sylph: "jupiter", tempest: "thor", sol_avatar: "judgment",
     }),
     battle_effect_icons: atlasMap("icons/battle_effects/battle_effect_icons"),
-    // your own icons in pack-upstream-extra/items/<item>.png go first (upstream has no potion)
+    // your own icons in pack-upstream-extra/items/<item>.png go first; the potion is the blue bottle
     items_icons: ownIcons(
         "items",
         atlasMap("icons/items/items_icons", {
-            potion: "antidote", pdrop: "psy_crystal", wood: "elven_rapier", bronze: "great_sword", iron: "great_axe", steel: "master_rapier",
+            potion: "hermes_water", pdrop: "psy_crystal", wood: "elven_rapier", bronze: "great_sword", iron: "great_axe", steel: "master_rapier",
             sol: "sol_blade", vest: "cotton_shirt", leather: "adepts_clothes", chain: "steel_armor", aegis: "asuras_armor",
         })
     ),
