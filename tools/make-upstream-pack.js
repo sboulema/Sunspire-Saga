@@ -284,13 +284,43 @@ function extraTrim(s, [x, y, w, h]) {
 }
 
 /**
- * Icons of your own over an atlas rule: `<folder>/<frame>.png` in the --extra folder (`items/potion.png`)
- * stands in for that frame, as it is; every other frame keeps `rule`.
+ * Clears an icon's frame: every pixel connected to the edge in a colour of the outermost ring (a
+ * ripped icon's border and backdrop), leaving the same colours inside the drawing alone. An icon
+ * without a frame has a transparent ring and comes back as it is.
+ */
+function unframe(img) {
+    const {width: w, height: h} = img,
+        at = (x, y) => img.data.readUInt32BE((y * w + x) * 4);
+    const ring = new Set();
+    for (let x = 0; x < w; x++) ring.add(at(x, 0)).add(at(x, h - 1));
+    for (let y = 0; y < h; y++) ring.add(at(0, y)).add(at(w - 1, y));
+    const out = png.create(w, h);
+    png.blit(out, img, 0, 0);
+    const seen = new Uint8Array(w * h),
+        todo = [];
+    for (let x = 0; x < w; x++) todo.push([x, 0], [x, h - 1]);
+    for (let y = 0; y < h; y++) todo.push([0, y], [w - 1, y]);
+    while (todo.length) {
+        const [x, y] = todo.pop();
+        if (x < 0 || y < 0 || x >= w || y >= h || seen[y * w + x]) continue;
+        seen[y * w + x] = 1;
+        if (!(img.data[(y * w + x) * 4 + 3] === 0 || ring.has(at(x, y)))) continue;
+        out.data.writeUInt32BE(0, (y * w + x) * 4);
+        todo.push([x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]);
+    }
+    return out;
+}
+
+/**
+ * Icons of your own over an atlas rule: `<folder>/<frame>.png` in the --extra folder (`items/potion.png`,
+ * any case) stands in for that frame, its frame cleared; every other frame keeps `rule`.
  */
 function ownIcons(folder, rule) {
+    const dir = path.join(EXTRA, folder);
+    const files = fs.existsSync(dir) ? fs.readdirSync(dir) : [];
     return (name, count) => {
-        const file = path.join(EXTRA, folder, name + ".png");
-        return fs.existsSync(file) ? {img: png.decode(fs.readFileSync(file)), anchor: "center"} : rule(name, count);
+        const file = files.find(f => f.toLowerCase() === name + ".png");
+        return file ? {img: unframe(png.decode(fs.readFileSync(path.join(dir, file)))), anchor: "center"} : rule(name, count);
     };
 }
 

@@ -99,8 +99,10 @@ their bottom row: `tree` the round dark-green, the green fruit and the yellow-gr
 `tree_trail` the blue-green, the big blue-green and the yellow-green round one.
 
 Item icons of your own go in `pack-upstream-extra/items/<item>.png`, named after the Sunspire
-item (`potion.png`): each replaces that item's upstream stand-in as it is (upstream has no potion,
-so the potion otherwise borrows the blue bottle, `hermes_water`).
+item (`potion.png`, any case; PNG only, so convert a GIF first): each replaces that item's upstream
+stand-in, with a ripped icon's frame cleared (the border and backdrop colours that reach the edge;
+the same colours inside the drawing stay). Upstream has no potion, so without one the potion
+borrows the blue bottle, `hermes_water`.
 
 The heroes' weapons are sprites of their own: each weapon in `content.json` has an engine weapon
 type (`sword`, `light_blade`, `axe`; `mace` and `staff` exist too), the engine draws the sheet for
