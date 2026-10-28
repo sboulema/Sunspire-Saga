@@ -79,11 +79,14 @@ tile); the tilesets, the houses, the map objects (sign, well, gate, marker, spri
 summon backdrops and the shadow stay built-in. `REPORT.txt` in the output folder lists what was
 replaced.
 
-Upstream has no bat, so the bat takes its frames from `pack-upstream-extra/bat.png` when that file
-is there (another folder with `--extra`), and from the `momonga` otherwise: a strip of three
-square wing beats side by side (32x32 each), standing on the bottom row with no ground shadow (the
-engine draws its own). Idle and casting hold the spread wings, attacks swing the raised wing, the
-damage pose drops them. The folder is git-ignored like the pack, for the same reason.
+Upstream has no bat, so the bat is cut out of `pack-upstream-extra/enemies.png` when that file is
+there (another folder with `--extra`), and takes the `momonga` otherwise. That is the 297x1113
+ripped enemies sheet with no alpha channel whose ninth block is the Bat (Vermin, Wild Mushroom,
+Slime, Zombie, Skeleton above it), saved under that name; the rects in the script are its
+pixel positions, and its most common colour is keyed out as the background. The bat idles with
+spread wings, winds up with a cocked wing and dives to attack, raises a wing and swipes to cast,
+and wraps its wings when hit, front and back, every pose in a 32x32 frame at the same hover
+height. The folder is git-ignored like the pack, for the same reason.
 
 ## Box art, concept sheets and screenshots
 

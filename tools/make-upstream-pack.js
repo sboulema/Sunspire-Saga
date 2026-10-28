@@ -12,7 +12,8 @@
 // built-in art, so every sheet stays complete. With --fit the built-in sheets and layout are kept
 // instead and each upstream frame is shrunk into its Sunspire cell (upstream frames are 32x32 or
 // 64x64 where Sunspire's are 16x22 or smaller), nearest-neighbour or averaged with --smooth.
-// Sprites upstream lacks come from strips in the --extra folder when present (`bat.png`).
+// Sprites upstream lacks are cut out of an enemies sheet in the --extra folder when present
+// (`enemies.png`, for the bat).
 //
 // The upstream sprites are not free to redistribute: this pack is for your own browser. Keep the
 // output folder and the zip out of the repository (both are git-ignored).
@@ -209,21 +210,45 @@ function battle(file) {
 }
 
 /**
- * A battle sheet from a strip in the --extra folder (`<file>.png`, square frames side by side), for
- * sprites upstream lacks; `poses` picks the strip frame per battle pose. Falls back to `orElse`
- * when the strip is absent.
+ * A battle sheet cut out of a sheet in the --extra folder (`<file>.png`) for sprites upstream lacks.
+ * The sheet has no alpha channel: its most common colour is the background. `poses` gives each
+ * battle pose a [front, back] pair of loose rects [x, y, w, h]; the sprite inside is trimmed and
+ * stood centred with its lowest pixel on row `foot` of a `size` x `size` frame, so every pose
+ * hovers at the same height. Falls back to `orElse` when the sheet is absent.
  */
-function strip(file, poses, orElse) {
+function sheetCut(file, poses, size, foot, orElse) {
     const src = path.join(EXTRA, file + ".png");
     if (!fs.existsSync(src)) return orElse;
     const img = png.decode(fs.readFileSync(src));
-    const n = Math.max(1, Math.round(img.width / img.height)),
-        w = Math.floor(img.width / n);
+    const counts = new Map();
+    for (let i = 0; i < img.data.length; i += 4) {
+        const c = img.data.readUInt32BE(i);
+        counts.set(c, (counts.get(c) || 0) + 1);
+    }
+    const bg = [...counts].reduce((a, b) => (b[1] > a[1] ? b : a))[0];
+    const cache = new Map();
+    const frame = ([x, y, w, h]) => {
+        const key = [x, y, w, h].join();
+        if (!cache.has(key)) {
+            const part = cut(img, {x, y, w, h});
+            let x0 = w, y0 = h, x1 = -1, y1 = -1;
+            for (let j = 0; j < h; j++) {
+                for (let i = 0; i < w; i++) {
+                    const o = (j * w + i) * 4;
+                    if (part.data.readUInt32BE(o) === bg) part.data.writeUInt32BE(0, o);
+                    else (x0 = Math.min(x0, i)), (y0 = Math.min(y0, j)), (x1 = Math.max(x1, i)), (y1 = Math.max(y1, j));
+                }
+            }
+            const out = png.create(size, size);
+            png.blit(out, part, Math.floor((size - (x1 - x0 + 1)) / 2), foot - (y1 - y0), x0, y0, x1 - x0 + 1, y1 - y0 + 1);
+            cache.set(key, out);
+        }
+        return cache.get(key);
+    };
     return name => {
         const m = name.match(/^battle\/(.*)_(back|front)\/\d+$/);
-        if (!m) return null;
-        const i = Math.min(n - 1, poses[m[1]] || 0);
-        return {img: cut(img, {x: i * w, y: 0, w, h: img.height}), anchor: "bottom"};
+        const pair = m && (poses[m[1]] || poses.idle);
+        return pair ? {img: frame(pair[m[2] === "front" ? 0 : 1]), anchor: "bottom"} : null;
     };
 }
 
@@ -293,8 +318,25 @@ for (const [id, src] of Object.entries(HEROES)) {
 }
 for (const [id, src] of Object.entries(NPCS)) RULES[`${id}_field`] = fieldChar(NPC + src);
 for (const [id, src] of Object.entries(ENEMIES)) RULES[`${id}_battle`] = battle(`${BT}${src}_battle`);
-// enemies upstream has no sprite for, from strips in the --extra folder (the bat: three wing beats)
-RULES.bat_battle = strip("bat", {idle: 1, attack_init: 0, attack: 2, cast_init: 1, cast: 2, damage: 0, downed: 0}, RULES.bat_battle);
+// enemies upstream has no sprite for, cut out of the enemies sheet in the --extra folder
+// the Bat block: front idle beats, back idle beats, then wrapped / dive / swipe, front and back
+const BAT_IDLE = [[1, 651, 28, 23], [29, 651, 34, 23], [63, 651, 30, 23], [93, 651, 30, 23], [123, 651, 31, 23], [154, 651, 29, 23]],
+    BAT_ACT = [[1, 674, 20, 26], [21, 674, 23, 26], [44, 674, 20, 26], [64, 674, 23, 26], [87, 674, 25, 26], [112, 674, 24, 26]];
+RULES.bat_battle = sheetCut(
+    "enemies",
+    {
+        idle: [BAT_IDLE[1], BAT_IDLE[4]],
+        attack_init: [BAT_ACT[4], BAT_ACT[5]],
+        attack: [BAT_ACT[1], BAT_ACT[3]],
+        cast_init: [BAT_IDLE[2], BAT_IDLE[5]],
+        cast: [BAT_ACT[4], BAT_ACT[5]],
+        damage: [BAT_ACT[0], BAT_ACT[2]],
+        downed: [BAT_ACT[0], BAT_ACT[2]],
+    },
+    32,
+    24,
+    RULES.bat_battle
+);
 for (const [id, el] of Object.entries(ELEMENT)) {
     RULES[id] = atlasMap(`spritesheets/djinn/${el}_djinn`);
     RULES[`djinn_battle_${id}_battle`] = battle(`${BT}${DJINN_BATTLE[el]}_djinn_battle`);
