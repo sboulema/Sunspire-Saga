@@ -32,8 +32,21 @@ Assembles `favicon.ico` (16, 32, 48 and 256 px frames) from the PNGs above. The 
 
 ## make-pack-zip.js
 
-Zips a folder of sprite pack sheets (see `packs/README.md` and the pack guide page) into a zip
-players can load with *Load sprite pack*.
+Builds a sprite pack zip players can load with *Load sprite pack* (see `packs/README.md` and the
+pack guide page). Without arguments it exports every built-in sheet listed in
+`static/pack-slots.json` to `sunspire-engine-pack.zip` at the repository root: a complete
+reference pack and a template to redraw from. With a folder (and optionally an output name) it
+zips that folder's PNG / GIF / WebP files instead:
+
+```bash
+node tools/make-pack-zip.js
+```
+
+```bash
+node tools/make-pack-zip.js my-pack/ my-pack.zip
+```
+
+Zips at the root are git-ignored; share them as release assets or from a separate repository.
 
 ## Box art, concept sheets and screenshots
 
