@@ -72,9 +72,12 @@ keep the built-in art. With `--fit` it keeps the built-in sheets instead and shr
 upstream frame into its Sunspire cell (upstream frames are 32x32 or 64x64 against Sunspire's
 16x22 and smaller), nearest-neighbour or averaged with `--smooth`. The
 mapping table at the top of the script says which upstream sheet stands in for which Sunspire
-character, enemy, spirit and icon; upstream has fewer of each, so several share a source. The
-tilesets, the map objects (sign, well, gate, marker, spring, crate), the summon backdrops and
-the shadow stay built-in. `REPORT.txt` in the output folder lists what was replaced.
+character, enemy, spirit and icon; upstream has fewer of each, so several share a source. In
+the outdoor tilesets the tree tiles get an upstream tree shrunk to the 16px tile (averaged, so
+it reads as a tree rather than noise) and the fence tiles get upstream fence pieces chosen by
+each tile's connections, both on the map's own grass; the other tiles, the map objects (sign,
+well, gate, marker, spring, crate), the summon backdrops and the shadow stay built-in.
+`REPORT.txt` in the output folder lists what was replaced.
 
 ## Box art, concept sheets and screenshots
 

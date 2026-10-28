@@ -91,15 +91,18 @@ function cut(img, r) {
 function fit(img, dw, dh) {
     const s = Math.min(dw / img.width, dh / img.height, 1);
     if (s === 1) return img;
-    const ow = Math.max(1, Math.round(img.width * s)),
-        oh = Math.max(1, Math.round(img.height * s));
+    return resample(img, Math.max(1, Math.round(img.width * s)), Math.max(1, Math.round(img.height * s)), SMOOTH);
+}
+
+/** Resamples img to ow x oh: nearest-neighbour, or a box filter with colours weighted by alpha. */
+function resample(img, ow, oh, smooth) {
     const out = png.create(ow, oh);
     const sx = img.width / ow,
         sy = img.height / oh;
     for (let y = 0; y < oh; y++) {
         for (let x = 0; x < ow; x++) {
             const o = (y * ow + x) * 4;
-            if (!SMOOTH) {
+            if (!smooth) {
                 const ix = Math.min(img.width - 1, Math.floor((x + 0.5) * sx)),
                     iy = Math.min(img.height - 1, Math.floor((y + 0.5) * sy));
                 img.data.copy(out.data, o, (iy * img.width + ix) * 4, (iy * img.width + ix) * 4 + 4);
@@ -134,6 +137,65 @@ function fit(img, dw, dh) {
             }
         }
     }
+    return out;
+}
+
+/** The 16x16 tile `id` of a tileset image. */
+function tileAt(img, id) {
+    const cols = img.width / 16;
+    return cut(img, {x: (id % cols) * 16, y: Math.floor(id / cols) * 16, w: 16, h: 16});
+}
+
+/** Which edges of a Sunspire fence tile its brown rails reach: the piece's connections. */
+function fenceLinks(tile) {
+    const brown = i => tile.data[i] > 90 && tile.data[i] < 230 && tile.data[i] > tile.data[i + 1] + 15 && tile.data[i + 1] > tile.data[i + 2];
+    const at = (x, y) => brown((y * 16 + x) * 4);
+    const range = [...Array(16).keys()];
+    return {left: range.some(y => at(0, y)), right: range.some(y => at(15, y)), up: range.some(x => at(x, 0)), down: range.some(x => at(x, 15))};
+}
+
+/**
+ * An outdoor tileset: the built-in tiles, with every tree tile and fence tile of the map's grid
+ * redrawn with an upstream tree (shrunk, smooth) and upstream fence pieces on the map's own grass.
+ * Tile ids come from the map's grid source, where `t` is a tree, `F` a fence and `.` plain grass.
+ */
+function tileset(mapId) {
+    return () => {
+        const madra = sheet("tilesets/madra");
+        if (!madra) return null;
+        const grid = JSON.parse(fs.readFileSync(path.join(root, "assets", "sunspire", "maps", `${mapId}_grid.json`), "utf8"));
+        const out = png.decode(fs.readFileSync(path.join(root, "assets", "images", "tilesets", `${mapId}.png`)));
+        const ids = {};
+        grid.chars.forEach((row, y) =>
+            [...row].forEach((c, x) => {
+                const id = grid.grid[y][x];
+                ids[c] = ids[c] || {};
+                ids[c][id] = (ids[c][id] || 0) + 1;
+            })
+        );
+        const most = c => +Object.entries(ids[c] || {}).sort((a, b) => b[1] - a[1])[0][0];
+        const grass = tileAt(out, most("."));
+        const piece = (x, y) => cut(madra.img, {x: x * 16, y: y * 16, w: 16, h: 16});
+        const fence = {left: piece(7, 24), mid: piece(7, 25), right: piece(8, 24), top: piece(9, 25), vmid: piece(9, 26), bottom: piece(9, 27)};
+        const tree = resample(cut(madra.img, {x: 80, y: 288, w: 48, h: 64}), 12, 16, true); // the orange tree
+        const draw = (id, img, anchor) => place(out, {x: (id % (out.width / 16)) * 16, y: Math.floor(id / (out.width / 16)) * 16, w: 16, h: 16}, over(grass, img, anchor), "center");
+        for (const id of Object.keys(ids.t || {})) draw(+id, tree, "bottom");
+        for (const id of Object.keys(ids.F || {})) {
+            const l = fenceLinks(tileAt(out, +id));
+            const p = l.left && l.right ? fence.mid : l.right ? fence.left : l.left ? fence.right : l.up && l.down ? fence.vmid : l.up ? fence.bottom : l.down ? fence.top : fence.vmid;
+            draw(+id, p, "center");
+        }
+        return {img: out, anchor: "center"};
+    };
+}
+
+/** img drawn over a copy of base, feet on the bottom row or centred. */
+function over(base, img, anchor) {
+    const out = png.create(base.width, base.height);
+    png.blit(out, base, 0, 0);
+    const ox = Math.floor((base.width - img.width) / 2);
+    const oy = anchor === "bottom" ? base.height - img.height : Math.floor((base.height - img.height) / 2);
+    png.blit(out, img, ox, oy);
     return out;
 }
 
@@ -295,6 +357,9 @@ Object.assign(RULES, {
     keyboard_arrow: image("debug/keyboard_arrow"),
     mind_read_arrow: image("psynergies/mind_read_arrow"),
     water_drop: image("misc/water_drop"),
+    fields: tileset("fields"),
+    brindle: tileset("brindle"),
+    trail: tileset("trail"),
 });
 
 // ---------------------------------------------------------------- build
