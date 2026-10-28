@@ -101,7 +101,7 @@
         "is_field_psynergy": false,
         "effects": [],
         "ability_category": "psynergy",
-        "battle_animation_key": "no_animation",
+        "battle_animation_key": "quake",
         "priority_move": false,
         "msg_type": "cast"
     },
@@ -120,7 +120,7 @@
         "is_field_psynergy": false,
         "effects": [],
         "ability_category": "psynergy",
-        "battle_animation_key": "no_animation",
+        "battle_animation_key": "spire",
         "priority_move": false,
         "msg_type": "cast"
     },
@@ -139,7 +139,7 @@
         "is_field_psynergy": false,
         "effects": [],
         "ability_category": "psynergy",
-        "battle_animation_key": "no_animation",
+        "battle_animation_key": "gaia_blade",
         "priority_move": false,
         "msg_type": "cast"
     },
@@ -158,7 +158,7 @@
         "is_field_psynergy": false,
         "effects": [],
         "ability_category": "psynergy",
-        "battle_animation_key": "no_animation",
+        "battle_animation_key": "flare",
         "priority_move": false,
         "msg_type": "cast"
     },
@@ -177,7 +177,7 @@
         "is_field_psynergy": false,
         "effects": [],
         "ability_category": "psynergy",
-        "battle_animation_key": "no_animation",
+        "battle_animation_key": "fire_bomb",
         "priority_move": false,
         "msg_type": "cast"
     },
@@ -196,7 +196,7 @@
         "is_field_psynergy": false,
         "effects": [],
         "ability_category": "psynergy",
-        "battle_animation_key": "no_animation",
+        "battle_animation_key": "inferno",
         "priority_move": false,
         "msg_type": "cast"
     },
@@ -234,7 +234,7 @@
         "is_field_psynergy": false,
         "effects": [],
         "ability_category": "psynergy",
-        "battle_animation_key": "no_animation",
+        "battle_animation_key": "ice_horn",
         "priority_move": false,
         "msg_type": "cast"
     },
@@ -272,7 +272,7 @@
         "is_field_psynergy": false,
         "effects": [],
         "ability_category": "psynergy",
-        "battle_animation_key": "no_animation",
+        "battle_animation_key": "gust",
         "priority_move": false,
         "msg_type": "cast"
     },
@@ -291,7 +291,7 @@
         "is_field_psynergy": false,
         "effects": [],
         "ability_category": "psynergy",
-        "battle_animation_key": "no_animation",
+        "battle_animation_key": "plasma",
         "priority_move": false,
         "msg_type": "cast"
     },
@@ -310,7 +310,7 @@
         "is_field_psynergy": false,
         "effects": [],
         "ability_category": "psynergy",
-        "battle_animation_key": "no_animation",
+        "battle_animation_key": "bolt",
         "priority_move": false,
         "msg_type": "cast"
     },
@@ -348,7 +348,7 @@
         "is_field_psynergy": false,
         "effects": [],
         "ability_category": "djinn",
-        "battle_animation_key": "no_animation",
+        "battle_animation_key": "quake",
         "priority_move": false,
         "msg_type": "unleash"
     },
@@ -367,7 +367,7 @@
         "is_field_psynergy": false,
         "effects": [],
         "ability_category": "djinn",
-        "battle_animation_key": "no_animation",
+        "battle_animation_key": "quake",
         "priority_move": false,
         "msg_type": "unleash"
     },
@@ -386,7 +386,7 @@
         "is_field_psynergy": false,
         "effects": [],
         "ability_category": "djinn",
-        "battle_animation_key": "no_animation",
+        "battle_animation_key": "flare",
         "priority_move": false,
         "msg_type": "unleash"
     },
@@ -405,7 +405,7 @@
         "is_field_psynergy": false,
         "effects": [],
         "ability_category": "djinn",
-        "battle_animation_key": "no_animation",
+        "battle_animation_key": "flare",
         "priority_move": false,
         "msg_type": "unleash"
     },
@@ -462,7 +462,7 @@
         "is_field_psynergy": false,
         "effects": [],
         "ability_category": "djinn",
-        "battle_animation_key": "no_animation",
+        "battle_animation_key": "gust",
         "priority_move": false,
         "msg_type": "unleash"
     },
@@ -481,7 +481,7 @@
         "is_field_psynergy": false,
         "effects": [],
         "ability_category": "djinn",
-        "battle_animation_key": "no_animation",
+        "battle_animation_key": "gust",
         "priority_move": false,
         "msg_type": "unleash"
     },

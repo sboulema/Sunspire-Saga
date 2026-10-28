@@ -64,7 +64,7 @@ then `npm run preview` tries it locally on port 9100.
 | `base/shell/SpritePacks.ts`, `pack-guide.html`, `static/pack-guide.js`, `static/pack-slots.json`, `packs/README.md` | sprite packs: sheets the player loads (PNG / GIF / WebP or a zip) replace the built-in art; the guide lists every slot |
 | `assets/sunspire/content.json` | **the game**: characters, arts, gear, items, shops, chests, spirits, summons, enemies, encounters, maps, villagers, dialog and story. Edit this, not the databases. |
 | `assets/sunspire/` | Sunspire's source art: the exported sprites, the five map grids and tilesets, the 5x5 font glyphs |
-| `assets/dbs/`, `assets/maps/`, `walkthrough.html` | **generated** from `content.json` by the scripts below (`misc_animations_db`, `interactable_objects_db`, the battle recipes and `init.json` are hand-written) |
+| `assets/dbs/`, `assets/maps/`, `walkthrough.html` | **generated** from `content.json` by the scripts below (`misc_animations_db`, `interactable_objects_db`, the attack, jump and cure battle recipes and `init.json` are hand-written; the arts' recipes are generated) |
 | `scripts/build_sunspire_assets.js` | generates `assets/images`, `assets/font`, `assets/sounds`, `bgm_db` / `se_db` and the pack slot list from `assets/sunspire/` |
 | `scripts/build_sunspire_content.js` | generates the databases and the Tiled maps from `content.json` and the map grids |
 | `scripts/build_walkthrough.js` | generates `walkthrough.html`, the plain-text walkthrough, from the same data |

@@ -158,7 +158,7 @@ const sample = (frames, index, count) => frames[Math.min(frames.length - 1, Math
 // ---------------------------------------------------------------- rules
 
 const DIR_FALLBACK = {down_left: "left", down_right: "right", up_left: "left", up_right: "right", up: "down", left: "down", right: "down"};
-const FIELD_ACTIONS = {idle: ["idle"], walk: ["walk", "idle"], dash: ["dash", "walk", "idle"], yes: ["yes", "idle"], no: ["no", "idle"], cast: ["cast", "idle"]};
+const FIELD_ACTIONS = {idle: ["idle"], walk: ["walk", "idle"], dash: ["dash", "walk", "idle"], yes: ["yes", "idle"], no: ["no", "idle"], cast: ["cast", "idle"], grant: ["grant", "cast", "idle"]};
 
 /** A field character: `<base>_<action>` sheets with `<action>/<dir>/NN` frames (8 or 4 directions). */
 function fieldChar(base) {
@@ -227,13 +227,19 @@ function image(file, anchor = "center") {
 }
 
 /** A fixed cut of the upstream town tileset, standing on its bottom row. */
-function madraCut(x, y, w, h, ow, oh) {
+function tileCut(file, x, y, w, h, ow, oh) {
     return () => {
-        const s = sheet("tilesets/madra");
+        const s = sheet(file);
         if (!s) return null;
         const img = cut(s.img, {x, y, w, h});
         return {img: ow ? resample(img, ow, oh, true) : img, anchor: "bottom"};
     };
+}
+const madraCut = (...a) => tileCut("tilesets/madra", ...a);
+/** The three tree variants of a Sunspire tree sheet: two town trees and the forest's round one. */
+function trees(order) {
+    const cuts = {orange: madraCut(80, 288, 48, 64, 32, 43), purple: madraCut(32, 288, 48, 64, 32, 43), round: tileCut("tilesets/forest", 16, 128, 48, 48, 32, 32)};
+    return name => cuts[order[["down", "alt1", "alt2"].indexOf(name.split("/")[1])] || order[0]]();
 }
 
 const MC = "spritesheets/main_chars/",
@@ -276,8 +282,8 @@ Object.assign(RULES, {
     }),
     battle_effect_icons: atlasMap("icons/battle_effects/battle_effect_icons"),
     items_icons: atlasMap("icons/items/items_icons", {
-        potion: "antidote", pdrop: "psy_crystal", wood: "wooden_stick", bronze: "rusty_mace", iron: "great_sword", steel: "master_rapier",
-        sol: "sol_blade", vest: "cotton_shirt", leather: "adepts_clothes", chain: "steel_armor", aegis: "knights_shield",
+        potion: "antidote", pdrop: "psy_crystal", wood: "elven_rapier", bronze: "great_sword", iron: "great_axe", steel: "master_rapier",
+        sol: "sol_blade", vest: "cotton_shirt", leather: "adepts_clothes", chain: "steel_armor", aegis: "asuras_armor",
     }),
     emoticons: atlasMap("misc/emoticons"),
     menu: atlasMap("misc/menu"),
@@ -310,8 +316,8 @@ Object.assign(RULES, {
     water_drop: image("misc/water_drop"),
     // decorations are sprites with their own sheets: the upstream trees and fence pieces at native size
     // the upstream trees are 48x64; at two tiles wide they hide less of a map whose trees stand on single tiles
-    tree: madraCut(80, 288, 48, 64, 32, 43),
-    tree_trail: madraCut(32, 288, 48, 64, 32, 43),
+    tree: trees(["orange", "purple", "round"]),
+    tree_trail: trees(["round", "purple", "orange"]),
     fence_h: madraCut(112, 400, 16, 16),
     fence_v: madraCut(144, 416, 16, 16),
     fence_v2: madraCut(144, 432, 16, 16),

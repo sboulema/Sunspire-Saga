@@ -141,6 +141,11 @@ function fieldSheet(id) {
         // the nod and the head shake the hero plays on a yes / no answer
         [stand, step, stand].forEach((img, i) => frames.push(F(`yes/${dir}/${String(i).padStart(2, "0")}`, cell(img, CW, CH))));
         [stand, shift(stand, -1, 0), stand, shift(stand, 1, 0)].forEach((img, i) => frames.push(F(`no/${dir}/${String(i).padStart(2, "0")}`, cell(img, CW, CH))));
+        // the heroes also cast on the field (arms spread) and hold up what they find (chests, spirits)
+        if (HEROES.includes(id)) {
+            frames.push(F(`cast/${dir}/00`, cell(spr(id + "_cast"), CW, CH)), F(`cast/${dir}/01`, cell(spr(id + "_cast2"), CW, CH)));
+            frames.push(F(`grant/${dir}/00`, cell(spr(id + "_cast"), CW, CH)));
+        }
     }
     writeAtlas(path.join(IMG, "spritesheets/field"), id + "_field", frames);
 }
@@ -202,8 +207,12 @@ function objectSheets() {
     // decorations drawn as sprites over plain ground, so a pack can replace them at any size:
     // trees, the fence pieces (the post faces right; the left end is its mirror) and the houses,
     // one frame per house_*.png
-    single("tree", "idle", spr("tree"));
-    single("tree_trail", "idle", spr("tree_trail"));
+    // three tree variants per sheet: the sprite, its mirror and a darker one, picked per tile
+    const tint = (img, f) => { const o = png.create(img.width, img.height); img.data.copy(o.data); for (let i = 0; i < o.data.length; i += 4) { o.data[i] = Math.round(o.data[i] * f[0]); o.data[i + 1] = Math.round(o.data[i + 1] * f[1]); o.data[i + 2] = Math.round(o.data[i + 2] * f[2]); } return o; };
+    for (const id of ["tree", "tree_trail"]) {
+        const t = spr(id);
+        writeAtlas(dir, id, [F("idle/down/00", t), F("idle/alt1/00", png.flipX(t)), F("idle/alt2/00", tint(t, [0.82, 0.9, 0.78]))]);
+    }
     single("fence_h", "idle", spr("fence_h"));
     single("fence_v", "idle", spr("fence_v"));
     single("fence_v2", "idle", spr("fence_v2"));
@@ -304,10 +313,20 @@ function battleAndPortraits() {
         F("herb", spr("item_herb")), F("potion", spr("item_potion")), F("pdrop", spr("item_pdrop")), F("elixir", spr("item_elixir")),
     ];
     writeAtlas(path.join(IMG, "icons/abilities"), "abilities_icons", abilityIcons);
-    const gear = { wood: "W", bronze: "W", iron: "W", steel: "W", sol: "W", vest: "A", leather: "A", chain: "A", aegis: "A" };
+    // 8x8 gear icons drawn here: a sword, an axe and a rapier per blade tier, and the four armours
+    const ICON_COL = { k: [43, 35, 32], H: [110, 70, 40], W: [217, 160, 102], B: [240, 192, 112], G: [224, 228, 232], S: [199, 211, 230], Y: [255, 236, 120], C: [154, 208, 122], c: [106, 154, 74], R: [176, 122, 60], r: [138, 90, 43], s: [127, 143, 166], P: [230, 214, 140], p: [192, 160, 64] };
+    const icon8 = (rows, blade) => { const img = png.create(8, 8); rows.forEach((row, y) => [...row].forEach((ch, x) => { if (ch === ".") return; const c = ICON_COL[ch === "X" ? blade : ch]; png.fill(img, x, y, 1, 1, c); })); return img; };
+    const SWORD = ["......kk", ".....kXk", "....kXk.", "...kXk..", "..kXk...", ".HHk....", "HH.H....", "H......."];
+    const AXE = ["....kkk.", "...kXXXk", "...kXXXk", "..kkXXk.", "..kH.k..", ".kH.....", "kH......", "k......."];
+    const RAPIER = [".......k", "......kX", ".....kX.", "....kX..", "...kX...", "..kkk...", ".kH.H...", "kH......"];
+    const armour = (a, b) => [".kk..kk.", `k${a}${a}kk${a}${a}k`, `k${a}${b}${a}${a}${b}${a}k`, `.k${a}${a}${a}${a}k.`, `.k${b}${a}${a}${b}k.`, `.k${a}${a}${a}${a}k.`, `.k${a}${b}${b}${a}k.`, "..kkkk.."];
+    const gearIcons = {
+        wood: icon8(SWORD, "W"), bronze: icon8(SWORD, "B"), iron: icon8(AXE, "G"), steel: icon8(RAPIER, "S"), sol: icon8(SWORD, "Y"),
+        vest: icon8(armour("C", "c")), leather: icon8(armour("R", "r")), chain: icon8(armour("S", "s")), aegis: icon8(armour("P", "p")),
+    };
     writeAtlas(path.join(IMG, "icons/items"), "items_icons", [
         ...["herb", "potion", "pdrop", "elixir"].map(k => F(k, spr("item_" + k))),
-        ...Object.entries(gear).map(([k, l]) => F(k, placeholder(8, 8, l, l === "W" ? COL.grey : COL.earth))),
+        ...Object.entries(gearIcons).map(([k, img]) => F(k, img)),
     ]);
     // title screen: night sky with the Sunspire logo block
     const title = png.create(240, 160);

@@ -69,11 +69,50 @@ const abilities = [
     ability("set_djinn", "Set spirit", {effects: [{type: "set_djinn", usage: "on_use"}], ability_category: "djinn", msg_type: "set_djinn"}),
     ability("flee", "Flee", {type: "effect_only", battle_animation_key: "flee", ability_category: "skill", msg_type: "no_msg", affects_downed: false}),
 ];
+// battle effects of the damaging arts: particle recipes for the engine's animation player, one per
+// art, written to assets/dbs/abilities_animations (the attack, jump and cure recipes are hand-written)
+const ART_FX = {
+    earth: {main: [205, 160, 70], core: "rgba(255,240,200,0.85)"},
+    fire: {main: [255, 130, 50], core: "rgba(255,240,160,0.9)"},
+    water: {main: [110, 180, 255], core: "rgba(235,250,255,0.9)"},
+    wind: {main: [205, 160, 255], core: "rgba(255,255,220,0.9)"},
+};
+const ART_STYLE = {
+    quake: {from: "ground", lift: -12, zone: ["line", 44], total: 18, repeat: 2, size: 5, shake: "x"},
+    spire: {from: "above", lift: 0, zone: ["circle", 10], total: 14, repeat: 2, size: 5},
+    gaia_blade: {from: "ground", lift: -40, zone: ["line", 64], total: 24, repeat: 2, size: 6},
+    flare: {from: "target", lift: -30, zone: ["circle", 12], total: 16, repeat: 2, size: 5},
+    fire_bomb: {from: "target", lift: -36, zone: ["circle", 18], total: 24, repeat: 2, size: 6, shake: "y"},
+    inferno: {from: "ground", lift: -44, zone: ["line", 72], total: 30, repeat: 3, size: 6, shake: "x"},
+    ice_horn: {from: "ground", lift: -26, zone: ["line", 20], total: 16, repeat: 2, size: 4, rect: true},
+    gust: {from: "left", lift: 0, zone: ["line", 10], total: 20, repeat: 3, size: 4},
+    plasma: {from: "target", lift: -10, zone: ["circle", 18], total: 18, repeat: 3, size: 4, blink: true},
+    bolt: {from: "above", lift: 0, zone: ["line", 6], total: 14, repeat: 2, size: 4, rect: true, blink: true},
+};
+function artRecipe(key, el) {
+    const col = ART_FX[el];
+    const style = ART_STYLE[key] || {from: "target", lift: -20, zone: ["circle", 10], total: 14, repeat: 2, size: 5};
+    // where the particles spawn: the ground line under the target, above it, on it, or to its left
+    const origin = {ground: {x: "targets", y: 135}, above: {x: "targets", y: "targets", shift_y: -80}, target: {x: "targets", y: "targets"}, left: {x: "targets", y: "targets", shift_x: -60}}[style.from];
+    const spawn = style.zone[0] === "line" ? {type: "line", points: [{x: -style.zone[1], y: 0}, {x: style.zone[1], y: 0}]} : {type: "circle", radius: style.zone[1]};
+    const recipe = {key_name: key, cast_type: "psynergy_cast", wait_for_cast_animation: true,
+        particles_sequence: [{
+            data: {energy: {red: col.main[0], green: col.main[1], blue: col.main[2], lifespan: 450, alpha: 0.85, target: {x: "targets", y: "targets", shift_x: style.from === "left" ? 40 : 0, shift_y: style.lift, zone_key: "hit_zone"}}},
+            zones: {hit_zone: {type: "circle", radius: 6}, spawn_zone: spawn},
+            emitters: [{...origin, position: "over", render_type: "pixel", show_trails: true, trails_clear_factor: 0.2, pixel_size: style.size, pixel_reducing_factor: 0.04, pixel_is_rect: !!style.rect, particles_display_blend_mode: "screen", render_white_core: true, core_custom_color: col.core, total: style.total, repeat: style.repeat, frequency: 40, random_in_zone: true, emitter_data_key: "energy", zone_key: "spawn_zone"}],
+            emission_finish: 900,
+        }]};
+    if (style.shake) recipe.shake_sequence = [{start_delay: 500, sprite_index: "targets", ignore_if_dodge: true, ignore_if_no_effect: false, interval: 40, direction: style.shake, shake_count: 6, intensity: 3, random_delta: 1}];
+    if (style.blink) recipe.blink_sequence = [{sprite_index: "targets", start_delay: 470, count: 2, interval: 100, duration: 300}];
+    return recipe;
+}
+const ELEMENT_ART = {earth: "quake", fire: "flare", water: "ice_horn", wind: "gust"}; // the spirits' attacks borrow the element's first art
 for (const [key, a] of Object.entries(C.arts)) {
+    if (!a.heal) writeJson(path.join(DBS, "abilities_animations", key + "_db.json"), artRecipe(key, a.el));
     abilities.push(
         a.heal
             ? ability(key, a.name, {description: a.desc, type: "healing", element: EL[a.el], battle_target: "ally", pp_cost: a.cost, ability_power: a.heal, effects_outside_battle: true, ability_category: "psynergy", battle_animation_key: "cure"})
-            : ability(key, a.name, {description: a.desc, type: "base_damage", element: EL[a.el], battle_target: "enemy", range: a.aoe ? 11 : 1, pp_cost: a.cost, ability_power: a.pow + ART_BONUS, ability_category: "psynergy"})
+            : ability(key, a.name, {description: a.desc, type: "base_damage", element: EL[a.el], battle_target: "enemy", range: a.aoe ? 11 : 1, pp_cost: a.cost, ability_power: a.pow + ART_BONUS, ability_category: "psynergy", battle_animation_key: key})
     );
 }
 // field arts are the engine's built-in field psynergy under Sunspire names (the key stays the engine's)
@@ -86,7 +125,7 @@ for (const [key, s] of Object.entries(C.spirits)) {
             ? ability(key, s.name, {description: s.desc, type: "healing", element: EL[s.el], battle_target: "ally", ability_power: 60, ability_category: "djinn", battle_animation_key: "cure", msg_type: "unleash"})
             : s.healAll
             ? ability(key, s.name, {description: s.desc, type: "healing", element: EL[s.el], battle_target: "ally", range: 11, ability_power: 45, ability_category: "djinn", battle_animation_key: "cure", msg_type: "unleash"})
-            : ability(key, s.name, {description: s.desc, type: "base_damage", element: EL[s.el], battle_target: "enemy", range: s.aoe ? 11 : 1, ability_power: s.pow + ART_BONUS, ability_category: "djinn", msg_type: "unleash"})
+            : ability(key, s.name, {description: s.desc, type: "base_damage", element: EL[s.el], battle_target: "enemy", range: s.aoe ? 11 : 1, ability_power: s.pow + ART_BONUS, ability_category: "djinn", msg_type: "unleash", battle_animation_key: ELEMENT_ART[s.el]})
     );
 }
 for (const s of C.summons) {
@@ -230,6 +269,9 @@ for (const [id, ch] of Object.entries(C.chars)) {
         dash: {frame_rate: 10, animations: DIRS8, frames_count: 2, initial_animation: "down", loop: true, spritesheet: sheet("field", `${id}_field`)},
         yes: {frame_rate: 6, animations: DIRS8, frames_count: 3, initial_animation: "down", loop: false, spritesheet: sheet("field", `${id}_field`)},
         no: {frame_rate: 8, animations: DIRS8, frames_count: 4, initial_animation: "down", loop: false, spritesheet: sheet("field", `${id}_field`)},
+        // the field cast (arms spread) and the pose that holds up a found item or a caught spirit
+        cast: {frame_rate: 6, animations: DIRS8, frames_count: 2, initial_animation: "down", loop: true, spritesheet: sheet("field", `${id}_field`)},
+        grant: {frame_rate: 1, animations: DIRS8, frames_count: 1, initial_animation: "down", loop: false, spritesheet: sheet("field", `${id}_field`)},
         battle: {spritesheet: sheet("battle", `${id}_battle`), animations: BATTLE_CHAR_ANIMS, frames_count: BATTLE_CHAR_ANIMS.map(() => 1), frame_rate: [10, 10, 3, 3, 10, 10, 12, 6, 1, 1, 1, 1, 1, 1], loop: BATTLE_CHAR_ANIMS.map(a => a.startsWith("idle") || a === "cast_back" || a === "cast_front")},
     }});
 }
@@ -253,7 +295,9 @@ for (const id of ["ogre_s", "wyrm_s"]) npcs.push(objectNpc(id, {idle: objectActi
 const HOUSE_IDS = [...new Set(Object.values(C.maps).flatMap(M => (M.houses || []).map(h => h.id)))];
 const decor = (key, animations, over = {}, action = "idle") => ({key_name: key, anchor_x: 0.5, anchor_y: 1, sprite_y_offset: 7, initial_action: action, no_shadow: true, ignore_physics: true, interaction_pattern: "no_interaction",
     actions: {[action]: objectAction(key, animations, animations.map(() => 1), animations.map(() => 1), animations.map(() => false))}, ...over});
-for (const id of ["tree", "tree_trail", "fence_h", "fence_v", "fence_v2"]) npcs.push(decor(id, ["down"]));
+const TREE_VARIANTS = ["down", "alt1", "alt2"]; // the sprite, its mirror, a darker one
+for (const id of ["tree", "tree_trail"]) npcs.push(decor(id, TREE_VARIANTS));
+for (const id of ["fence_h", "fence_v", "fence_v2"]) npcs.push(decor(id, ["down"]));
 npcs.push(decor("fence_post", ["right", "left"]));
 npcs.push(decor("houses", HOUSE_IDS, {}, "house")); // the sheet's frames are house/<id>/00
 for (const id of ["well", "spring"]) npcs.push(decor(id, ["down"], {anchor_y: 0.5, sprite_y_offset: 0})); // walked onto, so centred under the hero
@@ -294,7 +338,7 @@ for (const id of C.map_order) {
     const hash = (x, y, s) => ((x * 73856093) ^ (y * 19349663) ^ (s * 83492791)) >>> 0;
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
         const c = at(x, y);
-        if (c === "t") dec(M.kind === "trail" ? "tree_trail" : "tree", x, y);
+        if (c === "t") dec(M.kind === "trail" ? "tree_trail" : "tree", x, y, {animation: TREE_VARIANTS[hash(x, y, 5) % TREE_VARIANTS.length]});
         else if (c === "F") {
             // a run tile between two fence tiles, a post at the end of a run (its mirror on the
             // left end) or a vertical piece, the second variant now and then

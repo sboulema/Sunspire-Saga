@@ -279,6 +279,17 @@ docs and tools.
   snapshot or custom position gives pixels), so a pack can swap in a sheet of any height and it
   still stands on its tile and sorts with the hero. Thera carries 472 of them; the map update
   stayed under a few ms in the hidden pane. The hero walks at 70 (dash 100), up from 60 / 85.
+- Added 2026-10-28: the tree sheets hold three variants (`down`, `alt1` the mirror, `alt2` a
+  darker one) and the generator picks one per tile by hash; the heroes have `cast` (two frames,
+  arms spread, from the battle cast sprites) and `grant` (one frame, the pose for a found item
+  or a caught spirit) on the field, which the engine's chest and djinn events were already
+  asking for; the damaging arts got particle recipes (generated into
+  `assets/dbs/abilities_animations/<art>_db.json`, with a shake for quake, fire bomb and
+  inferno and a blink for plasma and bolt) and the spirits' attacks borrow their element's first
+  art, so Quake and the rest finally show something; the gear icons are drawn by the asset
+  builder (sword, axe, rapier, four armours) instead of letter placeholders. The engine still
+  requests `assets/images/abilities_animations/<art>.png` for every recipe and gets a 404, which
+  it tolerates; a real effect sheet there would be picked up as is.
 
 ### Phase 6 - the content (2026-10-27/28)
 

@@ -23,7 +23,8 @@ loaded, the list marks every slot the pack covers. The list is generated from th
   frames. Plain images (no frames in the guide) take no atlas.
 - Partial packs are fine; everything you leave out keeps the built-in art. Files that match no slot
   or have the wrong size are reported and skipped.
-- Trees (`tree`, `tree_trail`), fences (`fence_h` the run piece, `fence_post` facing right with
+- Trees (`tree`, `tree_trail`, three variants each: `down`, `alt1`, `alt2`, picked per tile),
+  fences (`fence_h` the run piece, `fence_post` facing right with
   its mirror for left ends, `fence_v` and `fence_v2`), the `houses` (one frame per house) and the
   `well` and `spring` are sprites, not tiles: they stand on the bottom row of their tile and may
   be taller or wider than it (a tree can cover several tiles), and they sort with the hero by

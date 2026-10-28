@@ -111,6 +111,46 @@
                     "json": "assets/images/spritesheets/field/ari_field.json"
                 }
             },
+            "cast": {
+                "frame_rate": 6,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 2,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/ari_field.png",
+                    "json": "assets/images/spritesheets/field/ari_field.json"
+                }
+            },
+            "grant": {
+                "frame_rate": 1,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 1,
+                "initial_animation": "down",
+                "loop": false,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/ari_field.png",
+                    "json": "assets/images/spritesheets/field/ari_field.json"
+                }
+            },
             "battle": {
                 "spritesheet": {
                     "image": "assets/images/spritesheets/battle/ari_battle.png",
@@ -288,6 +328,46 @@
                     "up_right"
                 ],
                 "frames_count": 4,
+                "initial_animation": "down",
+                "loop": false,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/lyn_field.png",
+                    "json": "assets/images/spritesheets/field/lyn_field.json"
+                }
+            },
+            "cast": {
+                "frame_rate": 6,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 2,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/lyn_field.png",
+                    "json": "assets/images/spritesheets/field/lyn_field.json"
+                }
+            },
+            "grant": {
+                "frame_rate": 1,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 1,
                 "initial_animation": "down",
                 "loop": false,
                 "spritesheet": {
@@ -479,6 +559,46 @@
                     "json": "assets/images/spritesheets/field/bram_field.json"
                 }
             },
+            "cast": {
+                "frame_rate": 6,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 2,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/bram_field.png",
+                    "json": "assets/images/spritesheets/field/bram_field.json"
+                }
+            },
+            "grant": {
+                "frame_rate": 1,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 1,
+                "initial_animation": "down",
+                "loop": false,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/bram_field.png",
+                    "json": "assets/images/spritesheets/field/bram_field.json"
+                }
+            },
             "battle": {
                 "spritesheet": {
                     "image": "assets/images/spritesheets/battle/bram_battle.png",
@@ -656,6 +776,46 @@
                     "up_right"
                 ],
                 "frames_count": 4,
+                "initial_animation": "down",
+                "loop": false,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/sera_field.png",
+                    "json": "assets/images/spritesheets/field/sera_field.json"
+                }
+            },
+            "cast": {
+                "frame_rate": 6,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 2,
+                "initial_animation": "down",
+                "loop": true,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/sera_field.png",
+                    "json": "assets/images/spritesheets/field/sera_field.json"
+                }
+            },
+            "grant": {
+                "frame_rate": 1,
+                "animations": [
+                    "down",
+                    "up",
+                    "left",
+                    "right",
+                    "down_left",
+                    "down_right",
+                    "up_left",
+                    "up_right"
+                ],
+                "frames_count": 1,
                 "initial_animation": "down",
                 "loop": false,
                 "spritesheet": {
@@ -1488,16 +1648,24 @@
         "actions": {
             "idle": {
                 "frame_rate": [
+                    1,
+                    1,
                     1
                 ],
                 "animations": [
-                    "down"
+                    "down",
+                    "alt1",
+                    "alt2"
                 ],
                 "frames_count": [
+                    1,
+                    1,
                     1
                 ],
                 "initial_animation": "down",
                 "loop": [
+                    false,
+                    false,
                     false
                 ],
                 "spritesheet": {
@@ -1519,16 +1687,24 @@
         "actions": {
             "idle": {
                 "frame_rate": [
+                    1,
+                    1,
                     1
                 ],
                 "animations": [
-                    "down"
+                    "down",
+                    "alt1",
+                    "alt2"
                 ],
                 "frames_count": [
+                    1,
+                    1,
                     1
                 ],
                 "initial_animation": "down",
                 "loop": [
+                    false,
+                    false,
                     false
                 ],
                 "spritesheet": {

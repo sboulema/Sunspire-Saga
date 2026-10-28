@@ -15,7 +15,8 @@ under `base/`). `README.md` describes the layout, `MIGRATION.md` the port and th
   Tiled maps in `assets/maps/` and `walkthrough.html`. **Edit the sources and regenerate; never
   edit a generated file by hand** (the next regeneration would silently undo it). The
   hand-written exceptions are `assets/dbs/misc_animations_db.json`,
-  `interactable_objects_db.json`, the battle recipes under `assets/dbs/*_animations/` and
+  `interactable_objects_db.json`, the attack, jump and cure recipes under
+  `assets/dbs/*_animations/` (the arts' own recipes are generated next to them) and
   `assets/init.json`.
 - Any change a player could notice must therefore go into `content.json` (or the generators),
   and the regenerated `walkthrough.html` is committed with it: that is how the walkthrough stays
