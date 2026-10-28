@@ -25,6 +25,7 @@
     "build": "webpack --config webpack.config.dev.js",
     "build_prod": "webpack --config webpack.config.prod.js",
     "build:assets": "node scripts/build_sunspire_assets.js",
+    "build:content": "node scripts/build_sunspire_assets.js && node scripts/build_sunspire_content.js && node scripts/build_walkthrough.js",
     "site": "npm run build_prod && node scripts/build_site.js",
     "format-check": "prettier --check \"base/**/*.ts\"",
     "format": "prettier --write \"base/**/*.ts\"",

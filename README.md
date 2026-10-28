@@ -8,10 +8,10 @@ Sunspire Saga is an independent homage, with no assets from Nintendo or Camelot.
 tile, name, line of dialog and number in this repository is original; `ASSETS.md` lists where each
 asset comes from. The engine code keeps its MIT licence and copyright notice (`LICENSE.txt`).
 
-**Status:** Phase 2 of the migration (see `MIGRATION.md`). The engine boots on a placeholder set
-of Sunspire content: the town of Brindle, its shop and inn, four villagers and a Fang Wolf battle.
-The finished game (`game.js`, one script with no build step) lives on the `main` branch until the
-port catches up with it.
+**Status:** Phase 6 of the migration (see `MIGRATION.md`): the whole game is on the engine, from
+Thera to the Sunspire, with every map, character, art, spirit, summon, enemy, chest, shop and
+boss of the single-script game, a push puzzle and a field art. Saves and the installable app
+(Phase 7) are next. The single-script game (`game.js`) lives on the `main` branch until then.
 
 ## Running it
 
@@ -21,8 +21,9 @@ port catches up with it.
   change. Use a Chromium browser for now.
 - `npm run build` type-checks and bundles for development; `npm run build_prod` makes the
   minified bundle; `npm run site` builds the static site in `site/` (what CI publishes);
-  `npm run build:assets` regenerates the game assets from `assets/sunspire/`; `npm run format`
-  runs Prettier over `base/` (the pre-commit hook does the same).
+  `npm run build:content` regenerates the assets, the databases, the maps and the walkthrough
+  from `assets/sunspire/` (run it after any change there); `npm run format` runs Prettier over
+  `base/` (the pre-commit hook does the same).
 - Controls: arrows to move, **Z** = A, **X** = B, **A / S** = L / R, **Backspace** = Select,
   **Enter** = Start, **M** sound, **F** immersive mode. The handheld shell around the screen has
   the same buttons for touch; the shell colour and the light / dark theme are remembered in the
@@ -35,9 +36,12 @@ port catches up with it.
 | `base/` | the engine, TypeScript (entry `base/GoldenSun.ts`; the class name is kept for now) |
 | `base/shell/HandheldShell.ts`, `index.html`, `static/site.css`, `static/site.js` | the handheld shell: on-screen buttons, integer scaling, immersive mode; the page's theme and shell colour |
 | `base/shell/SpritePacks.ts`, `pack-guide.html`, `static/pack-guide.js`, `static/pack-slots.json`, `packs/README.md` | sprite packs: sheets the player loads (PNG / GIF / WebP or a zip) replace the built-in art; the guide lists every slot |
-| `assets/dbs/` | the game data: characters, classes, abilities, items, enemies, spirits (`djinni_db`), summons, maps, NPCs, shops, inn, dialog, audio |
-| `assets/sunspire/` | Sunspire's source art: the exported sprites, the Brindle tileset and grid, the 5x5 font glyphs |
-| `scripts/build_sunspire_assets.js` | generates `assets/images`, `assets/maps`, `assets/font` and `assets/sounds` (plus `bgm_db` / `se_db`) from `assets/sunspire/`; run it after changing the source art |
+| `assets/sunspire/content.json` | **the game**: characters, arts, gear, items, shops, chests, spirits, summons, enemies, encounters, maps, villagers, dialog and story. Edit this, not the databases. |
+| `assets/sunspire/` | Sunspire's source art: the exported sprites, the five map grids and tilesets, the 5x5 font glyphs |
+| `assets/dbs/`, `assets/maps/`, `walkthrough.html` | **generated** from `content.json` by the scripts below (`misc_animations_db`, `interactable_objects_db`, the battle recipes and `init.json` are hand-written) |
+| `scripts/build_sunspire_assets.js` | generates `assets/images`, `assets/font`, `assets/sounds`, `bgm_db` / `se_db` and the pack slot list from `assets/sunspire/` |
+| `scripts/build_sunspire_content.js` | generates the databases and the Tiled maps from `content.json` and the map grids |
+| `scripts/build_walkthrough.js` | generates `walkthrough.html`, the plain-text walkthrough, from the same data |
 | `scripts/build_site.js` | copies the page, bundle, assets and static files into `site/` |
 | `.github/workflows/build.yml` | CI: format check, build, site artifact; deploys to GitHub Pages only when run by hand with the deploy option |
 | `assets/filters/`, `assets/plugins/` | WebGL filters and the particle plugin the engine ships with |

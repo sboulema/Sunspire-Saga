@@ -10,7 +10,7 @@ const OUT = path.join(ROOT, "site");
 
 fs.rmSync(OUT, {recursive: true, force: true});
 fs.mkdirSync(OUT, {recursive: true});
-for (const entry of ["index.html", "pack-guide.html", "dist/bundle.js", "assets", "static", "LICENSE.txt"]) {
+for (const entry of ["index.html", "pack-guide.html", "walkthrough.html", "dist/bundle.js", "assets", "static", "LICENSE.txt"]) {
     const src = path.join(ROOT, entry);
     if (!fs.existsSync(src)) throw new Error(`missing ${entry}; run npm run build_prod first`);
     fs.cpSync(src, path.join(OUT, entry), {recursive: true});

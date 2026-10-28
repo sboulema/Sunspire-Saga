@@ -268,6 +268,65 @@ docs and tools.
   (`ari_down.png` ...) work again, by stitching frames into sheets in the browser the way the
   build script does; animated GIF frames would come with that.
 
-### Phases 6-8
+### Phase 6 - the content (2026-10-27/28)
 
-Unchanged from the plan: content port, saves and PWA, then the Phaser upgrade decision.
+- Everything the game is made of lives in `assets/sunspire/content.json` (characters, arts,
+  gear, items, shops, inns, chests, spirits and their duels, summons, enemies, encounters, the
+  five maps with exits, houses, signs, wells, boulder, gate, puzzle, bosses and joins, the
+  villagers and their dialog, the story text and rules) and `assets/sunspire/maps/` (the tile
+  grid and tileset of each map, captured from the legacy builders).
+  `scripts/build_sunspire_content.js` generates every database and Tiled map from them;
+  `scripts/build_walkthrough.js` generates `walkthrough.html` from the same data, so the guide
+  cannot drift. Run `build_sunspire_assets.js`, then `build_sunspire_content.js`, then
+  `build_walkthrough.js` (`npm run build:content`).
+- How Sunspire's rules sit on the engine: characters level one by one (a member joins at the
+  level the story expects: Lyn 3, Bram 5, Sera 8; exp curve from 18 + 12 x level); plain attacks
+  do (atk - def) / 2, so bosses and spirit duels "shrug off steel" through a high def (ogre 30,
+  wyrm 40, duels +18) while arts (`base_damage` psynergy, which ignores def) carry a flat +8 on
+  their legacy power; spirits set give +4 hp, +2 pp, +1 atk, +1 def; summons are the engine's
+  (power + 3% of each foe's max HP per spirit spent).
+- Map objects are NPCs with events: chests (the engine's chest event for items and gear, a
+  branch + `set_party_coins` for coins, storage key per chest), signs / doors / wells as an
+  invisible `marker` NPC (shop, inn or a message; wells are an `event_trigger` tile that
+  restores HP and PP), the boulder and the gate (branch on a flag, dialog, then the NPC is
+  switched off), bosses (`battle` event; flags in `before_fade_victory_events`, the spire key
+  and the ending in `all_enemies_fled_events`, which is where the engine fires post-fade
+  victory events), spirits (`djinn_get` with a fight against a `duel_<id>` enemy). Party joins
+  are `party_join` events: Lyn from a yes / no dialog, Bram and Sera in the map's `game_events`
+  on first entry. Random encounters are one encounter zone per map (the paddock on top of the
+  fields), one party per legacy group.
+- The puzzle and the field art: a `loose_boulder` (pushable interactable object with
+  `psynergies_info.move`) wedged in the trail's lower gap at (8,13), pushed by walking into it
+  or with Ari's innate SHOVE (the engine's `move`, on the Q shortcut); its `allowed_tiles` run
+  north out of the gap. The engine's push code and field-psynergy targeting are used as they
+  are.
+- Engine quirks met, all worked around in the generator or patched:
+  - events in a list fire at once, so anything that must wait for a dialog hangs off its
+    `finish_events`; a dialog inside `yes_no_events` is destroyed with its parent before it
+    runs, so the whole exchange is one dialog with the question last;
+  - deactivating an NPC (`set_value` with `check_npc_storage_values`) destroys its running
+    events, so it is the last thing in a chain;
+  - `set_value` on a storage key that does not exist aborts the rest of the chain: every flag
+    is declared in `storage_db`;
+  - map properties that the engine reads as strings (`background_key`) must not be JSON-encoded;
+  - `is_close` uses the hero's `transition_direction`, set by walking, so NPCs are reached by
+    walking into them (also what a test harness must do);
+  - the hero needs `yes` and `no` actions (the nod and head shake after a yes / no answer);
+  - the psynergy menu and the battle status window assumed every character has field psynergy
+    and at least one spirit (`MainPsynergyMenu`, `ItemPsynergyChooseWindow`,
+    `BattleStatusDjinn` guarded).
+- Verified in Chromium end to end: the intro, Sorin, the coin chest, the Flint duel, the
+  boulder, the exit to Brindle, Lyn's join, the mine with Bram's join, an item chest, the Maw
+  Ogre and the spire key, the trail with Sera's join, the gate, the trail-to-spire exit, the
+  spring, the Shadow Wyrm, the ending back in Thera, random encounters in the fields, Mara's
+  shop and the farmstead inn, the push puzzle by walking and by Shove.
+- Not done, left for later phases or a balance pass: height differences (Sunspire's maps are
+  flat; the engine's collision layers are ready for them), battle animations beyond the
+  engine's image-free attack / cure recipes, Sunspire's synthesised music and sound, the
+  menu / status art the build script draws as labelled boxes, and a real balance pass of the
+  engine's damage formulas against the legacy numbers (the Flint duel at level 1 is as tight as
+  it was).
+
+### Phases 7-8
+
+Unchanged from the plan: saves and PWA, then the Phaser upgrade decision.
