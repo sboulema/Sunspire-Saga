@@ -79,22 +79,36 @@ tile); the tilesets, the houses, the map objects (sign, well, gate, marker, spri
 summon backdrops and the shadow stay built-in. `REPORT.txt` in the output folder lists what was
 replaced.
 
-Upstream has no bat or ooze, so those two are cut out of ripped enemy sheets in
-`pack-upstream-extra/` (another folder with `--extra`) when the sheets are there, and take the
-`momonga` and `mini_goblin` otherwise. Save the "Enemies & Bosses (No Alpha Channel)" sheets
+Sprites upstream lacks come from ripped sheets in `pack-upstream-extra/` (another folder with
+`--extra`) when the sheets are there, and from the upstream stand-ins otherwise. Save the sheets
 there under their downloaded names; the tool finds each by part of its name:
 
-| Sunspire enemy | Sheet name contains | Block |
-| --- | --- | --- |
-| bat (Dusk Bat) | `Vale to Goma Cave` (297x1113) | Bat |
-| ooze (Mire Ooze) | `Kojima Forest to Mercury Lighthouse` (649x872) | Ooze, the blue one |
+| Sunspire slot | Sheet name contains | Block | Without the sheet |
+| --- | --- | --- | --- |
+| `bat_battle` (Dusk Bat) | `Vale to Goma Cave` (297x1113) | Bat | `momonga` |
+| `ooze_battle` (Mire Ooze) | `Kojima Forest to Mercury Lighthouse` (649x872) | Ooze, the blue one | `mini_goblin` |
+| `spider_battle` (Pit Spider) | `Fuchin Falls to Atlin Peak` (297x1182) | Tarantula | `momonga` |
+| `tree`, `tree_trail` | `Miscellaneous - Trees` (260x231) | three trees each | the town tileset's trees |
 
 The rects in the script are pixel positions on those sheets, and each sheet's most common colour
-is keyed out as the background. Every pose sits in a 32x32 frame at one height, front and back:
-the bat hovers, idling with spread wings, winding up with a cocked wing and diving to attack,
-raising a wing and swiping to cast, wrapping its wings when hit; the ooze stands, idling upright,
-coiling and rolling into a ball to attack, splashing when hit. The folder is git-ignored like the
-pack, for the same reason.
+is keyed out as the background. Every enemy pose sits in a 32x32 frame at one height, front and
+back: the bat hovers (spread wings, cocked wing and dive to attack, raised wing and swipe to cast,
+wrapped wings when hit); the ooze and the spider stand (the ooze coils and rolls into a ball, the
+spider rears up and lunges; both flinch when hit). The trees come at native size, standing on
+their bottom row: `tree` the round dark-green, the green fruit and the yellow-green leafy tree,
+`tree_trail` the blue-green, the big blue-green and the yellow-green round one.
+
+Item icons of your own go in `pack-upstream-extra/items/<item>.png`, named after the Sunspire
+item (`potion.png`): each replaces that item's upstream stand-in as it is (upstream has no potion,
+so the potion otherwise borrows the antidote).
+
+The heroes' weapons are sprites of their own: each weapon in `content.json` has an engine weapon
+type (`sword`, `light_blade`, `axe`; `mace` and `staff` exist too), the engine draws the sheet for
+that type over the hero (`ari_sword`, `bram_axe` ...; transparent built in, as Sunspire's heroes
+hold their blades), and the tool fills them from upstream's weapon sheets where the upstream hero
+has one: Ari's sword and light blade from Isaac's sword, Bram's axe from Garet's. The heroes'
+frames keep upstream's 64x64 canvas so the weapon lines up; Isaac's sword is drawn 4 px lower, as
+upstream's weapon_sprite_shift does. The folder is git-ignored like the pack, for the same reason.
 
 ## Box art, concept sheets and screenshots
 

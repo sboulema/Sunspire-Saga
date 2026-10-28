@@ -151,12 +151,14 @@ for (const [key, it] of Object.entries(C.items)) {
     items.push({key_name: key, name: it.name, type: "general_item", description: it.desc, use_type: "single_use", ...BASE_ITEM, carry_up_to_30: true, use_ability: key, price: it.price});
 }
 for (const [key, g] of Object.entries(C.gear)) {
-    items.push({key_name: key, name: g.name, type: g.kind === "wpn" ? "weapons" : "armor", description: g.desc, use_type: "no_use", ...BASE_ITEM, effects: [g.kind === "wpn" ? {type: "attack", quantity: g.atk, operator: "plus"} : {type: "defense", quantity: g.def, operator: "plus"}], equipable_chars: C.party_order, price: g.price});
+    items.push({key_name: key, name: g.name, type: g.kind === "wpn" ? "weapons" : "armor", ...(g.kind === "wpn" ? {weapon_type: g.type} : {}), description: g.desc, use_type: "no_use", ...BASE_ITEM, effects: [g.kind === "wpn" ? {type: "attack", quantity: g.atk, operator: "plus"} : {type: "defense", quantity: g.def, operator: "plus"}], equipable_chars: C.party_order, price: g.price});
 }
 items.push({key_name: "compass", name: "Lyn's Compass", type: "general_item", description: "Lyn's scouting compass, lost in the paddock.", use_type: "no_use", ...BASE_ITEM, important_item: true, price: 0});
 db("items", items);
 
 // ---------------- classes and characters ----------------
+// the engine's weapon types the gear uses (sword, light_blade, axe, mace, staff)
+const WEAPON_TYPES = [...new Set(Object.values(C.gear).filter(g => g.kind === "wpn").map(g => g.type))];
 const CLASS_TYPE = {venus: 1, mercury: 2, mars: 3, jupiter: 4};
 db("classes", {
     class_table: elemObj(primary => elemObj(() => CLASS_TYPE[primary])),
@@ -179,7 +181,9 @@ db("main_chars", Object.entries(C.chars).map(([id, ch]) => ({
     djinn: [],
     items: id === "ari" ? [{key_name: "wood", quantity: 1, equipped: true}, {key_name: "herb", quantity: 3}] : [],
     battle_animations_variations: {},
-    weapons_sprites: {sword: {spritesheet: sheet("battle", `${id}_battle`)}},
+    // one sheet per weapon type, drawn over the hero (transparent built in: the heroes hold their blades; packs fill them)
+    weapons_sprites: Object.fromEntries(WEAPON_TYPES.map(type => [type, {spritesheet: sheet("battle/weapons", `${id}_${type}`)}])),
+    weapon_sprite_shift: 0,
 })));
 
 // ---------------- spirits and summons ----------------

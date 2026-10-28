@@ -45,11 +45,11 @@
     },
 
     "gear": {
-        "wood":    {"kind": "wpn", "name": "Wood Blade",   "atk": 3,  "price": 20,  "desc": "A practice blade of hard oak."},
-        "bronze":  {"kind": "wpn", "name": "Bronze Sword", "atk": 7,  "price": 80,  "desc": "A soldier's bronze sword."},
-        "iron":    {"kind": "wpn", "name": "Iron Axe",     "atk": 12, "price": 180, "desc": "Brindle iron, Brindle temper."},
-        "steel":   {"kind": "wpn", "name": "Steel Rapier", "atk": 16, "price": 480, "desc": "Light, quick and very sharp."},
-        "sol":     {"kind": "wpn", "name": "Sol Blade",    "atk": 24, "price": 999, "desc": "A blade that drinks the dawn."},
+        "wood":    {"kind": "wpn", "type": "sword",       "name": "Wood Blade",   "atk": 3,  "price": 20,  "desc": "A practice blade of hard oak."},
+        "bronze":  {"kind": "wpn", "type": "sword",       "name": "Bronze Sword", "atk": 7,  "price": 80,  "desc": "A soldier's bronze sword."},
+        "iron":    {"kind": "wpn", "type": "axe",         "name": "Iron Axe",     "atk": 12, "price": 180, "desc": "Brindle iron, Brindle temper."},
+        "steel":   {"kind": "wpn", "type": "light_blade", "name": "Steel Rapier", "atk": 16, "price": 480, "desc": "Light, quick and very sharp."},
+        "sol":     {"kind": "wpn", "type": "sword",       "name": "Sol Blade",    "atk": 24, "price": 999, "desc": "A blade that drinks the dawn."},
         "vest":    {"kind": "arm", "name": "Travel Vest",  "def": 2,  "price": 18,  "desc": "A padded vest for the road."},
         "leather": {"kind": "arm", "name": "Leather Mail", "def": 4,  "price": 70,  "desc": "Boiled leather, well stitched."},
         "chain":   {"kind": "arm", "name": "Chain Mail",   "def": 6,  "price": 160, "desc": "Linked rings over a quilted coat."},

@@ -162,7 +162,16 @@ function heroBattleSheet(id) {
     const frames = [];
     for (const [anim, list] of Object.entries(poses)) list.forEach((img, i) => frames.push(F(`battle/${anim}/${String(i).padStart(2, "0")}`, cell(img, CW, CH))));
     writeAtlas(path.join(IMG, "spritesheets/battle"), id + "_battle", frames);
+    // the weapon the engine draws over the hero, one sheet per weapon type the gear uses
+    // (content.json gear `type`), frame for frame with the hero: transparent here, as Sunspire's
+    // heroes hold their blades in their own sprites, so that packs can bring weapons of their own
+    for (const type of WEAPON_TYPES) {
+        const blank = [];
+        for (const [anim, list] of Object.entries(poses)) list.forEach((img, i) => blank.push(F(`${type}/${anim}/${String(i).padStart(2, "0")}`, png.create(CW, CH))));
+        writeAtlas(path.join(IMG, "spritesheets/battle/weapons"), `${id}_${type}`, blank);
+    }
 }
+const WEAPON_TYPES = [...new Set(Object.values(JSON.parse(fs.readFileSync(path.join(SRC, "content.json"), "utf8")).gear).filter(g => g.kind === "wpn").map(g => g.type))];
 const ENEMIES = ["ooze", "bat", "wolf", "spider", "beetle", "golem", "harpy", "boar", "shade", "gargoyle", "ogre", "wyrm",
     "djinn_battle_flint", "djinn_battle_granite", "djinn_battle_forge", "djinn_battle_ember", "djinn_battle_dew", "djinn_battle_mist", "djinn_battle_breeze", "djinn_battle_squall"];
 function enemyBattleSheet(id) {

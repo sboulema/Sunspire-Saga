@@ -1,0 +1,295 @@
+{
+    "frames": {
+        "light_blade/idle_back/00": {
+            "frame": {
+                "x": 0,
+                "y": 0,
+                "w": 20,
+                "h": 26
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 20,
+                "h": 26
+            },
+            "sourceSize": {
+                "w": 20,
+                "h": 26
+            }
+        },
+        "light_blade/idle_front/00": {
+            "frame": {
+                "x": 21,
+                "y": 0,
+                "w": 20,
+                "h": 26
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 20,
+                "h": 26
+            },
+            "sourceSize": {
+                "w": 20,
+                "h": 26
+            }
+        },
+        "light_blade/attack_init_back/00": {
+            "frame": {
+                "x": 42,
+                "y": 0,
+                "w": 20,
+                "h": 26
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 20,
+                "h": 26
+            },
+            "sourceSize": {
+                "w": 20,
+                "h": 26
+            }
+        },
+        "light_blade/attack_back/00": {
+            "frame": {
+                "x": 63,
+                "y": 0,
+                "w": 20,
+                "h": 26
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 20,
+                "h": 26
+            },
+            "sourceSize": {
+                "w": 20,
+                "h": 26
+            }
+        },
+        "light_blade/attack_init_front/00": {
+            "frame": {
+                "x": 84,
+                "y": 0,
+                "w": 20,
+                "h": 26
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 20,
+                "h": 26
+            },
+            "sourceSize": {
+                "w": 20,
+                "h": 26
+            }
+        },
+        "light_blade/attack_front/00": {
+            "frame": {
+                "x": 105,
+                "y": 0,
+                "w": 20,
+                "h": 26
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 20,
+                "h": 26
+            },
+            "sourceSize": {
+                "w": 20,
+                "h": 26
+            }
+        },
+        "light_blade/cast_init_back/00": {
+            "frame": {
+                "x": 126,
+                "y": 0,
+                "w": 20,
+                "h": 26
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 20,
+                "h": 26
+            },
+            "sourceSize": {
+                "w": 20,
+                "h": 26
+            }
+        },
+        "light_blade/cast_back/00": {
+            "frame": {
+                "x": 147,
+                "y": 0,
+                "w": 20,
+                "h": 26
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 20,
+                "h": 26
+            },
+            "sourceSize": {
+                "w": 20,
+                "h": 26
+            }
+        },
+        "light_blade/cast_init_front/00": {
+            "frame": {
+                "x": 168,
+                "y": 0,
+                "w": 20,
+                "h": 26
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 20,
+                "h": 26
+            },
+            "sourceSize": {
+                "w": 20,
+                "h": 26
+            }
+        },
+        "light_blade/cast_front/00": {
+            "frame": {
+                "x": 189,
+                "y": 0,
+                "w": 20,
+                "h": 26
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 20,
+                "h": 26
+            },
+            "sourceSize": {
+                "w": 20,
+                "h": 26
+            }
+        },
+        "light_blade/damage_back/00": {
+            "frame": {
+                "x": 210,
+                "y": 0,
+                "w": 20,
+                "h": 26
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 20,
+                "h": 26
+            },
+            "sourceSize": {
+                "w": 20,
+                "h": 26
+            }
+        },
+        "light_blade/damage_front/00": {
+            "frame": {
+                "x": 231,
+                "y": 0,
+                "w": 20,
+                "h": 26
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 20,
+                "h": 26
+            },
+            "sourceSize": {
+                "w": 20,
+                "h": 26
+            }
+        },
+        "light_blade/downed_back/00": {
+            "frame": {
+                "x": 252,
+                "y": 0,
+                "w": 20,
+                "h": 26
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 20,
+                "h": 26
+            },
+            "sourceSize": {
+                "w": 20,
+                "h": 26
+            }
+        },
+        "light_blade/downed_front/00": {
+            "frame": {
+                "x": 273,
+                "y": 0,
+                "w": 20,
+                "h": 26
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 20,
+                "h": 26
+            },
+            "sourceSize": {
+                "w": 20,
+                "h": 26
+            }
+        }
+    },
+    "meta": {
+        "app": "scripts/build_sunspire_assets.js",
+        "version": "1.0",
+        "image": "sera_light_blade.png",
+        "format": "RGBA8888",
+        "size": {
+            "w": 294,
+            "h": 26
+        },
+        "scale": "1"
+    }
+}

@@ -268,11 +268,24 @@
         "weapons_sprites": {
             "sword": {
                 "spritesheet": {
-                    "image": "assets/images/spritesheets/battle/ari_battle.png",
-                    "json": "assets/images/spritesheets/battle/ari_battle.json"
+                    "image": "assets/images/spritesheets/battle/weapons/ari_sword.png",
+                    "json": "assets/images/spritesheets/battle/weapons/ari_sword.json"
+                }
+            },
+            "axe": {
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/battle/weapons/ari_axe.png",
+                    "json": "assets/images/spritesheets/battle/weapons/ari_axe.json"
+                }
+            },
+            "light_blade": {
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/battle/weapons/ari_light_blade.png",
+                    "json": "assets/images/spritesheets/battle/weapons/ari_light_blade.json"
                 }
             }
-        }
+        },
+        "weapon_sprite_shift": 0
     },
     {
         "key_name": "lyn",
@@ -531,11 +544,24 @@
         "weapons_sprites": {
             "sword": {
                 "spritesheet": {
-                    "image": "assets/images/spritesheets/battle/lyn_battle.png",
-                    "json": "assets/images/spritesheets/battle/lyn_battle.json"
+                    "image": "assets/images/spritesheets/battle/weapons/lyn_sword.png",
+                    "json": "assets/images/spritesheets/battle/weapons/lyn_sword.json"
+                }
+            },
+            "axe": {
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/battle/weapons/lyn_axe.png",
+                    "json": "assets/images/spritesheets/battle/weapons/lyn_axe.json"
+                }
+            },
+            "light_blade": {
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/battle/weapons/lyn_light_blade.png",
+                    "json": "assets/images/spritesheets/battle/weapons/lyn_light_blade.json"
                 }
             }
-        }
+        },
+        "weapon_sprite_shift": 0
     },
     {
         "key_name": "bram",
@@ -794,11 +820,24 @@
         "weapons_sprites": {
             "sword": {
                 "spritesheet": {
-                    "image": "assets/images/spritesheets/battle/bram_battle.png",
-                    "json": "assets/images/spritesheets/battle/bram_battle.json"
+                    "image": "assets/images/spritesheets/battle/weapons/bram_sword.png",
+                    "json": "assets/images/spritesheets/battle/weapons/bram_sword.json"
+                }
+            },
+            "axe": {
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/battle/weapons/bram_axe.png",
+                    "json": "assets/images/spritesheets/battle/weapons/bram_axe.json"
+                }
+            },
+            "light_blade": {
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/battle/weapons/bram_light_blade.png",
+                    "json": "assets/images/spritesheets/battle/weapons/bram_light_blade.json"
                 }
             }
-        }
+        },
+        "weapon_sprite_shift": 0
     },
     {
         "key_name": "sera",
@@ -1057,10 +1096,23 @@
         "weapons_sprites": {
             "sword": {
                 "spritesheet": {
-                    "image": "assets/images/spritesheets/battle/sera_battle.png",
-                    "json": "assets/images/spritesheets/battle/sera_battle.json"
+                    "image": "assets/images/spritesheets/battle/weapons/sera_sword.png",
+                    "json": "assets/images/spritesheets/battle/weapons/sera_sword.json"
+                }
+            },
+            "axe": {
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/battle/weapons/sera_axe.png",
+                    "json": "assets/images/spritesheets/battle/weapons/sera_axe.json"
+                }
+            },
+            "light_blade": {
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/battle/weapons/sera_light_blade.png",
+                    "json": "assets/images/spritesheets/battle/weapons/sera_light_blade.json"
                 }
             }
-        }
+        },
+        "weapon_sprite_shift": 0
     }
 ]

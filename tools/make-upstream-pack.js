@@ -13,7 +13,8 @@
 // instead and each upstream frame is shrunk into its Sunspire cell (upstream frames are 32x32 or
 // 64x64 where Sunspire's are 16x22 or smaller), nearest-neighbour or averaged with --smooth.
 // Sprites upstream lacks are cut out of the ripped enemies sheets in the --extra folder when
-// present (the bat and the ooze).
+// present (the bat, the ooze and the spider). The heroes' upstream weapons fill the weapon sheets
+// the engine draws over them, for the weapon types the gear uses.
 //
 // The upstream sprites are not free to redistribute: this pack is for your own browser. Keep the
 // output folder and the zip out of the repository (both are git-ignored).
@@ -50,7 +51,10 @@ function gitRead(file) {
     return gitCache.get(file);
 }
 
-/** Normalised atlas: frame name -> rect, plus frames grouped by animation (name without /NN). */
+/**
+ * Normalised atlas: frame name -> rect, plus frames grouped by animation (name without /NN). A
+ * trimmed frame keeps its place in the untrimmed canvas as `src` (offset) and `size`.
+ */
 function normalise(json) {
     const f = json.frames;
     const list = Array.isArray(f) ? f.map(x => [x.filename, x]) : Object.entries(f);
@@ -59,6 +63,10 @@ function normalise(json) {
     for (const [name, r] of list) {
         if (r.rotated) throw new Error("rotated frames are not supported: " + name);
         frames[name] = {x: r.frame.x, y: r.frame.y, w: r.frame.w, h: r.frame.h};
+        if (r.trimmed && r.spriteSourceSize && r.sourceSize) {
+            frames[name].src = {x: r.spriteSourceSize.x, y: r.spriteSourceSize.y};
+            frames[name].size = {w: r.sourceSize.w, h: r.sourceSize.h};
+        }
         const m = name.match(/^(.*)\/(\d+)$/);
         const group = m ? m[1] : name,
             index = m ? +m[2] : 0;
@@ -82,6 +90,14 @@ function sheet(file) {
         sheetCache.set(file, s);
     }
     return sheetCache.get(file);
+}
+
+/** A frame back on its untrimmed canvas, so frames of one sheet (or of two layered sheets) line up. */
+function untrim(img, r) {
+    if (!r.size) return cut(img, r);
+    const out = png.create(r.size.w, r.size.h);
+    png.blit(out, img, r.src.x, r.src.y, r.x, r.y, r.w, r.h);
+    return out;
 }
 
 function cut(img, r) {
@@ -191,21 +207,45 @@ const BATTLE_FALLBACK = {
     damage: ["damage", "idle"],
     downed: ["downed", "damage", "idle"],
 };
-/** A battle sheet: `battle/<anim>_<side>/NN`; init poses take the first source frame, actions the last. */
-function battle(file) {
+/** The source frame a battle sheet gives `<anim>_<side>`: init poses take the first frame, actions the last. */
+function battlePick(s, anim, side) {
+    for (const kind of BATTLE_FALLBACK[anim] || [anim, "idle"]) {
+        const g = s.groups[`battle/${kind}_${side}`];
+        if (g) return (kind === "attack" || kind === "cast" ? g[g.length - 1] : g[0]).name;
+    }
+    return null;
+}
+
+/**
+ * A battle sheet: `battle/<anim>_<side>/NN`. With `whole` the frames keep their untrimmed canvas,
+ * which the heroes need so that their weapon sheets (drawn over them as sprites of their own) line up.
+ */
+function battle(file, whole) {
     return name => {
         const s = sheet(file);
-        if (!s) return null;
-        const m = name.match(/^battle\/(.*)_(back|front)\/\d+$/);
-        if (!m) return null;
-        for (const kind of BATTLE_FALLBACK[m[1]] || [m[1], "idle"]) {
-            const g = s.groups[`battle/${kind}_${m[2]}`];
-            if (g) {
-                const pick = kind === "attack" || kind === "cast" ? g[g.length - 1] : g[0];
-                return {img: cut(s.img, s.frames[pick.name]), anchor: "bottom"};
-            }
-        }
-        return null;
+        const m = s && name.match(/^battle\/(.*)_(back|front)\/\d+$/);
+        const pick = m && battlePick(s, m[1], m[2]);
+        return pick ? {img: (whole ? untrim : cut)(s.img, s.frames[pick]), anchor: "bottom"} : null;
+    };
+}
+
+/**
+ * A hero's weapon sheet: `<type>/<anim>_<side>/NN`, the upstream weapon's frame for the very hero
+ * frame `battle()` picks, on its untrimmed canvas and `shift` px lower (upstream's
+ * weapon_sprite_shift; Sunspire's is 0, and the few rows that pushes off the bottom are lost).
+ */
+function weaponOf(heroFile, file, type, shift) {
+    return name => {
+        const s = sheet(heroFile),
+            w = sheet(file);
+        const m = s && w && name.match(/^[a-z_]+\/(.*)_(back|front)\/\d+$/);
+        const pick = m && battlePick(s, m[1], m[2]);
+        const wf = pick && w.frames[pick.replace(/^battle\//, `${type}/`)];
+        if (!wf) return null;
+        const src = untrim(w.img, wf),
+            img = png.create(src.width, src.height);
+        png.blit(img, src, 0, shift);
+        return {img, anchor: "bottom"};
     };
 }
 
@@ -229,6 +269,44 @@ function extraSheet(key) {
     return extraCache.get(key);
 }
 
+/** The sprite inside loose rect [x, y, w, h] of an --extra sheet, background keyed out and trimmed. */
+function extraTrim(s, [x, y, w, h]) {
+    const part = cut(s.img, {x, y, w, h});
+    let x0 = w, y0 = h, x1 = -1, y1 = -1;
+    for (let j = 0; j < h; j++) {
+        for (let i = 0; i < w; i++) {
+            const o = (j * w + i) * 4;
+            if (part.data.readUInt32BE(o) === s.bg) part.data.writeUInt32BE(0, o);
+            else (x0 = Math.min(x0, i)), (y0 = Math.min(y0, j)), (x1 = Math.max(x1, i)), (y1 = Math.max(y1, j));
+        }
+    }
+    return cut(part, {x: x0, y: y0, w: x1 - x0 + 1, h: y1 - y0 + 1});
+}
+
+/**
+ * Icons of your own over an atlas rule: `<folder>/<frame>.png` in the --extra folder (`items/potion.png`)
+ * stands in for that frame, as it is; every other frame keeps `rule`.
+ */
+function ownIcons(folder, rule) {
+    return (name, count) => {
+        const file = path.join(EXTRA, folder, name + ".png");
+        return fs.existsSync(file) ? {img: png.decode(fs.readFileSync(file)), anchor: "center"} : rule(name, count);
+    };
+}
+
+/**
+ * The three variants of a Sunspire tree sheet (`down`, `alt1`, `alt2`), each a loose rect on an
+ * --extra sheet, at native size and standing on their bottom row. Falls back to `orElse`.
+ */
+function extraTrees(key, rects, orElse) {
+    const s = extraSheet(key);
+    if (!s) return orElse;
+    return name => {
+        const i = ["down", "alt1", "alt2"].indexOf(name.split("/")[1]);
+        return {img: extraTrim(s, rects[i < 0 ? 0 : i]), anchor: "bottom"};
+    };
+}
+
 /**
  * A battle sheet cut out of a sheet in the --extra folder (found by `key`, part of its file name)
  * for sprites upstream lacks. The sheet has no alpha channel: its most common colour is the
@@ -240,22 +318,13 @@ function extraSheet(key) {
 function sheetCut(key, poses, size, foot, orElse) {
     const s = extraSheet(key);
     if (!s) return orElse;
-    const {img, bg} = s;
     const cache = new Map();
-    const frame = ([x, y, w, h]) => {
-        const key = [x, y, w, h].join();
+    const frame = rect => {
+        const key = rect.join();
         if (!cache.has(key)) {
-            const part = cut(img, {x, y, w, h});
-            let x0 = w, y0 = h, x1 = -1, y1 = -1;
-            for (let j = 0; j < h; j++) {
-                for (let i = 0; i < w; i++) {
-                    const o = (j * w + i) * 4;
-                    if (part.data.readUInt32BE(o) === bg) part.data.writeUInt32BE(0, o);
-                    else (x0 = Math.min(x0, i)), (y0 = Math.min(y0, j)), (x1 = Math.max(x1, i)), (y1 = Math.max(y1, j));
-                }
-            }
+            const part = extraTrim(s, rect);
             const out = png.create(size, size);
-            png.blit(out, part, Math.floor((size - (x1 - x0 + 1)) / 2), foot - (y1 - y0), x0, y0, x1 - x0 + 1, y1 - y0 + 1);
+            png.blit(out, part, Math.floor((size - part.width) / 2), foot + 1 - part.height);
             cache.set(key, out);
         }
         return cache.get(key);
@@ -318,6 +387,9 @@ const MC = "spritesheets/main_chars/",
     NPC = "spritesheets/npc/",
     BT = "spritesheets/battle/";
 const HEROES = {ari: "isaac", lyn: "sheba", bram: "garet", sera: "piers"};
+// each upstream hero's battle weapon and its weapon_sprite_shift from upstream's main_chars_db, and
+// the Sunspire weapon types (content.json gear `type`) it stands in for on that hero
+const WEAPONS = {isaac: ["sword", 4, ["sword", "light_blade"]], sheba: ["staff", 4, ["staff"]], garet: ["axe", 0, ["axe"]], piers: ["mace", 0, ["mace"]]};
 const NPCS = {dov: "alex", ina: "village_1", miner: "briggs", elder: "healer", mara: "village_1", polly: "village_1", hob: "briggs"};
 const ENEMIES = {
     wolf: "wild_wolf", boar: "wild_wolf", bat: "momonga", spider: "momonga", ooze: "mini_goblin", beetle: "mini_goblin",
@@ -329,7 +401,9 @@ const DJINN_BATTLE = {venus: "venus", mars: "venus", mercury: "jupiter", jupiter
 const RULES = {};
 for (const [id, src] of Object.entries(HEROES)) {
     RULES[`${id}_field`] = fieldChar(MC + src);
-    RULES[`${id}_battle`] = battle(`${BT}${src}_battle`);
+    RULES[`${id}_battle`] = battle(`${BT}${src}_battle`, true);
+    const [type, shift, ours] = WEAPONS[src];
+    for (const t of ours) RULES[`${id}_${t}`] = weaponOf(`${BT}${src}_battle`, `${BT}weapons/${src}_${type}`, type, shift);
 }
 for (const [id, src] of Object.entries(NPCS)) RULES[`${id}_field`] = fieldChar(NPC + src);
 for (const [id, src] of Object.entries(ENEMIES)) RULES[`${id}_battle`] = battle(`${BT}${src}_battle`);
@@ -371,6 +445,25 @@ RULES.ooze_battle = sheetCut(
     31,
     RULES.ooze_battle
 );
+// the Tarantula block: front and back idle, then rear-up / lunge front, rear-up / lunge back, then
+// the flinch when hit, front and back; it stands on the ground
+const SPIDER_IDLE = [[1, 721, 34, 21], [35, 721, 35, 21], [70, 721, 35, 21], [105, 721, 34, 21], [139, 721, 35, 21], [174, 721, 31, 21]],
+    SPIDER_ACT = [[1, 742, 31, 26], [32, 742, 34, 26], [66, 742, 31, 26], [97, 742, 34, 26], [1, 768, 35, 23], [36, 768, 36, 23]];
+RULES.spider_battle = sheetCut(
+    "Fuchin Falls to Atlin Peak",
+    {
+        idle: [SPIDER_IDLE[1], SPIDER_IDLE[4]],
+        attack_init: [SPIDER_ACT[0], SPIDER_ACT[2]],
+        attack: [SPIDER_ACT[1], SPIDER_ACT[3]],
+        cast_init: [SPIDER_ACT[0], SPIDER_ACT[2]],
+        cast: [SPIDER_IDLE[0], SPIDER_IDLE[3]],
+        damage: [SPIDER_ACT[4], SPIDER_ACT[5]],
+        downed: [SPIDER_ACT[4], SPIDER_ACT[5]],
+    },
+    32,
+    31,
+    RULES.spider_battle
+);
 for (const [id, el] of Object.entries(ELEMENT)) {
     RULES[id] = atlasMap(`spritesheets/djinn/${el}_djinn`);
     RULES[`djinn_battle_${id}_battle`] = battle(`${BT}${DJINN_BATTLE[el]}_djinn_battle`);
@@ -391,10 +484,14 @@ Object.assign(RULES, {
         sylph: "jupiter", tempest: "thor", sol_avatar: "judgment",
     }),
     battle_effect_icons: atlasMap("icons/battle_effects/battle_effect_icons"),
-    items_icons: atlasMap("icons/items/items_icons", {
-        potion: "antidote", pdrop: "psy_crystal", wood: "elven_rapier", bronze: "great_sword", iron: "great_axe", steel: "master_rapier",
-        sol: "sol_blade", vest: "cotton_shirt", leather: "adepts_clothes", chain: "steel_armor", aegis: "asuras_armor",
-    }),
+    // your own icons in pack-upstream-extra/items/<item>.png go first (upstream has no potion)
+    items_icons: ownIcons(
+        "items",
+        atlasMap("icons/items/items_icons", {
+            potion: "antidote", pdrop: "psy_crystal", wood: "elven_rapier", bronze: "great_sword", iron: "great_axe", steel: "master_rapier",
+            sol: "sol_blade", vest: "cotton_shirt", leather: "adepts_clothes", chain: "steel_armor", aegis: "asuras_armor",
+        })
+    ),
     emoticons: atlasMap("misc/emoticons"),
     menu: atlasMap("misc/menu"),
     ranges: atlasMap("misc/ranges"),
@@ -427,8 +524,9 @@ Object.assign(RULES, {
     water_drop: image("misc/water_drop"),
     // decorations are sprites with their own sheets: the upstream trees and fence pieces at native size
     // the upstream trees are 48x64; at two tiles wide they hide less of a map whose trees stand on single tiles
-    tree: trees(["orange", "purple", "round"]),
-    tree_trail: trees(["round", "purple", "orange"]),
+    // ...or the trees of the ripped tree sheet in the --extra folder, at native size, when it is there
+    tree: extraTrees("Miscellaneous - Trees", [[162, 120, 43, 44], [6, 4, 38, 48], [96, 116, 34, 47]], trees(["orange", "purple", "round"])),
+    tree_trail: extraTrees("Miscellaneous - Trees", [[212, 117, 34, 47], [209, 176, 43, 48], [121, 175, 43, 48]], trees(["round", "purple", "orange"])),
     fence_h: madraCut(112, 400, 16, 16),
     fence_v: madraCut(144, 416, 16, 16),
     fence_v2: madraCut(144, 432, 16, 16),
