@@ -242,6 +242,17 @@ function trees(order) {
     return name => cuts[order[["down", "alt1", "alt2"].indexOf(name.split("/")[1])] || order[0]]();
 }
 
+/** The title screen: the built-in night sky with the sun-ring logo (assets/sunspire/sprites/title_sun.png). */
+function sunTitle() {
+    return () => {
+        const logo = png.decode(fs.readFileSync(path.join(root, "assets", "sunspire", "sprites", "title_sun.png")));
+        const title = png.create(240, 160);
+        for (let y = 0; y < 160; y++) png.fill(title, 0, y, 240, 1, [12 + (y >> 4), 10 + (y >> 3), 22 + (y >> 2)]);
+        png.blit(title, logo, Math.floor((240 - logo.width) / 2), 10); // clear of the PRESS START line
+        return {img: title, anchor: "center"};
+    };
+}
+
 const MC = "spritesheets/main_chars/",
     NPC = "spritesheets/npc/",
     BT = "spritesheets/battle/";
@@ -273,7 +284,7 @@ Object.assign(RULES, {
         spirit_dew: "mercury_djinn", spirit_mist: "mercury_djinn", spirit_breeze: "jupiter_djinn", spirit_squall: "jupiter_djinn",
     }),
     battle_backgrounds: atlasMap("battle_backgrounds/battle_backgrounds", {bg_field: "bg_world_map", bg_mine: "bg_cave", bg_trail: "bg_forest", bg_tower: "bg_cliffs"}),
-    start_screen: image("misc/start_screen"),
+    start_screen: sunTitle(), // the sun-ring logo on the night sky, not the upstream title
     buttons: atlasMap("buttons/buttons"),
     abilities_icons: atlasMap("icons/abilities/abilities_icons", {
         gaia_blade: "gaia", fire_bomb: "fireball", inferno: "eruption", ice_horn: "ice", pure_ply: "ply", gust: "whirlwind",
