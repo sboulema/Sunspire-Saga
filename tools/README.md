@@ -35,7 +35,8 @@ Assembles `favicon.ico` (16, 32, 48 and 256 px frames) from the PNGs above. The 
 Builds a sprite pack zip players can load with *Load sprite pack* (see `packs/README.md` and the
 pack guide page). Without arguments it exports every built-in sheet listed in
 `static/pack-slots.json` to `sunspire-engine-pack.zip` at the repository root: a complete
-reference pack and a template to redraw from. With a folder (and optionally an output name) it
+reference pack and a template to redraw from. Its sheets are the built-in art itself, so loading
+it unchanged alters nothing on screen; redraw a sheet to see the pack take effect. With a folder (and optionally an output name) it
 zips that folder's PNG / GIF / WebP files instead:
 
 ```bash

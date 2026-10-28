@@ -20,7 +20,11 @@ One image per slot, named after the slot it replaces, exactly the size of the bu
 Load the zip (or the folder) with "Load sprite pack" on the play page; the pack guide page lists
 every slot with its size, a preview and its frame names, and marks the ones a loaded pack covers.
 
-${src ? "" : "This zip holds every slot, exported from the built-in art, so the guide shows all of them as covered.\n"}Use it as a template: open any sheet in a pixel editor, redraw it, keep the file name and size,
+${
+    src
+        ? ""
+        : "This zip holds every slot, exported from the built-in art, so the guide shows all of them as\ncovered. The sheets are identical to the built-in ones, so loading the zip as it is changes nothing\non screen: the game looks different only once you redraw a sheet.\n"
+}Use it as a template: open any sheet in a pixel editor, redraw it, keep the file name and size,
 and load it again. Leave out the sheets you do not change; anything missing keeps the built-in
 art. Files that match no slot or have the wrong size are reported and skipped.
 
