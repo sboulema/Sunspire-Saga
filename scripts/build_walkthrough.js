@@ -268,9 +268,9 @@ const html = `<!DOCTYPE html>
         <title>Sunspire Saga walkthrough</title>
         <meta name="description" content="The complete walkthrough and FAQ for Sunspire Saga: every area, chest, spirit and boss, with maps and the full bestiary." />
         <meta name="theme-color" content="#100d1d" />
-        <link rel="shortcut icon" type="image/x-icon" href="/static/favicon.ico" />
+        <link rel="shortcut icon" type="image/x-icon" href="static/favicon.ico" />
         <script>try{var t=localStorage.getItem('sunspire_theme'),h=localStorage.getItem('sunspire_handheld'),r=document.documentElement;if(t)r.dataset.theme=t;r.dataset.themeEff=t||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');if(h&&/^#[0-9a-f]{6}$/i.test(h))r.style.setProperty('--hh',h)}catch(e){}</script>
-        <link rel="stylesheet" href="/static/site.css">
+        <link rel="stylesheet" href="static/site.css">
         <style>
             .guide{width:100%; max-width:960px; margin:0 auto; padding:40px 20px 0;}
             .guide h1{font-family:var(--display); font-size:clamp(32px, 4.5vw, 44px); margin:0 0 .4em;}
@@ -283,13 +283,13 @@ const html = `<!DOCTYPE html>
     </head>
     <body>
         <header class="nav"><div class="wrap">
-            <a class="brand" href="/index.html"><img src="/static/icons/sunspire-mark-512.png" alt=""><span>Sunspire Saga</span></a>
+            <a class="brand" href="index.html"><img src="static/icons/sunspire-mark-512.png" alt=""><span>Sunspire Saga</span></a>
             <nav class="nav-links" aria-label="Site">
-                <a href="/index.html">Home</a>
-                <a href="/play.html">Play online</a>
-                <a href="/pack-guide.html">Pack guide</a>
-                <a href="/changelog.html">Changelog</a>
-                <a href="/walkthrough.html" aria-current="page">Walkthrough</a>
+                <a href="index.html">Home</a>
+                <a href="play.html">Play online</a>
+                <a href="pack-guide.html">Pack guide</a>
+                <a href="changelog.html">Changelog</a>
+                <a href="walkthrough.html" aria-current="page">Walkthrough</a>
             </nav>
             <button class="icon-btn theme-toggle" type="button" aria-label="Toggle colour theme">
                 <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
@@ -318,7 +318,7 @@ ${pre}
             <span>Sunspire Saga &middot; original code and art, MIT licence</span>
             <span>An independent homage; no assets from Nintendo or Camelot.</span>
         </div></footer>
-        <script src="/static/site.js"></script>
+        <script src="static/site.js"></script>
     </body>
 </html>
 `;

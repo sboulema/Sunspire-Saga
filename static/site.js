@@ -162,7 +162,7 @@
   // the service worker (sw.js, written by the site build; absent on the dev server) makes the site
   // installable and playable offline; the install button appears when the browser offers it
   if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){
-    navigator.serviceWorker.register('/sw.js').catch(() => {});
+    navigator.serviceWorker.register('sw.js').catch(() => {});
   }
   const install = document.getElementById('install'), installBtn = document.getElementById('installBtn');
   let installPrompt = null;

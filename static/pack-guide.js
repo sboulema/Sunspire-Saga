@@ -28,7 +28,7 @@
 
   async function render(){
     let slots = [];
-    try { slots = await (await fetch('/static/pack-slots.json')).json(); }
+    try { slots = await (await fetch('static/pack-slots.json')).json(); }
     catch (e){ list.innerHTML = '<p class="warn">The slot list could not be loaded.</p>'; return; }
     const on = await covered();
     const groups = new Map();
@@ -43,7 +43,7 @@
           : 'single image';
         parts.push('<tr><td><code class="' + (on.has(s.slot) ? 'on' : '') + '">' + esc(s.slot) + '.png</code>' + (on.has(s.slot) ? ' <span class="cov">in your pack</span>' : '') + '</td>'
           + '<td>' + s.width + '&times;' + s.height + '</td>'
-          + '<td><a href="/' + esc(s.file) + '" target="_blank"><img class="sheet" src="/' + esc(s.file) + '" alt="" loading="lazy"></a></td>'
+          + '<td><a href="' + esc(s.file) + '" target="_blank"><img class="sheet" src="' + esc(s.file) + '" alt="" loading="lazy"></a></td>'
           + '<td class="wrap">' + frames + '</td></tr>');
       }
       parts.push('</table>');
