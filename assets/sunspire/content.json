@@ -1,6 +1,6 @@
 {
     "_comment": "Sunspire Saga's game data and story, ported from the legacy game.js (V48). scripts/build_sunspire_content.js turns this into the engine databases and the Tiled maps; scripts/build_walkthrough.js turns it into walkthrough.html. Numbers are the legacy ones unless a key says otherwise.",
-    "version": "V52",
+    "version": "V53",
     "elements": {"earth": "venus", "water": "mercury", "fire": "mars", "wind": "jupiter"},
 
     "rules": {

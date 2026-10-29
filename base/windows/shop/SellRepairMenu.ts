@@ -99,7 +99,12 @@ export class SellRepairMenu {
                     this.data.info.party_data.coins -=
                         (this.data.info.items_list[this.selected_item.key_name].price * REPAIR_MULTIPLIER) | 0;
 
-                    this.npc_dialog.update_dialog("repair_done", true);
+                    const text = this.npc_dialog.replace_text(
+                        this.npc_dialog.get_message("repair_done"),
+                        undefined,
+                        this.data.info.items_list[this.selected_item.key_name].name
+                    );
+                    this.npc_dialog.update_dialog(text, true, false);
                     this.parent.update_your_coins();
 
                     this.data.control_manager.add_simple_controls(
@@ -227,7 +232,12 @@ export class SellRepairMenu {
 
             const item = this.data.info.items_list[this.selected_item.key_name];
             if (item.important_item) {
-                this.npc_dialog.update_dialog("cant_sell_important", true);
+                const text = this.npc_dialog.replace_text(
+                    this.npc_dialog.get_message("cant_sell_important"),
+                    undefined,
+                    item.name
+                );
+                this.npc_dialog.update_dialog(text, true, false);
 
                 this.data.control_manager.add_simple_controls(
                     this.on_character_select.bind(this, "sell_follow_up", this.inv_win_pos)
@@ -266,7 +276,9 @@ export class SellRepairMenu {
                     "menu/shop_sell"
                 );
             } else {
-                this.npc_dialog.update_dialog("sell_quantity_select");
+                let text = this.npc_dialog.get_message("sell_quantity_select");
+                text = this.npc_dialog.replace_text(text, undefined, item.name);
+                this.npc_dialog.update_dialog(text, false, false);
 
                 let char_item_match = this.selected_character.items.filter(i => {
                     return i.key_name === this.selected_item.key_name;

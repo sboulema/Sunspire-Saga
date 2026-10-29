@@ -175,7 +175,11 @@ export class BuyArtifactsMenu {
             await this.show_cursed_msg();
         }
 
-        this.npc_dialog.update_dialog("equip_compliment", true);
+        const compliment = this.npc_dialog.replace_text(
+            this.npc_dialog.get_message("equip_compliment"),
+            this.selected_character.name
+        );
+        this.npc_dialog.update_dialog(compliment, true, false);
 
         this.old_item = null;
         const slot: ItemSlot = char_slots[item_equip_slot[item_type]];
@@ -322,7 +326,11 @@ export class BuyArtifactsMenu {
                     if (equip_ask && !has_cursed_slot) {
                         let equip_now = () => {
                             let text = this.npc_dialog.get_message("equip_now");
-                            text = this.npc_dialog.replace_text(text, this.selected_character.name);
+                            text = this.npc_dialog.replace_text(
+                                text,
+                                this.selected_character.name,
+                                this.data.info.items_list[this.selected_item.key_name].name
+                            );
                             this.npc_dialog.update_dialog(text, false, false);
 
                             this.yesno_action.open(
@@ -367,7 +375,11 @@ export class BuyArtifactsMenu {
                 )
             ) {
                 let text = this.npc_dialog.get_message("cant_equip");
-                text = this.npc_dialog.replace_text(text, this.selected_character.name);
+                text = this.npc_dialog.replace_text(
+                    text,
+                    this.selected_character.name,
+                    this.data.info.items_list[this.selected_item.key_name].name
+                );
                 this.npc_dialog.update_dialog(text, false, false);
 
                 this.yesno_action.open(
