@@ -566,6 +566,8 @@ Object.assign(RULES, {
 // ---------------------------------------------------------------- build
 
 const slots = JSON.parse(fs.readFileSync(path.join(root, "static", "pack-slots.json"), "utf8"));
+/** Sheets whose frames keep their own size in the native-size layout (see below). */
+const OWN_SIZE_SLOTS = new Set(["keyboard_buttons", "menu"]);
 fs.mkdirSync(OUT, {recursive: true});
 const report = [];
 let written = 0;
@@ -611,14 +613,32 @@ for (const slot of slots) {
     }
     const cw = Math.max(...items.map(it => it.img.width)),
         ch = Math.max(...items.map(it => it.img.height));
-    const cols = Math.max(1, Math.min(items.length, Math.floor(1024 / (cw + 1))));
-    const rows = Math.ceil(items.length / cols);
-    const out = png.create(cols * (cw + 1) - 1, rows * (ch + 1) - 1);
+    // frames share one cell size so animations line up, except on the menu widget sheets: the menus
+    // place those by their top-left corner, and a button or marker centred in a cell sized for the
+    // sheet's biggest frame lands off its spot
+    const own = OWN_SIZE_SLOTS.has(slot.slot);
+    const cells_out = [];
+    let x = 0,
+        y = 0,
+        row_h = 0;
+    items.forEach(it => {
+        const w = own ? it.img.width : cw,
+            h = own ? it.img.height : ch;
+        if (x && x + w > 1024) {
+            x = 0;
+            y += row_h + 1;
+            row_h = 0;
+        }
+        cells_out.push({x, y, w, h});
+        x += w + 1;
+        row_h = Math.max(row_h, h);
+    });
+    const out = png.create(Math.max(...cells_out.map(c => c.x + c.w)), y + row_h);
     const frames = {};
     items.forEach((it, i) => {
-        const cell = {x: (i % cols) * (cw + 1), y: Math.floor(i / cols) * (ch + 1), w: cw, h: ch};
+        const cell = cells_out[i];
         place(out, cell, it.img, it.anchor);
-        frames[it.name] = {frame: cell, rotated: false, trimmed: false, spriteSourceSize: {x: 0, y: 0, w: cw, h: ch}, sourceSize: {w: cw, h: ch}};
+        frames[it.name] = {frame: cell, rotated: false, trimmed: false, spriteSourceSize: {x: 0, y: 0, w: cell.w, h: cell.h}, sourceSize: {w: cell.w, h: cell.h}};
     });
     fs.writeFileSync(path.join(OUT, slot.slot + ".png"), png.encode(out));
     fs.writeFileSync(
@@ -626,7 +646,7 @@ for (const slot of slots) {
         JSON.stringify({frames, meta: {app: "tools/make-upstream-pack.js", image: slot.slot + ".png", size: {w: out.width, h: out.height}, scale: "1"}})
     );
     written++;
-    report.push(`${slot.slot}: ${replaced} of ${cells.length} frames from upstream at native size (${cw}x${ch} cells, own atlas)`);
+    report.push(`${slot.slot}: ${replaced} of ${cells.length} frames from upstream at native size (${own ? "own-size" : `${cw}x${ch}`} cells, own atlas)`);
 }
 fs.writeFileSync(path.join(OUT, "REPORT.txt"), report.join("\n") + "\n");
 console.log(report.join("\n"));
