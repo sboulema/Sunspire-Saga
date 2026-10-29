@@ -95,8 +95,10 @@ is keyed out as the background. Every enemy pose sits in a 32x32 frame at one he
 back: the bat hovers (spread wings, cocked wing and dive to attack, raised wing and swipe to cast,
 wrapped wings when hit); the ooze and the spider stand (the ooze coils and rolls into a ball, the
 spider rears up and lunges; both flinch when hit). The trees come at native size, standing on
-their bottom row: `tree` the round dark-green, the green fruit and the yellow-green leafy tree,
-`tree_trail` the blue-green, the big blue-green and the yellow-green round one.
+their bottom row, and are the sheet's calmest ones: fine-leaved trees overlapping at 2x made a
+screen shimmer to the eye (nothing a capture shows), so the picks are the trees with the fewest
+sharp light / dark neighbouring pixels. `tree` is the big blue-green, the lower green fruit tree
+and the autumn-yellow one; `tree_trail` the same two greens and the autumn-red one.
 
 Item icons of your own go in `pack-upstream-extra/items/<item>.png`, named after the Sunspire
 item (`potion.png`, any case; PNG only, so convert a GIF first): each replaces that item's upstream

@@ -557,9 +557,11 @@ Object.assign(RULES, {
     water_drop: image("misc/water_drop"),
     // decorations are sprites with their own sheets: the upstream trees and fence pieces at native size
     // the upstream trees are 48x64; at two tiles wide they hide less of a map whose trees stand on single tiles
-    // ...or the trees of the ripped tree sheet in the --extra folder, at native size, when it is there
-    tree: extraTrees("Miscellaneous - Trees", [[162, 120, 43, 44], [6, 4, 38, 48], [96, 116, 34, 47]], trees(["orange", "purple", "round"])),
-    tree_trail: extraTrees("Miscellaneous - Trees", [[212, 117, 34, 47], [209, 176, 43, 48], [121, 175, 43, 48]], trees(["round", "purple", "orange"])),
+    // ...or the trees of the ripped tree sheet in the --extra folder, at native size, when it is there:
+    // the calmest ones (fewest sharp light / dark neighbours), as fine-leaved trees overlapping at
+    // 2x make some screens shimmer; big blue-green, lower green fruit tree, autumn yellow / red
+    tree: extraTrees("Miscellaneous - Trees", [[209, 176, 43, 48], [6, 117, 38, 48], [138, 3, 43, 48]], trees(["orange", "purple", "round"])),
+    tree_trail: extraTrees("Miscellaneous - Trees", [[6, 117, 38, 48], [209, 176, 43, 48], [186, 2, 43, 48]], trees(["round", "purple", "orange"])),
     fence_h: madraCut(112, 400, 16, 16),
     fence_v: madraCut(144, 416, 16, 16),
     fence_v2: madraCut(144, 432, 16, 16),
