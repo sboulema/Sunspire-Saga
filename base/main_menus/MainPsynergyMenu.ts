@@ -140,7 +140,7 @@ export class MainPsynergyMenu {
         buttons_bg.endFill();
         this.shortcuts_window.add_sprite_to_window_group(buttons_bg);
 
-        this.shortcuts_window.set_text_in_position(": Change shortcut", 37, 0, {with_bg: true});
+        this.shortcuts_window.set_text_in_position(": Set shortcut", 37, 0, {with_bg: true});
         this.shortcuts_window.create_at_group(9, 1, "keyboard_buttons", {frame: "l_button", color: 0x0});
         this.shortcuts_window.create_at_group(8, 0, "keyboard_buttons", {frame: "l_button"});
         this.shortcuts_window.create_at_group(23, 1, "keyboard_buttons", {frame: "r_button", color: 0x0});
