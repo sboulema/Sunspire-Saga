@@ -14,9 +14,9 @@
 # The FTP deploy is optional too: it runs only when the repository secrets FTP_SERVER,
 # FTP_USERNAME and FTP_PASSWORD are set. FTP_PATH (secret, optional) is the
 # folder on the server to upload into, "./" by default; the repository variable FTP_PROTOCOL
-# (optional) picks ftp, ftps or ftps-legacy, "ftp" by default. The upload is a sync: files that
-# are no longer in the site are deleted from that folder, so point it at a folder that holds only
-# the site.
+# (optional) picks ftp, ftps or ftps-legacy, "ftps" (explicit TLS on port 21) by default. The
+# upload is a sync: files that are no longer in the site are deleted from that folder, so point
+# it at a folder that holds only the site.
 #
 # The zip is the output of `npm run site` (scripts/build_site.js) and unpacks straight into a
 # web root; the Docker image builds the same site inside the Dockerfile.
@@ -129,7 +129,7 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ${{ vars.FTP_PROTOCOL || 'ftp' }}
+          protocol: ${{ vars.FTP_PROTOCOL || 'ftps' }}
           local-dir: site/
           server-dir: ${{ secrets.FTP_PATH || './' }}
           state-name: .sunspire-ftp-state.json
