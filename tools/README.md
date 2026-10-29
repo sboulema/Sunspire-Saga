@@ -75,9 +75,12 @@ mapping table at the top of the script says which upstream sheet stands in for w
 character, enemy, spirit and icon; upstream has fewer of each, so several share a source. The
 trees and fence pieces are sprites of their own in the engine build, so they come over at
 native size (the trees shrunk to two tiles wide, as the maps plant a tree on every single
-tile); the tilesets, the houses, the map objects (sign, well, gate, marker, spring, crate), the
-summon backdrops and the shadow stay built-in. `REPORT.txt` in the output folder lists what was
-replaced.
+tile). Thera's fields tileset gets its ground from the Madra town tileset: every tile the map
+draws as grass (plain, tufted or under an object) becomes one of Madra's flat grass tiles and
+every path tile one of its flat sand tiles, picked by tile index so the ground keeps some
+variation; the fence pieces are Madra's posts and rails. The other tilesets, the houses, the map
+objects (sign, well, gate, marker, spring, crate), the summon backdrops and the shadow stay
+built-in. `REPORT.txt` in the output folder lists what was replaced.
 
 Sprites upstream lacks come from ripped sheets in `pack-upstream-extra/` (another folder with
 `--extra`) when the sheets are there, and from the upstream stand-ins otherwise. Save the sheets

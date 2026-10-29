@@ -405,6 +405,35 @@ function trees(order) {
     return name => cuts[order[["down", "alt1", "alt2"].indexOf(name.split("/")[1])] || order[0]]();
 }
 
+/**
+ * A town map's tileset with its ground redrawn from the upstream town tileset (madra): every tile
+ * the map's grid (assets/sunspire/maps/<id>_grid.json) draws as grass (plain, tufted, or under an
+ * object) becomes one of madra's flat grass tiles and every path tile one of its flat sand tiles,
+ * picked by tile index so the ground keeps some variation. Water, houses, signs and the well stay
+ * built-in; trees, fences and houses are sprites of their own. Returns the number of tiles redrawn.
+ */
+const GROUND = {grass: {chars: ".gkBf", tiles: [[16, 48], [32, 48], [48, 48], [64, 48]]}, path: {chars: "p", tiles: [[16, 144], [32, 144], [16, 160], [32, 160], [48, 160]]}};
+function townGround(id) {
+    return base => {
+        const s = sheet("tilesets/madra");
+        if (!s) return 0;
+        const grid = JSON.parse(fs.readFileSync(path.join(root, "assets", "sunspire", "maps", id + "_grid.json"), "utf8"));
+        const kind = {};
+        grid.chars.forEach((row, y) =>
+            [...row].forEach((c, x) => {
+                for (const k in GROUND) if (GROUND[k].chars.includes(c)) kind[grid.grid[y][x]] = k;
+            })
+        );
+        for (const [index, k] of Object.entries(kind)) {
+            const [sx, sy] = GROUND[k].tiles[index % GROUND[k].tiles.length];
+            png.blit(base, s.img, (index % grid.cols) * 16, Math.floor(index / grid.cols) * 16, sx, sy, 16, 16);
+        }
+        return Object.keys(kind).length;
+    };
+}
+/** The map tilesets whose ground comes from upstream: Thera's fields. */
+const TILESETS = {fields: townGround("fields")};
+
 /** The title screen: the built-in night sky with the sun-ring logo (assets/sunspire/sprites/title_sun.png). */
 function sunTitle() {
     return () => {
@@ -592,6 +621,20 @@ for (const slot of slots) {
         fs.writeFileSync(path.join(OUT, slot.slot + ".fnt"), fnt.toString("utf8").replace(/file="[^"]*"/, `file="${slot.slot}.png"`));
         written++;
         report.push(`${slot.slot}: upstream's ${src} font with its .fnt`);
+        continue;
+    }
+    const ground = TILESETS[slot.slot];
+    if (ground) {
+        // a map tileset: the built-in sheet with its ground tiles redrawn from the upstream town
+        const base = png.decode(fs.readFileSync(path.join(root, slot.file)));
+        const redrawn = ground(base);
+        if (!redrawn) {
+            report.push(`${slot.slot}: built-in (no upstream town tileset)`);
+            continue;
+        }
+        fs.writeFileSync(path.join(OUT, slot.slot + ".png"), png.encode(base));
+        written++;
+        report.push(`${slot.slot}: ${redrawn} ground tiles (grass and path) from upstream's madra tileset, the rest built-in`);
         continue;
     }
     const rule = RULES[slot.slot];
