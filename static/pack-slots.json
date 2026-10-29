@@ -3121,7 +3121,7 @@
         "slot": "heights",
         "file": "assets/images/tilesets/heights.png",
         "width": 256,
-        "height": 80,
+        "height": 96,
         "frames": [],
         "group": "tilesets"
     },

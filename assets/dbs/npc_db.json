@@ -1668,31 +1668,6 @@
         }
     },
     {
-        "key_name": "sign",
-        "anchor_x": 0.5,
-        "anchor_y": 0.6,
-        "initial_action": "idle",
-        "collision_body_bevel": 3,
-        "interaction_pattern": "tik_tak_toe",
-        "no_shadow": true,
-        "body_radius": 7,
-        "actions": {
-            "idle": {
-                "frame_rate": 1,
-                "animations": [
-                    "down"
-                ],
-                "frames_count": 1,
-                "initial_animation": "down",
-                "loop": false,
-                "spritesheet": {
-                    "image": "assets/images/spritesheets/objects/sign.png",
-                    "json": "assets/images/spritesheets/objects/sign.json"
-                }
-            }
-        }
-    },
-    {
         "key_name": "boulder",
         "anchor_x": 0.5,
         "anchor_y": 0.6,
@@ -2123,6 +2098,37 @@
                 "spritesheet": {
                     "image": "assets/images/spritesheets/objects/spring.png",
                     "json": "assets/images/spritesheets/objects/spring.json"
+                }
+            }
+        }
+    },
+    {
+        "key_name": "sign",
+        "anchor_x": 0.5,
+        "anchor_y": 1,
+        "sprite_y_offset": 7,
+        "initial_action": "idle",
+        "no_shadow": true,
+        "ignore_physics": true,
+        "interaction_pattern": "no_interaction",
+        "actions": {
+            "idle": {
+                "frame_rate": [
+                    1
+                ],
+                "animations": [
+                    "down"
+                ],
+                "frames_count": [
+                    1
+                ],
+                "initial_animation": "down",
+                "loop": [
+                    false
+                ],
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/objects/sign.png",
+                    "json": "assets/images/spritesheets/objects/sign.json"
                 }
             }
         }

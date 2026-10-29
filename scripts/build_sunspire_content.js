@@ -306,7 +306,7 @@ for (const [engineEl, sunEl] of Object.entries(Object.fromEntries(Object.entries
 const objectNpc = (key, actions, over = {}) => ({key_name: key, anchor_x: 0.5, anchor_y: 0.5, initial_action: Object.keys(actions)[0], collision_body_bevel: 3, interaction_pattern: "tik_tak_toe", no_shadow: true, body_radius: 7.0, actions, ...over});
 const objectAction = (id, animations, frames_count, frame_rate, loop) => ({frame_rate, animations, frames_count, initial_animation: animations[0], loop, spritesheet: sheet("objects", id)});
 npcs.push(objectNpc("chest", {chest: objectAction("chest", ["closed", "open", "opening", "shining", "empty"], [1, 1, 2, 2, 1], [1, 1, 6, 10, 1], [false, false, false, true, false])}, {anchor_y: 0.6}));
-for (const id of ["marker", "sign", "boulder", "gate"]) npcs.push(objectNpc(id, {idle: objectAction(id, ["down"], 1, 1, false)}, {anchor_y: 0.6}));
+for (const id of ["marker", "boulder", "gate"]) npcs.push(objectNpc(id, {idle: objectAction(id, ["down"], 1, 1, false)}, {anchor_y: 0.6}));
 for (const id of ["ogre_s", "wyrm_s"]) npcs.push(objectNpc(id, {idle: objectAction(id, ["down"], 2, 2, true)}, {anchor_y: 0.7, no_shadow: false}));
 // decorations: trees, fences, houses and wells are body-less sprites over plain ground (the grid
 // still blocks), so a sprite pack can replace them at any size; they stand on their tile's bottom
@@ -320,6 +320,7 @@ for (const id of ["fence_h", "fence_v", "fence_v2"]) npcs.push(decor(id, ["down"
 npcs.push(decor("fence_post", ["right", "left"]));
 npcs.push(decor("houses", HOUSE_IDS, {}, "house")); // the sheet's frames are house/<id>/00
 for (const id of ["well", "spring"]) npcs.push(decor(id, ["down"], {anchor_y: 0.5, sprite_y_offset: 0})); // walked onto, so centred under the hero
+npcs.push(decor("sign", ["down"])); // the signpost picture; the marker on the same tile carries its text
 db("npc", npcs);
 
 // ---------------- maps ----------------
@@ -403,6 +404,7 @@ for (const id of C.map_order) {
     }
     for (const house of M.houses || []) dec("houses", house.x + 1, house.y + 2, {animation: house.id});
     for (const well of M.wells || []) dec(at(well.x, well.y) === "E" ? "spring" : "well", well.x, well.y);
+    for (const sign of M.signs || []) dec("sign", sign.x, sign.y);
 
     // exits
     for (const exit of M.exits) {
