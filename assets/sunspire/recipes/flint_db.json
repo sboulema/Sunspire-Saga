@@ -1,0 +1,111 @@
+{
+    "key_name": "flint",
+    "color_blend_filter_sequence": [{
+        "start_delay": 0,
+        "sprite_index": "caster",
+        "r": 1.0,
+        "g": 0.85,
+        "b": 0.3,
+        "fake_blend": false,
+        "remove": false
+    },{
+        "start_delay": 650,
+        "sprite_index": "caster",
+        "remove": true
+    }],
+    "x_sequence": [{
+        "start_delay": 0,
+        "to": "targets",
+        "shift": 15,
+        "shift_direction": "in_center",
+        "is_absolute": true,
+        "tween": "Linear.None",
+        "sprite_index": "caster",
+        "duration": 250
+    }],
+    "y_sequence": [{
+        "start_delay": 0,
+        "to": "targets",
+        "is_absolute": true,
+        "tween": "Linear.None",
+        "sprite_index": "caster",
+        "to_expression": "v - 13",
+        "duration": 125
+    },{
+        "start_delay": 125,
+        "to": "targets",
+        "is_absolute": true,
+        "tween": "Linear.None",
+        "sprite_index": "caster",
+        "duration": 125
+    }],
+    "play_sequence": [{
+        "animation_key": "attack_init",
+        "start_delay": 0,
+        "sprite_index": "caster",
+        "wait": false
+    },{
+        "animation_key": "attack",
+        "start_delay": 200,
+        "sprite_index": "caster",
+        "wait": false
+    },{
+        "ignore_if_dodge": true,
+        "animation_key": "damage",
+        "start_delay": 250,
+        "sprite_index": "targets",
+        "wait": false
+    }],
+    "center_shift_sequence": [{
+        "ignore_if_dodge": true,
+        "start_delay": 250,
+        "to": 15,
+        "is_absolute": false,
+        "tween": "Quadratic.Out",
+        "sprite_index": "targets",
+        "duration": 200
+    }],
+    "blink_sequence": [{
+        "ignore_if_dodge": true,
+        "sprite_index": "targets",
+        "start_delay": 250,
+        "count": 2,
+        "interval": 60,
+        "color": {"r": 1.0, "g": 0.9, "b": 0.4}
+    }],
+    "particles_sequence": [{
+        "data": {
+            "stone": {
+                "red": 205, "green": 160, "blue": 70,
+                "lifespan": 350,
+                "alpha": 0.85,
+                "target": {"x": "targets", "y": "targets", "shift_y": -24, "zone_key": "hit_zone"}
+            }
+        },
+        "zones": {
+            "hit_zone": {"type": "circle", "radius": 10},
+            "spawn_zone": {"type": "circle", "radius": 4}
+        },
+        "emitters": [{
+            "x": "targets", "y": "targets",
+            "position": "over",
+            "render_type": "pixel",
+            "show_trails": false,
+            "trails_clear_factor": 0.2,
+            "pixel_size": 4,
+            "pixel_reducing_factor": 0.06,
+            "pixel_is_rect": true,
+            "particles_display_blend_mode": "screen",
+            "render_white_core": true,
+            "core_custom_color": "rgba(255,240,200,0.85)",
+            "total": 8,
+            "repeat": 1,
+            "frequency": 30,
+            "random_in_zone": true,
+            "emitter_data_key": "stone",
+            "zone_key": "spawn_zone"
+        }],
+        "emission_delay": 250,
+        "emission_finish": 650
+    }]
+}

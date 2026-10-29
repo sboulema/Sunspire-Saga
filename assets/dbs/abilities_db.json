@@ -348,7 +348,7 @@
         "is_field_psynergy": false,
         "effects": [],
         "ability_category": "djinn",
-        "battle_animation_key": "quake",
+        "battle_animation_key": "flint",
         "priority_move": false,
         "msg_type": "unleash"
     },

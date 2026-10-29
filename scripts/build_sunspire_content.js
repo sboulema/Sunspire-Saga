@@ -106,10 +106,12 @@ function artRecipe(key, el) {
     if (style.blink) recipe.blink_sequence = [{sprite_index: "targets", start_delay: 470, count: 2, interval: 100, duration: 300}];
     return recipe;
 }
-const ELEMENT_ART = {earth: "quake", fire: "flare", water: "ice_horn", wind: "gust"}; // the spirits' attacks borrow the element's first art
+const ELEMENT_ART = {earth: "quake", fire: "flare", water: "ice_horn", wind: "gust"}; // the spirits' attacks borrow the element's first art...
+// ...unless the spirit has a hand-written recipe of its own under assets/sunspire/recipes/<spirit>_db.json
+const ownRecipe = key => path.join(SRC, "recipes", key + "_db.json");
 // a hand-written recipe under assets/sunspire/recipes/<art>_db.json wins over the generated one
 for (const [key, a] of Object.entries(C.arts)) {
-    const own = path.join(SRC, "recipes", key + "_db.json");
+    const own = ownRecipe(key);
     if (!a.heal) writeJson(path.join(DBS, "abilities_animations", key + "_db.json"), fs.existsSync(own) ? JSON.parse(fs.readFileSync(own, "utf8")) : artRecipe(key, a.el));
     abilities.push(
         a.heal
@@ -127,8 +129,9 @@ for (const [key, s] of Object.entries(C.spirits)) {
             ? ability(key, s.name, {description: s.desc, type: "healing", element: EL[s.el], battle_target: "ally", ability_power: 60, ability_category: "djinn", battle_animation_key: "cure", msg_type: "unleash"})
             : s.healAll
             ? ability(key, s.name, {description: s.desc, type: "healing", element: EL[s.el], battle_target: "ally", range: 11, ability_power: 45, ability_category: "djinn", battle_animation_key: "cure", msg_type: "unleash"})
-            : ability(key, s.name, {description: s.desc, type: "base_damage", element: EL[s.el], battle_target: "enemy", range: s.aoe ? 11 : 1, ability_power: s.pow + ART_BONUS, ability_category: "djinn", msg_type: "unleash", battle_animation_key: ELEMENT_ART[s.el]})
+            : ability(key, s.name, {description: s.desc, type: "base_damage", element: EL[s.el], battle_target: "enemy", range: s.aoe ? 11 : 1, ability_power: s.pow + ART_BONUS, ability_category: "djinn", msg_type: "unleash", battle_animation_key: fs.existsSync(ownRecipe(key)) ? key : ELEMENT_ART[s.el]})
     );
+    if (fs.existsSync(ownRecipe(key))) writeJson(path.join(DBS, "abilities_animations", key + "_db.json"), JSON.parse(fs.readFileSync(ownRecipe(key), "utf8")));
 }
 for (const s of C.summons) {
     abilities.push(ability(s.key, s.name, {description: `The great ${s.el} summon.`, type: "summon", element: s.el === "sol" ? "all_elements" : EL[s.el], battle_target: "enemy", range: 11, ability_power: s.pow, ability_category: "summon", msg_type: "summon"}));
