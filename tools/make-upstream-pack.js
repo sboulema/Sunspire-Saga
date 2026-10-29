@@ -408,11 +408,23 @@ function trees(order) {
 /**
  * A town map's tileset with its ground redrawn from the upstream town tileset (madra): every tile
  * the map's grid (assets/sunspire/maps/<id>_grid.json) draws as grass (plain, tufted, or under an
- * object) becomes one of madra's flat grass tiles and every path tile one of its flat sand tiles,
- * picked by tile index so the ground keeps some variation. Water, houses, signs and the well stay
+ * object) becomes one of madra's flat grass tiles, every path tile one of its flat sand tiles and
+ * every water tile one of its sea tiles, picked by tile index so the ground keeps some variation.
+ * A built-in water tile whose top rows are lighter than its middle is the pond's far bank: it gets
+ * madra's wave crest, turned upside down, lapping along its top. Houses, signs and the well stay
  * built-in; trees, fences and houses are sprites of their own. Returns the number of tiles redrawn.
  */
-const GROUND = {grass: {chars: ".gkBf", tiles: [[16, 48], [32, 48], [48, 48], [64, 48]]}, path: {chars: "p", tiles: [[16, 144], [32, 144], [16, 160], [32, 160], [48, 160]]}};
+const GROUND = {
+    grass: {chars: ".gkBf", tiles: [[16, 48], [32, 48], [48, 48], [64, 48]]},
+    path: {chars: "p", tiles: [[16, 144], [32, 144], [16, 160], [32, 160], [48, 160]]},
+    water: {chars: "w", tiles: [[0, 432], [16, 432], [32, 432], [0, 448], [16, 448], [32, 448]], shore: [[48, 432], [64, 432], [48, 448], [64, 448]]},
+};
+/** The image upside down. */
+function flipV(img) {
+    const out = png.create(img.width, img.height);
+    for (let y = 0; y < img.height; y++) img.data.copy(out.data, (img.height - 1 - y) * img.width * 4, y * img.width * 4, (y + 1) * img.width * 4);
+    return out;
+}
 function townGround(id) {
     return base => {
         const s = sheet("tilesets/madra");
@@ -424,9 +436,18 @@ function townGround(id) {
                 for (const k in GROUND) if (GROUND[k].chars.includes(c)) kind[grid.grid[y][x]] = k;
             })
         );
-        for (const [index, k] of Object.entries(kind)) {
+        for (const [i, k] of Object.entries(kind)) {
+            const index = +i,
+                dx = (index % grid.cols) * 16,
+                dy = Math.floor(index / grid.cols) * 16;
+            const pixel = (x, y) => base.data.readUInt32LE((y * base.width + x) * 4);
+            const shore = GROUND[k].shore && pixel(dx, dy) !== pixel(dx, dy + 8);
             const [sx, sy] = GROUND[k].tiles[index % GROUND[k].tiles.length];
-            png.blit(base, s.img, (index % grid.cols) * 16, Math.floor(index / grid.cols) * 16, sx, sy, 16, 16);
+            png.blit(base, s.img, dx, dy, sx, sy, 16, 16);
+            if (shore) {
+                const [fx, fy] = GROUND[k].shore[index % GROUND[k].shore.length];
+                png.blit(base, flipV(cut(s.img, {x: fx, y: fy, w: 16, h: 16})), dx, dy);
+            }
         }
         return Object.keys(kind).length;
     };
@@ -634,7 +655,7 @@ for (const slot of slots) {
         }
         fs.writeFileSync(path.join(OUT, slot.slot + ".png"), png.encode(base));
         written++;
-        report.push(`${slot.slot}: ${redrawn} ground tiles (grass and path) from upstream's madra tileset, the rest built-in`);
+        report.push(`${slot.slot}: ${redrawn} ground tiles (grass, path and water) from upstream's madra tileset, the rest built-in`);
         continue;
     }
     const rule = RULES[slot.slot];

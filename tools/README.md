@@ -77,8 +77,9 @@ trees and fence pieces are sprites of their own in the engine build, so they com
 native size (the trees shrunk to two tiles wide, as the maps plant a tree on every single
 tile). Thera's fields tileset gets its ground from the Madra town tileset: every tile the map
 draws as grass (plain, tufted or under an object) becomes one of Madra's flat grass tiles and
-every path tile one of its flat sand tiles, picked by tile index so the ground keeps some
-variation; the fence pieces are Madra's posts and rails. The other tilesets, the houses, the map
+every path tile one of its flat sand tiles and every water tile one of its sea tiles, picked by
+tile index so the ground keeps some variation (the pond's far bank gets Madra's wave crest, upside
+down, along its top); the fence pieces are Madra's posts and rails. The other tilesets, the houses, the map
 objects (sign, well, gate, marker, spring, crate), the summon backdrops and the shadow stay
 built-in. `REPORT.txt` in the output folder lists what was replaced.
 
