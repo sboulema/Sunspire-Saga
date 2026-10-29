@@ -450,6 +450,46 @@ const GROUND = {
     path: {chars: "p", tiles: [[16, 144], [32, 144], [16, 160], [32, 160], [48, 160]]},
     water: {chars: "w", tiles: [[0, 432], [16, 432], [32, 432], [0, 448], [16, 448], [32, 448]], shore: [[48, 432], [64, 432], [48, 448], [64, 448]]},
 };
+/**
+ * Madra's sand block, by the sides of a path tile that meet the grass (N E S W as "p" where the
+ * path goes on, "." where it does not): the block has the four edges and the four outer corners;
+ * any other pattern (a strip, a dead end, a lone tile) is the flat sand with the grass fringe of
+ * every side it needs laid over it, taken from those pieces.
+ */
+const SAND = {
+    "pppp": null, // flat: GROUND.path.tiles
+    ".ppp": [[16, 128], [32, 128]],
+    "p.pp": [[48, 144]],
+    "pp.p": [[16, 176], [32, 176]],
+    "ppp.": [[0, 144], [0, 160]],
+    "..pp": [[48, 128]],
+    ".pp.": [[0, 128]],
+    "p..p": [[48, 176]],
+    "pp..": [[0, 176]],
+};
+/** A path tile's neighbours N E S W: "p" where the path goes on (off the map counts as going on). */
+function pathPattern(chars, x, y) {
+    const at = (nx, ny) => (ny < 0 || ny >= chars.length || nx < 0 || nx >= chars[0].length ? "p" : chars[ny][nx]);
+    return [at(x, y - 1), at(x + 1, y), at(x, y + 1), at(x - 1, y)].map(c => (c === "p" ? "p" : ".")).join("");
+}
+const isGrassPixel = (img, o) => img.data[o + 3] > 0 && img.data[o + 1] > img.data[o] + 20 && img.data[o + 1] > img.data[o + 2] + 20;
+function sandTile(madra, pattern, index) {
+    const pick = list => list[index % list.length];
+    if (SAND[pattern]) return cut(madra, {x: pick(SAND[pattern])[0], y: pick(SAND[pattern])[1], w: 16, h: 16});
+    const [fx, fy] = pick(GROUND.path.tiles);
+    const img = cut(madra, {x: fx, y: fy, w: 16, h: 16});
+    if (pattern === "pppp") return img;
+    // the fringe of every side (and of every corner between two fringed sides) the pattern asks for
+    const pieces = [];
+    const sides = ["N", "E", "S", "W"].filter((_, i) => pattern[i] === ".");
+    for (const side of sides) pieces.push(pick(SAND[{N: ".ppp", E: "p.pp", S: "pp.p", W: "ppp."}[side]]));
+    for (const [a, b, corner] of [["N", "E", "..pp"], ["N", "W", ".pp."], ["S", "E", "p..p"], ["S", "W", "pp.."]]) if (sides.includes(a) && sides.includes(b)) pieces.push(pick(SAND[corner]));
+    for (const [sx, sy] of pieces) {
+        const piece = cut(madra, {x: sx, y: sy, w: 16, h: 16});
+        for (let o = 0; o < piece.data.length; o += 4) if (isGrassPixel(piece, o)) piece.data.copy(img.data, o, o, o + 4);
+    }
+    return img;
+}
 /** The image upside down. */
 function flipV(img) {
     const out = png.create(img.width, img.height);
@@ -461,10 +501,11 @@ function townGround(id) {
         const s = sheet("tilesets/madra");
         if (!s) return 0;
         const grid = JSON.parse(fs.readFileSync(path.join(root, "assets", "sunspire", "maps", id + "_grid.json"), "utf8"));
-        const kind = {};
+        const kind = {}, pattern = {};
         grid.chars.forEach((row, y) =>
             [...row].forEach((c, x) => {
                 for (const k in GROUND) if (GROUND[k].chars.includes(c)) kind[grid.grid[y][x]] = k;
+                if (c === "p") pattern[grid.grid[y][x]] = pathPattern(grid.chars, x, y);
             })
         );
         for (const [i, k] of Object.entries(kind)) {
@@ -473,6 +514,10 @@ function townGround(id) {
                 dy = Math.floor(index / grid.cols) * 16;
             const pixel = (x, y) => base.data.readUInt32LE((y * base.width + x) * 4);
             const shore = GROUND[k].shore && pixel(dx, dy) !== pixel(dx, dy + 8);
+            if (k === "path") {
+                png.blit(base, sandTile(s.img, pattern[index], index), dx, dy);
+                continue;
+            }
             const [sx, sy] = GROUND[k].tiles[index % GROUND[k].tiles.length];
             png.blit(base, s.img, dx, dy, sx, sy, 16, 16);
             if (shore) {
@@ -505,11 +550,12 @@ function heightsGround(id) {
         const pixel = (x, y) => base.data.readUInt32LE((y * base.width + x) * 4);
         const chasmColour = (() => { for (let y = 0; y < grid.h; y++) for (let x = 0; x < grid.w; x++) if (at(x, y) === "c") { const i = grid.grid[y][x]; return pixel((i % grid.cols) * 16, Math.floor(i / grid.cols) * 16); } return null; })();
         // one class per tile index, from the letter and its neighbours
-        const kind = {};
+        const kind = {}, cellOf = {};
         grid.chars.forEach((row, y) =>
             [...row].forEach((c, x) => {
                 const i = grid.grid[y][x];
                 if (i in kind) return;
+                cellOf[i] = [x, y];
                 const dx = (i % grid.cols) * 16, dy = Math.floor(i / grid.cols) * 16;
                 if (c === "v") kind[i] = at(x, y + 1) === "v" ? "face" : at(x, y - 1) === "v" ? "foot" : "face";
                 else if (c === "L") kind[i] = at(x, y - 1) !== "L" ? "ladder_brow" : at(x, y + 1) === "L" ? "ladder_face" : "ladder_foot";
@@ -523,7 +569,9 @@ function heightsGround(id) {
             const index = +i, dx = (index % grid.cols) * 16, dy = Math.floor(index / grid.cols) * 16;
             const builtIn = cut(base, {x: dx, y: dy, w: 16, h: 16});
             const forestTile = list => { const [sx, sy] = list[index % list.length]; png.blit(base, forest.img, dx, dy, sx, sy, 16, 16); };
-            if (k === "grass" || k === "path" || k === "water") {
+            if (k === "path") {
+                png.blit(base, sandTile(madra.img, pathPattern(grid.chars, ...cellOf[index]), index), dx, dy);
+            } else if (k === "grass" || k === "water") {
                 const g = GROUND[k];
                 const shore = g.shore && pixel(dx, dy) !== pixel(dx, dy + 8);
                 const [sx, sy] = g.tiles[index % g.tiles.length];

@@ -50,6 +50,12 @@
   <p class="intro">Newest first.</p>
   <div class="pg-body doc">
     <table>
+    <tr><td class="ver">v59</td><td>Paths know their edges. Every path tile now carries which of its four sides
+      meet the grass (a faint darker line along those sides in the built-in art;
+      <code>tools/split-path-tiles.js</code> split the fields' flat path tile into its edge
+      variants), so a sprite pack can draw real path edges: the upstream pack lays Madra's
+      grass-fringed sand along them, with its corners at the bends and the fork, and composes the
+      strips, dead ends and lone tiles Madra has no tile for.</td></tr>
     <tr><td class="ver">v58</td><td>The spirit spring in the Sunspire is drawn with the <code>spring</code> sprite
       instead of the village well: the generator only ever used the spring picture for a well on an
       exit tile, which no map has. The upstream sprite pack gains the signpost and the two wells

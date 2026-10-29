@@ -42,6 +42,18 @@ changing the layout, then `npm run build:content`.
 node tools/make-heights-map.js
 ```
 
+## split-path-tiles.js
+
+Gives every path tile of a captured map grid its own tile per neighbourhood (which of its four
+sides meet the grass), the flat path tile with a faint darker line along those sides, so a sprite
+pack can redraw path edges. The legacy grids used one flat tile for the whole path; the heights
+builder edges its path tiles itself. Remembers the flat tile in the grid as `path_flat`, so a
+second run changes nothing. Run `npm run build:content` afterwards.
+
+```bash
+node tools/split-path-tiles.js fields
+```
+
 ## make-pack-zip.js
 
 Builds a sprite pack zip players can load with *Load sprite pack* (see `packs/README.md` and the
@@ -91,7 +103,9 @@ tile). Thera's fields tileset gets its ground from the Madra town tileset: every
 draws as grass (plain, tufted or under an object) becomes one of Madra's flat grass tiles and
 every path tile one of its flat sand tiles and every water tile one of its sea tiles, picked by
 tile index so the ground keeps some variation (the pond's far bank gets Madra's wave crest, upside
-down, along its top). Thera Heights' tileset is redrawn the same way, plus its cliffs from the
+down, along its top). Path tiles are autotiled: each side of a path tile that meets the grass gets
+Madra's grass-fringed sand edge, the bends and the fork its corners, and the strips, dead ends and
+lone tiles Madra has no tile for are composed from those pieces. Thera Heights' tileset is redrawn the same way, plus its cliffs from the
 forest tileset's rock (the layered strata for the brow and the ridge, the streaked face, the
 pebbled foot), its pillar tops from the top of the push pillar sprite and the built-in ladder rails
 laid over the upstream rock; the chasm stays built-in. The fence pieces are Madra's three fence tiles: the horizontal section (two

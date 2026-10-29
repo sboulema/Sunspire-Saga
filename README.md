@@ -68,8 +68,9 @@ the same folder on every push and keeps it as a workflow artifact; each `vNN` ta
 Publish workflow, which attaches it as a zip to the GitHub Release and uploads it over FTP to the
 web host when the repository secrets `FTP_SERVER`, `FTP_USERNAME` and `FTP_PASSWORD` are set
 (plus the optional secret `FTP_PATH`, the folder on the server, and the optional repository
-variable `FTP_PROTOCOL`: `ftps` by default, or `ftp` or `ftps-legacy`); without them that
-step is skipped.
+variables `FTP_PROTOCOL`, `ftps` by default, and `FTP_VERIFY_CERTIFICATE`); without them that
+step is skipped. A manual run of Publish with the `deploy_ftp` option uploads a branch's site
+over FTP without a release, to try the settings.
 
 ### With Docker
 
