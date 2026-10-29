@@ -164,6 +164,6 @@ jobs:
           set ssl:priority "NORMAL:-VERS-TLS1.3"
           set ssl:verify-certificate $verify
           set ssl:check-hostname $verify
-          mirror --reverse --delete --no-perms --parallel=4 --verbose=1             --exclude-glob .* --exclude-glob .*/ --exclude-glob cgi-bin/             site/ "${FTP_PATH:-.}"
+          mirror --reverse --delete --no-perms --parallel=4 --verbose=1 --exclude-glob .* --exclude-glob .*/ --exclude-glob cgi-bin/ site/ "${FTP_PATH:-.}"
           bye
           LFTP
