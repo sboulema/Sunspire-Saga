@@ -1,0 +1,34 @@
+{
+    "frames": {
+        "granite_unleash/000": {
+            "frame": {
+                "x": 1,
+                "y": 1,
+                "w": 12,
+                "h": 10
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 12,
+                "h": 10
+            },
+            "sourceSize": {
+                "w": 12,
+                "h": 10
+            }
+        }
+    },
+    "meta": {
+        "app": "scripts/build_sunspire_assets.js",
+        "image": "granite_unleash.png",
+        "format": "RGBA8888",
+        "size": {
+            "w": 14,
+            "h": 12
+        },
+        "scale": "1"
+    }
+}

@@ -1,6 +1,6 @@
 {
     "_comment": "Sunspire Saga's game data and story, ported from the legacy game.js (V48). scripts/build_sunspire_content.js turns this into the engine databases and the Tiled maps; scripts/build_walkthrough.js turns it into walkthrough.html. Numbers are the legacy ones unless a key says otherwise.",
-    "version": "V54",
+    "version": "V55",
     "elements": {"earth": "venus", "water": "mercury", "fire": "mars", "wind": "jupiter"},
 
     "rules": {
@@ -80,7 +80,7 @@
     "spirit_order": ["flint", "granite", "forge", "ember", "dew", "mist", "breeze", "squall"],
     "spirits": {
         "flint":   {"el": "earth", "name": "Flint",   "pow": 32, "map": "fields", "x": 3,  "y": 20, "desc": "Strikes with stone. Its power can shatter boulders."},
-        "granite": {"el": "earth", "name": "Granite", "pow": 48, "map": "mine",   "x": 3,  "y": 18, "desc": "A heavy blow of living rock."},
+        "granite": {"el": "earth", "name": "Granite", "guard": 50, "turns": 4, "map": "mine", "x": 3, "y": 18, "desc": "Raises everyone's defence by half for 4 turns."},
         "forge":   {"el": "fire",  "name": "Forge",   "pow": 40, "map": "mine",   "x": 12, "y": 3,  "desc": "A hammer of flame."},
         "ember":   {"el": "fire",  "name": "Ember",   "pow": 56, "map": "trail",  "x": 28, "y": 16, "desc": "A searing strike."},
         "dew":     {"el": "water", "name": "Dew",     "heal": 0.55, "map": "fields", "x": 8, "y": 12, "desc": "Restores 55% of one ally's HP."},

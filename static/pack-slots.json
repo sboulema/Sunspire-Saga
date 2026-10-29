@@ -1,5 +1,15 @@
 [
     {
+        "slot": "granite_unleash",
+        "file": "assets/images/abilities_animations/granite_unleash.png",
+        "width": 14,
+        "height": 12,
+        "frames": [
+            "granite_unleash/000"
+        ],
+        "group": "abilities_animations"
+    },
+    {
         "slot": "quake",
         "file": "assets/images/abilities_animations/quake.png",
         "width": 42,

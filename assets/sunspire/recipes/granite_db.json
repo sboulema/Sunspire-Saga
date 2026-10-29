@@ -1,0 +1,310 @@
+{
+    "key_name": "granite",
+    "cast_type": "psynergy_cast",
+    "wait_for_cast_animation": false,
+    "sprites": [
+        {
+            "key_name": "granite_unleash",
+            "per_target": false,
+            "position": "over",
+            "initial_config": {
+                "x": "targets",
+                "y": "targets",
+                "alpha": 0,
+                "scale": {
+                    "x": 2,
+                    "y": 2
+                },
+                "anchor": {
+                    "x": 0.5,
+                    "y": 0.5
+                },
+                "blend_mode": "screen"
+            }
+        },
+        {
+            "type": "circle",
+            "per_target": true,
+            "per_target_key": "orb_a",
+            "count": 1,
+            "position": "over",
+            "geometry_info": {
+                "color": "f8e070",
+                "radius": 3
+            },
+            "initial_config": {
+                "x": "targets",
+                "y": "targets",
+                "alpha": 0,
+                "anchor": {
+                    "x": 0.5,
+                    "y": 0.5
+                },
+                "blend_mode": "screen"
+            }
+        },
+        {
+            "type": "circle",
+            "per_target": true,
+            "per_target_key": "orb_b",
+            "count": 1,
+            "position": "over",
+            "geometry_info": {
+                "color": "f8e070",
+                "radius": 3
+            },
+            "initial_config": {
+                "x": "targets",
+                "y": "targets",
+                "alpha": 0,
+                "anchor": {
+                    "x": 0.5,
+                    "y": 0.5
+                },
+                "blend_mode": "screen"
+            }
+        },
+        {
+            "type": "circle",
+            "per_target": true,
+            "per_target_key": "orb_c",
+            "count": 1,
+            "position": "over",
+            "geometry_info": {
+                "color": "f8e070",
+                "radius": 3
+            },
+            "initial_config": {
+                "x": "targets",
+                "y": "targets",
+                "alpha": 0,
+                "anchor": {
+                    "x": 0.5,
+                    "y": 0.5
+                },
+                "blend_mode": "screen"
+            }
+        },
+        {
+            "type": "rectangle",
+            "per_target": true,
+            "per_target_key": "wall",
+            "position": "over",
+            "geometry_info": {
+                "color": "fff4b0",
+                "width": 4,
+                "height": 30
+            },
+            "initial_config": {
+                "x": "targets",
+                "y": "targets",
+                "alpha": 0,
+                "anchor": {
+                    "x": 0.5,
+                    "y": 1
+                },
+                "blend_mode": "screen"
+            }
+        }
+    ],
+    "x_sequence": [
+        {
+            "start_delay": 0,
+            "to": "targets",
+            "is_absolute": true,
+            "sprite_index": 0
+        },
+        {
+            "start_delay": 0,
+            "to": "targets",
+            "is_absolute": true,
+            "per_target_key": "orb_a"
+        },
+        {
+            "start_delay": 0,
+            "to": "targets",
+            "is_absolute": true,
+            "per_target_key": "orb_b"
+        },
+        {
+            "start_delay": 0,
+            "to": "targets",
+            "is_absolute": true,
+            "per_target_key": "orb_c"
+        },
+        {
+            "start_delay": 0,
+            "to": "targets",
+            "shift": -14,
+            "is_absolute": true,
+            "per_target_key": "wall"
+        }
+    ],
+    "y_sequence": [
+        {
+            "start_delay": 0,
+            "to": "targets",
+            "shift": -72,
+            "is_absolute": true,
+            "sprite_index": 0
+        },
+        {
+            "start_delay": 300,
+            "to": -5,
+            "is_absolute": false,
+            "yoyo": true,
+            "tween": "Sinusoidal.InOut",
+            "duration": 700,
+            "sprite_index": 0
+        },
+        {
+            "start_delay": 0,
+            "to": "targets",
+            "shift": -72,
+            "is_absolute": true,
+            "per_target_key": "orb_a"
+        },
+        {
+            "start_delay": 0,
+            "to": "targets",
+            "shift": -72,
+            "is_absolute": true,
+            "per_target_key": "orb_b"
+        },
+        {
+            "start_delay": 0,
+            "to": "targets",
+            "shift": -72,
+            "is_absolute": true,
+            "per_target_key": "orb_c"
+        },
+        {
+            "start_delay": 650,
+            "to": "targets",
+            "shift": -12,
+            "is_absolute": true,
+            "tween": "Quadratic.In",
+            "duration": 420,
+            "per_target_key": "orb_a"
+        },
+        {
+            "start_delay": 800,
+            "to": "targets",
+            "shift": -12,
+            "is_absolute": true,
+            "tween": "Quadratic.In",
+            "duration": 420,
+            "per_target_key": "orb_b"
+        },
+        {
+            "start_delay": 950,
+            "to": "targets",
+            "shift": -12,
+            "is_absolute": true,
+            "tween": "Quadratic.In",
+            "duration": 420,
+            "per_target_key": "orb_c"
+        },
+        {
+            "start_delay": 0,
+            "to": "targets",
+            "shift": 2,
+            "is_absolute": true,
+            "per_target_key": "wall"
+        }
+    ],
+    "alpha_sequence": [
+        {
+            "start_delay": 0,
+            "to": 0.65,
+            "is_absolute": true,
+            "tween": "Linear.None",
+            "duration": 350,
+            "sprite_index": 0
+        },
+        {
+            "start_delay": 1900,
+            "to": 0,
+            "is_absolute": true,
+            "tween": "Linear.None",
+            "duration": 350,
+            "sprite_index": 0
+        },
+        {
+            "start_delay": 650,
+            "to": 0.9,
+            "is_absolute": true,
+            "per_target_key": "orb_a"
+        },
+        {
+            "start_delay": 800,
+            "to": 0.9,
+            "is_absolute": true,
+            "per_target_key": "orb_b"
+        },
+        {
+            "start_delay": 950,
+            "to": 0.9,
+            "is_absolute": true,
+            "per_target_key": "orb_c"
+        },
+        {
+            "start_delay": 1070,
+            "to": 0,
+            "is_absolute": true,
+            "per_target_key": "orb_a"
+        },
+        {
+            "start_delay": 1220,
+            "to": 0,
+            "is_absolute": true,
+            "per_target_key": "orb_b"
+        },
+        {
+            "start_delay": 1370,
+            "to": 0,
+            "is_absolute": true,
+            "per_target_key": "orb_c"
+        },
+        {
+            "start_delay": 1500,
+            "to": 0.75,
+            "is_absolute": true,
+            "tween": "Linear.None",
+            "duration": 120,
+            "per_target_key": "wall"
+        },
+        {
+            "start_delay": 1750,
+            "to": 0,
+            "is_absolute": true,
+            "tween": "Linear.None",
+            "duration": 250,
+            "per_target_key": "wall"
+        }
+    ],
+    "color_blend_filter_sequence": [
+        {
+            "start_delay": 0,
+            "sprite_index": 0,
+            "r": 1,
+            "g": 0.9,
+            "b": 0.45,
+            "fake_blend": false,
+            "remove": false
+        }
+    ],
+    "blink_sequence": [
+        {
+            "sprite_index": "targets",
+            "start_delay": 1520,
+            "count": 1,
+            "interval": 80,
+            "color": {
+                "r": 1,
+                "g": 0.95,
+                "b": 0.6
+            }
+        }
+    ]
+}

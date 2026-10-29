@@ -348,26 +348,35 @@
         "is_field_psynergy": false,
         "effects": [],
         "ability_category": "djinn",
-        "battle_animation_key": "flint",
+        "battle_animation_key": "flint_unleash",
         "priority_move": false,
         "msg_type": "unleash"
     },
     {
         "key_name": "granite",
         "name": "Granite",
-        "description": "A heavy blow of living rock.",
-        "type": "base_damage",
+        "description": "Raises everyone's defence by half for 4 turns.",
+        "type": "effect_only",
         "element": "venus",
-        "battle_target": "enemy",
-        "range": 1,
+        "battle_target": "ally",
+        "range": 11,
         "pp_cost": 0,
-        "ability_power": 56,
+        "ability_power": 0,
         "effects_outside_battle": false,
         "is_battle_ability": true,
         "is_field_psynergy": false,
-        "effects": [],
+        "effects": [
+            {
+                "type": "defense",
+                "quantity": 1.5,
+                "operator": "times",
+                "turns_quantity": 4,
+                "usage": "on_use",
+                "show_msg": true
+            }
+        ],
         "ability_category": "djinn",
-        "battle_animation_key": "quake",
+        "battle_animation_key": "granite_unleash",
         "priority_move": false,
         "msg_type": "unleash"
     },

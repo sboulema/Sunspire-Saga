@@ -409,6 +409,15 @@ function effectSheets() {
         frames: { "quake/000": { frame: { x: 1, y: 1, w: 40, h: 96 }, rotated: false, trimmed: false, spriteSourceSize: { x: 0, y: 0, w: 40, h: 96 }, sourceSize: { w: 40, h: 96 } } },
         meta: { app: "scripts/build_sunspire_assets.js", image: "quake.png", format: "RGBA8888", size: { w: 42, h: 98 }, scale: "1" },
     });
+    // granite_unleash: the glowing image of the spirit that hovers over the party while Granite guards it
+    const spirit = spr("djinn_granite");
+    const hover = png.create(spirit.width + 2, spirit.height + 2);
+    png.blit(hover, spirit, 1, 1);
+    writePng(path.join(dir, "granite_unleash.png"), hover);
+    writeJson(path.join(dir, "granite_unleash.json"), {
+        frames: { "granite_unleash/000": { frame: { x: 1, y: 1, w: spirit.width, h: spirit.height }, rotated: false, trimmed: false, spriteSourceSize: { x: 0, y: 0, w: spirit.width, h: spirit.height }, sourceSize: { w: spirit.width, h: spirit.height } } },
+        meta: { app: "scripts/build_sunspire_assets.js", image: "granite_unleash.png", format: "RGBA8888", size: { w: spirit.width + 2, h: spirit.height + 2 }, scale: "1" },
+    });
 }
 
 // ---------------- tilesets ----------------

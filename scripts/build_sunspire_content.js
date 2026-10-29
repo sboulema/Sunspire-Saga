@@ -107,8 +107,10 @@ function artRecipe(key, el) {
     return recipe;
 }
 const ELEMENT_ART = {earth: "quake", fire: "flare", water: "ice_horn", wind: "gust"}; // the spirits' attacks borrow the element's first art...
-// ...unless the spirit has a hand-written recipe of its own under assets/sunspire/recipes/<spirit>_db.json
+// ...unless the spirit has a hand-written recipe of its own under assets/sunspire/recipes/<spirit>_db.json,
+// played under the key <spirit>_unleash (the spirit's own key names its field sheet)
 const ownRecipe = key => path.join(SRC, "recipes", key + "_db.json");
+const spiritAnimation = key => (fs.existsSync(ownRecipe(key)) ? key + "_unleash" : ELEMENT_ART[C.spirits[key].el]);
 // a hand-written recipe under assets/sunspire/recipes/<art>_db.json wins over the generated one
 for (const [key, a] of Object.entries(C.arts)) {
     const own = ownRecipe(key);
@@ -129,9 +131,11 @@ for (const [key, s] of Object.entries(C.spirits)) {
             ? ability(key, s.name, {description: s.desc, type: "healing", element: EL[s.el], battle_target: "ally", ability_power: 60, ability_category: "djinn", battle_animation_key: "cure", msg_type: "unleash"})
             : s.healAll
             ? ability(key, s.name, {description: s.desc, type: "healing", element: EL[s.el], battle_target: "ally", range: 11, ability_power: 45, ability_category: "djinn", battle_animation_key: "cure", msg_type: "unleash"})
-            : ability(key, s.name, {description: s.desc, type: "base_damage", element: EL[s.el], battle_target: "enemy", range: s.aoe ? 11 : 1, ability_power: s.pow + ART_BONUS, ability_category: "djinn", msg_type: "unleash", battle_animation_key: fs.existsSync(ownRecipe(key)) ? key : ELEMENT_ART[s.el]})
+            : s.guard // raises the whole party's defence by guard% for a few turns (the engine caps buffs at +50%)
+            ? ability(key, s.name, {description: s.desc, type: "effect_only", element: EL[s.el], battle_target: "ally", range: 11, ability_category: "djinn", msg_type: "unleash", battle_animation_key: spiritAnimation(key), effects: [{type: "defense", quantity: 1 + s.guard / 100, operator: "times", turns_quantity: s.turns, usage: "on_use", show_msg: true}]})
+            : ability(key, s.name, {description: s.desc, type: "base_damage", element: EL[s.el], battle_target: "enemy", range: s.aoe ? 11 : 1, ability_power: s.pow + ART_BONUS, ability_category: "djinn", msg_type: "unleash", battle_animation_key: spiritAnimation(key)})
     );
-    if (fs.existsSync(ownRecipe(key))) writeJson(path.join(DBS, "abilities_animations", key + "_db.json"), JSON.parse(fs.readFileSync(ownRecipe(key), "utf8")));
+    if (fs.existsSync(ownRecipe(key))) writeJson(path.join(DBS, "abilities_animations", key + "_unleash_db.json"), {...JSON.parse(fs.readFileSync(ownRecipe(key), "utf8")), key_name: key + "_unleash"});
 }
 for (const s of C.summons) {
     abilities.push(ability(s.key, s.name, {description: `The great ${s.el} summon.`, type: "summon", element: s.el === "sol" ? "all_elements" : EL[s.el], battle_target: "enemy", range: 11, ability_power: s.pow, ability_category: "summon", msg_type: "summon"}));

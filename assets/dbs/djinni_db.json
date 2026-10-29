@@ -15,7 +15,7 @@
     {
         "key_name": "granite",
         "name": "Granite",
-        "description": "A heavy blow of living rock.",
+        "description": "Raises everyone's defence by half for 4 turns.",
         "element": "venus",
         "ability_key_name": "granite",
         "hp_boost": 4,
