@@ -434,7 +434,13 @@ export class Debug {
                     document.getElementById("object_inspector").innerText = JSON.stringify(events, null, 4);
                 }
             } else {
-                this.game.debug.text(`x: --, y: --`, 60, 15, "#00ff00");
+                //no mouse over the canvas: show the hero's tile instead
+                this.game.debug.text(
+                    `hero x: ${this.data.hero.tile_x_pos}, y: ${this.data.hero.tile_y_pos}`,
+                    15,
+                    15,
+                    "#00ff00"
+                );
             }
         } else {
             document.getElementById("object_inspector").innerText = "";
