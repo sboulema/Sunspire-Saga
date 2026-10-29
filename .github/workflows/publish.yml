@@ -153,12 +153,17 @@ jobs:
           fi
           # A manual run is a test run: show the whole SFTP dialogue.
           debug=; [ "$GITHUB_EVENT_NAME" = workflow_dispatch ] && debug="debug 3"
+          # The SFTP server creates folders that the web server cannot enter (their files then
+          # answer 404), so open every folder of the site up to 755 after the upload.
+          base="${FTP_PATH:-.}"; base="${base%/}"
+          chmods=$(cd site && find . -mindepth 1 -type d ! -name '.*' -printf "chmod 755 \"$base/%P\"\n")
           lftp -u "$FTP_USERNAME" --env-password "sftp://$FTP_SERVER:$FTP_PORT" <<LFTP
           $debug
           set cmd:fail-exit yes
           set net:timeout 30
           set net:max-retries 3
           set sftp:connect-program "ssh -a -x -o StrictHostKeyChecking=yes"
-          mirror --reverse --delete --no-perms --parallel=4 --verbose=1 --exclude-glob .* --exclude-glob .*/ --exclude-glob cgi-bin/ site/ "${FTP_PATH:-.}"
+          mirror --reverse --delete --no-perms --parallel=4 --verbose=1 --exclude-glob .* --exclude-glob .*/ --exclude-glob cgi-bin/ site/ "$base"
+          $chmods
           bye
           LFTP
