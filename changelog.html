@@ -50,6 +50,15 @@
   <p class="intro">Newest first.</p>
   <div class="pg-body doc">
     <table>
+    <tr><td class="ver">v51</td><td>A proportional font with a lowercase. Sunspire's font had only
+      capitals, so every lowercase letter was drawn as a 5-wide capital and lines ran about a tenth
+      longer than the menus were laid out for (the ARTS shortcut window still ran into its border).
+      The font now has a 4-wide lowercase with real descenders, and every glyph is as wide as its
+      ink: text reads as written ("Whose item?", "Set shortcut") and fits its windows.
+      <br>The fonts are sprite pack slots too: <code>font</code>, <code>font_italic</code>,
+      <code>font_item</code> (item counts) and <code>font_shop</code> (prices), each a sheet with a
+      <code>.fnt</code> (AngelCode BMFont XML) next to it that says where every character sits, so
+      a pack's font may be any size and any face.</td></tr>
     <tr><td class="ver">v50</td><td>The ARTS menu's shortcut window fits its text. Its heading reads
       SET SHORTCUT instead of CHANGE SHORTCUT, which ran past the window's right edge in Sunspire's
       wider font.</td></tr>

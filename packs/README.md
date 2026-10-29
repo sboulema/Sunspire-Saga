@@ -21,6 +21,10 @@ loaded, the list marks every slot the pack covers. The list is generated from th
 - Or bring your own layout: a `<slot>.json` TexturePacker atlas next to the sheet, with exactly
   the frame names the guide lists for that slot, lets the sheet be any size that holds those
   frames. Plain images (no frames in the guide) take no atlas.
+- The fonts are slots too (`font`, `font_italic`, `font_item` for item counts, `font_shop` for
+  prices): the sheet comes with a `<slot>.fnt`, an AngelCode BMFont XML file that says where each
+  character sits, and with it the sheet may be any size. The built-in font is Sunspire's own, 5x5
+  capitals with a 4-wide lowercase.
 - Partial packs are fine; everything you leave out keeps the built-in art. Files that match no slot
   or have the wrong size are reported and skipped.
 - Trees (`tree`, `tree_trail`, three variants each: `down`, `alt1`, `alt2`, picked per tile),

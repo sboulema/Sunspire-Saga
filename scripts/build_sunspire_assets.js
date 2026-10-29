@@ -35,11 +35,29 @@ function writePng(file, img) { mkdir(path.dirname(file)); fs.writeFileSync(file,
 function writeJson(file, obj) { mkdir(path.dirname(file)); fs.writeFileSync(file, JSON.stringify(obj, null, 4) + "\n"); }
 
 // ---------------- drawing helpers ----------------
+// A glyph's ink: its rows cropped to the columns that hold a pixel. The capitals, digits and
+// punctuation sit in a fixed 5x5 grid, the lowercase glyphs are drawn at their own width (row 0
+// the ascender, rows 1-4 the x-height, rows 5-6 the descender); the font is proportional, every
+// glyph as wide as its ink plus one pixel.
+const SPACE_WIDTH = 2;
+function ink(ch) {
+    const g = glyphs[ch];
+    if (!g) return null;
+    let x0 = Infinity, x1 = -1;
+    for (const row of g) for (let c = 0; c < row.length; c++) if (row[c] === "1") { x0 = Math.min(x0, c); x1 = Math.max(x1, c); }
+    return x1 < 0 ? null : { rows: g.map(row => row.slice(x0, x1 + 1)), w: x1 - x0 + 1, h: g.length };
+}
+const advance = ch => { const g = ink(ch); return g ? g.w + 1 : ch === " " ? SPACE_WIDTH + 1 : 0; };
+const textWidth = s => Math.max(0, [...String(s)].reduce((w, ch) => w + advance(ch), 0) - 1);
+function drawGlyph(img, ch, x, y, rgba) {
+    const g = ink(ch);
+    if (g) for (let r = 0; r < g.h; r++) for (let c = 0; c < g.w; c++) if (g.rows[r][c] === "1") png.fill(img, x + c, y + r, 1, 1, rgba);
+}
+// a line of capitals, for the placeholder labels
 function text5(img, s, x, y, rgba) {
     for (const ch of String(s).toUpperCase()) {
-        const g = glyphs[ch];
-        if (g) for (let r = 0; r < 5; r++) for (let c = 0; c < 5; c++) if (g[r][c] === "1") png.fill(img, x + c, y + r, 1, 1, rgba);
-        x += 6;
+        drawGlyph(img, ch, x, y, rgba);
+        x += advance(ch);
     }
 }
 // a bordered box with a short centred label, for art the engine needs but Sunspire never drew
@@ -48,9 +66,9 @@ function placeholder(w, h, label, border = COL.gold, bg = COL.ink) {
     png.fill(img, 0, 0, w, h, border);
     if (w > 2 && h > 2) png.fill(img, 1, 1, w - 2, h - 2, bg);
     if (label && h >= 7) {
-        let s = String(label);
-        while (s.length && s.length * 6 - 1 > w - 2) s = s.slice(0, -1);
-        if (s.length) text5(img, s, Math.floor((w - (s.length * 6 - 1)) / 2), Math.floor((h - 5) / 2), COL.white);
+        let s = String(label).toUpperCase();
+        while (s.length && textWidth(s) > w - 2) s = s.slice(0, -1);
+        if (s.length) text5(img, s, Math.floor((w - textWidth(s)) / 2), Math.floor((h - 5) / 2), COL.white);
     }
     return img;
 }
@@ -404,23 +422,33 @@ function tilesets() {
 }
 
 // ---------------- font ----------------
-// Sunspire's 5x5 uppercase font as an AngelCode BMFont (XML) for Phaser's bitmap text. Lower case
-// shares the capitals; characters the font never had get an empty, normal-width glyph.
+// Sunspire's bitmap font as an AngelCode BMFont (XML) for Phaser's bitmap text: the 5x5 capitals,
+// digits and punctuation and the 4-wide lowercase, proportional (see ink). Every glyph starts on
+// row 1 of the 8px line, so the capitals and the x-height share a baseline on row 5 and the
+// descenders use rows 6-7. Characters the font never had get an empty, normal-width glyph.
+// The game loads four fonts (text, italic, item counts, shop prices); each gets its own copy of the
+// sheet so that each is a sprite pack slot of its own.
 function font() {
-    const keys = Object.keys(glyphs), pitch = 6;
-    const img = png.create(keys.length * pitch, 8);
-    keys.forEach((k, i) => text5(img, k, i * pitch, 1, COL.white));
-    const rect = {}; keys.forEach((k, i) => (rect[k] = { x: i * pitch, y: 1 }));
+    const keys = Object.keys(glyphs).filter(ink);
+    const img = png.create(keys.reduce((w, k) => w + advance(k), 0), 8);
+    const rect = {};
+    let x = 0;
+    for (const k of keys) {
+        drawGlyph(img, k, x, 1, COL.white);
+        rect[k] = { x, w: ink(k).w, h: ink(k).h };
+        x += advance(k);
+    }
     const chars = [];
-    const add = (id, k) => chars.push(k in rect ? `    <char id="${id}" x="${rect[k].x}" y="${rect[k].y}" width="5" height="5" xoffset="0" yoffset="1" xadvance="6" page="0" chnl="15"/>` : `    <char id="${id}" x="0" y="0" width="0" height="0" xoffset="0" yoffset="0" xadvance="${id === 32 ? 4 : 6}" page="0" chnl="15"/>`);
-    for (let id = 32; id < 127; id++) add(id, String.fromCharCode(id).toUpperCase());
+    const add = (id, k) => chars.push(k in rect ? `    <char id="${id}" x="${rect[k].x}" y="1" width="${rect[k].w}" height="${rect[k].h}" xoffset="0" yoffset="1" xadvance="${rect[k].w + 1}" page="0" chnl="15"/>` : `    <char id="${id}" x="0" y="0" width="0" height="0" xoffset="0" yoffset="0" xadvance="${id === 32 ? SPACE_WIDTH : 6}" page="0" chnl="15"/>`);
+    for (let id = 32; id < 127; id++) { const ch = String.fromCharCode(id); add(id, ch in glyphs ? ch : ch.toUpperCase()); }
     add(8217, "'"); add(8220, "'"); add(8221, "'");
-    const fnt = size => `<?xml version="1.0"?>\n<font>\n  <info face="sunspire" size="${size}" bold="0" italic="0" charset="" unicode="1" stretchH="100" smooth="0" aa="1" padding="0,0,0,0" spacing="1,1" outline="0"/>\n  <common lineHeight="8" base="6" scaleW="${img.width}" scaleH="${img.height}" pages="1" packed="0" alphaChnl="0" redChnl="4" greenChnl="4" blueChnl="4"/>\n  <pages>\n    <page id="0" file="sunspire.png"/>\n  </pages>\n  <chars count="${chars.length}">\n${chars.join("\n")}\n  </chars>\n</font>\n`;
-    writePng(path.join(ROOT, "assets/font/sunspire.png"), img);
-    fs.writeFileSync(path.join(ROOT, "assets/font/sunspire.fnt"), fnt(8));
     // the item quantities and shop prices are bitmap texts made without a size, which Phaser draws
     // at 32: declaring the same glyphs as size 32 keeps them 1:1 (upstream's item and shop fonts did the same)
-    fs.writeFileSync(path.join(ROOT, "assets/font/sunspire-small.fnt"), fnt(32));
+    const fnt = (name, size) => `<?xml version="1.0"?>\n<font>\n  <info face="sunspire" size="${size}" bold="0" italic="0" charset="" unicode="1" stretchH="100" smooth="0" aa="1" padding="0,0,0,0" spacing="1,1" outline="0"/>\n  <common lineHeight="8" base="6" scaleW="${img.width}" scaleH="${img.height}" pages="1" packed="0" alphaChnl="0" redChnl="4" greenChnl="4" blueChnl="4"/>\n  <pages>\n    <page id="0" file="${name}.png"/>\n  </pages>\n  <chars count="${chars.length}">\n${chars.join("\n")}\n  </chars>\n</font>\n`;
+    for (const [name, size] of [["font", 8], ["font_italic", 8], ["font_item", 32], ["font_shop", 32]]) {
+        writePng(path.join(ROOT, "assets/font", name + ".png"), img);
+        fs.writeFileSync(path.join(ROOT, "assets/font", name + ".fnt"), fnt(name, size));
+    }
 }
 
 // ---------------- audio ----------------
@@ -487,6 +515,7 @@ function audio() {
 
 // ---------------- sprite pack slot list ----------------
 // Every PNG under assets/images is a slot named after the file; a pack replaces the whole sheet.
+// The bitmap fonts under assets/font are slots too, cut by the .fnt a pack brings with the sheet.
 // static/pack-slots.json drives the loader hook (base/shell/SpritePacks.ts) and the pack guide.
 function packSlots() {
     const slots = [];
@@ -510,6 +539,12 @@ function packSlots() {
         }
     };
     walk(IMG);
+    const FONT = path.join(ROOT, "assets/font");
+    for (const entry of fs.readdirSync(FONT)) {
+        if (!entry.endsWith(".png")) continue;
+        const img = png.decode(fs.readFileSync(path.join(FONT, entry)));
+        slots.push({ slot: entry.replace(/\.png$/, ""), file: "assets/font/" + entry, width: img.width, height: img.height, frames: [], group: "font", font: true });
+    }
     const names = slots.map(s => s.slot);
     const dupes = names.filter((n, i) => names.indexOf(n) !== i);
     if (dupes.length) throw new Error("sprite pack slots must be unique file names; duplicates: " + dupes.join(", "));

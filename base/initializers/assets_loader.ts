@@ -81,10 +81,11 @@ function load_assets(game) {
 }
 
 function load_fonts(game) {
-    game.load.bitmapFont("gs-bmp-font", "assets/font/sunspire.png", "assets/font/sunspire.fnt");
-    game.load.bitmapFont("gs-italic-bmp-font", "assets/font/sunspire.png", "assets/font/sunspire.fnt");
-    game.load.bitmapFont("gs-item-bmp-font", "assets/font/sunspire.png", "assets/font/sunspire-small.fnt");
-    game.load.bitmapFont("gs-shop-bmp-font", "assets/font/sunspire.png", "assets/font/sunspire-small.fnt");
+    // one sheet per font so that each is a sprite pack slot of its own (base/shell/SpritePacks.ts)
+    game.load.bitmapFont("gs-bmp-font", "assets/font/font.png", "assets/font/font.fnt");
+    game.load.bitmapFont("gs-italic-bmp-font", "assets/font/font_italic.png", "assets/font/font_italic.fnt");
+    game.load.bitmapFont("gs-item-bmp-font", "assets/font/font_item.png", "assets/font/font_item.fnt");
+    game.load.bitmapFont("gs-shop-bmp-font", "assets/font/font_shop.png", "assets/font/font_shop.fnt");
 }
 
 function load_filters(game) {

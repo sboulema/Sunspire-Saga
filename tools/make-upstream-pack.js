@@ -14,7 +14,8 @@
 // 64x64 where Sunspire's are 16x22 or smaller), nearest-neighbour or averaged with --smooth.
 // Sprites upstream lacks are cut out of the ripped enemies sheets in the --extra folder when
 // present (the bat, the ooze and the spider). The heroes' upstream weapons fill the weapon sheets
-// the engine draws over them, for the weapon types the gear uses.
+// the engine draws over them, for the weapon types the gear uses. The four bitmap fonts come over
+// as they are, each with its .fnt.
 //
 // The upstream sprites are not free to redistribute: this pack is for your own browser. Keep the
 // output folder and the zip out of the repository (both are git-ignored).
@@ -38,15 +39,17 @@ const EXTRA = path.resolve(opt("--extra", "pack-upstream-extra"));
 // ---------------------------------------------------------------- git + images
 
 const gitCache = new Map();
+/** A file of the upstream tree, or null when it has none. */
+function gitShow(file) {
+    try {
+        return execFileSync("git", ["show", `${REF}:${file}`], {cwd: root, maxBuffer: 1 << 26, stdio: ["ignore", "pipe", "ignore"]});
+    } catch {
+        return null;
+    }
+}
 function gitRead(file) {
     if (!gitCache.has(file)) {
-        let data = null;
-        try {
-            data = execFileSync("git", ["show", `${REF}:assets/images/${file}`], {cwd: root, maxBuffer: 1 << 26, stdio: ["ignore", "pipe", "ignore"]});
-        } catch {
-            data = null;
-        }
-        gitCache.set(file, data);
+        gitCache.set(file, gitShow(`assets/images/${file}`));
     }
     return gitCache.get(file);
 }
@@ -568,10 +571,27 @@ Object.assign(RULES, {
 const slots = JSON.parse(fs.readFileSync(path.join(root, "static", "pack-slots.json"), "utf8"));
 /** Sheets whose frames keep their own size in the native-size layout (see below). */
 const OWN_SIZE_SLOTS = new Set(["keyboard_buttons", "menu"]);
+/** The font slots and the upstream font (sheet + .fnt under assets/font) each comes from. */
+const FONTS = {font: "golden-sun", font_italic: "golden-sun-italic", font_item: "gs-item-font", font_shop: "gs-shop-font"};
 fs.mkdirSync(OUT, {recursive: true});
 const report = [];
 let written = 0;
 for (const slot of slots) {
+    if (slot.font) {
+        // the fonts come over as they are: the sheet, and its .fnt pointed at the slot's sheet name
+        const src = FONTS[slot.slot];
+        const image = src && gitShow(`assets/font/${src}.png`),
+            fnt = src && gitShow(`assets/font/${src}.fnt`);
+        if (!image || !fnt) {
+            report.push(`${slot.slot}: built-in (no upstream font)`);
+            continue;
+        }
+        fs.writeFileSync(path.join(OUT, slot.slot + ".png"), image);
+        fs.writeFileSync(path.join(OUT, slot.slot + ".fnt"), fnt.toString("utf8").replace(/file="[^"]*"/, `file="${slot.slot}.png"`));
+        written++;
+        report.push(`${slot.slot}: upstream's ${src} font with its .fnt`);
+        continue;
+    }
     const rule = RULES[slot.slot];
     if (!rule) {
         report.push(`${slot.slot}: built-in (no upstream counterpart)`);

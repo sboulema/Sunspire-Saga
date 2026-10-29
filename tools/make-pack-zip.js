@@ -36,6 +36,8 @@ Notes
 - .gif (first frame) and .webp files may replace any .png here, same file name.
 - A sheet may be another size if a <slot>.json TexturePacker atlas with the same frame names
   comes with it in the pack; the game then cuts the sheet by that atlas instead.
+- The fonts (font, font_italic, font_item, font_shop) are a sheet plus a <slot>.fnt (AngelCode
+  BMFont XML) that says where each character sits; with its .fnt a font sheet may be any size.
 - Folder names inside the zip are ignored; only the file name counts.
 
 Only load and share art you made yourself or have the rights to use.
@@ -44,11 +46,14 @@ Only load and share art you made yourself or have the rights to use.
 const files = [{name: "README.md", data: Buffer.from(readme, "utf8")}];
 if (src) {
     for (const f of fs.readdirSync(src).sort()) {
-        if (/\.(png|gif|webp|json)$/i.test(f)) files.push({name: f, data: fs.readFileSync(path.join(src, f))});
+        if (/\.(png|gif|webp|json|fnt)$/i.test(f)) files.push({name: f, data: fs.readFileSync(path.join(src, f))});
     }
 } else {
     const slots = JSON.parse(fs.readFileSync(path.join(root, "static", "pack-slots.json"), "utf8"));
-    for (const s of slots) files.push({name: s.slot + ".png", data: fs.readFileSync(path.join(root, s.file))});
+    for (const s of slots) {
+        files.push({name: s.slot + ".png", data: fs.readFileSync(path.join(root, s.file))});
+        if (s.font) files.push({name: s.slot + ".fnt", data: fs.readFileSync(path.join(root, s.file.replace(/\.png$/, ".fnt")))});
+    }
 }
 if (files.length === 1) {
     console.error("no images found");

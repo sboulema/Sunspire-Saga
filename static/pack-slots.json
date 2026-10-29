@@ -133,6 +133,42 @@
         "group": "debug"
     },
     {
+        "slot": "font",
+        "file": "assets/font/font.png",
+        "width": 398,
+        "height": 8,
+        "frames": [],
+        "group": "font",
+        "font": true
+    },
+    {
+        "slot": "font_italic",
+        "file": "assets/font/font_italic.png",
+        "width": 398,
+        "height": 8,
+        "frames": [],
+        "group": "font",
+        "font": true
+    },
+    {
+        "slot": "font_item",
+        "file": "assets/font/font_item.png",
+        "width": 398,
+        "height": 8,
+        "frames": [],
+        "group": "font",
+        "font": true
+    },
+    {
+        "slot": "font_shop",
+        "file": "assets/font/font_shop.png",
+        "width": 398,
+        "height": 8,
+        "frames": [],
+        "group": "font",
+        "font": true
+    },
+    {
         "slot": "abilities_icons",
         "file": "assets/images/icons/abilities/abilities_icons.png",
         "width": 318,

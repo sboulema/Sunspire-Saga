@@ -38,10 +38,12 @@
       parts.push('<h3 id="g-' + esc(group.replace(/\W+/g, '-')) + '">' + esc(group) + ' <i>' + items.length + '</i></h3>');
       parts.push('<table><tr><th>slot</th><th>size</th><th>sheet</th><th>frames</th></tr>');
       for (const s of items){
-        const frames = s.frames.length
+        const frames = s.font
+          ? 'bitmap font: the sheet comes with a <code>' + esc(s.slot) + '.fnt</code> (AngelCode BMFont XML) that says where each character sits, so it may be any size'
+          : s.frames.length
           ? s.frames.length + ' frame' + (s.frames.length > 1 ? 's' : '') + ': <span class="frames">' + s.frames.map(esc).join(', ') + '</span>'
           : 'single image';
-        parts.push('<tr><td><code class="' + (on.has(s.slot) ? 'on' : '') + '">' + esc(s.slot) + '.png</code>' + (on.has(s.slot) ? ' <span class="cov">in your pack</span>' : '') + '</td>'
+        parts.push('<tr><td><code class="' + (on.has(s.slot) ? 'on' : '') + '">' + esc(s.slot) + '.png</code>' + (s.font ? ' + <code>' + esc(s.slot) + '.fnt</code>' : '') + (on.has(s.slot) ? ' <span class="cov">in your pack</span>' : '') + '</td>'
           + '<td>' + s.width + '&times;' + s.height + '</td>'
           + '<td><a href="' + esc(s.file) + '" target="_blank"><img class="sheet" src="' + esc(s.file) + '" alt="" loading="lazy"></a></td>'
           + '<td class="wrap">' + frames + '</td></tr>');
@@ -49,9 +51,11 @@
       parts.push('</table>');
     }
     list.innerHTML = parts.join('');
-    if (count) count.textContent = slots.length + ' slots' + (on.size ? ', ' + on.size + ' covered by your pack' : '');
+    // the store also holds the atlases and .fnt files a pack brought, which are not slots
+    const coveredSlots = slots.filter(s => on.has(s.slot)).length;
+    if (count) count.textContent = slots.length + ' slots' + (coveredSlots ? ', ' + coveredSlots + ' covered by your pack' : '');
     if (copy) copy.onclick = async () => {
-      const names = slots.map(s => s.slot + '.png').join('\n');
+      const names = slots.map(s => s.slot + '.png' + (s.font ? '\n' + s.slot + '.fnt' : '')).join('\n');
       try { await navigator.clipboard.writeText(names); copy.textContent = 'Copied'; }
       catch (e){ copy.textContent = 'Copy failed'; }
       setTimeout(() => (copy.textContent = 'Copy all names'), 1500);
