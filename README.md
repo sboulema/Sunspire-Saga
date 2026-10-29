@@ -66,7 +66,7 @@ That serves `site/` on [http://localhost:9100](http://localhost:9100). Installin
 HTTPS or `localhost`, so this is also where to test the install flow. The Publish workflow builds
 the same folder on every push to `main` and attaches it as a zip to each `vNN` release. A `vNN`
 tag also uploads the folder over FTP to the web host when the repository secrets `FTP_SERVER`,
-`FTP_USERNAME` and `FTP_PASSWORD` are set (plus the optional secret `FTP_SERVER_DIR`, the folder
+`FTP_USERNAME` and `FTP_PASSWORD` are set (plus the optional secret `FTP_PATH`, the folder
 on the server, and the optional repository variable `FTP_PROTOCOL`: `ftp`, `ftps` or
 `ftps-legacy`); without them that step is skipped.
 

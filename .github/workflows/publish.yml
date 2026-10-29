@@ -13,7 +13,7 @@
 # access token, Docker Hub -> Account settings -> Personal access tokens, with Read & Write scope).
 #
 # The FTP deploy is optional too: it runs only on a vNN tag and only when the repository secrets
-# FTP_SERVER, FTP_USERNAME and FTP_PASSWORD are set. FTP_SERVER_DIR (secret, optional) is the
+# FTP_SERVER, FTP_USERNAME and FTP_PASSWORD are set. FTP_PATH (secret, optional) is the
 # folder on the server to upload into, "./" by default; the repository variable FTP_PROTOCOL
 # (optional) picks ftp, ftps or ftps-legacy, "ftp" by default. The upload is a sync: files that
 # are no longer in the site are deleted from that folder, so point it at a folder that holds only
@@ -146,5 +146,5 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ${{ vars.FTP_PROTOCOL || 'ftp' }}
           local-dir: site/
-          server-dir: ${{ secrets.FTP_SERVER_DIR || './' }}
+          server-dir: ${{ secrets.FTP_PATH || './' }}
           state-name: .sunspire-ftp-state.json
