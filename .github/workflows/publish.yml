@@ -1,19 +1,18 @@
-# Publish the game: a Docker image on Docker Hub and GitHub Container Registry, and a zip of the
-# built site.
+# Publish a release of the game. Runs on a vNN tag only (the Build workflow covers every push):
 #
-#   push to main      ->  images <user>/sunspire-saga and ghcr.io/<owner>/sunspire-saga,
-#                         tagged :latest and :sha-<short sha>
-#                         + workflow artifact "sunspire-saga-sha-<short sha>" (the site, zipped)
-#   push of tag vNN   ->  the same images tagged :vNN and :sha-<short sha>
+#   push of tag vNN   ->  images <user>/sunspire-saga and ghcr.io/<owner>/sunspire-saga,
+#                         tagged :vNN, :latest and :sha-<short sha>
 #                         + a GitHub Release for vNN with sunspire-saga-vNN.zip attached
 #                         + the site uploaded over FTP to the web host
+#
+# A manual run (workflow_dispatch) from a branch only rebuilds the images, tagged :sha-<short sha>.
 #
 # GHCR uses the workflow's own GITHUB_TOKEN and always gets the image. Docker Hub is optional: it
 # is pushed only when the repository secrets DOCKERHUB_USERNAME and DOCKERHUB_TOKEN are set (an
 # access token, Docker Hub -> Account settings -> Personal access tokens, with Read & Write scope).
 #
-# The FTP deploy is optional too: it runs only on a vNN tag and only when the repository secrets
-# FTP_SERVER, FTP_USERNAME and FTP_PASSWORD are set. FTP_PATH (secret, optional) is the
+# The FTP deploy is optional too: it runs only when the repository secrets FTP_SERVER,
+# FTP_USERNAME and FTP_PASSWORD are set. FTP_PATH (secret, optional) is the
 # folder on the server to upload into, "./" by default; the repository variable FTP_PROTOCOL
 # (optional) picks ftp, ftps or ftps-legacy, "ftp" by default. The upload is a sync: files that
 # are no longer in the site are deleted from that folder, so point it at a folder that holds only
@@ -25,7 +24,6 @@ name: Publish
 
 on:
   push:
-    branches: [main]
     tags: ['v*']
   workflow_dispatch:
 
@@ -80,7 +78,7 @@ jobs:
         with:
           images: ${{ steps.images.outputs.images }}
           tags: |
-            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=latest,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
             type=ref,event=tag
             type=sha
 
@@ -94,8 +92,9 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  site-zip:
-    name: Static site zip
+  release:
+    name: Release and FTP deploy
+    if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     permissions:
       contents: write   # to create the release on a tag
@@ -108,34 +107,20 @@ jobs:
       - run: npm ci
       - run: npm run site
 
-      - id: version
-        name: Pick the release name
-        run: |
-          if [[ "$GITHUB_REF" == refs/tags/* ]]; then v="$GITHUB_REF_NAME"; else v="sha-${GITHUB_SHA::7}"; fi
-          echo "name=sunspire-saga-$v" >> "$GITHUB_OUTPUT"
-
       - name: Zip the site
         run: |
           mkdir -p dist
-          (cd site && zip -r -X "../dist/${{ steps.version.outputs.name }}.zip" .)
-          unzip -l "dist/${{ steps.version.outputs.name }}.zip" | tail -1
+          (cd site && zip -r -X "../dist/sunspire-saga-$GITHUB_REF_NAME.zip" .)
+          unzip -l dist/*.zip | tail -1
 
-      # Every run: the built site as a workflow artifact (GitHub serves it as a zip).
-      - uses: actions/upload-artifact@v7
-        with:
-          name: ${{ steps.version.outputs.name }}
-          path: site
-          if-no-files-found: error
-
-      # Tags only: a GitHub Release with the zip attached.
-      - if: startsWith(github.ref, 'refs/tags/v')
+      - name: Create the GitHub Release with the zip attached
         uses: softprops/action-gh-release@v3
         with:
           files: dist/*.zip
           generate_release_notes: true
 
-      # Tags only, and only when the FTP secrets are set: sync the site to the web host.
-      - if: startsWith(github.ref, 'refs/tags/v') && env.FTP_SERVER != ''
+      # Only when the FTP secrets are set: sync the site to the web host.
+      - if: env.FTP_SERVER != ''
         name: Deploy the site over FTP
         env:
           FTP_SERVER: ${{ secrets.FTP_SERVER }}

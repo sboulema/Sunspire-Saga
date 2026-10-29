@@ -63,12 +63,12 @@ npm run preview
 ```
 
 That serves `site/` on [http://localhost:9100](http://localhost:9100). Installing as an app needs
-HTTPS or `localhost`, so this is also where to test the install flow. The Publish workflow builds
-the same folder on every push to `main` and attaches it as a zip to each `vNN` release. A `vNN`
-tag also uploads the folder over FTP to the web host when the repository secrets `FTP_SERVER`,
-`FTP_USERNAME` and `FTP_PASSWORD` are set (plus the optional secret `FTP_PATH`, the folder
-on the server, and the optional repository variable `FTP_PROTOCOL`: `ftp`, `ftps` or
-`ftps-legacy`); without them that step is skipped.
+HTTPS or `localhost`, so this is also where to test the install flow. The Build workflow builds
+the same folder on every push and keeps it as a workflow artifact; each `vNN` tag runs the
+Publish workflow, which attaches it as a zip to the GitHub Release and uploads it over FTP to the
+web host when the repository secrets `FTP_SERVER`, `FTP_USERNAME` and `FTP_PASSWORD` are set
+(plus the optional secret `FTP_PATH`, the folder on the server, and the optional repository
+variable `FTP_PROTOCOL`: `ftp`, `ftps` or `ftps-legacy`); without them that step is skipped.
 
 ### With Docker
 
@@ -81,8 +81,8 @@ docker run --rm -p 8080:80 sunspire-saga
 ```
 
 The image builds the site with Node and serves it with nginx on port 80; open
-[http://localhost:8080](http://localhost:8080). Every push to `main` also publishes the image as
-`ghcr.io/sboulema/sunspire-saga:latest` (and `:vNN` for releases), so without building:
+[http://localhost:8080](http://localhost:8080). Every `vNN` release also publishes the image as
+`ghcr.io/sboulema/sunspire-saga:vNN` and `:latest`, so without building:
 
 ```bash
 docker run --rm -p 8080:80 ghcr.io/sboulema/sunspire-saga:latest
