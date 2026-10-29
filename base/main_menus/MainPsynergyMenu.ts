@@ -21,11 +21,12 @@ const DESCRIPTION_WINDOW_HEIGHT = 20;
 const PSY_OVERVIEW_WIN_X = 104;
 const PSY_OVERVIEW_WIN_Y = 24;
 const PSY_OVERVIEW_WIN_WIDTH = 132;
-const PSY_OVERVIEW_WIN_HEIGHT = 76;
+const PSY_OVERVIEW_WIN_HEIGHT = 68;
+// tall enough for its three rows inside the frame (upstream drew the first one over the top border)
 const SHORTCUTS_WINDOW_X = 104;
-const SHORTCUTS_WINDOW_Y = 104;
+const SHORTCUTS_WINDOW_Y = 96;
 const SHORTCUTS_WINDOW_WIDTH = 132;
-const SHORTCUTS_WINDOW_HEIGHT = 28;
+const SHORTCUTS_WINDOW_HEIGHT = 36;
 
 const TOTAL_BORDER = numbers.INSIDE_BORDER_WIDTH + numbers.OUTSIDE_BORDER_WIDTH;
 const PSY_OVERVIEW_WIN_INSIDE_PADDING_H = 1;
@@ -134,29 +135,23 @@ export class MainPsynergyMenu {
     init_shortcuts_window() {
         this.shortcuts_info = {};
 
-        const buttons_bg = this.game.add.graphics(8, 0);
-        buttons_bg.beginFill(this.shortcuts_window.color, 1);
-        buttons_bg.drawRect(0, 0, 28, 8);
-        buttons_bg.endFill();
-        this.shortcuts_window.add_sprite_to_window_group(buttons_bg);
-
-        this.shortcuts_window.set_text_in_position(": Set shortcut", 37, 0, {with_bg: true});
-        this.shortcuts_window.create_at_group(9, 1, "keyboard_buttons", {frame: "l_button", color: 0x0});
-        this.shortcuts_window.create_at_group(8, 0, "keyboard_buttons", {frame: "l_button"});
-        this.shortcuts_window.create_at_group(23, 1, "keyboard_buttons", {frame: "r_button", color: 0x0});
-        this.shortcuts_window.create_at_group(22, 0, "keyboard_buttons", {frame: "r_button"});
-
+        this.shortcuts_window.set_text_in_position(": Set shortcut", 37, 8);
         this.shortcuts_window.create_at_group(9, 9, "keyboard_buttons", {frame: "l_button", color: 0x0});
         this.shortcuts_window.create_at_group(8, 8, "keyboard_buttons", {frame: "l_button"});
-        this.shortcuts_window.set_text_in_position(":", 23, 8);
-        this.shortcuts_info.l_ability = this.shortcuts_window.set_text_in_position("", 27, 8);
-        this.shortcuts_info.l_char = this.shortcuts_window.set_text_in_position("", 88, 8);
+        this.shortcuts_window.create_at_group(23, 9, "keyboard_buttons", {frame: "r_button", color: 0x0});
+        this.shortcuts_window.create_at_group(22, 8, "keyboard_buttons", {frame: "r_button"});
 
-        this.shortcuts_window.create_at_group(9, 17, "keyboard_buttons", {frame: "r_button", color: 0x0});
-        this.shortcuts_window.create_at_group(8, 16, "keyboard_buttons", {frame: "r_button"});
+        this.shortcuts_window.create_at_group(9, 17, "keyboard_buttons", {frame: "l_button", color: 0x0});
+        this.shortcuts_window.create_at_group(8, 16, "keyboard_buttons", {frame: "l_button"});
         this.shortcuts_window.set_text_in_position(":", 23, 16);
-        this.shortcuts_info.r_ability = this.shortcuts_window.set_text_in_position("", 27, 16);
-        this.shortcuts_info.r_char = this.shortcuts_window.set_text_in_position("", 88, 16);
+        this.shortcuts_info.l_ability = this.shortcuts_window.set_text_in_position("", 27, 16);
+        this.shortcuts_info.l_char = this.shortcuts_window.set_text_in_position("", 88, 16);
+
+        this.shortcuts_window.create_at_group(9, 25, "keyboard_buttons", {frame: "r_button", color: 0x0});
+        this.shortcuts_window.create_at_group(8, 24, "keyboard_buttons", {frame: "r_button"});
+        this.shortcuts_window.set_text_in_position(":", 23, 24);
+        this.shortcuts_info.r_ability = this.shortcuts_window.set_text_in_position("", 27, 24);
+        this.shortcuts_info.r_char = this.shortcuts_window.set_text_in_position("", 88, 24);
     }
 
     set_shortcuts_window_info() {
