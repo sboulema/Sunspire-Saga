@@ -65,12 +65,12 @@ npm run preview
 That serves `site/` on [http://localhost:9100](http://localhost:9100). Installing as an app needs
 HTTPS or `localhost`, so this is also where to test the install flow. The Build workflow builds
 the same folder on every push and keeps it as a workflow artifact; each `vNN` tag runs the
-Publish workflow, which attaches it as a zip to the GitHub Release and uploads it over FTP to the
+Publish workflow, which attaches it as a zip to the GitHub Release and uploads it over SFTP to the
 web host when the repository secrets `FTP_SERVER`, `FTP_USERNAME` and `FTP_PASSWORD` are set
-(plus the optional secret `FTP_PATH`, the folder on the server, and the optional repository
-variables `FTP_PROTOCOL`, `ftps` by default, and `FTP_VERIFY_CERTIFICATE`); without them that
-step is skipped. A manual run of Publish with the `deploy_ftp` option uploads a branch's site
-over FTP without a release, to try the settings.
+(plus the optional secret `FTP_PATH`, the folder on the server, the optional secret
+`FTP_KNOWN_HOSTS` to pin the host key, and the optional repository variable `FTP_PORT`, 22 by
+default); without them that step is skipped. A manual run of Publish with the `deploy_ftp`
+option uploads a branch's site over SFTP without a release, to try the settings.
 
 ### With Docker
 
