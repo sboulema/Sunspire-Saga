@@ -11,7 +11,7 @@
     "tileheight": 16,
     "nextobjectid": 65,
     "properties": {
-        "npc/01": "{\"key_name\":\"well\",\"x\":3,\"y\":17,\"npc_type\":\"normal\",\"movement_type\":\"idle\",\"base_collision_layer\":0}",
+        "npc/01": "{\"key_name\":\"spring\",\"x\":3,\"y\":17,\"npc_type\":\"normal\",\"movement_type\":\"idle\",\"base_collision_layer\":0}",
         "tile_event/01": "{\"type\":\"teleport\",\"x\":12,\"y\":21,\"target\":\"trail\",\"activation_directions\":\"down\",\"x_target\":16,\"y_target\":2,\"destination_direction\":\"down\",\"dest_collision_layer\":0,\"activation_collision_layers\":0}",
         "tile_event/02": "{\"type\":\"event_trigger\",\"x\":3,\"y\":17,\"activation_directions\":\"all\",\"activation_collision_layers\":0,\"trigger_once\":true,\"events\":[{\"type\":\"set_char_hp_pp\",\"char_key\":\"all\",\"points_type\":\"hp\",\"value\":\"full\"},{\"type\":\"set_char_hp_pp\",\"char_key\":\"all\",\"points_type\":\"pp\",\"value\":\"full\"},{\"type\":\"dialog\",\"dialog_info\":{\"text\":\"The spirit spring glows. The party is fully restored!\"}}]}",
         "npc/02": "{\"key_name\":\"chest\",\"label\":\"chest_shrine_2_2\",\"storage_keys\":{\"animation\":\"chest_shrine_2_2\"},\"x\":2,\"y\":2,\"npc_type\":\"normal\",\"movement_type\":\"idle\",\"base_collision_layer\":0,\"message\":\"\",\"events\":[{\"type\":\"chest\",\"item\":\"steel\",\"standard_chest\":true,\"finish_events\":[{\"type\":\"dialog\",\"dialog_info\":{\"text\":\"Equip it from the menu.\"}}]}]}",

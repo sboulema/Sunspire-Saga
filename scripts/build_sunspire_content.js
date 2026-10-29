@@ -403,7 +403,7 @@ for (const id of C.map_order) {
         }
     }
     for (const house of M.houses || []) dec("houses", house.x + 1, house.y + 2, {animation: house.id});
-    for (const well of M.wells || []) dec(at(well.x, well.y) === "E" ? "spring" : "well", well.x, well.y);
+    for (const well of M.wells || []) dec(well.kind === "spring" ? "spring" : "well", well.x, well.y); // the spire's spirit spring has its own sprite
     for (const sign of M.signs || []) dec("sign", sign.x, sign.y);
 
     // exits

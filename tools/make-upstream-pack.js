@@ -23,6 +23,7 @@ const fs = require("fs"),
     path = require("path"),
     {execFileSync} = require("child_process");
 const png = require("../scripts/png.js");
+const gif = require("./gif2png.js");
 
 const root = path.join(__dirname, "..");
 const args = process.argv.slice(2);
@@ -253,13 +254,20 @@ function weaponOf(heroFile, file, type, shift) {
 }
 
 const extraCache = new Map();
-/** A sheet in the --extra folder by part of its file name, with its background colour; null when absent. */
+/** A PNG or GIF (first frame) read from disk. */
+const readImage = file => (/.gif$/i.test(file) ? gif.decode(fs.readFileSync(file)) : png.decode(fs.readFileSync(file)));
+const isImage = f => /.(png|gif)$/i.test(f);
+/**
+ * A sheet in the --extra folder by its file name (`<key>.png` or `<key>.gif` first, else any file
+ * whose name contains the key), with its background colour; null when absent.
+ */
 function extraSheet(key) {
     if (!extraCache.has(key)) {
-        const file = fs.existsSync(EXTRA) && fs.readdirSync(EXTRA).find(f => f.includes(key) && f.endsWith(".png"));
+        const files = fs.existsSync(EXTRA) ? fs.readdirSync(EXTRA).filter(isImage) : [];
+        const file = files.find(f => f.replace(/.[^.]*$/, "") === key) || files.find(f => f.includes(key));
         let s = null;
         if (file) {
-            const img = png.decode(fs.readFileSync(path.join(EXTRA, file)));
+            const img = readImage(path.join(EXTRA, file));
             const counts = new Map();
             for (let i = 0; i < img.data.length; i += 4) {
                 const c = img.data.readUInt32BE(i);
@@ -315,15 +323,15 @@ function unframe(img) {
 }
 
 /**
- * Icons of your own over an atlas rule: `<folder>/<frame>.png` in the --extra folder (`items/potion.png`,
+ * Icons of your own over an atlas rule: `<folder>/<frame>.png` or `.gif` in the --extra folder (`items/potion.png`,
  * any case) stands in for that frame, its frame cleared; every other frame keeps `rule`.
  */
 function ownIcons(folder, rule) {
     const dir = path.join(EXTRA, folder);
     const files = fs.existsSync(dir) ? fs.readdirSync(dir) : [];
     return (name, count) => {
-        const file = files.find(f => f.toLowerCase() === name + ".png");
-        return file ? {img: unframe(png.decode(fs.readFileSync(path.join(dir, file)))), anchor: "center"} : rule(name, count);
+        const file = files.find(f => f.toLowerCase() === name + ".png" || f.toLowerCase() === name + ".gif");
+        return file ? {img: unframe(readImage(path.join(dir, file))), anchor: "center"} : rule(name, count);
     };
 }
 
@@ -389,6 +397,17 @@ function image(file, anchor = "center") {
     };
 }
 
+/**
+ * A whole image from the --extra folder (`<key>.png` or `.gif`) as a single-frame sprite, its
+ * background keyed out and trimmed: the signpost stands on its tile's bottom row, the wells are
+ * centred on theirs (the hero walks onto them).
+ */
+function extraImage(key, anchor = "bottom") {
+    return () => {
+        const s = extraSheet(key);
+        return s ? {img: extraTrim(s, [0, 0, s.img.width, s.img.height]), anchor} : null;
+    };
+}
 /** A fixed cut of the upstream town tileset, standing on its bottom row. */
 function tileCut(file, x, y, w, h, ow, oh) {
     return () => {
@@ -464,8 +483,75 @@ function townGround(id) {
         return Object.keys(kind).length;
     };
 }
-/** The map tilesets whose ground comes from upstream: Thera's fields. */
-const TILESETS = {fields: townGround("fields")};
+/**
+ * Thera Heights' tileset redrawn from upstream: the grass, path and water as in the fields (madra),
+ * the cliffs from the forest tileset's rock (its layered strata for the brow and the ridge, the
+ * streaked face, the pebbled foot), the pillar tops from the top of the push pillar sprite, and
+ * the ladder as the built-in rails over the upstream cliff. The chasm stays built-in. A chest on
+ * a pillar keeps its pillar. Returns the number of tiles redrawn.
+ */
+const FOREST = {
+    brow: [[192, 0], [208, 0]],
+    face: [[160, 0], [176, 0], [224, 0], [240, 0], [160, 16], [176, 16]],
+    foot: [[176, 48]],
+};
+const RAIL_COLOURS = new Set([0xff3c6ea8, 0xff20426b]); // the built-in ladder's two wood colours, ABGR
+function heightsGround(id) {
+    return base => {
+        const madra = sheet("tilesets/madra"), forest = sheet("tilesets/forest"), pillars = sheet("interactable_objects/push_pillars");
+        if (!madra || !forest || !pillars) return 0;
+        const grid = JSON.parse(fs.readFileSync(path.join(root, "assets", "sunspire", "maps", id + "_grid.json"), "utf8"));
+        const at = (x, y) => (grid.chars[y] || "")[x] || "t";
+        const pixel = (x, y) => base.data.readUInt32LE((y * base.width + x) * 4);
+        const chasmColour = (() => { for (let y = 0; y < grid.h; y++) for (let x = 0; x < grid.w; x++) if (at(x, y) === "c") { const i = grid.grid[y][x]; return pixel((i % grid.cols) * 16, Math.floor(i / grid.cols) * 16); } return null; })();
+        // one class per tile index, from the letter and its neighbours
+        const kind = {};
+        grid.chars.forEach((row, y) =>
+            [...row].forEach((c, x) => {
+                const i = grid.grid[y][x];
+                if (i in kind) return;
+                const dx = (i % grid.cols) * 16, dy = Math.floor(i / grid.cols) * 16;
+                if (c === "v") kind[i] = at(x, y + 1) === "v" ? "face" : at(x, y - 1) === "v" ? "foot" : "face";
+                else if (c === "L") kind[i] = at(x, y - 1) !== "L" ? "ladder_brow" : at(x, y + 1) === "L" ? "ladder_face" : "ladder_foot";
+                else if (c === "k") kind[i] = pixel(dx, dy) === chasmColour ? "pillar" : "grass";
+                else kind[i] = {".": "grass", g: "grass", t: "grass", s: "grass", E: "grass", p: "path", w: "water", r: "brow", n: "brow", o: "pillar"}[c] || null;
+            })
+        );
+        let redrawn = 0;
+        for (const [i, k] of Object.entries(kind)) {
+            if (!k) continue;
+            const index = +i, dx = (index % grid.cols) * 16, dy = Math.floor(index / grid.cols) * 16;
+            const builtIn = cut(base, {x: dx, y: dy, w: 16, h: 16});
+            const forestTile = list => { const [sx, sy] = list[index % list.length]; png.blit(base, forest.img, dx, dy, sx, sy, 16, 16); };
+            if (k === "grass" || k === "path" || k === "water") {
+                const g = GROUND[k];
+                const shore = g.shore && pixel(dx, dy) !== pixel(dx, dy + 8);
+                const [sx, sy] = g.tiles[index % g.tiles.length];
+                png.blit(base, madra.img, dx, dy, sx, sy, 16, 16);
+                if (shore) { const [fx, fy] = g.shore[index % g.shore.length]; png.blit(base, flipV(cut(madra.img, {x: fx, y: fy, w: 16, h: 16})), dx, dy); }
+            } else if (k === "brow") forestTile(FOREST.brow);
+            else if (k === "face") forestTile(FOREST.face);
+            else if (k === "foot") forestTile(FOREST.foot);
+            else if (k.startsWith("ladder_")) {
+                forestTile(FOREST[k.slice(7)]);
+                // the built-in rails and rungs back over the upstream rock
+                for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) {
+                    const p = builtIn.data.readUInt32LE((y * 16 + x) * 4);
+                    if (RAIL_COLOURS.has(p)) base.data.writeUInt32LE(p, ((dy + y) * base.width + dx + x) * 4);
+                }
+            } else if (k === "pillar") {
+                // the chasm under it, then the top of the pillar sprite (its cap and the start of its shaft)
+                png.fill(base, dx, dy, 16, 16, [chasmColour & 0xff, (chasmColour >> 8) & 0xff, (chasmColour >> 16) & 0xff, 255]);
+                const r = pillars.frames["push_pillar/pillar/00"];
+                png.blit(base, pillars.img, dx, dy, r.x, r.y, 16, 16);
+            }
+            redrawn++;
+        }
+        return redrawn;
+    };
+}
+/** The map tilesets whose ground comes from upstream: Thera's fields, and the heights. */
+const TILESETS = {fields: townGround("fields"), heights: heightsGround("heights")};
 
 /** The title screen: the built-in night sky with the sun-ring logo (assets/sunspire/sprites/title_sun.png). */
 function sunTitle() {
@@ -563,6 +649,10 @@ for (const [id, el] of Object.entries(ELEMENT)) {
     RULES[id] = atlasMap(`spritesheets/djinn/${el}_djinn`);
     RULES[`djinn_battle_${id}_battle`] = battle(`${BT}${DJINN_BATTLE[el]}_djinn_battle`);
 }
+// the signpost and the two wells, drawn by the project's author, from the --extra folder
+RULES.sign = extraImage("sign");
+RULES.well = extraImage("well", "center");
+RULES.spring = extraImage("well2", "center");
 Object.assign(RULES, {
     avatars: atlasMap("avatars/avatars", {
         ari: "isaac", lyn: "sheba", bram: "garet", sera: "piers", dov: "alex", ina: "innkeeper_wife", miner: "weapon_shopkeeper",
@@ -670,7 +760,7 @@ for (const slot of slots) {
         }
         fs.writeFileSync(path.join(OUT, slot.slot + ".png"), png.encode(base));
         written++;
-        report.push(`${slot.slot}: ${redrawn} ground tiles (grass, path and water) from upstream's madra tileset, the rest built-in`);
+        report.push(slot.slot === "heights" ? `${slot.slot}: ${redrawn} tiles from upstream (madra ground and water, forest cliffs, push pillar tops), the chasm built-in` : `${slot.slot}: ${redrawn} ground tiles (grass, path and water) from upstream's madra tileset, the rest built-in`);
         continue;
     }
     const rule = RULES[slot.slot];

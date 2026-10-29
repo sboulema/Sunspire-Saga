@@ -1,6 +1,6 @@
 {
     "_comment": "Sunspire Saga's game data and story, ported from the legacy game.js (V48). scripts/build_sunspire_content.js turns this into the engine databases and the Tiled maps; scripts/build_walkthrough.js turns it into walkthrough.html. Numbers are the legacy ones unless a key says otherwise.",
-    "version": "V57",
+    "version": "V58",
     "elements": {"earth": "venus", "water": "mercury", "fire": "mars", "wind": "jupiter"},
 
     "rules": {
@@ -170,7 +170,7 @@
                     "join": {"char": "sera", "flag": "sera", "lines": ["A scout drops from a ledge, bow drawn... then lowers it.", "SERA: 'Climbers! Finally. The harpies have me pinned down for days.'", "'Heading for the spire gate? Then we share a road.'", "SERA joined the party!"]}},
         "shrine":  {"name": "The Sunspire", "kind": "shrine", "bgm": "battle_boss", "background": "bg_tower", "start": {"x": 12, "y": 19},
                     "exits": [{"x": 12, "y": 21, "to": "trail", "tx": 16, "ty": 2, "dir": "down"}],
-                    "wells": [{"x": 3, "y": 17, "text": "The spirit spring glows. The party is fully restored!"}],
+                    "wells": [{"x": 3, "y": 17, "kind": "spring", "text": "The spirit spring glows. The party is fully restored!"}],
                     "boss": {"id": "wyrm", "x": 12, "y": 2, "flag": "boss_down", "bgm": "battle_boss",
                              "intro": ["SHADOW WYRM: 'Ssso... children of the dawn come to reclaim the light.'", "'Four little flames. I will sssnuff you one by one.'"],
                              "victory": ["The Wyrm lets out a final shriek...", "The Wyrm dissolves into mist!", "Warm light floods the Sunspire!"], "ending": true}}

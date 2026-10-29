@@ -91,12 +91,15 @@ tile). Thera's fields tileset gets its ground from the Madra town tileset: every
 draws as grass (plain, tufted or under an object) becomes one of Madra's flat grass tiles and
 every path tile one of its flat sand tiles and every water tile one of its sea tiles, picked by
 tile index so the ground keeps some variation (the pond's far bank gets Madra's wave crest, upside
-down, along its top). The fence pieces are Madra's three fence tiles: the horizontal section (two
+down, along its top). Thera Heights' tileset is redrawn the same way, plus its cliffs from the
+forest tileset's rock (the layered strata for the brow and the ridge, the streaked face, the
+pebbled foot), its pillar tops from the top of the push pillar sprite and the built-in ladder rails
+laid over the upstream rock; the chasm stays built-in. The fence pieces are Madra's three fence tiles: the horizontal section (two
 posts and their rail), the vertical one (a post with its rail running down) and the end post, which
 is drawn with its rail running right, so it is the left end as it is and the right end mirrored. The
 other tilesets, the houses, the map
-objects (sign, well, gate, marker, spring, crate), the summon backdrops and the shadow stay
-built-in. `REPORT.txt` in the output folder lists what was replaced.
+objects (gate, marker, crate), the summon backdrops and the shadow stay built-in; the sign and
+the wells come from the extra folder (below) when the files are there. `REPORT.txt` in the output folder lists what was replaced.
 
 Sprites upstream lacks come from ripped sheets in `pack-upstream-extra/` (another folder with
 `--extra`) when the sheets are there, and from the upstream stand-ins otherwise. Save the sheets
@@ -108,9 +111,11 @@ there under their downloaded names; the tool finds each by part of its name:
 | `ooze_battle` (Mire Ooze) | `Kojima Forest to Mercury Lighthouse` (649x872) | Ooze, the blue one | `mini_goblin` |
 | `spider_battle` (Pit Spider) | `Fuchin Falls to Atlin Peak` (297x1182) | Tarantula | `momonga` |
 | `tree`, `tree_trail` | `Miscellaneous - Trees` (260x231) | three trees each | the town tileset's trees |
+| `sign` | `sign.gif` (or `.png`) | the whole image, a signpost standing on its tile | built-in |
+| `well`, `spring` | `well.gif`, `well2.gif` | the whole image, centred on the tile the hero walks onto | built-in |
 
 The rects in the script are pixel positions on those sheets, and each sheet's most common colour
-is keyed out as the background. Every enemy pose sits in a 32x32 frame at one height, front and
+is keyed out as the background. Sheets may be PNG or GIF (first frame). Every enemy pose sits in a 32x32 frame at one height, front and
 back: the bat hovers (spread wings, cocked wing and dive to attack, raised wing and swipe to cast,
 wrapped wings when hit); the ooze and the spider stand (the ooze coils and rolls into a ball, the
 spider rears up and lunges; both flinch when hit). The trees come at native size, standing on
@@ -120,7 +125,7 @@ sharp light / dark neighbouring pixels. `tree` is the big blue-green, the lower 
 and the autumn-yellow one; `tree_trail` the same two greens and the autumn-red one.
 
 Item icons of your own go in `pack-upstream-extra/items/<item>.png`, named after the Sunspire
-item (`potion.png`, any case; PNG only, so convert a GIF first): each replaces that item's upstream
+item (`potion.png` or `potion.gif`, any case): each replaces that item's upstream
 stand-in, with a ripped icon's frame cleared (the border and backdrop colours that reach the edge;
 the same colours inside the drawing stay). Upstream has no potion, so without one the potion
 borrows the blue bottle, `hermes_water`.
