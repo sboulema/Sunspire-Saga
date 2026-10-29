@@ -30,6 +30,18 @@ http.createServer((q, s) => {
 Assembles `favicon.ico` (16, 32, 48 and 256 px frames) from the PNGs above. The pages link
 `static/favicon.ico` and `static/icons/sunspire-mark-512.png` (apple-touch-icon).
 
+## make-heights-map.js
+
+Builds the Thera Heights map sources, `assets/sunspire/maps/heights_grid.json` and
+`heights_tiles.png`, the way the legacy map builders produced the other five grids: the layout in
+the script (one letter per tile) becomes the tile grid and the tileset it indexes, the tiles cut
+from the trail and fields tilesets or drawn here (ladder, chasm, pillar top, ridge). Run it after
+changing the layout, then `npm run build:content`.
+
+```bash
+node tools/make-heights-map.js
+```
+
 ## make-pack-zip.js
 
 Builds a sprite pack zip players can load with *Load sprite pack* (see `packs/README.md` and the

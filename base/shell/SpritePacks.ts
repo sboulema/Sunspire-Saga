@@ -79,14 +79,47 @@ export class SpritePacks {
         }
         try {
             const stored = await SpritePacks.store_all();
+            const sheets: {[slot: string]: Blob} = {};
+            const extras: {[slot: string]: Blob} = {};
             for (const key in stored) {
                 if (key.endsWith(ATLAS_SUFFIX) || key.endsWith(FNT_SUFFIX)) {
                     const slot = key.slice(0, key.lastIndexOf("."));
                     if (slot in packs.slots) {
-                        packs.atlas_urls[slot] = URL.createObjectURL(stored[key]);
+                        extras[slot] = stored[key];
                     }
                 } else if (key in packs.slots) {
-                    packs.urls[key] = URL.createObjectURL(stored[key]);
+                    sheets[key] = stored[key];
+                }
+            }
+            // a stored sheet must still fit its slot: since the pack was loaded the game may have
+            // given the sheet new frames (the heroes' climb frames) or another size, and a stale
+            // sheet would leave the engine without those frames; such a sheet is left out, with
+            // the built-in art in its place, until the pack is loaded again
+            for (const slot in sheets) {
+                const def = packs.slots[slot];
+                const extra = extras[slot];
+                try {
+                    if (!def.font) {
+                        if (extra) {
+                            SpritePacks.check_atlas(JSON.parse(await extra.text()), def);
+                        } else {
+                            const size = await SpritePacks.image_size(sheets[slot]);
+                            if (!size || size.width !== def.width || size.height !== def.height) {
+                                throw new Error(
+                                    `is ${size ? `${size.width}x${size.height}` : "unreadable"}, the sheet is now ${def.width}x${def.height}`
+                                );
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.warn(
+                        `Sprite packs: ${slot} left out until the pack is loaded again: ${e instanceof Error ? e.message : e}`
+                    );
+                    continue;
+                }
+                packs.urls[slot] = URL.createObjectURL(sheets[slot]);
+                if (extra) {
+                    packs.atlas_urls[slot] = URL.createObjectURL(extra);
                 }
             }
         } catch {

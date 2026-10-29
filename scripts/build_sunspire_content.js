@@ -13,8 +13,12 @@
 //   have by then (starting_level) instead of the shared party level;
 // - plain attacks do max(0, atk - def) / 2, so bosses and spirits "shrug off steel" through a
 //   high def; psynergy ignores def, so arts get a flat bonus on top of their power;
-// - spirits on the map are djinn NPCs with a fight first; chests, signs, doors, the boulder,
-//   the gate and the bosses are NPCs with events; story flags live in storage.
+// - spirits on the map are djinn NPCs with a fight first (a spirit without duel stats joins
+//   willingly); chests, signs, doors, the boulder, the gate and the bosses are NPCs with events;
+//   story flags live in storage;
+// - a ladder (L tiles in a cliff column) is a pair of climb events at each end and a second
+//   collision layer in which only the ladder tiles are free; a walkable tile beside a one-tile
+//   chasm (c) with walkable ground beyond gets a jump event towards it.
 const fs = require("fs");
 const path = require("path");
 const png = require("./png.js");
@@ -210,7 +214,7 @@ const enemy = (key, sprite, e, over) => ({
     ...over,
 });
 const enemies = Object.entries(C.enemies).map(([key, e]) => enemy(key, key, e, e.boss ? {def: BOSS_DEF[key], level: 10, battle_shadow_key: "01"} : {}));
-for (const id of C.spirit_order) {
+for (const id of C.spirit_order.filter(s => C.spirit_duels[s])) {
     const d = C.spirit_duels[id];
     enemies.push(enemy(`duel_${id}`, `djinn_battle_${id}`, {...d, name: C.spirits[id].name, double: d.double}, {def: d.def + DUEL_DEF_BONUS, level: 5}));
 }
@@ -228,7 +232,7 @@ for (const [zone, enc] of Object.entries(C.encounters)) {
         parties.push({key_name: key, name: group.map(k => C.enemies[k].name).join(" and "), can_escape: true, members: Object.entries(counts).map(([k, n]) => ({key: k, min: n, max: n}))});
     });
 }
-for (const id of C.spirit_order) parties.push({key_name: `duel_${id}`, name: `${C.spirits[id].name} the spirit`, can_escape: false, members: [{key: `duel_${id}`, min: 1, max: 1}]});
+for (const id of C.spirit_order.filter(s => C.spirit_duels[s])) parties.push({key_name: `duel_${id}`, name: `${C.spirits[id].name} the spirit`, can_escape: false, members: [{key: `duel_${id}`, min: 1, max: 1}]});
 for (const key of Object.keys(C.enemies).filter(k => C.enemies[k].boss)) parties.push({key_name: `boss_${key}`, name: C.enemies[key].name, can_escape: false, members: [{key, min: 1, max: 1}]});
 db("enemies_parties", parties);
 
@@ -285,6 +289,8 @@ for (const [id, ch] of Object.entries(C.chars)) {
         // the field cast (arms spread) and the pose that holds up a found item or a caught spirit
         cast: {frame_rate: 6, animations: DIRS8, frames_count: 2, initial_animation: "down", loop: true, spritesheet: sheet("field", `${id}_field`)},
         grant: {frame_rate: 1, animations: DIRS8, frames_count: 1, initial_animation: "down", loop: false, spritesheet: sheet("field", `${id}_field`)},
+        // on a ladder: the engine plays start / turn / end once and up / down / idle while climbing
+        climb: {frame_rate: [6, 6, 6, 1, 6, 6], animations: ["start", "turn", "end", "idle", "up", "down"], frames_count: [1, 2, 1, 1, 2, 2], initial_animation: "idle", loop: [false, false, false, false, true, true], spritesheet: sheet("field", `${id}_field`)},
         battle: {spritesheet: sheet("battle", `${id}_battle`), animations: BATTLE_CHAR_ANIMS, frames_count: BATTLE_CHAR_ANIMS.map(() => 1), frame_rate: [10, 10, 3, 3, 10, 10, 12, 6, 1, 1, 1, 1, 1, 1], loop: BATTLE_CHAR_ANIMS.map(a => a.startsWith("idle") || a === "cast_back" || a === "cast_front")},
     }});
 }
@@ -317,11 +323,13 @@ for (const id of ["well", "spring"]) npcs.push(decor(id, ["down"], {anchor_y: 0.
 db("npc", npcs);
 
 // ---------------- maps ----------------
-const SOLID = new Set(["t", "w", "r", "v", "R", "Q", "W", "D", "#", "s", "F"]); // k, B and G are objects that block by themselves; + E C are walkable
+const SOLID = new Set(["t", "w", "r", "v", "R", "Q", "W", "D", "#", "s", "F", "L", "c"]); // k, B and G are objects that block by themselves; + E C o n are walkable
 const OPPOSITE = {up: "down", down: "up", left: "right", right: "left"};
 const mapsDb = [];
-const BACKGROUND = {fields: "bg_field", brindle: "bg_field", mine: "bg_mine", trail: "bg_trail", shrine: "bg_tower"};
-const EXPECTED_LEVEL = {fields: 2, brindle: 3, mine: 6, trail: 9, shrine: 12};
+const BACKGROUND = {fields: "bg_field", brindle: "bg_field", mine: "bg_mine", trail: "bg_trail", shrine: "bg_tower", heights: "bg_trail"};
+const EXPECTED_LEVEL = {fields: 2, brindle: 3, mine: 6, trail: 9, shrine: 12, heights: 3};
+const WALKABLE = c => !SOLID.has(c);
+const DIR = {up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0]};
 
 for (const id of C.map_order) {
     const grid = JSON.parse(fs.readFileSync(path.join(SRC, "maps", `${id}_grid.json`), "utf8"));
@@ -336,13 +344,44 @@ for (const id of C.map_order) {
     const marker = (x, y, over) => addNpc({key_name: "marker", x, y, npc_type: "normal", movement_type: "idle", base_collision_layer: 0, ...over});
 
     // collision: every solid tile, horizontal runs merged; the exits are tile events
-    const objects = [];
+    const collisionObjects = solid => {
+        const objects = [];
+        for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+            if (!solid(x, y)) continue;
+            let x1 = x;
+            while (x1 + 1 < w && solid(x1 + 1, y)) x1++;
+            objects.push({id: objectId++, name: "", type: "", x: x * T, y: y * T, width: (x1 - x + 1) * T, height: T, rotation: 0, visible: true});
+            x = x1;
+        }
+        return objects;
+    };
+    const objects = collisionObjects((x, y) => SOLID.has(at(x, y)));
+    // ladders: while climbing the hero is on collision layer 1, where only the ladder tiles are
+    // free, so the climb can only go up or down the ladder; the climb events sit on the ground
+    // tile below the ladder and the ladder's bottom tile (the climb starts and ends there going
+    // up and down), and on the top ladder tile and the ground tile above it
+    const ladders = [];
+    for (let x = 0; x < w; x++) for (let y = 0; y < h; y++) {
+        if (at(x, y) !== "L" || at(x, y - 1) === "L") continue;
+        let y1 = y;
+        while (at(x, y1 + 1) === "L") y1++;
+        ladders.push({x, top: y, bottom: y1});
+    }
+    const climbObjects = ladders.length ? collisionObjects((x, y) => at(x, y) !== "L") : null;
+    for (const l of ladders) {
+        const climb = (y, dir, from, to) => addTileEvent({type: "climb", x: l.x, y, activation_directions: dir, activation_collision_layers: from, change_to_collision_layer: to});
+        climb(l.bottom + 1, "up", 0, 1);
+        climb(l.bottom, "down", 1, 0);
+        climb(l.top, "up", 1, 0);
+        climb(l.top - 1, "down", 0, 1);
+    }
+    // jumps: from a walkable tile over one chasm tile onto walkable ground; the engine only jumps
+    // where the landing tile has the opposite event, which this rule gives it
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
-        if (!SOLID.has(at(x, y))) continue;
-        let x1 = x;
-        while (x1 + 1 < w && SOLID.has(at(x1 + 1, y))) x1++;
-        objects.push({id: objectId++, name: "", type: "", x: x * T, y: y * T, width: (x1 - x + 1) * T, height: T, rotation: 0, visible: true});
-        x = x1;
+        if (!WALKABLE(at(x, y))) continue;
+        for (const [dir, [dx, dy]] of Object.entries(DIR)) {
+            if (at(x + dx, y + dy) === "c" && WALKABLE(at(x + 2 * dx, y + 2 * dy))) addTileEvent({type: "jump", x, y, activation_directions: dir, activation_collision_layers: 0});
+        }
     }
 
     // decorations as sprites: every tree and fence tile, the houses and the wells (the tiles under
@@ -351,7 +390,7 @@ for (const id of C.map_order) {
     const hash = (x, y, s) => ((x * 73856093) ^ (y * 19349663) ^ (s * 83492791)) >>> 0;
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
         const c = at(x, y);
-        if (c === "t") dec(M.kind === "trail" ? "tree_trail" : "tree", x, y, {animation: TREE_VARIANTS[hash(x, y, 5) % TREE_VARIANTS.length]});
+        if (c === "t") dec(M.kind === "trail" || M.kind === "heights" ? "tree_trail" : "tree", x, y, {animation: TREE_VARIANTS[hash(x, y, 5) % TREE_VARIANTS.length]});
         else if (c === "F") {
             // a run tile between two fence tiles, a post at the end of a run (its mirror on the
             // left end) or a vertical piece, the second variant now and then
@@ -393,15 +432,18 @@ for (const id of C.map_order) {
             addNpc({...base, events: [{type: "chest", item, standard_chest: true, finish_events: finish}]});
         }
     }
-    // spirits: a duel, then the spirit joins
+    // spirits: a duel, then the spirit joins; a spirit without duel stats tells its story and joins willingly
     for (const sid of C.spirit_order.filter(s => C.spirits[s].map === id)) {
         const s = C.spirits[sid];
+        const duel = C.spirit_duels[sid];
         const elName = s.el.toUpperCase();
-        const challenge = C.story.spirit_challenge.map(l => l.replace("{EL}", elName).replace("{NAME}", s.name.toUpperCase())).concat(C.spirit_duels[sid].double ? [C.story.spirit_double] : []);
-        addNpc({key_name: `${EL[s.el]}_djinn`, label: `spirit_${sid}`, storage_keys: {active: `spirit_${sid}_free`}, x: s.x, y: s.y, npc_type: "normal", movement_type: "idle", base_collision_layer: 0, message: say(challenge),
-            events: [{type: "djinn_get", djinn_key: sid, has_fight: true, enemy_party_key: `duel_${sid}`, custom_battle_bg: BACKGROUND[id],
+        const fill = l => l.replace("{EL}", elName).replace("{NAME}", s.name.toUpperCase());
+        const talk = duel ? C.story.spirit_challenge.map(fill).concat(duel.double ? [C.story.spirit_double] : []) : s.lines;
+        const won = duel ? `Humbled, the ${elName} spirit ${s.name.toUpperCase()} joins you!` : fill(C.story.spirit_won_willing);
+        addNpc({key_name: `${EL[s.el]}_djinn`, label: `spirit_${sid}`, storage_keys: {active: `spirit_${sid}_free`}, x: s.x, y: s.y, npc_type: "normal", movement_type: "idle", base_collision_layer: 0, message: say(talk),
+            events: [{type: "djinn_get", djinn_key: sid, has_fight: Boolean(duel), ...(duel ? {enemy_party_key: `duel_${sid}`, custom_battle_bg: BACKGROUND[id]} : {}),
                 finish_events: [ev.set(`spirit_${sid}_free`, false), ev.set(`spirit_${sid}`, true), ev.set("spirits_found", 1, {increment: true}),
-                    ev.dialog([`Humbled, the ${elName} spirit ${s.name.toUpperCase()} joins you!`, sid === "flint" ? C.story.spirit_won_flint : C.story.spirit_won_other])]}]});
+                    ev.dialog([won, sid === "flint" ? C.story.spirit_won_flint : C.story.spirit_won_other])]}]});
     }
     // the boulder and the gate
     if (M.boulder) {
@@ -499,6 +541,7 @@ for (const id of C.map_order) {
         {name: "ground", type: "tilelayer", x: 0, y: 0, width: w, height: h, opacity: 1, visible: true, data},
         {name: "0", type: "objectgroup", x: 0, y: 0, opacity: 1, visible: true, draworder: "topdown", objects},
     ];
+    if (climbObjects) layers.push({name: "1", type: "objectgroup", x: 0, y: 0, opacity: 1, visible: true, draworder: "topdown", objects: climbObjects});
     if (zones.length) {
         layers.push({name: "encounter_zones", type: "objectgroup", x: 0, y: 0, opacity: 1, visible: true, draworder: "topdown", objects: zones,
             properties: {encounter_zone: true, base_rate: 60}, propertytypes: {encounter_zone: "bool", base_rate: "int"}});

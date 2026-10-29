@@ -1,6 +1,6 @@
 {
     "_comment": "Sunspire Saga's game data and story, ported from the legacy game.js (V48). scripts/build_sunspire_content.js turns this into the engine databases and the Tiled maps; scripts/build_walkthrough.js turns it into walkthrough.html. Numbers are the legacy ones unless a key says otherwise.",
-    "version": "V55",
+    "version": "V56",
     "elements": {"earth": "venus", "water": "mercury", "fire": "mars", "wind": "jupiter"},
 
     "rules": {
@@ -72,6 +72,7 @@
 
     "chests": {
         "fields":  [{"x": 32, "y": 11, "gold": 25}, {"x": 50, "y": 36, "item": "potion"}, {"x": 3, "y": 3, "flag": "compass", "name": "Lyn's Compass"}],
+        "heights": [{"x": 17, "y": 17, "item": "potion"}],
         "mine":    [{"x": 4, "y": 3, "gear": "bronze"}, {"x": 24, "y": 18, "gold": 60}, {"x": 13, "y": 12, "item": "pdrop"}],
         "trail":   [{"x": 12, "y": 4, "gear": "chain"}, {"x": 25, "y": 16, "item": "potion"}],
         "shrine":  [{"x": 2, "y": 2, "gear": "steel"}, {"x": 23, "y": 2, "item": "elixir"}, {"x": 13, "y": 8, "gear": "sol"}]
@@ -83,14 +84,15 @@
         "granite": {"el": "earth", "name": "Granite", "guard": 50, "turns": 4, "map": "mine", "x": 3, "y": 18, "desc": "Raises everyone's defence by half for 4 turns."},
         "forge":   {"el": "fire",  "name": "Forge",   "pow": 40, "map": "mine",   "x": 12, "y": 3,  "desc": "A hammer of flame."},
         "ember":   {"el": "fire",  "name": "Ember",   "pow": 56, "map": "trail",  "x": 28, "y": 16, "desc": "A searing strike."},
-        "dew":     {"el": "water", "name": "Dew",     "heal": 0.55, "map": "fields", "x": 8, "y": 12, "desc": "Restores 55% of one ally's HP."},
+        "dew":     {"el": "water", "name": "Dew",     "heal": 0.55, "map": "heights", "x": 19, "y": 4, "desc": "Restores 55% of one ally's HP.",
+                    "_comment": "no duel stats: Dew is lost and joins willingly after these lines",
+                    "lines": ["A small blue spirit sits at the water's edge, hugging its knees. It sniffs.", "DEW: 'Oh! A face! A real face! You are not a cloud, are you? The clouds never answer.'", "'When the spire went dark I flew and flew, and the wind dropped me up here.'", "'The lake looked like home. It is not home. Nobody comes. The fish will not talk to me.'", "'I have counted the ripples every day since. I lost count. I am so very lost.'", "'Please... may I come with you? I can mend scrapes. I will be very quiet.'", "DEW does not wait for an answer."]},
         "mist":    {"el": "water", "name": "Mist",    "healAll": 0.35, "map": "shrine", "x": 4, "y": 10, "desc": "Restores 35% of everyone's HP."},
         "breeze":  {"el": "wind",  "name": "Breeze",  "pow": 24, "stun": true, "map": "trail", "x": 29, "y": 3, "desc": "A cutting wind that staggers its target."},
         "squall":  {"el": "wind",  "name": "Squall",  "pow": 22, "aoe": true, "map": "shrine", "x": 22, "y": 12, "desc": "A storm over every foe."}
     },
     "spirit_duels": {
         "flint":   {"hp": 70,  "atk": 14, "def": 5,  "agi": 10, "xp": 24, "gold": 12},
-        "dew":     {"hp": 120, "atk": 20, "def": 6,  "agi": 12, "xp": 30, "gold": 14},
         "granite": {"hp": 220, "atk": 34, "def": 11, "agi": 8,  "xp": 40, "gold": 24},
         "forge":   {"hp": 200, "atk": 35, "def": 10, "agi": 11, "xp": 40, "gold": 24},
         "breeze":  {"hp": 380, "atk": 46, "def": 9,  "agi": 16, "xp": 55, "gold": 30, "double": true},
@@ -134,15 +136,20 @@
 
     "maps": {
         "fields":  {"name": "Thera Fields", "kind": "field", "bgm": "town", "background": "bg_field", "start": {"x": 18, "y": 22},
-                    "exits": [{"x": 18, "y": 0, "to": "brindle", "tx": 15, "ty": 17, "dir": "up"}],
+                    "exits": [{"x": 18, "y": 0, "to": "brindle", "tx": 15, "ty": 17, "dir": "up"}, {"x": 57, "y": 12, "to": "heights", "tx": 2, "ty": 23, "dir": "right"}],
                     "houses": [{"x": 6, "y": 17, "id": "thera_1", "use": "home"}, {"x": 12, "y": 17, "id": "thera_2", "use": "home"}, {"x": 20, "y": 17, "id": "thera_shop", "use": "shop", "shop": "thera"},
                                {"x": 40, "y": 27, "id": "thera_far_1", "use": "home"}, {"x": 46, "y": 27, "id": "thera_far_2", "use": "home"}, {"x": 43, "y": 32, "id": "thera_far_inn", "use": "inn", "inn": "thera_far_inn"}],
                     "signs": [{"x": 20, "y": 20, "lines": ["NORTH: FENCE GATE AND BRINDLE.", "WEST: LAKE MIRA. BEWARE TALL GRASS.", "EAST ROAD: MIRA FARMSTEAD AND INN."]},
-                              {"x": 40, "y": 35, "lines": ["MIRA FARMSTEAD.", "BEDS AT THE INN - TWELVE COINS. WEST: THERA."]}],
+                              {"x": 40, "y": 35, "lines": ["MIRA FARMSTEAD.", "BEDS AT THE INN - TWELVE COINS. WEST: THERA."]},
+                              {"x": 53, "y": 11, "lines": ["EAST: THERA HEIGHTS.", "A LADDER, A RIDGE AND THE OLD PILLARS.", "NOT FOR THE FAINT OF FOOT."]}],
                     "wells": [{"x": 15, "y": 22, "text": "Cool well water. The party is fully restored!"}],
                     "boulder": {"x": 18, "y": 8, "flag": "boulder", "needs": "flint",
                                 "locked": ["A massive boulder seals the only gap in the fence. It will not budge.", "Perhaps an EARTH spirit could shatter it..."],
                                 "open": ["FLINT rumbles with joy - the boulder cracks and crumbles to dust!", "The way north lies open."]}},
+        "heights": {"name": "Thera Heights", "kind": "heights", "bgm": "town", "background": "bg_trail", "start": {"x": 2, "y": 23},
+                    "_comment": "the mountain east of the fields: a ladder up the first cliff, a narrow ridge over the chasm, then pillar to pillar up to the lake; built by tools/make-heights-map.js",
+                    "exits": [{"x": 1, "y": 23, "to": "fields", "tx": 56, "ty": 12, "dir": "left"}],
+                    "signs": [{"x": 6, "y": 22, "lines": ["THERA HEIGHTS. THE LADDER CLIMBS TO THE RIDGE.", "WALK INTO THE LADDER TO CLIMB IT.", "AT A GAP, KEEP WALKING: YOU WILL JUMP."]}]},
         "brindle": {"name": "Brindle", "kind": "town", "bgm": "town", "background": "bg_field", "start": {"x": 15, "y": 17},
                     "exits": [{"x": 15, "y": 19, "to": "fields", "tx": 18, "ty": 2, "dir": "down"}, {"x": 24, "y": 1, "to": "mine", "tx": 2, "ty": 19, "dir": "up"}],
                     "houses": [{"x": 5, "y": 5, "id": "brindle_1", "use": "home"}, {"x": 11, "y": 5, "id": "brindle_2", "use": "home"}, {"x": 18, "y": 5, "id": "brindle_3", "use": "home"}, {"x": 21, "y": 9, "id": "brindle_inn", "use": "inn", "inn": "brindle_inn"}],
@@ -168,12 +175,12 @@
                              "intro": ["SHADOW WYRM: 'Ssso... children of the dawn come to reclaim the light.'", "'Four little flames. I will sssnuff you one by one.'"],
                              "victory": ["The Wyrm lets out a final shriek...", "The Wyrm dissolves into mist!", "Warm light floods the Sunspire!"], "ending": true}}
     },
-    "map_order": ["fields", "brindle", "mine", "trail", "shrine"],
+    "map_order": ["fields", "heights", "brindle", "mine", "trail", "shrine"],
 
     "npcs": {
         "elder": {"name": "Sorin", "sprite": "elder", "map": "fields", "x": 11, "y": 21, "wander": false, "voice": "elder_1",
                   "dialog": [
-                      {"unless": "boss_down", "unless_spirits": 8, "lines": ["SORIN: 'The spirits scattered when the SHADOW WYRM darkened the spire.'", "'FLINT hides west of the houses. Another skims the lake.'", "'The rest fled north - to Brindle's mine, the high trail, the spire itself.'", "'MARA keeps the shop by the lane. The inn up in Brindle rests weary bones.'"]},
+                      {"unless": "boss_down", "unless_spirits": 8, "lines": ["SORIN: 'The spirits scattered when the SHADOW WYRM darkened the spire.'", "'FLINT hides west of the houses. Another was blown up onto THERA HEIGHTS, east of the fields.'", "'The rest fled north - to Brindle's mine, the high trail, the spire itself.'", "'MARA keeps the shop by the lane. The inn up in Brindle rests weary bones.'"]},
                       {"unless": "boss_down", "lines": ["SORIN: 'All eight walk with you! Unleash them in battle and call the great summons.'", "'Now climb, Ari. Bring back the dawn.'"]},
                       {"lines": ["SORIN: 'The dawn is yours. Thera will sing of this day.'"]}]},
         "mara":  {"name": "Mara", "sprite": "mara", "map": "fields", "x": 16, "y": 20, "wander": true, "voice": "adult_female_1",
@@ -201,6 +208,7 @@
         "spirit_challenge": ["The {EL} spirit {NAME} bristles and darts into a fighting stance!", "It will only follow the strong - prove yourselves!", "Steel barely touches a spirit. Strike with your ARTS!"],
         "spirit_double": "It is quick - it will strike twice each turn!",
         "spirit_won": ["Humbled, the {EL} spirit {NAME} joins you! ({N}/8)"],
+        "spirit_won_willing": "The {EL} spirit {NAME} joins you, sniffling happily!",
         "spirit_won_flint": "Its power can shatter boulders.",
         "spirit_won_other": "Each SET spirit strengthens the whole party. Unleash spirits in battle, then SUMMON with the ones on standby!",
         "spirit_won_all": "All eight spirits gathered! The great summons are yours.",

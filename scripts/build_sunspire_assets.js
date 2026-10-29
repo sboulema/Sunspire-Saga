@@ -165,6 +165,14 @@ function fieldSheet(id) {
             frames.push(F(`grant/${dir}/00`, cell(spr(id + "_cast"), CW, CH)));
         }
     }
+    // on a ladder the heroes show their backs: the climbing step alternates the two up frames,
+    // the turn (starting a descent) swings from facing the camera to facing the wall
+    if (HEROES.includes(id)) {
+        const [up, upStep] = walkFrames(id, "up"), [down] = walkFrames(id, "down");
+        frames.push(F("climb/idle/00", cell(up, CW, CH)), F("climb/start/00", cell(upStep, CW, CH)), F("climb/end/00", cell(upStep, CW, CH)));
+        frames.push(F("climb/turn/00", cell(down, CW, CH)), F("climb/turn/01", cell(up, CW, CH)));
+        for (const anim of ["up", "down"]) frames.push(F(`climb/${anim}/00`, cell(upStep, CW, CH)), F(`climb/${anim}/01`, cell(up, CW, CH)));
+    }
     writeAtlas(path.join(IMG, "spritesheets/field"), id + "_field", frames);
 }
 // battle poses: Sunspire's attack / cast / hit / downed frames are the party's view (back), the

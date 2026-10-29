@@ -2399,6 +2399,186 @@
                 "w": 18,
                 "h": 24
             }
+        },
+        "climb/idle/00": {
+            "frame": {
+                "x": 228,
+                "y": 100,
+                "w": 18,
+                "h": 24
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 18,
+                "h": 24
+            },
+            "sourceSize": {
+                "w": 18,
+                "h": 24
+            }
+        },
+        "climb/start/00": {
+            "frame": {
+                "x": 247,
+                "y": 100,
+                "w": 18,
+                "h": 24
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 18,
+                "h": 24
+            },
+            "sourceSize": {
+                "w": 18,
+                "h": 24
+            }
+        },
+        "climb/end/00": {
+            "frame": {
+                "x": 266,
+                "y": 100,
+                "w": 18,
+                "h": 24
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 18,
+                "h": 24
+            },
+            "sourceSize": {
+                "w": 18,
+                "h": 24
+            }
+        },
+        "climb/turn/00": {
+            "frame": {
+                "x": 285,
+                "y": 100,
+                "w": 18,
+                "h": 24
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 18,
+                "h": 24
+            },
+            "sourceSize": {
+                "w": 18,
+                "h": 24
+            }
+        },
+        "climb/turn/01": {
+            "frame": {
+                "x": 304,
+                "y": 100,
+                "w": 18,
+                "h": 24
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 18,
+                "h": 24
+            },
+            "sourceSize": {
+                "w": 18,
+                "h": 24
+            }
+        },
+        "climb/up/00": {
+            "frame": {
+                "x": 323,
+                "y": 100,
+                "w": 18,
+                "h": 24
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 18,
+                "h": 24
+            },
+            "sourceSize": {
+                "w": 18,
+                "h": 24
+            }
+        },
+        "climb/up/01": {
+            "frame": {
+                "x": 342,
+                "y": 100,
+                "w": 18,
+                "h": 24
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 18,
+                "h": 24
+            },
+            "sourceSize": {
+                "w": 18,
+                "h": 24
+            }
+        },
+        "climb/down/00": {
+            "frame": {
+                "x": 361,
+                "y": 100,
+                "w": 18,
+                "h": 24
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 18,
+                "h": 24
+            },
+            "sourceSize": {
+                "w": 18,
+                "h": 24
+            }
+        },
+        "climb/down/01": {
+            "frame": {
+                "x": 380,
+                "y": 100,
+                "w": 18,
+                "h": 24
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 18,
+                "h": 24
+            },
+            "sourceSize": {
+                "w": 18,
+                "h": 24
+            }
         }
     },
     "meta": {

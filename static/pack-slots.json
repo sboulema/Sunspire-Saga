@@ -1555,7 +1555,16 @@
             "no/up_right/03",
             "cast/up_right/00",
             "cast/up_right/01",
-            "grant/up_right/00"
+            "grant/up_right/00",
+            "climb/idle/00",
+            "climb/start/00",
+            "climb/end/00",
+            "climb/turn/00",
+            "climb/turn/01",
+            "climb/up/00",
+            "climb/up/01",
+            "climb/down/00",
+            "climb/down/01"
         ],
         "group": "spritesheets/field"
     },
@@ -1684,7 +1693,16 @@
             "no/up_right/03",
             "cast/up_right/00",
             "cast/up_right/01",
-            "grant/up_right/00"
+            "grant/up_right/00",
+            "climb/idle/00",
+            "climb/start/00",
+            "climb/end/00",
+            "climb/turn/00",
+            "climb/turn/01",
+            "climb/up/00",
+            "climb/up/01",
+            "climb/down/00",
+            "climb/down/01"
         ],
         "group": "spritesheets/field"
     },
@@ -2233,7 +2251,16 @@
             "no/up_right/03",
             "cast/up_right/00",
             "cast/up_right/01",
-            "grant/up_right/00"
+            "grant/up_right/00",
+            "climb/idle/00",
+            "climb/start/00",
+            "climb/end/00",
+            "climb/turn/00",
+            "climb/turn/01",
+            "climb/up/00",
+            "climb/up/01",
+            "climb/down/00",
+            "climb/down/01"
         ],
         "group": "spritesheets/field"
     },
@@ -2677,7 +2704,16 @@
             "no/up_right/03",
             "cast/up_right/00",
             "cast/up_right/01",
-            "grant/up_right/00"
+            "grant/up_right/00",
+            "climb/idle/00",
+            "climb/start/00",
+            "climb/end/00",
+            "climb/turn/00",
+            "climb/turn/01",
+            "climb/up/00",
+            "climb/up/01",
+            "climb/down/00",
+            "climb/down/01"
         ],
         "group": "spritesheets/field"
     },
@@ -3078,6 +3114,14 @@
         "file": "assets/images/tilesets/fields.png",
         "width": 256,
         "height": 112,
+        "frames": [],
+        "group": "tilesets"
+    },
+    {
+        "slot": "heights",
+        "file": "assets/images/tilesets/heights.png",
+        "width": 256,
+        "height": 80,
         "frames": [],
         "group": "tilesets"
     },

@@ -50,6 +50,17 @@
   <p class="intro">Newest first.</p>
   <div class="pg-body doc">
     <table>
+    <tr><td class="ver">v56</td><td>Thera Heights, a mountain east of the fields with a lake on top. A sign at
+      the fields' east edge points the way; the path ends at a cliff with a ladder (walk into it and
+      Ari climbs), the ladder tops out on a ridge a single tile wide over a chasm, and the ridge ends
+      at a chain of rock pillars that Ari hops across (face the gap and keep walking). A side pillar
+      holds a potion. DEW, the water spirit, is no longer skimming the fields' pond: it was blown up
+      onto the heights, sits lost by the lake and joins without a duel after telling its story.
+      Sorin's hint follows it. The engine's ladder, climb and jump mechanics are new to Sunspire:
+      the map has a second collision layer for the climb, the heroes have climb frames (back view,
+      the pack slots <code>ari_field</code> ... gain <code>climb/*</code> frames) and the tileset
+      <code>heights</code> is a new pack slot. <code>tools/make-heights-map.js</code> builds the
+      map's grid and tiles.</td></tr>
     <tr><td class="ver">v55</td><td>Granite guards the party. Unleashing it used to be a second earth strike; it
       now raises everyone's defence by half for 4 turns, and plays its own scene: a glowing image of
       the spirit hovers over the party, yellow orbs sink into each ally and a thin wall of light

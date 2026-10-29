@@ -58,7 +58,7 @@ const grid = id => JSON.parse(fs.readFileSync(path.join(SRC, "maps", `${id}_grid
 const xpNext = lv => 18 + 12 * lv;
 
 // ---------------- ASCII maps ----------------
-const LEGEND = {".": ".", "p": ".", "f": ".", "g": ":", "e": ":", "t": "T", "w": "~", "r": "-", "v": "|", "R": "H", "Q": "H", "W": "H", "D": "D", "#": "#", "s": "S", "+": "+", "F": "F", "B": "O", "G": "=", "E": ">", "C": "^", "k": "k"};
+const LEGEND = {".": ".", "p": ".", "f": ".", "g": ":", "e": ":", "t": "T", "w": "~", "r": "-", "v": "|", "R": "H", "Q": "H", "W": "H", "D": "D", "#": "#", "s": "S", "+": "+", "F": "F", "B": "O", "G": "=", "E": ">", "C": "^", "k": "k", "L": "L", "c": "x", "o": "o", "n": "."};
 function asciiMap(id) {
     const g = grid(id), M = C.maps[id];
     const rows = g.chars.map(r => r.split("").map(ch => LEGEND[ch] || ch));
@@ -125,11 +125,11 @@ line();
 sub("5.2 Battle");
 para("Turns go by agility. A plain attack does (attack - the target's defence) / 2, so steel does little to anything with a hard hide: the bosses and the spirits shrug it off, and arts (psynergy) are the answer. An art does its listed power as damage whatever the defence; area arts hit every foe. Defend halves the damage taken that turn. Fleeing from a normal battle usually works; spirits and bosses block every path.");
 sub("5.3 Spirits");
-para("A spirit joins you after you beat it in a duel. SET, a spirit adds to the stats of the character who holds it (" + ["hp +4", "pp +2", "attack +1", "defence +1"].join(", ") + "). In battle you can UNLEASH a set spirit for its own effect (see section 8); it then stands by, and standby spirits are what the great summons spend (section 9). After a summon the spirits set themselves again over the next turns.");
+para("A spirit joins you after you beat it in a duel (Dew, lost on Thera Heights, simply asks to come along). SET, a spirit adds to the stats of the character who holds it (" + ["hp +4", "pp +2", "attack +1", "defence +1"].join(", ") + "). In battle you can UNLEASH a set spirit for its own effect (see section 8); it then stands by, and standby spirits are what the great summons spend (section 9). After a summon the spirits set themselves again over the next turns.");
 sub("5.4 Items and gear");
 para("Herbs, potions, psy drops and elixirs are used from the item menu or in battle. Weapons add attack and armour adds defence; equip them from the main menu. Every character can wear everything.");
 sub("5.5 Encounters");
-para("Random battles happen while you walk in the fields, the mine, the trail and the spire; towns are safe. Each area has its own set of enemy groups (section 13 lists who lives where); the paddock behind the boulder in Thera Fields sends packs at any level.");
+para("Random battles happen while you walk in the fields, the mine, the trail and the spire; towns are safe. Each area has its own set of enemy groups (section 13 lists who lives where); the paddock behind the boulder in Thera Fields sends packs at any level. Thera Heights is quiet: nothing attacks on the ladder, the ridge or the pillars.");
 sub("5.6 Field arts");
 para("Ari knows SHOVE from the start: press Q (the first psynergy shortcut) facing a loose boulder to push it one tile for 2 PP, or pick it from the psynergy menu. Walking into a loose boulder pushes it too. Boulders only move onto the tiles the ground allows.");
 sub("5.7 Sprite packs");
@@ -150,12 +150,16 @@ line();
 
 // ---------------- 7 walkthrough ----------------
 section("WLK07", 7, "WALKTHROUGH");
-para("Map legend: . ground  : tall grass or rubble (encounters)  T tree  ~ water  - | cliff  H house  D door  F fence  # wall  S sign  + well or spring  O boulder  = gate  > exit  ^ cave mouth  @ villager  * spirit  X boss  1-9 chests (listed under each map).");
+para("Map legend: . ground  : tall grass or rubble (encounters)  T tree  ~ water  - | cliff  L ladder  x chasm (jump over a single x)  o pillar top  H house  D door  F fence  # wall  S sign  + well or spring  O boulder  = gate  > exit  ^ cave mouth  @ villager  * spirit  X boss  1-9 chests (listed under each map).");
 const steps = {
     fields: ["Thera is the row of houses in the middle of the fields; you start by the well (18,22). Talk to SORIN (11,21): he points you west. The shop is the house at (20,17): its door at (21,19) opens Mara's counter. The well at (15,22) restores the party.",
         "FLINT waits at (3,20), left of the houses. Talk to it to duel it: it shrugs off steel, so cast QUAKE every turn (3 casts at level 1, so an herb or a level helps). With Flint set, the boulder at (18,8) on the trail north crumbles when you talk to it.",
-        "Behind the boulder is the paddock: packs roam here at any level. LYN'S COMPASS is in chest 3 at (3,3). DEW, the water spirit, skims the lake at (8,12) west of the fence. The road north at (18,0) leads to Brindle.",
+        "Behind the boulder is the paddock: packs roam here at any level. LYN'S COMPASS is in chest 3 at (3,3). The road north at (18,0) leads to Brindle.",
+        "The sign at (53,11) points to the east edge: the gap in the trees at (57,12) leads to Thera Heights, where the water spirit DEW is lost.",
         "East along the lane is Mira Farmstead: two homes, the inn (door at (44,34), 12 coins, saves the game), HOB by the hedge and a chest at (50,36)."],
+    heights: ["The mountain east of the fields. Follow the path to the ladder at (8,18-20): walk up into it and Ari climbs; keep pressing up to reach the ridge at (8,17). The ridge is a single tile wide over the chasm: east to (12,17), north to (12,15), east to (14,15).",
+        "From (14,15) the pillars begin. Face a gap and keep walking: Ari jumps to the next pillar. The chain goes (16,15), up to (16,13), east to (18,13), up to (18,11), east to (20,11) and up to the landing at (20,9) on the summit's edge. From (16,15) a jump down lands on a side pillar at (16,17) with chest 1 beside it.",
+        "The lake is on the summit. DEW sits on its east shore at (19,4): talk to it and it tells its story and joins without a fight. The way down is the same way back, the ladder included (walk down into it from (8,17))."],
     brindle: ["Brindle is the mining town north of the fields. DOV (8,9) sells iron gear and potions; the inn door is at (22,11). LYN wanders the plaza: with her compass found she asks to join - say yes. The MINER tells you about the ogre. The mine mouth is at the top of the north path, (24,1)."],
     mine: ["BRAM joins the moment you enter. The mine is a grid of galleries: GRANITE waits at (3,18) and FORGE at (12,3). Three chests sit in the galleries (see the list). The MAW OGRE squats on the SPIRE KEY in the east gallery at (25,10); beat it and the way east to the trail at (26,10) opens."],
     trail: ["SERA joins at the foot of the trail. Three terraces climb north; the gap in the lower terrace is at (8,12-13) and the gap in the upper one at (24,6-7). " + C.maps.trail.puzzle.text + " BREEZE is at (29,3) and EMBER at (28,16). The spire gate at (16,1) opens with the SPIRE KEY; the spire is through (16,0)."],
@@ -201,7 +205,9 @@ section("SPR08", 8, "SPIRIT (DJINN) GUIDE");
 table([["Spirit", "Element", "Where", "Unleash"], ["------", "-------", "-----", "-------"], ...C.spirit_order.map(s => { const d = C.spirits[s]; return [d.name, EL_NAME[d.el], `${C.maps[d.map].name} (${d.x},${d.y})`, d.desc]; })], [8, 8, 24, 36]);
 line();
 para("Duel stats (the spirit as an enemy):");
-table([["Spirit", "HP", "ATK", "AGI", "XP", "Coins", "Note"], ["------", "--", "---", "---", "--", "-----", "----"], ...C.spirit_order.map(s => { const d = C.spirit_duels[s]; return [C.spirits[s].name, d.hp, d.atk, d.agi, d.xp, d.gold, d.double ? "acts twice a turn" : ""]; })], [8, 4, 4, 4, 4, 6, 18]);
+table([["Spirit", "HP", "ATK", "AGI", "XP", "Coins", "Note"], ["------", "--", "---", "---", "--", "-----", "----"], ...C.spirit_order.filter(s => C.spirit_duels[s]).map(s => { const d = C.spirit_duels[s]; return [C.spirits[s].name, d.hp, d.atk, d.agi, d.xp, d.gold, d.double ? "acts twice a turn" : ""]; })], [8, 4, 4, 4, 4, 6, 18]);
+line();
+para("Dew has no duel: it joins the moment you talk to it.");
 line();
 
 section("SUM09", 9, "SUMMON LIST");
@@ -242,6 +248,8 @@ line();
 section("FAQ14", 14, "FREQUENTLY ASKED QUESTIONS");
 sub("Q: Steel does nothing to the spirits and bosses. Is that a bug?");
 para("A: No. Their defence is far above your attack; cast arts and unleash spirits instead.");
+sub("Q: How do I climb the ladder and cross the pillars on Thera Heights?");
+para("A: Walk into the ladder from below (or from above) and keep pressing: Ari climbs it. On a pillar, face the gap and keep walking; after a moment Ari jumps to the next pillar. Only gaps of a single tile can be jumped, and only onto solid ground.");
 sub("Q: Where is Lyn's compass?");
 para("A: In the paddock north of the fence in Thera Fields, chest 3 at (3,3). You need Flint to break the boulder first.");
 sub("Q: The gate on the trail will not open.");

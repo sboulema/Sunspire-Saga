@@ -16,6 +16,22 @@
         "expected_party_level": 2
     },
     {
+        "name": "Thera Heights",
+        "key_name": "heights",
+        "bgm": {
+            "key": "town",
+            "path": "assets/sounds/bgm/town.wav"
+        },
+        "tileset_files": {
+            "image": "assets/images/tilesets/heights.png",
+            "json": "assets/maps/heights/heights.json"
+        },
+        "lazy_load": true,
+        "collision_embedded": true,
+        "background_key": "bg_trail",
+        "expected_party_level": 3
+    },
+    {
         "name": "Brindle",
         "key_name": "brindle",
         "bgm": {

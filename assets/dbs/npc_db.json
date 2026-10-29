@@ -151,6 +151,45 @@
                     "json": "assets/images/spritesheets/field/ari_field.json"
                 }
             },
+            "climb": {
+                "frame_rate": [
+                    6,
+                    6,
+                    6,
+                    1,
+                    6,
+                    6
+                ],
+                "animations": [
+                    "start",
+                    "turn",
+                    "end",
+                    "idle",
+                    "up",
+                    "down"
+                ],
+                "frames_count": [
+                    1,
+                    2,
+                    1,
+                    1,
+                    2,
+                    2
+                ],
+                "initial_animation": "idle",
+                "loop": [
+                    false,
+                    false,
+                    false,
+                    false,
+                    true,
+                    true
+                ],
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/ari_field.png",
+                    "json": "assets/images/spritesheets/field/ari_field.json"
+                }
+            },
             "battle": {
                 "spritesheet": {
                     "image": "assets/images/spritesheets/battle/ari_battle.png",
@@ -370,6 +409,45 @@
                 "frames_count": 1,
                 "initial_animation": "down",
                 "loop": false,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/lyn_field.png",
+                    "json": "assets/images/spritesheets/field/lyn_field.json"
+                }
+            },
+            "climb": {
+                "frame_rate": [
+                    6,
+                    6,
+                    6,
+                    1,
+                    6,
+                    6
+                ],
+                "animations": [
+                    "start",
+                    "turn",
+                    "end",
+                    "idle",
+                    "up",
+                    "down"
+                ],
+                "frames_count": [
+                    1,
+                    2,
+                    1,
+                    1,
+                    2,
+                    2
+                ],
+                "initial_animation": "idle",
+                "loop": [
+                    false,
+                    false,
+                    false,
+                    false,
+                    true,
+                    true
+                ],
                 "spritesheet": {
                     "image": "assets/images/spritesheets/field/lyn_field.png",
                     "json": "assets/images/spritesheets/field/lyn_field.json"
@@ -599,6 +677,45 @@
                     "json": "assets/images/spritesheets/field/bram_field.json"
                 }
             },
+            "climb": {
+                "frame_rate": [
+                    6,
+                    6,
+                    6,
+                    1,
+                    6,
+                    6
+                ],
+                "animations": [
+                    "start",
+                    "turn",
+                    "end",
+                    "idle",
+                    "up",
+                    "down"
+                ],
+                "frames_count": [
+                    1,
+                    2,
+                    1,
+                    1,
+                    2,
+                    2
+                ],
+                "initial_animation": "idle",
+                "loop": [
+                    false,
+                    false,
+                    false,
+                    false,
+                    true,
+                    true
+                ],
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/bram_field.png",
+                    "json": "assets/images/spritesheets/field/bram_field.json"
+                }
+            },
             "battle": {
                 "spritesheet": {
                     "image": "assets/images/spritesheets/battle/bram_battle.png",
@@ -818,6 +935,45 @@
                 "frames_count": 1,
                 "initial_animation": "down",
                 "loop": false,
+                "spritesheet": {
+                    "image": "assets/images/spritesheets/field/sera_field.png",
+                    "json": "assets/images/spritesheets/field/sera_field.json"
+                }
+            },
+            "climb": {
+                "frame_rate": [
+                    6,
+                    6,
+                    6,
+                    1,
+                    6,
+                    6
+                ],
+                "animations": [
+                    "start",
+                    "turn",
+                    "end",
+                    "idle",
+                    "up",
+                    "down"
+                ],
+                "frames_count": [
+                    1,
+                    2,
+                    1,
+                    1,
+                    2,
+                    2
+                ],
+                "initial_animation": "idle",
+                "loop": [
+                    false,
+                    false,
+                    false,
+                    false,
+                    true,
+                    true
+                ],
                 "spritesheet": {
                     "image": "assets/images/spritesheets/field/sera_field.png",
                     "json": "assets/images/spritesheets/field/sera_field.json"
