@@ -56,7 +56,16 @@
       systems, a push puzzle and the SHOVE field art, saves in the browser with autosave, the
       installable offline app, and sheet-level sprite packs. The handheld shell, the shell colours,
       the theme and the walkthrough carried over; the walkthrough is now generated from the game's
-      data.</td></tr>
+      data.
+      <br>Since the switch: the button icons in the STATUS, ITEMS, ARTS and SPIRIT menus are drawn
+      at the size the menus are laid out for, so they no longer cover the text next to them, and item
+      counts and shop prices are no longer four times too big. Every weapon has a weapon type (sword,
+      light blade or axe) and every hero a weapon sheet per type, drawn over the hero in battle; the
+      built-in sheets are empty, so the game looks the same, but a pack can fill them
+      (<code>ari_sword</code>, <code>bram_axe</code> ...). The play page always checks for the
+      latest list of pack slots, so a page opened just before an update no longer refuses the new
+      slots as unknown. The play, pack guide and walkthrough pages also load their styles and
+      scripts when the site is served from a subfolder, as on GitHub Pages.</td></tr>
     <tr><td class="ver">v48</td><td>L and R shoulder buttons. The handheld shell has them on its top edge, and
       <code>Q</code> / <code>E</code> press them from the keyboard. They step to the previous / next party member
       on the STATUS and EQUIP screens and when picking who gets an item, and to the previous / next target

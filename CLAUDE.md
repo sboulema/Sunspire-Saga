@@ -20,7 +20,8 @@ under `base/`). `README.md` says how to run and change it, `packs/README.md` the
   `assets/init.json`.
 - Any change a player could notice must therefore go into `content.json` (or the generators),
   and the regenerated `walkthrough.html` is committed with it: that is how the walkthrough stays
-  in sync with the game.
+  in sync with the game. The same commit also describes the change on the changelog page
+  (`changelog.html`, hand-written; the top row while the engine build has no version number).
 
 ## Working on it
 
