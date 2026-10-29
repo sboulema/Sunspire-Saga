@@ -416,7 +416,9 @@ export class Map {
             const b_y = b.useHeightWhenSorting ? b.y + b.height : b.y;
             if (a_y < b_y) return -1;
             if (a_y > b_y) return 1;
-            return 1;
+            //equal rows keep their order: Array.sort is stable, and a comparator that never says
+            //"equal" shuffles overlapping sprites of one row from frame to frame while a char moves
+            return 0;
         });
         send_to_front_list.forEach(sprite => {
             if (sprite) {
