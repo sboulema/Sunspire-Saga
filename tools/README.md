@@ -79,7 +79,10 @@ tile). Thera's fields tileset gets its ground from the Madra town tileset: every
 draws as grass (plain, tufted or under an object) becomes one of Madra's flat grass tiles and
 every path tile one of its flat sand tiles and every water tile one of its sea tiles, picked by
 tile index so the ground keeps some variation (the pond's far bank gets Madra's wave crest, upside
-down, along its top); the fence pieces are Madra's posts and rails. The other tilesets, the houses, the map
+down, along its top). The fence pieces are the forest tileset's fence, a two-tile section of two rails
+running up and down: its lower tile (crossbars and feet) and upper tile (post tops) are the vertical
+pieces, the lower tile turned a quarter is the horizontal run and the upper tile turned a quarter
+each end post, its post tops capping the run. The other tilesets, the houses, the map
 objects (sign, well, gate, marker, spring, crate), the summon backdrops and the shadow stay
 built-in. `REPORT.txt` in the output folder lists what was replaced.
 

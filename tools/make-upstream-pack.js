@@ -399,6 +399,22 @@ function tileCut(file, x, y, w, h, ow, oh) {
     };
 }
 const madraCut = (...a) => tileCut("tilesets/madra", ...a);
+const forestCut = (...a) => tileCut("tilesets/forest", ...a);
+/** The image turned a quarter clockwise, or counter-clockwise. */
+function quarterTurn(img, cw) {
+    const out = png.create(img.height, img.width);
+    for (let y = 0; y < img.height; y++)
+        for (let x = 0; x < img.width; x++) {
+            const [ox, oy] = cw ? [img.height - 1 - y, x] : [y, img.width - 1 - x];
+            img.data.copy(out.data, (oy * out.width + ox) * 4, (y * img.width + x) * 4, (y * img.width + x) * 4 + 4);
+        }
+    return out;
+}
+/** A cut turned a quarter: the forest fence runs up and down, so its rails are turned to run left to right. */
+const turned = (cutter, cw) => () => {
+    const c = cutter();
+    return c && {img: quarterTurn(c.img, cw), anchor: c.anchor};
+};
 /** The three tree variants of a Sunspire tree sheet: two town trees and the forest's round one. */
 function trees(order) {
     const cuts = {orange: madraCut(80, 288, 48, 64, 32, 43), purple: madraCut(32, 288, 48, 64, 32, 43), round: tileCut("tilesets/forest", 16, 128, 48, 48, 32, 32)};
@@ -612,10 +628,14 @@ Object.assign(RULES, {
     // 2x make some screens shimmer; big blue-green, lower green fruit tree, autumn yellow / red
     tree: extraTrees("Miscellaneous - Trees", [[209, 176, 43, 48], [6, 117, 38, 48], [138, 3, 43, 48]], trees(["orange", "purple", "round"])),
     tree_trail: extraTrees("Miscellaneous - Trees", [[6, 117, 38, 48], [209, 176, 43, 48], [186, 2, 43, 48]], trees(["round", "purple", "orange"])),
-    fence_h: madraCut(112, 400, 16, 16),
-    fence_v: madraCut(144, 416, 16, 16),
-    fence_v2: madraCut(144, 432, 16, 16),
-    fence_post: name => madraCut(name.startsWith('idle/left') ? 112 : 128, 384, 16, 16)(),
+    // the fence is the forest tileset's: a two-tile section of two rails running up and down, with
+    // crossbars and feet on its lower tile and the rounded post tops on its upper one. The vertical
+    // pieces are those two tiles; the horizontal run is the lower tile turned a quarter, and each
+    // end post the upper tile turned so its post tops cap the run
+    fence_h: turned(forestCut(144, 144, 16, 16), true),
+    fence_v: forestCut(144, 144, 16, 16),
+    fence_v2: forestCut(144, 128, 16, 16),
+    fence_post: name => turned(forestCut(144, 128, 16, 16), !name.startsWith("idle/left"))(),
 });
 
 // ---------------------------------------------------------------- build
